@@ -1,0 +1,1205 @@
+{
+  "metadata": {
+    "$schema": "https://as400parser.dev/schemas/ir/v1.0.0/rpg3.json",
+    "irVersion": "1.0.0",
+    "sourceType": "RPG3",
+    "sourceMember": "CUSTINQ",
+    "sourceFile": "QRPGSRC",
+    "sourceLibrary": "APPLIB",
+    "description": "Customer Inquiry Program",
+    "createdDate": "2001-05-15",
+    "modifiedDate": "2024-11-20",
+    "recordLength": 80,
+    "totalLines": 42,
+    "parseInfo": {
+      "parserVersion": "1.0.0",
+      "parsedAt": "2026-03-11T22:15:00+07:00",
+      "parseStatus": "complete",
+      "errors": [],
+      "warnings": []
+    }
+  },
+
+  "content": {
+    "sourceLines": [
+      { "lineNumber": 1, "rawText": "     H                                                                         ", "specType": "H", "isComment": false, "isBlank": false },
+      { "lineNumber": 2, "rawText": "     F* File declarations                                                      ", "specType": "comment", "isComment": true, "isBlank": false },
+      { "lineNumber": 3, "rawText": "     FCUSTMAST IF  E           K        DISK                                    ", "specType": "F", "isComment": false, "isBlank": false },
+      { "lineNumber": 4, "rawText": "     FCUSTDSP  CF  E                    WORKSTN                                 ", "specType": "F", "isComment": false, "isBlank": false },
+      { "lineNumber": 5, "rawText": "     FQSYSPRT  O   F     132            PRINTER                            OA   ", "specType": "F", "isComment": false, "isBlank": false },
+      { "lineNumber": 6, "rawText": "     E                    ARR        10  5 0                                    ", "specType": "E", "isComment": false, "isBlank": false },
+      { "lineNumber": 7, "rawText": "     LQSYSPRT  066 056                                                          ", "specType": "L", "isComment": false, "isBlank": false },
+      { "lineNumber": 8, "rawText": "     ICUSTREC                                                                   ", "specType": "I", "isComment": false, "isBlank": false },
+      { "lineNumber": 9, "rawText": "     I                                        1   5 0CUSTNO                     ", "specType": "I", "isComment": false, "isBlank": false },
+      { "lineNumber": 10, "rawText": "     I                                        6  30  CUSTNM                     ", "specType": "I", "isComment": false, "isBlank": false },
+      { "lineNumber": 11, "rawText": "     I                                       31  40  CUSTCT                     ", "specType": "I", "isComment": false, "isBlank": false },
+      { "lineNumber": 12, "rawText": "     I            DS                                                            ", "specType": "I", "isComment": false, "isBlank": false },
+      { "lineNumber": 13, "rawText": "     I                                        1  80 DTEFLD                      ", "specType": "I", "isComment": false, "isBlank": false },
+      { "lineNumber": 14, "rawText": "     I                                        1   2 0DTEMON                     ", "specType": "I", "isComment": false, "isBlank": false },
+      { "lineNumber": 15, "rawText": "     I                                        3   4 0DTEDAY                     ", "specType": "I", "isComment": false, "isBlank": false },
+      { "lineNumber": 16, "rawText": "     I                                        5   8 0DTEYER                     ", "specType": "I", "isComment": false, "isBlank": false },
+      { "lineNumber": 17, "rawText": "     C* Main calculation logic                                                  ", "specType": "comment", "isComment": true, "isBlank": false },
+      { "lineNumber": 18, "rawText": "     C           *IN03     DOWEQ*OFF                                            ", "specType": "C", "isComment": false, "isBlank": false },
+      { "lineNumber": 19, "rawText": "     C           CUSTNO    CHAINCUSTREC                50                       ", "specType": "C", "isComment": false, "isBlank": false },
+      { "lineNumber": 20, "rawText": "     C  N50                EXSR DSPREC           DISPLAY RECORD ", "specType": "C", "isComment": false, "isBlank": false },
+      { "lineNumber": 21, "rawText": "     C   50                EXSR ERRMSG           SHOW ERROR     ", "specType": "C", "isComment": false, "isBlank": false },
+      { "lineNumber": 22, "rawText": "     C                     READ CUSTDSP                                         ", "specType": "C", "isComment": false, "isBlank": false },
+      { "lineNumber": 23, "rawText": "     C                     END                                                  ", "specType": "C", "isComment": false, "isBlank": false },
+      { "lineNumber": 24, "rawText": "     C* Subroutine - Display customer record                                    ", "specType": "comment", "isComment": true, "isBlank": false },
+      { "lineNumber": 25, "rawText": "     C           DSPREC    BEGSR                                                ", "specType": "C", "isComment": false, "isBlank": false },
+      { "lineNumber": 26, "rawText": "     C                     MOVELCUSTNM    DSPNAM 25            MOVE NAME        ", "specType": "C", "isComment": false, "isBlank": false },
+      { "lineNumber": 27, "rawText": "     C                     Z-ADDCUSTNO    DSPNUM  5 0          MOVE NUMBER       ", "specType": "C", "isComment": false, "isBlank": false },
+      { "lineNumber": 28, "rawText": "     C           AMT1      ADD  AMT2      TOTAL   9 2          CALC TOTAL        ", "specType": "C", "isComment": false, "isBlank": false },
+      { "lineNumber": 29, "rawText": "     C           COUNT     IFGT 0                                                ", "specType": "C", "isComment": false, "isBlank": false },
+      { "lineNumber": 30, "rawText": "     C                     WRITEDTLREC                   90    WRITE DETAIL      ", "specType": "C", "isComment": false, "isBlank": false },
+      { "lineNumber": 31, "rawText": "     C  N90                EXCPTHDRREC                         PRINT HEADER      ", "specType": "C", "isComment": false, "isBlank": false },
+      { "lineNumber": 32, "rawText": "     C                     ELSE                                                  ", "specType": "C", "isComment": false, "isBlank": false },
+      { "lineNumber": 33, "rawText": "     C                     MOVEL*BLANKS  DSPNAM                CLEAR NAME        ", "specType": "C", "isComment": false, "isBlank": false },
+      { "lineNumber": 34, "rawText": "     C                     END                                                   ", "specType": "C", "isComment": false, "isBlank": false },
+      { "lineNumber": 35, "rawText": "     C                     ENDSR                                                 ", "specType": "C", "isComment": false, "isBlank": false },
+      { "lineNumber": 36, "rawText": "     C* Subroutine - Error message                                               ", "specType": "comment", "isComment": true, "isBlank": false },
+      { "lineNumber": 37, "rawText": "     C           ERRMSG    BEGSR                                                 ", "specType": "C", "isComment": false, "isBlank": false },
+      { "lineNumber": 38, "rawText": "     C                     MOVEL'NOTFND' ERRCDE  6             SET ERROR CODE    ", "specType": "C", "isComment": false, "isBlank": false },
+      { "lineNumber": 39, "rawText": "     C                     SETON                     LR        SET LR ON         ", "specType": "C", "isComment": false, "isBlank": false },
+      { "lineNumber": 40, "rawText": "     C                     ENDSR                                                 ", "specType": "C", "isComment": false, "isBlank": false },
+      { "lineNumber": 41, "rawText": "     OQSYSPRT  H          1P                                                     ", "specType": "O", "isComment": false, "isBlank": false },
+      { "lineNumber": 42, "rawText": "     O                              CUSTNM    30                                  ", "specType": "O", "isComment": false, "isBlank": false }
+    ],
+
+    "headerSpecs": [
+      {
+        "location": { "startLine": 1, "endLine": 1, "startColumn": 1, "endColumn": 80 },
+        "rawSourceLine": "     H                                                                         ",
+        "inlineComment": "",
+        "formType": "H",
+        "programName": "",
+        "debugOption": "",
+        "currencySymbol": "",
+        "dateFormat": "",
+        "dateEdit": "",
+        "decimalNotation": "",
+        "alteringSequence": "",
+        "fileTranslation": "",
+        "invertedPrint": "",
+        "sharedIO": "",
+        "options": []
+      }
+    ],
+
+    "fileSpecs": [
+      {
+        "location": { "startLine": 3, "endLine": 3, "startColumn": 1, "endColumn": 80 },
+        "rawSourceLine": "     FCUSTMAST IF  E           K        DISK                                    ",
+        "inlineComment": "",
+        "formType": "F",
+        "fileName": "CUSTMAST",
+        "fileType": "I",
+        "fileDesignation": "",
+        "endOfFile": "",
+        "fileSequence": "",
+        "fileFormat": "E",
+        "recordLength": null,
+        "limitsProcessing": "",
+        "keyLength": null,
+        "recordAddressType": "K",
+        "fileOrganization": "",
+        "overflowIndicator": "",
+        "blockLength": null,
+        "device": "DISK",
+        "symbolicDevice": "",
+        "continuationLines": [],
+        "externalName": "",
+        "additionType": "",
+        "fileConditionIndicator": ""
+      },
+      {
+        "location": { "startLine": 4, "endLine": 4, "startColumn": 1, "endColumn": 80 },
+        "rawSourceLine": "     FCUSTDSP  CF  E                    WORKSTN                                 ",
+        "inlineComment": "",
+        "formType": "F",
+        "fileName": "CUSTDSP",
+        "fileType": "C",
+        "fileDesignation": "",
+        "endOfFile": "",
+        "fileSequence": "",
+        "fileFormat": "E",
+        "recordLength": null,
+        "limitsProcessing": "",
+        "keyLength": null,
+        "recordAddressType": "",
+        "fileOrganization": "",
+        "overflowIndicator": "",
+        "blockLength": null,
+        "device": "WORKSTN",
+        "symbolicDevice": "",
+        "continuationLines": [],
+        "externalName": "",
+        "additionType": "",
+        "fileConditionIndicator": ""
+      },
+      {
+        "location": { "startLine": 5, "endLine": 5, "startColumn": 1, "endColumn": 80 },
+        "rawSourceLine": "     FQSYSPRT  O   F     132            PRINTER                            OA   ",
+        "inlineComment": "",
+        "formType": "F",
+        "fileName": "QSYSPRT",
+        "fileType": "O",
+        "fileDesignation": "",
+        "endOfFile": "",
+        "fileSequence": "",
+        "fileFormat": "F",
+        "recordLength": 132,
+        "limitsProcessing": "",
+        "keyLength": null,
+        "recordAddressType": "",
+        "fileOrganization": "",
+        "overflowIndicator": "OA",
+        "blockLength": null,
+        "device": "PRINTER",
+        "symbolicDevice": "",
+        "continuationLines": [],
+        "externalName": "",
+        "additionType": "",
+        "fileConditionIndicator": ""
+      }
+    ],
+
+    "extensionSpecs": [
+      {
+        "location": { "startLine": 6, "endLine": 6, "startColumn": 1, "endColumn": 80 },
+        "rawSourceLine": "     E                    ARR        10  5 0                                    ",
+        "inlineComment": "",
+        "formType": "E",
+        "fromFileName": "",
+        "toFileName": "",
+        "tableName": "ARR",
+        "entriesPerRecord": null,
+        "entriesPerTable": 10,
+        "length": 5,
+        "dataFormat": "",
+        "decimalPositions": 0,
+        "sequence": "",
+        "alternateName": "",
+        "alternateLength": null,
+        "alternateDataFormat": "",
+        "alternateDecimalPositions": null,
+        "alternateSequence": ""
+      }
+    ],
+
+    "lineCounterSpecs": [
+      {
+        "location": { "startLine": 7, "endLine": 7, "startColumn": 1, "endColumn": 80 },
+        "rawSourceLine": "     LQSYSPRT  066 056                                                          ",
+        "inlineComment": "",
+        "formType": "L",
+        "fileName": "QSYSPRT",
+        "linesPerPage": 66,
+        "formLength": null,
+        "overflowLine": 56
+      }
+    ],
+
+    "inputSpecs": [
+      {
+        "location": { "startLine": 8, "endLine": 11, "startColumn": 1, "endColumn": 80 },
+        "rawSourceLine": "     ICUSTREC                                                                   ",
+        "inlineComment": "",
+        "formType": "I",
+        "fileName": "",
+        "recordName": "CUSTREC",
+        "logicalRelationship": "",
+        "sequenceNumber": "",
+        "number": "",
+        "option": "",
+        "recordIdIndicator": "",
+        "recordIdentification": [],
+        "fields": [
+          {
+            "location": { "startLine": 9, "endLine": 9, "startColumn": 1, "endColumn": 80 },
+            "rawSourceLine": "     I                                        1   5 0CUSTNO                     ",
+            "inlineComment": "",
+            "dataAttributes": "",
+            "dateTimeFormat": "",
+            "dateSeparator": "",
+            "fieldName": "CUSTNO",
+            "dataType": "S",
+            "fromPosition": 1,
+            "toPosition": 5,
+            "decimalPositions": 0,
+            "controlLevel": "",
+            "matchingFields": "",
+            "fieldRecordRelation": "",
+            "fieldIndicators": {
+              "plus": "",
+              "minus": "",
+              "zeroOrBlank": ""
+            }
+          },
+          {
+            "location": { "startLine": 10, "endLine": 10, "startColumn": 1, "endColumn": 80 },
+            "rawSourceLine": "     I                                        6  30  CUSTNM                     ",
+            "inlineComment": "",
+            "dataAttributes": "",
+            "dateTimeFormat": "",
+            "dateSeparator": "",
+            "fieldName": "CUSTNM",
+            "dataType": "A",
+            "fromPosition": 6,
+            "toPosition": 30,
+            "decimalPositions": null,
+            "controlLevel": "",
+            "matchingFields": "",
+            "fieldRecordRelation": "",
+            "fieldIndicators": {
+              "plus": "",
+              "minus": "",
+              "zeroOrBlank": ""
+            }
+          },
+          {
+            "location": { "startLine": 11, "endLine": 11, "startColumn": 1, "endColumn": 80 },
+            "rawSourceLine": "     I                                       31  40  CUSTCT                     ",
+            "inlineComment": "",
+            "dataAttributes": "",
+            "dateTimeFormat": "",
+            "dateSeparator": "",
+            "fieldName": "CUSTCT",
+            "dataType": "A",
+            "fromPosition": 31,
+            "toPosition": 40,
+            "decimalPositions": null,
+            "controlLevel": "",
+            "matchingFields": "",
+            "fieldRecordRelation": "",
+            "fieldIndicators": {
+              "plus": "",
+              "minus": "",
+              "zeroOrBlank": ""
+            }
+          }
+        ]
+      }
+    ],
+
+    "dataStructures": [
+      {
+        "location": { "startLine": 12, "endLine": 16, "startColumn": 1, "endColumn": 80 },
+        "rawSourceLine": "     I            DS                                                            ",
+        "inlineComment": "",
+        "dataStructureName": "",
+        "dataStructureType": "standard",
+        "externalName": "",
+        "fromPosition": null,
+        "toPosition": null,
+        "occurrences": null,
+        "length": 8,
+        "subfields": [
+          {
+            "location": { "startLine": 13, "endLine": 13, "startColumn": 1, "endColumn": 80 },
+            "rawSourceLine": "     I                                        1  80 DTEFLD                      ",
+            "name": "DTEFLD",
+            "dataType": "A",
+            "fromPosition": 1,
+            "toPosition": 8,
+            "decimalPositions": null,
+            "dataFormat": "",
+            "externalFieldName": "",
+            "inlineComment": ""
+          },
+          {
+            "location": { "startLine": 14, "endLine": 14, "startColumn": 1, "endColumn": 80 },
+            "rawSourceLine": "     I                                        1   2 0DTEMON                     ",
+            "name": "DTEMON",
+            "dataType": "S",
+            "fromPosition": 1,
+            "toPosition": 2,
+            "decimalPositions": 0,
+            "dataFormat": "",
+            "externalFieldName": "",
+            "inlineComment": ""
+          },
+          {
+            "location": { "startLine": 15, "endLine": 15, "startColumn": 1, "endColumn": 80 },
+            "rawSourceLine": "     I                                        3   4 0DTEDAY                     ",
+            "name": "DTEDAY",
+            "dataType": "S",
+            "fromPosition": 3,
+            "toPosition": 4,
+            "decimalPositions": 0,
+            "dataFormat": "",
+            "externalFieldName": "",
+            "inlineComment": ""
+          },
+          {
+            "location": { "startLine": 16, "endLine": 16, "startColumn": 1, "endColumn": 80 },
+            "rawSourceLine": "     I                                        5   8 0DTEYER                     ",
+            "name": "DTEYER",
+            "dataType": "S",
+            "fromPosition": 5,
+            "toPosition": 8,
+            "decimalPositions": 0,
+            "dataFormat": "",
+            "externalFieldName": "",
+            "inlineComment": ""
+          }
+        ]
+      }
+    ],
+
+    "calculationSpecs": [
+      {
+        "nodeType": "doWhileBlock",
+        "location": { "startLine": 18, "endLine": 23, "startColumn": 1, "endColumn": 80 },
+        "rawSourceLine": "     C           *IN03     DOWEQ*OFF                                            ",
+        "inlineComment": "",
+        "formType": "C",
+        "controlLevel": "",
+        "conditioningIndicators": { "indicators": [] },
+        "condition": {
+          "nodeType": "indicator",
+          "rawText": "*IN03",
+          "indicator": "03",
+          "category": "numeric",
+          "location": { "startLine": 18, "endLine": 18, "startColumn": 18, "endColumn": 23 }
+        },
+        "comparisonType": "EQ",
+        "comparisonValue": {
+          "nodeType": "figurativeConstant",
+          "rawText": "*OFF",
+          "constant": "*OFF",
+          "location": { "startLine": 18, "endLine": 18, "startColumn": 33, "endColumn": 37 }
+        },
+        "resultingIndicators": { "high": "", "low": "", "equal": "" },
+        "bodyOps": [
+          {
+            "nodeType": "operation",
+            "location": { "startLine": 19, "endLine": 19, "startColumn": 1, "endColumn": 80 },
+            "rawSourceLine": "     C           CUSTNO    CHAINCUSTREC                50                       ",
+            "inlineComment": "",
+            "formType": "C",
+            "controlLevel": "",
+            "conditioningIndicators": { "indicators": [] },
+            "factor1": {
+              "nodeType": "identifier",
+              "rawText": "CUSTNO",
+              "name": "CUSTNO",
+              "isArray": false,
+              "dataType": "S", "length": 5, "decimalPositions": 0,
+              "location": { "startLine": 19, "endLine": 19, "startColumn": 18, "endColumn": 23 }
+            },
+            "opcode": "CHAIN",
+            "extendedOpcode": "",
+            "factor2": {
+              "nodeType": "identifier",
+              "rawText": "CUSTREC",
+              "name": "CUSTREC",
+              "isArray": false,
+              "dataType": "A", "length": null, "decimalPositions": null,
+              "location": { "startLine": 19, "endLine": 19, "startColumn": 33, "endColumn": 42 }
+            },
+            "resultField": null,
+            "fieldLength": null,
+            "decimalPositions": null,
+            "resultingIndicators": { "high": "50", "low": "", "equal": "" }
+          },
+          {
+            "nodeType": "operation",
+            "location": { "startLine": 20, "endLine": 20, "startColumn": 1, "endColumn": 80 },
+            "rawSourceLine": "     C  N50                EXSR DSPREC           DISPLAY RECORD ",
+            "inlineComment": "DISPLAY RECORD",
+            "formType": "C",
+            "controlLevel": "",
+            "conditioningIndicators": {
+              "indicators": [
+                { "not": true, "indicator": "50", "position": "first" }
+              ]
+            },
+            "factor1": null,
+            "opcode": "EXSR",
+            "extendedOpcode": "",
+            "factor2": {
+              "nodeType": "identifier",
+              "rawText": "DSPREC",
+              "name": "DSPREC",
+              "isArray": false,
+              "dataType": "A", "length": null, "decimalPositions": null,
+              "location": { "startLine": 20, "endLine": 20, "startColumn": 33, "endColumn": 38 }
+            },
+            "resultField": null,
+            "fieldLength": null,
+            "decimalPositions": null,
+            "resultingIndicators": { "high": "", "low": "", "equal": "" }
+          },
+          {
+            "nodeType": "operation",
+            "location": { "startLine": 21, "endLine": 21, "startColumn": 1, "endColumn": 80 },
+            "rawSourceLine": "     C   50                EXSR ERRMSG           SHOW ERROR     ",
+            "inlineComment": "SHOW ERROR",
+            "formType": "C",
+            "controlLevel": "",
+            "conditioningIndicators": {
+              "indicators": [
+                { "not": false, "indicator": "50", "position": "first" }
+              ]
+            },
+            "factor1": null,
+            "opcode": "EXSR",
+            "extendedOpcode": "",
+            "factor2": {
+              "nodeType": "identifier",
+              "rawText": "ERRMSG",
+              "name": "ERRMSG",
+              "isArray": false,
+              "dataType": "A", "length": null, "decimalPositions": null,
+              "location": { "startLine": 21, "endLine": 21, "startColumn": 33, "endColumn": 38 }
+            },
+            "resultField": null,
+            "fieldLength": null,
+            "decimalPositions": null,
+            "resultingIndicators": { "high": "", "low": "", "equal": "" }
+          },
+          {
+            "nodeType": "operation",
+            "location": { "startLine": 22, "endLine": 22, "startColumn": 1, "endColumn": 80 },
+            "rawSourceLine": "     C                     READ CUSTDSP                                         ",
+            "inlineComment": "",
+            "formType": "C",
+            "controlLevel": "",
+            "conditioningIndicators": { "indicators": [] },
+            "factor1": null,
+            "opcode": "READ",
+            "extendedOpcode": "",
+            "factor2": {
+              "nodeType": "identifier",
+              "rawText": "CUSTDSP",
+              "name": "CUSTDSP",
+              "isArray": false,
+              "dataType": "A", "length": null, "decimalPositions": null,
+              "location": { "startLine": 22, "endLine": 22, "startColumn": 33, "endColumn": 39 }
+            },
+            "resultField": null,
+            "fieldLength": null,
+            "decimalPositions": null,
+            "resultingIndicators": { "high": "", "low": "", "equal": "" }
+          }
+        ]
+      },
+      {
+        "nodeType": "subroutineBlock",
+        "location": { "startLine": 25, "endLine": 35, "startColumn": 1, "endColumn": 80 },
+        "rawSourceLine": "     C           DSPREC    BEGSR                                                ",
+        "inlineComment": "",
+        "formType": "C",
+        "controlLevel": "",
+        "conditioningIndicators": { "indicators": [] },
+        "name": "DSPREC",
+        "resultingIndicators": { "high": "", "low": "", "equal": "" },
+        "operations": [
+          {
+            "nodeType": "operation",
+            "location": { "startLine": 26, "endLine": 26, "startColumn": 1, "endColumn": 80 },
+            "rawSourceLine": "     C                     MOVELCUSTNM    DSPNAM 25            MOVE NAME        ",
+            "inlineComment": "MOVE NAME",
+            "formType": "C",
+            "controlLevel": "",
+            "conditioningIndicators": { "indicators": [] },
+            "factor1": null,
+            "opcode": "MOVEL",
+            "extendedOpcode": "",
+            "factor2": {
+              "nodeType": "identifier",
+              "rawText": "CUSTNM",
+              "name": "CUSTNM",
+              "isArray": false,
+              "dataType": "A", "length": 25, "decimalPositions": null,
+              "location": { "startLine": 26, "endLine": 26, "startColumn": 33, "endColumn": 38 }
+            },
+            "resultField": {
+              "nodeType": "identifier",
+              "rawText": "DSPNAM",
+              "name": "DSPNAM",
+              "isArray": false,
+              "dataType": "A", "length": 25, "decimalPositions": null,
+              "location": { "startLine": 26, "endLine": 26, "startColumn": 43, "endColumn": 48 }
+            },
+            "fieldLength": 25,
+            "decimalPositions": null,
+            "resultingIndicators": { "high": "", "low": "", "equal": "" }
+          },
+          {
+            "nodeType": "operation",
+            "location": { "startLine": 27, "endLine": 27, "startColumn": 1, "endColumn": 80 },
+            "rawSourceLine": "     C                     Z-ADDCUSTNO    DSPNUM  5 0          MOVE NUMBER       ",
+            "inlineComment": "MOVE NUMBER",
+            "formType": "C",
+            "controlLevel": "",
+            "conditioningIndicators": { "indicators": [] },
+            "factor1": null,
+            "opcode": "Z-ADD",
+            "extendedOpcode": "",
+            "factor2": {
+              "nodeType": "identifier",
+              "rawText": "CUSTNO",
+              "name": "CUSTNO",
+              "isArray": false,
+              "dataType": "S", "length": 5, "decimalPositions": 0,
+              "location": { "startLine": 27, "endLine": 27, "startColumn": 33, "endColumn": 38 }
+            },
+            "resultField": {
+              "nodeType": "identifier",
+              "rawText": "DSPNUM",
+              "name": "DSPNUM",
+              "isArray": false,
+              "dataType": "S", "length": 5, "decimalPositions": 0,
+              "location": { "startLine": 27, "endLine": 27, "startColumn": 43, "endColumn": 48 }
+            },
+            "fieldLength": 5,
+            "decimalPositions": 0,
+            "resultingIndicators": { "high": "", "low": "", "equal": "" }
+          },
+          {
+            "nodeType": "operation",
+            "location": { "startLine": 28, "endLine": 28, "startColumn": 1, "endColumn": 80 },
+            "rawSourceLine": "     C           AMT1      ADD  AMT2      TOTAL   9 2          CALC TOTAL        ",
+            "inlineComment": "CALC TOTAL",
+            "formType": "C",
+            "controlLevel": "",
+            "conditioningIndicators": { "indicators": [] },
+            "factor1": {
+              "nodeType": "identifier",
+              "rawText": "AMT1",
+              "name": "AMT1",
+              "isArray": false,
+              "dataType": "S", "length": null, "decimalPositions": null,
+              "location": { "startLine": 28, "endLine": 28, "startColumn": 18, "endColumn": 21 }
+            },
+            "opcode": "ADD",
+            "extendedOpcode": "",
+            "factor2": {
+              "nodeType": "identifier",
+              "rawText": "AMT2",
+              "name": "AMT2",
+              "isArray": false,
+              "dataType": "S", "length": null, "decimalPositions": null,
+              "location": { "startLine": 28, "endLine": 28, "startColumn": 33, "endColumn": 36 }
+            },
+            "resultField": {
+              "nodeType": "identifier",
+              "rawText": "TOTAL",
+              "name": "TOTAL",
+              "isArray": false,
+              "dataType": "S", "length": 9, "decimalPositions": 2,
+              "location": { "startLine": 28, "endLine": 28, "startColumn": 43, "endColumn": 47 }
+            },
+            "fieldLength": 9,
+            "decimalPositions": 2,
+            "resultingIndicators": { "high": "", "low": "", "equal": "" }
+          },
+          {
+            "nodeType": "conditionalBlock",
+            "location": { "startLine": 29, "endLine": 34, "startColumn": 1, "endColumn": 80 },
+            "rawSourceLine": "     C           COUNT     IFGT 0                                                ",
+            "inlineComment": "",
+            "formType": "C",
+            "controlLevel": "",
+            "conditioningIndicators": { "indicators": [] },
+            "condition": {
+              "nodeType": "identifier",
+              "rawText": "COUNT",
+              "name": "COUNT",
+              "isArray": false,
+              "dataType": "S", "length": null, "decimalPositions": null,
+              "location": { "startLine": 29, "endLine": 29, "startColumn": 18, "endColumn": 22 }
+            },
+            "comparisonType": "GT",
+            "comparisonValue": {
+              "nodeType": "literal",
+              "rawText": "0",
+              "value": 0,
+              "dataType": "S",
+              "location": { "startLine": 29, "endLine": 29, "startColumn": 33, "endColumn": 33 }
+            },
+            "resultingIndicators": { "high": "", "low": "", "equal": "" },
+            "thenOps": [
+              {
+                "nodeType": "operation",
+                "location": { "startLine": 30, "endLine": 30, "startColumn": 1, "endColumn": 80 },
+                "rawSourceLine": "     C                     WRITEDTLREC                   90    WRITE DETAIL      ",
+                "inlineComment": "WRITE DETAIL",
+                "formType": "C",
+                "controlLevel": "",
+                "conditioningIndicators": { "indicators": [] },
+                "factor1": null,
+                "opcode": "WRITE",
+                "extendedOpcode": "",
+                "factor2": {
+                  "nodeType": "identifier",
+                  "rawText": "DTLREC",
+                  "name": "DTLREC",
+                  "isArray": false,
+              "dataType": "A", "length": null, "decimalPositions": null,
+                  "location": { "startLine": 30, "endLine": 30, "startColumn": 33, "endColumn": 38 }
+                },
+                "resultField": null,
+                "fieldLength": null,
+                "decimalPositions": null,
+                "resultingIndicators": { "high": "90", "low": "", "equal": "" }
+              },
+              {
+                "nodeType": "operation",
+                "location": { "startLine": 31, "endLine": 31, "startColumn": 1, "endColumn": 80 },
+                "rawSourceLine": "     C  N90                EXCPTHDRREC                         PRINT HEADER      ",
+                "inlineComment": "PRINT HEADER",
+                "formType": "C",
+                "controlLevel": "",
+                "conditioningIndicators": {
+                  "indicators": [
+                    { "not": true, "indicator": "90", "position": "first" }
+                  ]
+                },
+                "factor1": null,
+                "opcode": "EXCPT",
+                "extendedOpcode": "",
+                "factor2": {
+                  "nodeType": "identifier",
+                  "rawText": "HDRREC",
+                  "name": "HDRREC",
+                  "isArray": false,
+              "dataType": "A", "length": null, "decimalPositions": null,
+                  "location": { "startLine": 31, "endLine": 31, "startColumn": 33, "endColumn": 38 }
+                },
+                "resultField": null,
+                "fieldLength": null,
+                "decimalPositions": null,
+                "resultingIndicators": { "high": "", "low": "", "equal": "" }
+              }
+            ],
+            "elseOps": [
+              {
+                "nodeType": "operation",
+                "location": { "startLine": 33, "endLine": 33, "startColumn": 1, "endColumn": 80 },
+                "rawSourceLine": "     C                     MOVEL*BLANKS  DSPNAM                CLEAR NAME        ",
+                "inlineComment": "CLEAR NAME",
+                "formType": "C",
+                "controlLevel": "",
+                "conditioningIndicators": { "indicators": [] },
+                "factor1": null,
+                "opcode": "MOVEL",
+                "extendedOpcode": "",
+                "factor2": {
+                  "nodeType": "figurativeConstant",
+                  "rawText": "*BLANKS",
+                  "constant": "*BLANKS",
+                  "location": { "startLine": 33, "endLine": 33, "startColumn": 33, "endColumn": 39 }
+                },
+                "resultField": {
+                  "nodeType": "identifier",
+                  "rawText": "DSPNAM",
+                  "name": "DSPNAM",
+                  "isArray": false,
+              "dataType": "A", "length": 25, "decimalPositions": null,
+                  "location": { "startLine": 33, "endLine": 33, "startColumn": 43, "endColumn": 48 }
+                },
+                "fieldLength": null,
+                "decimalPositions": null,
+                "resultingIndicators": { "high": "", "low": "", "equal": "" }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "nodeType": "subroutineBlock",
+        "location": { "startLine": 37, "endLine": 40, "startColumn": 1, "endColumn": 80 },
+        "rawSourceLine": "     C           ERRMSG    BEGSR                                                 ",
+        "inlineComment": "",
+        "formType": "C",
+        "controlLevel": "",
+        "conditioningIndicators": { "indicators": [] },
+        "name": "ERRMSG",
+        "resultingIndicators": { "high": "", "low": "", "equal": "" },
+        "operations": [
+          {
+            "nodeType": "operation",
+            "location": { "startLine": 38, "endLine": 38, "startColumn": 1, "endColumn": 80 },
+            "rawSourceLine": "     C                     MOVEL'NOTFND' ERRCDE  6             SET ERROR CODE    ",
+            "inlineComment": "SET ERROR CODE",
+            "formType": "C",
+            "controlLevel": "",
+            "conditioningIndicators": { "indicators": [] },
+            "factor1": null,
+            "opcode": "MOVEL",
+            "extendedOpcode": "",
+            "factor2": {
+              "nodeType": "literal",
+              "rawText": "'NOTFND'",
+              "value": "NOTFND",
+              "dataType": "A",
+              "location": { "startLine": 38, "endLine": 38, "startColumn": 33, "endColumn": 40 }
+            },
+            "resultField": {
+              "nodeType": "identifier",
+              "rawText": "ERRCDE",
+              "name": "ERRCDE",
+              "isArray": false,
+              "dataType": "A", "length": 6, "decimalPositions": null,
+              "location": { "startLine": 38, "endLine": 38, "startColumn": 43, "endColumn": 48 }
+            },
+            "fieldLength": 6,
+            "decimalPositions": null,
+            "resultingIndicators": { "high": "", "low": "", "equal": "" }
+          },
+          {
+            "nodeType": "operation",
+            "location": { "startLine": 39, "endLine": 39, "startColumn": 1, "endColumn": 80 },
+            "rawSourceLine": "     C                     SETON                     LR        SET LR ON         ",
+            "inlineComment": "SET LR ON",
+            "formType": "C",
+            "controlLevel": "",
+            "conditioningIndicators": { "indicators": [] },
+            "factor1": null,
+            "opcode": "SETON",
+            "extendedOpcode": "",
+            "factor2": null,
+            "resultField": null,
+            "fieldLength": null,
+            "decimalPositions": null,
+            "resultingIndicators": { "high": "LR", "low": "", "equal": "" }
+          }
+        ]
+      }
+    ],
+
+    "subroutines": [
+      {
+        "name": "DSPREC",
+        "location": { "startLine": 25, "endLine": 35, "startColumn": 1, "endColumn": 80 },
+        "calledFrom": [
+          { "startLine": 20, "endLine": 20, "startColumn": 33, "endColumn": 38 }
+        ],
+        "operations": [
+          {
+            "nodeType": "operation",
+            "location": { "startLine": 26, "endLine": 26, "startColumn": 1, "endColumn": 80 },
+            "rawSourceLine": "     C                     MOVELCUSTNM    DSPNAM 25            MOVE NAME        ",
+            "inlineComment": "MOVE NAME",
+            "formType": "C",
+            "controlLevel": "",
+            "conditioningIndicators": { "indicators": [] },
+            "factor1": null,
+            "opcode": "MOVEL",
+            "extendedOpcode": "",
+            "factor2": {
+              "nodeType": "identifier",
+              "rawText": "CUSTNM",
+              "name": "CUSTNM",
+              "isArray": false,
+              "dataType": "A", "length": 25, "decimalPositions": null,
+              "location": { "startLine": 26, "endLine": 26, "startColumn": 33, "endColumn": 38 }
+            },
+            "resultField": {
+              "nodeType": "identifier",
+              "rawText": "DSPNAM",
+              "name": "DSPNAM",
+              "isArray": false,
+              "dataType": "A", "length": 25, "decimalPositions": null,
+              "location": { "startLine": 26, "endLine": 26, "startColumn": 43, "endColumn": 48 }
+            },
+            "fieldLength": 25,
+            "decimalPositions": null,
+            "resultingIndicators": { "high": "", "low": "", "equal": "" }
+          },
+          {
+            "nodeType": "operation",
+            "location": { "startLine": 27, "endLine": 27, "startColumn": 1, "endColumn": 80 },
+            "rawSourceLine": "     C                     Z-ADDCUSTNO    DSPNUM  5 0          MOVE NUMBER       ",
+            "inlineComment": "MOVE NUMBER",
+            "formType": "C",
+            "controlLevel": "",
+            "conditioningIndicators": { "indicators": [] },
+            "factor1": null,
+            "opcode": "Z-ADD",
+            "extendedOpcode": "",
+            "factor2": {
+              "nodeType": "identifier",
+              "rawText": "CUSTNO",
+              "name": "CUSTNO",
+              "isArray": false,
+              "dataType": "S", "length": 5, "decimalPositions": 0,
+              "location": { "startLine": 27, "endLine": 27, "startColumn": 33, "endColumn": 38 }
+            },
+            "resultField": {
+              "nodeType": "identifier",
+              "rawText": "DSPNUM",
+              "name": "DSPNUM",
+              "isArray": false,
+              "dataType": "S", "length": 5, "decimalPositions": 0,
+              "location": { "startLine": 27, "endLine": 27, "startColumn": 43, "endColumn": 48 }
+            },
+            "fieldLength": 5,
+            "decimalPositions": 0,
+            "resultingIndicators": { "high": "", "low": "", "equal": "" }
+          },
+          {
+            "nodeType": "operation",
+            "location": { "startLine": 28, "endLine": 28, "startColumn": 1, "endColumn": 80 },
+            "rawSourceLine": "     C           AMT1      ADD  AMT2      TOTAL   9 2          CALC TOTAL        ",
+            "inlineComment": "CALC TOTAL",
+            "formType": "C",
+            "controlLevel": "",
+            "conditioningIndicators": { "indicators": [] },
+            "factor1": {
+              "nodeType": "identifier",
+              "rawText": "AMT1",
+              "name": "AMT1",
+              "isArray": false,
+              "dataType": "S", "length": null, "decimalPositions": null,
+              "location": { "startLine": 28, "endLine": 28, "startColumn": 18, "endColumn": 21 }
+            },
+            "opcode": "ADD",
+            "extendedOpcode": "",
+            "factor2": {
+              "nodeType": "identifier",
+              "rawText": "AMT2",
+              "name": "AMT2",
+              "isArray": false,
+              "dataType": "S", "length": null, "decimalPositions": null,
+              "location": { "startLine": 28, "endLine": 28, "startColumn": 33, "endColumn": 36 }
+            },
+            "resultField": {
+              "nodeType": "identifier",
+              "rawText": "TOTAL",
+              "name": "TOTAL",
+              "isArray": false,
+              "dataType": "S", "length": 9, "decimalPositions": 2,
+              "location": { "startLine": 28, "endLine": 28, "startColumn": 43, "endColumn": 47 }
+            },
+            "fieldLength": 9,
+            "decimalPositions": 2,
+            "resultingIndicators": { "high": "", "low": "", "equal": "" }
+          },
+          {
+            "nodeType": "conditionalBlock",
+            "location": { "startLine": 29, "endLine": 34, "startColumn": 1, "endColumn": 80 },
+            "rawSourceLine": "     C           COUNT     IFGT 0                                                ",
+            "inlineComment": "",
+            "formType": "C",
+            "controlLevel": "",
+            "conditioningIndicators": { "indicators": [] },
+            "condition": {
+              "nodeType": "identifier",
+              "rawText": "COUNT",
+              "name": "COUNT",
+              "isArray": false,
+              "dataType": "S", "length": null, "decimalPositions": null,
+              "location": { "startLine": 29, "endLine": 29, "startColumn": 18, "endColumn": 22 }
+            },
+            "comparisonType": "GT",
+            "comparisonValue": {
+              "nodeType": "literal",
+              "rawText": "0",
+              "value": 0,
+              "dataType": "S",
+              "location": { "startLine": 29, "endLine": 29, "startColumn": 33, "endColumn": 33 }
+            },
+            "resultingIndicators": { "high": "", "low": "", "equal": "" },
+            "thenOps": [
+              {
+                "nodeType": "operation",
+                "location": { "startLine": 30, "endLine": 30, "startColumn": 1, "endColumn": 80 },
+                "rawSourceLine": "     C                     WRITEDTLREC                   90    WRITE DETAIL      ",
+                "inlineComment": "WRITE DETAIL",
+                "formType": "C",
+                "controlLevel": "",
+                "conditioningIndicators": { "indicators": [] },
+                "factor1": null,
+                "opcode": "WRITE",
+                "extendedOpcode": "",
+                "factor2": {
+                  "nodeType": "identifier",
+                  "rawText": "DTLREC",
+                  "name": "DTLREC",
+                  "isArray": false,
+              "dataType": "A", "length": null, "decimalPositions": null,
+                  "location": { "startLine": 30, "endLine": 30, "startColumn": 33, "endColumn": 38 }
+                },
+                "resultField": null,
+                "fieldLength": null,
+                "decimalPositions": null,
+                "resultingIndicators": { "high": "90", "low": "", "equal": "" }
+              },
+              {
+                "nodeType": "operation",
+                "location": { "startLine": 31, "endLine": 31, "startColumn": 1, "endColumn": 80 },
+                "rawSourceLine": "     C  N90                EXCPTHDRREC                         PRINT HEADER      ",
+                "inlineComment": "PRINT HEADER",
+                "formType": "C",
+                "controlLevel": "",
+                "conditioningIndicators": {
+                  "indicators": [
+                    { "not": true, "indicator": "90", "position": "first" }
+                  ]
+                },
+                "factor1": null,
+                "opcode": "EXCPT",
+                "extendedOpcode": "",
+                "factor2": {
+                  "nodeType": "identifier",
+                  "rawText": "HDRREC",
+                  "name": "HDRREC",
+                  "isArray": false,
+              "dataType": "A", "length": null, "decimalPositions": null,
+                  "location": { "startLine": 31, "endLine": 31, "startColumn": 33, "endColumn": 38 }
+                },
+                "resultField": null,
+                "fieldLength": null,
+                "decimalPositions": null,
+                "resultingIndicators": { "high": "", "low": "", "equal": "" }
+              }
+            ],
+            "elseOps": [
+              {
+                "nodeType": "operation",
+                "location": { "startLine": 33, "endLine": 33, "startColumn": 1, "endColumn": 80 },
+                "rawSourceLine": "     C                     MOVEL*BLANKS  DSPNAM                CLEAR NAME        ",
+                "inlineComment": "CLEAR NAME",
+                "formType": "C",
+                "controlLevel": "",
+                "conditioningIndicators": { "indicators": [] },
+                "factor1": null,
+                "opcode": "MOVEL",
+                "extendedOpcode": "",
+                "factor2": {
+                  "nodeType": "figurativeConstant",
+                  "rawText": "*BLANKS",
+                  "constant": "*BLANKS",
+                  "location": { "startLine": 33, "endLine": 33, "startColumn": 33, "endColumn": 39 }
+                },
+                "resultField": {
+                  "nodeType": "identifier",
+                  "rawText": "DSPNAM",
+                  "name": "DSPNAM",
+                  "isArray": false,
+              "dataType": "A", "length": 25, "decimalPositions": null,
+                  "location": { "startLine": 33, "endLine": 33, "startColumn": 43, "endColumn": 48 }
+                },
+                "fieldLength": null,
+                "decimalPositions": null,
+                "resultingIndicators": { "high": "", "low": "", "equal": "" }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "ERRMSG",
+        "location": { "startLine": 37, "endLine": 40, "startColumn": 1, "endColumn": 80 },
+        "calledFrom": [
+          { "startLine": 21, "endLine": 21, "startColumn": 33, "endColumn": 38 }
+        ],
+        "operations": [
+          {
+            "nodeType": "operation",
+            "location": { "startLine": 38, "endLine": 38, "startColumn": 1, "endColumn": 80 },
+            "rawSourceLine": "     C                     MOVEL'NOTFND' ERRCDE  6             SET ERROR CODE    ",
+            "inlineComment": "SET ERROR CODE",
+            "formType": "C",
+            "controlLevel": "",
+            "conditioningIndicators": { "indicators": [] },
+            "factor1": null,
+            "opcode": "MOVEL",
+            "extendedOpcode": "",
+            "factor2": {
+              "nodeType": "literal",
+              "rawText": "'NOTFND'",
+              "value": "NOTFND",
+              "dataType": "A",
+              "location": { "startLine": 38, "endLine": 38, "startColumn": 33, "endColumn": 40 }
+            },
+            "resultField": {
+              "nodeType": "identifier",
+              "rawText": "ERRCDE",
+              "name": "ERRCDE",
+              "isArray": false,
+              "dataType": "A", "length": 6, "decimalPositions": null,
+              "location": { "startLine": 38, "endLine": 38, "startColumn": 43, "endColumn": 48 }
+            },
+            "fieldLength": 6,
+            "decimalPositions": null,
+            "resultingIndicators": { "high": "", "low": "", "equal": "" }
+          },
+          {
+            "nodeType": "operation",
+            "location": { "startLine": 39, "endLine": 39, "startColumn": 1, "endColumn": 80 },
+            "rawSourceLine": "     C                     SETON                     LR        SET LR ON         ",
+            "inlineComment": "SET LR ON",
+            "formType": "C",
+            "controlLevel": "",
+            "conditioningIndicators": { "indicators": [] },
+            "factor1": null,
+            "opcode": "SETON",
+            "extendedOpcode": "",
+            "factor2": null,
+            "resultField": null,
+            "fieldLength": null,
+            "decimalPositions": null,
+            "resultingIndicators": { "high": "LR", "low": "", "equal": "" }
+          }
+        ]
+      }
+    ],
+
+    "symbolTable": [
+      { "name": "CUSTNO", "dataType": "S", "length": 5, "decimalPositions": 0, "definedIn": "inputField", "definedAtLine": 9, "isDataStructure": false, "dataStructureName": null },
+      { "name": "CUSTNM", "dataType": "A", "length": 25, "decimalPositions": null, "definedIn": "inputField", "definedAtLine": 10, "isDataStructure": false, "dataStructureName": null },
+      { "name": "CUSTCT", "dataType": "A", "length": 10, "decimalPositions": null, "definedIn": "inputField", "definedAtLine": 11, "isDataStructure": false, "dataStructureName": null },
+      { "name": "DTEFLD", "dataType": "A", "length": 8, "decimalPositions": null, "definedIn": "dataStructure", "definedAtLine": 13, "isDataStructure": false, "dataStructureName": "" },
+      { "name": "DTEMON", "dataType": "S", "length": 2, "decimalPositions": 0, "definedIn": "dataStructure", "definedAtLine": 14, "isDataStructure": false, "dataStructureName": "" },
+      { "name": "DTEDAY", "dataType": "S", "length": 2, "decimalPositions": 0, "definedIn": "dataStructure", "definedAtLine": 15, "isDataStructure": false, "dataStructureName": "" },
+      { "name": "DTEYER", "dataType": "S", "length": 4, "decimalPositions": 0, "definedIn": "dataStructure", "definedAtLine": 16, "isDataStructure": false, "dataStructureName": "" },
+      { "name": "DSPNAM", "dataType": "A", "length": 25, "decimalPositions": null, "definedIn": "resultField", "definedAtLine": 26, "isDataStructure": false, "dataStructureName": null },
+      { "name": "DSPNUM", "dataType": "S", "length": 5, "decimalPositions": 0, "definedIn": "resultField", "definedAtLine": 27, "isDataStructure": false, "dataStructureName": null },
+      { "name": "TOTAL", "dataType": "S", "length": 9, "decimalPositions": 2, "definedIn": "resultField", "definedAtLine": 28, "isDataStructure": false, "dataStructureName": null },
+      { "name": "ERRCDE", "dataType": "A", "length": 6, "decimalPositions": null, "definedIn": "resultField", "definedAtLine": 38, "isDataStructure": false, "dataStructureName": null },
+      { "name": "ARR", "dataType": "S", "length": 5, "decimalPositions": 0, "definedIn": "extensionSpec", "definedAtLine": 6, "isDataStructure": false, "dataStructureName": null }
+    ],
+
+    "outputSpecs": [
+      {
+        "location": { "startLine": 41, "endLine": 42, "startColumn": 1, "endColumn": 80 },
+        "rawSourceLine": "     OQSYSPRT  H          1P                                                     ",
+        "inlineComment": "",
+        "formType": "O",
+        "fileName": "QSYSPRT",
+        "logicalRelationship": "",
+        "recordType": "H",
+        "addDelete": "",
+        "fetchOverflow": "",
+        "exceptName": "",
+        "spaceBeforeLines": null,
+        "spaceAfterLines": null,
+        "skipBeforeLine": null,
+        "skipAfterLine": null,
+        "outputIndicators": {
+          "indicators": [
+            { "not": false, "indicator": "1P", "position": "first" }
+          ]
+        },
+        "fields": [
+          {
+            "location": { "startLine": 42, "endLine": 42, "startColumn": 1, "endColumn": 80 },
+            "rawSourceLine": "     O                              CUSTNM    30                                  ",
+            "inlineComment": "",
+            "fieldName": "CUSTNM",
+            "editCode": "",
+            "blankAfter": "",
+            "endPosition": 30,
+            "dataFormat": "",
+            "editWord": "",
+            "fieldOutputIndicators": { "indicators": [] },
+            "constantOrEditWord": ""
+          }
+        ]
+      }
+    ],
+
+    "comments": [
+      {
+        "location": { "startLine": 2, "endLine": 2, "startColumn": 1, "endColumn": 80 },
+        "lineNumber": 2,
+        "rawSourceLine": "     F* File declarations                                                      ",
+        "text": "File declarations",
+        "specContext": "fileSpecs"
+      },
+      {
+        "location": { "startLine": 17, "endLine": 17, "startColumn": 1, "endColumn": 80 },
+        "lineNumber": 17,
+        "rawSourceLine": "     C* Main calculation logic                                                  ",
+        "text": "Main calculation logic",
+        "specContext": "calculationSpecs"
+      },
+      {
+        "location": { "startLine": 24, "endLine": 24, "startColumn": 1, "endColumn": 80 },
+        "lineNumber": 24,
+        "rawSourceLine": "     C* Subroutine - Display customer record                                    ",
+        "text": "Subroutine - Display customer record",
+        "specContext": "calculationSpecs"
+      },
+      {
+        "location": { "startLine": 36, "endLine": 36, "startColumn": 1, "endColumn": 80 },
+        "lineNumber": 36,
+        "rawSourceLine": "     C* Subroutine - Error message                                               ",
+        "text": "Subroutine - Error message",
+        "specContext": "calculationSpecs"
+      }
+    ],
+
+    "copyMembers": [
+      {
+        "location": null,
+        "rawSourceLine": "",
+        "memberName": "CUSTCPY",
+        "fileName": "QRPGSRC",
+        "libraryName": "APPLIB",
+        "qualifiedPath": "APPLIB/QRPGSRC,CUSTCPY",
+        "resolved": true,
+        "inlined": false,
+        "inlinedContent": null,
+        "inlinedSourceLines": [],
+        "memberMetadata": {
+          "sourceMember": "CUSTCPY",
+          "sourceFile": "QRPGSRC",
+          "sourceLibrary": "APPLIB",
+          "totalLines": 15
+        }
+      }
+    ]
+  },
+
+  "dependencies": {
+    "referencedFiles": [
+      {
+        "name": "CUSTMAST",
+        "library": "",
+        "referenceType": "read",
+        "locations": [
+          { "startLine": 3, "endLine": 3, "startColumn": 7, "endColumn": 14 }
+        ],
+        "qualifiedName": "CUSTMAST"
+      },
+      {
+        "name": "CUSTDSP",
+        "library": "",
+        "referenceType": "update",
+        "locations": [
+          { "startLine": 4, "endLine": 4, "startColumn": 7, "endColumn": 13 }
+        ],
+        "qualifiedName": "CUSTDSP"
+      },
+      {
+        "name": "QSYSPRT",
+        "library": "",
+        "referenceType": "write",
+        "locations": [
+          { "startLine": 5, "endLine": 5, "startColumn": 7, "endColumn": 13 }
+        ],
+        "qualifiedName": "QSYSPRT"
+      }
+    ],
+    "calledPrograms": [],
+    "referencedDataAreas": [],
+    "referencedDataQueues": [],
+    "copyMembers": [
+      {
+        "name": "CUSTCPY",
+        "library": "APPLIB",
+        "referenceType": "copy",
+        "locations": [],
+        "qualifiedName": "APPLIB/QRPGSRC,CUSTCPY"
+      }
+    ],
+    "referencedAPIs": [],
+    "customReferences": []
+  }
+}
