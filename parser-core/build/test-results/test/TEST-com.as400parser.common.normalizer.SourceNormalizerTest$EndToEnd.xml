@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.as400parser.common.normalizer.SourceNormalizerTest$EndToEnd" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-03-13T15:02:12" hostname="NXN-PC" time="0.173">
+  <properties/>
+  <testcase name="fullRpg3HeaderSpec()" classname="com.as400parser.common.normalizer.SourceNormalizerTest$EndToEnd" time="0.153"/>
+  <testcase name="emptySourceProducesEmptyResult()" classname="com.as400parser.common.normalizer.SourceNormalizerTest$EndToEnd" time="0.011"/>
+  <testcase name="multipleSpecTypes()" classname="com.as400parser.common.normalizer.SourceNormalizerTest$EndToEnd" time="0.004"/>
+  <testcase name="commentLine()" classname="com.as400parser.common.normalizer.SourceNormalizerTest$EndToEnd" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

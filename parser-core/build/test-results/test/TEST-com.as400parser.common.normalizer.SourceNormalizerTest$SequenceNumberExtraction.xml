@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.as400parser.common.normalizer.SourceNormalizerTest$SequenceNumberExtraction" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-03-13T15:02:13" hostname="NXN-PC" time="0.005">
+  <properties/>
+  <testcase name="blankSequenceNumbersExtracted()" classname="com.as400parser.common.normalizer.SourceNormalizerTest$SequenceNumberExtraction" time="0.001"/>
+  <testcase name="sequenceNumbersReplacedInOutput()" classname="com.as400parser.common.normalizer.SourceNormalizerTest$SequenceNumberExtraction" time="0.001"/>
+  <testcase name="mixedSequenceNumbers()" classname="com.as400parser.common.normalizer.SourceNormalizerTest$SequenceNumberExtraction" time="0.001"/>
+  <testcase name="extractNumericSequenceNumbers()" classname="com.as400parser.common.normalizer.SourceNormalizerTest$SequenceNumberExtraction" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

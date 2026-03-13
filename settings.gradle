@@ -1,0 +1,3 @@
+rootProject.name = 'as400-parser'
+
+include 'parser-core'

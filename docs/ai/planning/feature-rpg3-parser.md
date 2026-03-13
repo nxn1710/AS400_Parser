@@ -20,10 +20,10 @@ description: Phased task breakdown, dependencies, timeline, and risk mitigation 
 ## Task Breakdown
 
 ### Phase 1: Foundation
-- [ ] Task 1.1: Create Gradle project with ANTLR plugin, Shadow JAR, JUnit 5
-- [ ] Task 1.2: Implement `SourceNormalizer` (6-step pipeline: split, tabs, control chars, trim/pad, seq numbers, line mapping)
-- [ ] Task 1.3: Implement `NormalizedSource` and `NormalizationWarning` models
-- [ ] Task 1.4: Write normalizer unit tests (9 test cases per implementation doc)
+- [x] Task 1.1: Create Gradle project with ANTLR plugin, Shadow JAR, JUnit 5
+- [x] Task 1.2: Implement `SourceNormalizer` (6-step pipeline: split, tabs, control chars, trim/pad, seq numbers, line mapping)
+- [x] Task 1.3: Implement `NormalizedSource` and `NormalizationWarning` models
+- [x] Task 1.4: Write normalizer unit tests (9 test cases per implementation doc)
 
 **Exit criteria:** `gradle build` passes, normalizer tests green
 

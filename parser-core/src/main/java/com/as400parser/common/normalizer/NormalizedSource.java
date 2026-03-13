@@ -1,0 +1,52 @@
+package com.as400parser.common.normalizer;
+
+import java.util.Collections;
+import java.util.List;
+
+/**
+ * Result of source normalization.
+ * <p>
+ * Contains the normalized lines (each exactly 80 characters, padded),
+ * original line number mapping, extracted sequence numbers, and any
+ * warnings generated during normalization.
+ */
+public class NormalizedSource {
+
+    private final String[] lines;
+    private final int[] originalLineNumbers;
+    private final String[] sequenceNumbers;
+    private final List<NormalizationWarning> warnings;
+
+    public NormalizedSource(String[] lines, int[] originalLineNumbers,
+                           String[] sequenceNumbers, List<NormalizationWarning> warnings) {
+        this.lines = lines;
+        this.originalLineNumbers = originalLineNumbers;
+        this.sequenceNumbers = sequenceNumbers;
+        this.warnings = Collections.unmodifiableList(warnings);
+    }
+
+    /** Normalized lines, each exactly 80 characters (right-padded with spaces). */
+    public String[] getLines() {
+        return lines;
+    }
+
+    /** 1-based original line numbers for each normalized line. */
+    public int[] getOriginalLineNumbers() {
+        return originalLineNumbers;
+    }
+
+    /** Sequence numbers extracted from columns 1-5 of each line. */
+    public String[] getSequenceNumbers() {
+        return sequenceNumbers;
+    }
+
+    /** Warnings generated during normalization. */
+    public List<NormalizationWarning> getWarnings() {
+        return warnings;
+    }
+
+    /** Number of normalized lines. */
+    public int getLineCount() {
+        return lines.length;
+    }
+}
