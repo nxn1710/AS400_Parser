@@ -143,6 +143,7 @@ graph TD
     CONTENT --> ST["symbolTable"]
     CONTENT --> CMT["comments"]
     CONTENT --> CPY["copyMembers"]
+    CONTENT --> CTD["compileTimeData"]
 
     CS --> EXPR["Expression AST"]
     CS --> CTRL["Control Flow AST"]
@@ -245,6 +246,7 @@ Each entry:
 | `lineNumber` | `integer` | 1-based line number |
 | `rawText` | `string` | Complete raw source line text |
 | `specType` | `string` | Specification type: `H`, `F`, `E`, `L`, `I`, `C`, `O`, `comment`, `blank`, `directive`, `compileTimeData` |
+| `sequenceNumber` | `string` | Source sequence number (columns 1–5), extracted by the normalizer. Preserved as-is from the original source |
 | `isComment` | `boolean` | Whether this is a full-line comment |
 | `isBlank` | `boolean` | Whether this is a blank/empty line |
 
@@ -462,7 +464,8 @@ Structure: ordered array of calculation operation nodes. Every node has a `nodeT
 
 | Field | Type | Description |
 |---|---|---|
-| `nodeType` | `string` | Node type: `operation`, `doWhileBlock`, `doUntilBlock`, `doBlock`, `conditionalBlock`, `caseBlock`, `subroutineBlock`, `labelNode`, `gotoNode`, `callSubroutine` |
+| `nodeType` | `string` | Node type: `operation`, `doWhileBlock`, `doUntilBlock`, `doBlock`, `conditionalBlock`, `caseBlock`, `subroutineBlock`, `labelNode`, `gotoNode`, `callSubroutine`, `unparsedSpec` |
+| `parseQuality` | `string` | Parse quality: `"full"` (normal AST), `"columnOnly"` (raw column values, no AST), `"raw"` (raw text + column map). Default: `"full"`. See Error Handling in implementation doc |
 | `location` | `location` | Source position |
 | `rawSourceLine` | `string` | Original source text |
 | `inlineComment` | `string` | Inline comment (columns 60–74) |
@@ -548,11 +551,11 @@ Some opcodes define structured blocks. The IR captures these as nested AST struc
 
 | Construct | Node Type | Fields |
 |---|---|---|
-| `IFxx` / `ELSE` / `END` | `conditionalBlock` | `condition` (expression AST), `comparisonType` (xx: GT, LT, EQ, GE, LE, NE), `thenOps` (array), `elseOps` (array), `location` |
-| `DOWxx` / `END` | `doWhileBlock` | `condition` (expression AST), `comparisonType`, `bodyOps` (array), `location` |
-| `DOUxx` / `END` | `doUntilBlock` | `condition` (expression AST), `comparisonType`, `bodyOps` (array), `location` |
+| `IFxx` / `ELSE` / `END` | `conditionalBlock` | `condition` (expression AST — factor1), `comparisonType` (xx: GT, LT, EQ, GE, LE, NE), `comparisonValue` (expression AST — factor2), `thenOps` (array), `elseOps` (array), `location` |
+| `DOWxx` / `END` | `doWhileBlock` | `condition` (expression AST — factor1), `comparisonType`, `comparisonValue` (expression AST — factor2), `bodyOps` (array), `location` |
+| `DOUxx` / `END` | `doUntilBlock` | `condition` (expression AST — factor1), `comparisonType`, `comparisonValue` (expression AST — factor2), `bodyOps` (array), `location` |
 | `DO` / `END` | `doBlock` | `startValue` (expression AST), `endValue` (expression AST), `indexField`, `bodyOps` (array), `location` |
-| `CASxx` / `END` | `caseBlock` | `cases` (array of `{ condition, comparisonType, subroutineName, location }`), `defaultSubroutine`, `location` |
+| `CASxx` / `END` | `caseBlock` | `cases` (array of `{ condition, comparisonType, comparisonValue, subroutineName, location }`), `defaultSubroutine`, `location` |
 | `TAG` | `labelNode` | `name`, `location` |
 | `GOTO` | `gotoNode` | `targetLabel`, `location` |
 | `BEGSR` / `ENDSR` | `subroutineBlock` | `name`, `operations` (array), `location` |
@@ -670,6 +673,27 @@ Array of standalone comment lines (lines with `*` in column 7):
 | `rawSourceLine` | `string` | Complete raw source line |
 | `text` | `string` | Comment content (columns 8–74) |
 | `specContext` | `string` | The specification section where this comment appears (e.g., `fileSpecs`, `calculationSpecs`) |
+
+##### `compileTimeData`
+
+Captures the raw compile-time data that follows a `**` separator line at the end of RPG3 source. This data populates arrays/tables defined in E-specs.
+
+> **Design decision:** Compile-time data is preserved as **raw text blocks** keyed by associated array/table name. Parsing the data into structured arrays is a downstream concern.
+
+| Field | Type | Description |
+|---|---|---|
+| `startLine` | `integer` | Line number of the `**` separator |
+| `blocks` | `array<object>` | Ordered array of data blocks |
+
+Each block:
+
+| Field | Type | Description |
+|---|---|---|
+| `arrayName` | `string` | Associated E-spec array/table name (matched by order of E-spec definitions that specify compile-time data) |
+| `rawLines` | `array<string>` | Raw text lines of the compile-time data |
+| `location` | `location` | Source position of this data block |
+
+**Association rule:** Blocks are associated with E-spec arrays in source order. The first block after `**` maps to the first E-spec without a `fromFileName`, the second block to the second such E-spec, etc.
 
 ##### `copyMembers`
 

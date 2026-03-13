@@ -1,0 +1,181 @@
+---
+phase: planning
+title: "Project Planning & Task Breakdown: RPG3 Parser"
+description: Phased task breakdown, dependencies, timeline, and risk mitigation for the RPG3 parser feature
+---
+
+# Project Planning & Task Breakdown — RPG3 Parser
+
+## Milestones
+
+- [ ] **M1: Foundation** — Gradle project builds, normalizer passes all tests
+- [ ] **M2: Grammar Compiles** — Forked RPG3 grammar produces parse tree for sample source
+- [ ] **M3: IR Builder Complete** — All 7 spec types + expression AST + control flow produce correct IR
+- [ ] **M4: Full Pipeline** — End-to-end parse produces JSON matching sample `rpg3.json`
+- [ ] **M5: CLI Ready** — Python CLI can parse single file and batch directory
+- [ ] **M6: Release Candidate** — All edge case tests pass, docs finalized
+
+---
+
+## Task Breakdown
+
+### Phase 1: Foundation
+- [ ] Task 1.1: Create Gradle project with ANTLR plugin, Shadow JAR, JUnit 5
+- [ ] Task 1.2: Implement `SourceNormalizer` (6-step pipeline: split, tabs, control chars, trim/pad, seq numbers, line mapping)
+- [ ] Task 1.3: Implement `NormalizedSource` and `NormalizationWarning` models
+- [ ] Task 1.4: Write normalizer unit tests (9 test cases per implementation doc)
+
+**Exit criteria:** `gradle build` passes, normalizer tests green
+
+---
+
+### Phase 2: Grammar Fork + Common Model
+- [ ] Task 2.1: Fork `grammar/rpgle/RpgLexer.g4` → `grammar/rpg3/Rpg3Lexer.g4`
+- [ ] Task 2.2: Fork `grammar/rpgle/RpgParser.g4` → `grammar/rpg3/Rpg3Parser.g4`
+- [ ] Task 2.3: Remove RPG IV/ILE constructs (free-format, D-spec, P-spec, BIFs, SQL, RPG IV opcodes)
+- [ ] Task 2.4: Add RPG3-specific constructs (E-spec mode, L-spec mode, `compileTimeData` rule, I-spec DS)
+- [ ] Task 2.5: Implement `As400Parser` interface in `common/parser/`
+- [ ] Task 2.6: Implement common models: `IrDocument`, `Metadata`, `Location`, `SourceLine`, `ParseError`, `ResolvedCopy`
+- [ ] Task 2.7: Implement RPG3 models: `HeaderSpec`, `FileSpec`, `ExtensionSpec`, `LineCounterSpec`, `InputSpec`, `CalcSpec`, `OutputSpec`, `DataStructure`, `SymbolEntry`, `Subroutine`, `CompileTimeData`, `Dependency`
+- [ ] Task 2.8: Implement expression AST hierarchy (8 node types + `UnparsedSpec`)
+- [ ] Task 2.9: Verify grammar compiles: `gradle generateGrammarSource`
+- [ ] Task 2.10: Smoke test: parse H-spec only source → parse tree
+
+**Exit criteria:** Grammar compiles, models compile, simple parse tree produced → **M2**
+
+---
+
+### Phase 3: IR Builder Visitor
+- [ ] Task 3.1: Implement `Rpg3IrBuilder` base (extends `Rpg3ParserBaseVisitor<Void>`)
+- [ ] Task 3.2: `visitHeaderSpec` → `headerSpecs[]`
+- [ ] Task 3.3: `visitFileSpec` → `fileSpecs[]` + `dependencies.referencedFiles[]` (handle continuations)
+- [ ] Task 3.4: `visitExtensionSpec` → `extensionSpecs[]` (E-spec column layout)
+- [ ] Task 3.5: `visitLineCounterSpec` → `lineCounterSpecs[]` (L-spec column layout)
+- [ ] Task 3.6: `visitOutputSpec` → `outputSpecs[]` (record-level + field-level)
+- [ ] Task 3.7: `visitInputSpec` → `inputSpecs[]` + `dataStructures[]` (DS detection)
+- [ ] Task 3.8: Expression AST builder (correct detection order: figurative → *INxx → *IN → special → literal → array → identifier)
+- [ ] Task 3.9: `visitCalcSpec` → `calculationSpecs[]` with conditioning indicators (cols 9-17), resulting indicators (cols 54-59), extendedOpcode (col 53)
+- [ ] Task 3.10: Control flow block builder (stack-based: IFxx, DOWxx, DOUxx, DO, CASxx, BEGSR/ENDSR, TAG, GOTO, EXSR)
+- [ ] Task 3.11: `ANDxx`/`ORxx` compound condition handling (nested `BinaryOpNode` tree)
+- [ ] Task 3.12: `visitDirective` → `copyMembers[]` + `dependencies.copyMembers[]`
+- [ ] Task 3.13: `visitCompileTimeData` → `compileTimeData` (raw text blocks)
+- [ ] Task 3.14: Comments + `sourceLines[]` builder
+- [ ] Task 3.15: Zero-loss fallback (Tier 2 column extraction + Tier 3 raw capture)
+- [ ] Task 3.16: IR Builder unit tests per spec type
+
+**Exit criteria:** All 7 spec types produce correct IR nodes from CUSTINQ sample → **M3**
+
+---
+
+### Phase 4: Symbol Table + Copy Resolver
+- [ ] Task 4.1: Implement `Rpg3SymbolTableBuilder` (4-source scan, priority-based conflict resolution)
+- [ ] Task 4.2: Data type inference for C-spec result fields (decimal → S, null → A)
+- [ ] Task 4.3: Back-propagate resolved types onto `IdentifierNode` expressions
+- [ ] Task 4.4: Subroutine `calledFrom` cross-reference population
+- [ ] Task 4.5: Implement `Rpg3CopyResolver` (search algorithm: 4 extensions, left-to-right)
+- [ ] Task 4.6: `ResolvedCopy` return type handling
+- [ ] Task 4.7: Symbol table + copy resolver unit tests
+
+**Exit criteria:** Symbol table matches expected entries, types resolved on expression nodes
+
+---
+
+### Phase 5: JSON Serializer
+- [ ] Task 5.1: Implement `IrJsonSerializer` with Gson config (serializeNulls, prettyPrinting, expression polymorphism)
+- [ ] Task 5.2: Implement `ExpressionNodeSerializer` (type adapter for polymorphic AST)
+- [ ] Task 5.3: Null convention validation (null vs "" vs 0 vs [])
+- [ ] Task 5.4: Validate output against `example/ir/rpg3.json` — field-by-field comparison
+
+**Exit criteria:** Serialized output matches sample JSON structure → **M4**
+
+---
+
+### Phase 6: Parser Facade + CLI
+- [ ] Task 6.1: Implement `Rpg3ParserFacade` (implements `As400Parser`, 8-step pipeline)
+- [ ] Task 6.2: Implement `Rpg3ErrorListener` (ANTLR error collection with line mapping)
+- [ ] Task 6.3: Implement `ParseOptions` (copyPaths, sourceRoot, resolveCopies, charset, tabStops)
+- [ ] Task 6.4: Metadata population logic (irVersion, sourceType, sourceMember, parseInfo)
+- [ ] Task 6.5: Build fat JAR via `gradle shadowJar`
+- [ ] Task 6.6: Implement Python CLI wrapper (`rpg3_parser_cli.py`) with 3 subcommands
+- [ ] Task 6.7: CLI integration test (parse, batch, validate)
+
+**Exit criteria:** `rpg3-parser parse CUSTINQ.rpg -o output.json` produces valid IR → **M5**
+
+---
+
+### Phase 7: Integration Testing + Polish
+- [ ] Task 7.1: CUSTINQ end-to-end test (compare against golden `rpg3.json`)
+- [ ] Task 7.2: Edge case test suite (9 cases — see implementation doc Task 7.2)
+- [ ] Task 7.3: Performance test (5000+ line source < 1 second)
+- [ ] Task 7.4: Zero-loss verification (intentionally malformed source → all lines captured)
+- [ ] Task 7.5: Update design doc project structure (add missing files)
+- [ ] Task 7.6: Update design doc NFR Error Recovery (zero-loss reference)
+- [ ] Task 7.7: Update sample JSON with `parseQuality` field
+- [ ] Task 7.8: Final `/check-implementation` pass
+
+**Exit criteria:** All tests pass, docs synced → **M6**
+
+---
+
+## Dependencies
+
+```mermaid
+graph LR
+    P1[Phase 1: Gradle + Normalizer] --> P2[Phase 2: Grammar + Models]
+    P2 --> P3[Phase 3: IR Builder]
+    P3 --> P4[Phase 4: Symbol Table + Copy]
+    P2 --> P5[Phase 5: JSON Serializer]
+    P3 --> P6[Phase 6: Facade + CLI]
+    P4 --> P6
+    P5 --> P6
+    P6 --> P7[Phase 7: Integration Testing]
+```
+
+**Key dependency notes:**
+- Phase 5 (Serializer) can start in parallel with Phase 3 once models are defined
+- Phase 4 (Symbol Table) depends on Phase 3 output (IR model populated)
+- Phase 6 (Facade) is the integration point — needs Phases 3, 4, 5 all complete
+
+**External dependencies:**
+- Existing RPGLE grammar files in `grammar/rpgle/` (required for fork)
+- Sample RPG3 source `CUSTINQ.rpg` for testing
+- Java 17+ JDK installed
+- Python 3.10+ for CLI
+
+---
+
+## Timeline & Estimates
+
+| Phase | Tasks | Estimated Effort | Cumulative |
+|---|---|---|---|
+| Phase 1: Foundation | 4 | 0.5 day | 0.5 day |
+| Phase 2: Grammar + Models | 10 | 1.5 days | 2 days |
+| Phase 3: IR Builder | 16 | 3 days | 5 days |
+| Phase 4: Symbol Table + Copy | 7 | 1.5 days | 6.5 days |
+| Phase 5: JSON Serializer | 4 | 0.5 day | 7 days |
+| Phase 6: Facade + CLI | 7 | 1.5 days | 8.5 days |
+| Phase 7: Integration + Polish | 8 | 1.5 days | **10 days** |
+
+**Total estimated effort:** ~10 working days
+
+---
+
+## Risks & Mitigation
+
+| Risk | Impact | Probability | Mitigation |
+|---|---|---|---|
+| RPGLE grammar fork is harder than expected (hidden inter-rule dependencies) | Phase 2 delays | Medium | Start with minimal grammar, add rules incrementally |
+| C-spec column extraction off-by-one errors | Incorrect IR | High | Use column layout reference table, test every column |
+| ANDxx/ORxx compound conditions complexity | Broken condition AST | Medium | Implement and test independently before integration |
+| DBCS/Japanese encoding edge cases | Normalizer bugs | Low | Defer DBCS testing until Phase 7, use known test fixtures |
+| 5000+ line performance regression | Missed NFR | Low | Profile after Phase 6, optimize SLL before LL fallback |
+
+---
+
+## Resources Needed
+
+- **Grammar reference:** [RpgLexer.g4](file:///d:/Code/AS400_Parser/grammar/rpgle/RpgLexer.g4), [RpgParser.g4](file:///d:/Code/AS400_Parser/grammar/rpgle/RpgParser.g4)
+- **IR contract:** [feature-ir-json-template.md](file:///d:/Code/AS400_Parser/docs/ai/design/feature-ir-json-template.md)
+- **Golden sample:** [rpg3.json](file:///d:/Code/AS400_Parser/example/ir/rpg3.json)
+- **Implementation guide:** [feature-rpg3-parser.md](file:///d:/Code/AS400_Parser/docs/ai/implementation/feature-rpg3-parser.md)
+- **IBM RPG III reference:** Column layouts for H/F/E/L/I/C/O specs
