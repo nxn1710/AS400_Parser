@@ -8,7 +8,7 @@ description: Phased task breakdown, dependencies, timeline, and risk mitigation 
 
 ## Milestones
 
-- [ ] **M1: Foundation** — Gradle project builds, normalizer passes all tests
+- [x] **M1: Foundation** — Gradle project builds, normalizer passes all tests
 - [ ] **M2: Grammar Compiles** — Forked RPG3 grammar produces parse tree for sample source
 - [ ] **M3: IR Builder Complete** — All 7 spec types + expression AST + control flow produce correct IR
 - [ ] **M4: Full Pipeline** — End-to-end parse produces JSON matching sample `rpg3.json`
@@ -30,16 +30,13 @@ description: Phased task breakdown, dependencies, timeline, and risk mitigation 
 ---
 
 ### Phase 2: Grammar Fork + Common Model
-- [ ] Task 2.1: Fork `grammar/rpgle/RpgLexer.g4` → `grammar/rpg3/Rpg3Lexer.g4`
-- [ ] Task 2.2: Fork `grammar/rpgle/RpgParser.g4` → `grammar/rpg3/Rpg3Parser.g4`
-- [ ] Task 2.3: Remove RPG IV/ILE constructs (free-format, D-spec, P-spec, BIFs, SQL, RPG IV opcodes)
-- [ ] Task 2.4: Add RPG3-specific constructs (E-spec mode, L-spec mode, `compileTimeData` rule, I-spec DS)
-- [ ] Task 2.5: Implement `As400Parser` interface in `common/parser/`
-- [ ] Task 2.6: Implement common models: `IrDocument`, `Metadata`, `Location`, `SourceLine`, `ParseError`, `ResolvedCopy`
-- [ ] Task 2.7: Implement RPG3 models: `HeaderSpec`, `FileSpec`, `ExtensionSpec`, `LineCounterSpec`, `InputSpec`, `CalcSpec`, `OutputSpec`, `DataStructure`, `SymbolEntry`, `Subroutine`, `CompileTimeData`, `Dependency`
-- [ ] Task 2.8: Implement expression AST hierarchy (8 node types + `UnparsedSpec`)
-- [ ] Task 2.9: Verify grammar compiles: `gradle generateGrammarSource`
-- [ ] Task 2.10: Smoke test: parse H-spec only source → parse tree
+- [ ] Task 2.1: Fork `grammar/rpgle/RpgLexer.g4` → `Rpg3Lexer.g4` (remove RPG IV, add E-spec/L-spec modes)
+- [ ] Task 2.2: Fork `grammar/rpgle/RpgParser.g4` → `Rpg3Parser.g4` (remove RPG IV, add rpg3Program rule)
+- [x] Task 2.3: Implement `As400Parser` interface + `ParseOptions`
+- [x] Task 2.4: Common models (`IrDocument`, `Metadata`, `Location`, `SourceLine`, `ParseError`, `ResolvedCopy`)
+- [x] Task 2.5: RPG3 models (`Rpg3Content` with all 7 spec types + supporting)
+- [x] Task 2.6: Expression AST hierarchy (8 node types + `UnparsedSpec`)
+- [ ] Task 2.7: Grammar compile + smoke test: parse H-spec only source → parse tree
 
 **Exit criteria:** Grammar compiles, models compile, simple parse tree produced → **M2**
 
