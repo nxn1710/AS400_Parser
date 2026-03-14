@@ -88,15 +88,15 @@ description: Phased task breakdown, dependencies, timeline, and risk mitigation 
 ---
 
 ### Phase 6: Parser Facade + CLI
-- [ ] Task 6.1: Implement `Rpg3ParserFacade` (implements `As400Parser`, 8-step pipeline)
-- [ ] Task 6.2: Implement `Rpg3ErrorListener` (ANTLR error collection with line mapping)
-- [ ] Task 6.3: Implement `ParseOptions` (copyPaths, sourceRoot, resolveCopies, charset, tabStops)
-- [ ] Task 6.4: Metadata population logic (irVersion, sourceType, sourceMember, parseInfo)
-- [ ] Task 6.5: Build fat JAR via `gradle shadowJar`
-- [ ] Task 6.6: Implement Python CLI wrapper (`rpg3_parser_cli.py`) with 3 subcommands
-- [ ] Task 6.7: CLI integration test (parse, batch, validate)
+- [x] Task 6.1: Implement `Rpg3ParserFacade` (implements `As400Parser`, 8-step pipeline)
+- [x] Task 6.2: Implement `Rpg3ErrorListener` (ANTLR error collection with line mapping)
+- [x] Task 6.3: Implement `ParseOptions` (copyPaths, sourceRoot, resolveCopies, charset, tabStops)
+- [x] Task 6.4: Metadata population logic (irVersion, sourceType, sourceMember, parseInfo)
+- [x] Task 6.5: Build fat JAR via `gradle shadowJar`
+- [x] Task 6.6: Implement Python CLI wrapper (`rpg3_parser_cli.py`) with 3 subcommands
+- [x] Task 6.7: CLI integration test (parse, batch, validate)
 
-**Exit criteria:** `rpg3-parser parse CUSTINQ.rpg -o output.json` produces valid IR → **M5**
+**Exit criteria:** ✅ All tests pass + shadowJar builds. `java -jar` CLI works → **M5**
 
 ---
 
