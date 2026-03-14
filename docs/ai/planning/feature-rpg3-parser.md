@@ -78,12 +78,12 @@ description: Phased task breakdown, dependencies, timeline, and risk mitigation 
 ---
 
 ### Phase 5: JSON Serializer
-- [ ] Task 5.1: Implement `IrJsonSerializer` with Gson config (serializeNulls, prettyPrinting, expression polymorphism)
-- [ ] Task 5.2: Implement `ExpressionNodeSerializer` (type adapter for polymorphic AST)
-- [ ] Task 5.3: Null convention validation (null vs "" vs 0 vs [])
-- [ ] Task 5.4: Validate output against `example/ir/rpg3.json` — field-by-field comparison
+- [x] Task 5.1: Implement `IrJsonSerializer` with Gson config (serializeNulls, prettyPrinting, expression polymorphism)
+- [x] Task 5.2: Implement `ExpressionNodeSerializer` (type adapter for polymorphic AST)
+- [x] Task 5.3: Null convention validation (null vs "" vs 0 vs [])
+- [x] Task 5.4: Validate output against `example/ir/rpg3.json` — field-by-field comparison
 
-**Exit criteria:** Serialized output matches sample JSON structure → **M4**
+**Exit criteria:** ✅ 17 tests pass. Serialized output matches sample JSON structure → **M4**
 
 ---
 
