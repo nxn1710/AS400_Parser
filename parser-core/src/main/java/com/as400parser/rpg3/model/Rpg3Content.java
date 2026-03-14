@@ -358,6 +358,8 @@ public class Rpg3Content {
         private Integer decimalPositions;
         private String definedIn;  // "I-spec", "C-spec", "E-spec", "DS"
         private Location definitionLocation;
+        private boolean isDataStructure;
+        private String dataStructureName;  // parent DS name if this is a subfield
 
         public String getName() { return name; }
         public void setName(String v) { this.name = v; }
@@ -371,6 +373,10 @@ public class Rpg3Content {
         public void setDefinedIn(String v) { this.definedIn = v; }
         public Location getDefinitionLocation() { return definitionLocation; }
         public void setDefinitionLocation(Location v) { this.definitionLocation = v; }
+        public boolean isDataStructure() { return isDataStructure; }
+        public void setDataStructure(boolean v) { this.isDataStructure = v; }
+        public String getDataStructureName() { return dataStructureName; }
+        public void setDataStructureName(String v) { this.dataStructureName = v; }
     }
 
     /** Subroutine reference */

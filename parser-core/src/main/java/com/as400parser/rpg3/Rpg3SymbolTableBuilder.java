@@ -108,6 +108,8 @@ public class Rpg3SymbolTableBuilder {
                 entry.setName(name);
                 entry.setDefinedIn("DS");
                 entry.setDefinitionLocation(ds.getLocation());
+                entry.setDataStructure(true);
+                entry.setDataStructureName(ds.getName());
 
                 if (sub.getDataType() != null && !sub.getDataType().isBlank()) {
                     entry.setDataType(sub.getDataType().trim());

@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Nested;
 
 import static org.assertj.core.api.Assertions.*;
 
-import java.util.List;
 import java.util.Map;
 
 class Rpg3SymbolTableBuilderTest {
@@ -43,6 +42,8 @@ class Rpg3SymbolTableBuilderTest {
         assertThat(entry.getLength()).isEqualTo(5);
         assertThat(entry.getDecimalPositions()).isEqualTo(0);
         assertThat(entry.getDefinedIn()).isEqualTo("I-spec");
+        assertThat(entry.isDataStructure()).isFalse();
+        assertThat(entry.getDataStructureName()).isNull();
     }
 
     @Test
@@ -109,6 +110,8 @@ class Rpg3SymbolTableBuilderTest {
         assertThat(entry.getDefinedIn()).isEqualTo("DS");
         assertThat(entry.getDataType()).isEqualTo("A"); // no decimal
         assertThat(entry.getLength()).isEqualTo(10);
+        assertThat(entry.isDataStructure()).isTrue();
+        assertThat(entry.getDataStructureName()).isEqualTo("MYDS");
     }
 
     // =========================================================================
