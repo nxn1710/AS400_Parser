@@ -43,37 +43,37 @@ description: Phased task breakdown, dependencies, timeline, and risk mitigation 
 ---
 
 ### Phase 3: IR Builder Visitor
-- [ ] Task 3.1: Implement `Rpg3IrBuilder` base (extends `Rpg3ParserBaseVisitor<Void>`)
-- [ ] Task 3.2: `visitHeaderSpec` → `headerSpecs[]`
-- [ ] Task 3.3: `visitFileSpec` → `fileSpecs[]` + `dependencies.referencedFiles[]` (handle continuations)
-- [ ] Task 3.4: `visitExtensionSpec` → `extensionSpecs[]` (E-spec column layout)
-- [ ] Task 3.5: `visitLineCounterSpec` → `lineCounterSpecs[]` (L-spec column layout)
-- [ ] Task 3.6: `visitOutputSpec` → `outputSpecs[]` (record-level + field-level)
-- [ ] Task 3.7: `visitInputSpec` → `inputSpecs[]` + `dataStructures[]` (DS detection)
-- [ ] Task 3.8: Expression AST builder (correct detection order: figurative → *INxx → *IN → special → literal → array → identifier)
-- [ ] Task 3.9: `visitCalcSpec` → `calculationSpecs[]` with conditioning indicators (cols 9-17), resulting indicators (cols 54-59), extendedOpcode (col 53)
-- [ ] Task 3.10: Control flow block builder (stack-based: IFxx, DOWxx, DOUxx, DO, CASxx, BEGSR/ENDSR, TAG, GOTO, EXSR)
-- [ ] Task 3.11: `ANDxx`/`ORxx` compound condition handling (nested `BinaryOpNode` tree)
-- [ ] Task 3.12: `visitDirective` → `copyMembers[]` + `dependencies.copyMembers[]`
-- [ ] Task 3.13: `visitCompileTimeData` → `compileTimeData` (raw text blocks)
-- [ ] Task 3.14: Comments + `sourceLines[]` builder
-- [ ] Task 3.15: Zero-loss fallback (Tier 2 column extraction + Tier 3 raw capture)
-- [ ] Task 3.16: IR Builder unit tests per spec type
+- [x] Task 3.1: Implement `Rpg3IrBuilder` base (extends `Rpg3ParserBaseVisitor<Void>`)
+- [x] Task 3.2: `visitHeaderSpec` → `headerSpecs[]`
+- [x] Task 3.3: `visitFileSpec` → `fileSpecs[]` + `dependencies.referencedFiles[]` (handle continuations)
+- [x] Task 3.4: `visitExtensionSpec` → `extensionSpecs[]` (E-spec column layout)
+- [x] Task 3.5: `visitLineCounterSpec` → `lineCounterSpecs[]` (L-spec column layout)
+- [x] Task 3.6: `visitOutputSpec` → `outputSpecs[]` (record-level + field-level)
+- [x] Task 3.7: `visitInputSpec` → `inputSpecs[]` + `dataStructures[]` (DS detection)
+- [x] Task 3.8: Expression AST builder (correct detection order: figurative → *INxx → *IN → special → literal → array → identifier)
+- [x] Task 3.9: `visitCalcSpec` → `calculationSpecs[]` with conditioning indicators (cols 9-17), resulting indicators (cols 54-59), extendedOpcode (col 53)
+- [x] Task 3.10: Control flow block builder (stack-based: IFxx, DOWxx, DOUxx, DO, CASxx, BEGSR/ENDSR, TAG, GOTO, EXSR)
+- [x] Task 3.11: `ANDxx`/`ORxx` compound condition handling (nested `BinaryOpNode` tree)
+- [x] Task 3.12: `visitDirective` → `copyMembers[]` + `dependencies.copyMembers[]`
+- [x] Task 3.13: `visitCompileTimeData` → `compileTimeData` (raw text blocks)
+- [x] Task 3.14: Comments + `sourceLines[]` builder
+- [ ] Task 3.15: Zero-loss fallback (Tier 2 column extraction + Tier 3 raw capture) — *deferred to Phase 7*
+- [/] Task 3.16: IR Builder unit tests per spec type — *40 tests pass, C-spec integration tests pending*
 
 **Exit criteria:** All 7 spec types produce correct IR nodes from CUSTINQ sample → **M3**
 
 ---
 
 ### Phase 4: Symbol Table + Copy Resolver
-- [ ] Task 4.1: Implement `Rpg3SymbolTableBuilder` (4-source scan, priority-based conflict resolution)
-- [ ] Task 4.2: Data type inference for C-spec result fields (decimal → S, null → A)
-- [ ] Task 4.3: Back-propagate resolved types onto `IdentifierNode` expressions
-- [ ] Task 4.4: Subroutine `calledFrom` cross-reference population
-- [ ] Task 4.5: Implement `Rpg3CopyResolver` (search algorithm: 4 extensions, left-to-right)
-- [ ] Task 4.6: `ResolvedCopy` return type handling
-- [ ] Task 4.7: Symbol table + copy resolver unit tests
+- [x] Task 4.1: Implement `Rpg3SymbolTableBuilder` (4-source scan, priority-based conflict resolution)
+- [x] Task 4.2: Data type inference for C-spec result fields (decimal → S, null → A)
+- [x] Task 4.3: Back-propagate resolved types onto `IdentifierNode` expressions
+- [x] Task 4.4: Subroutine `calledFrom` cross-reference population — *done in Phase 3*
+- [x] Task 4.5: Implement `Rpg3CopyResolver` (search algorithm: 4 extensions, left-to-right)
+- [x] Task 4.6: `ResolvedCopy` return type handling
+- [x] Task 4.7: Symbol table + copy resolver unit tests (26 tests)
 
-**Exit criteria:** Symbol table matches expected entries, types resolved on expression nodes
+**Exit criteria:** Symbol table matches expected entries, types resolved on expression nodes ✅
 
 ---
 
