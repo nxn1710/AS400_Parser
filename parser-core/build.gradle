@@ -1,6 +1,5 @@
 plugins {
     id 'java-library'
-    id 'antlr'
     id 'com.github.johnrengelman.shadow' version '8.+'
     id 'jacoco'
 }
@@ -17,6 +16,10 @@ repositories {
     mavenCentral()
 }
 
+configurations {
+    antlr
+}
+
 dependencies {
     antlr "org.antlr:antlr4:4.13.2"
     implementation "org.antlr:antlr4-runtime:4.13.2"
@@ -26,10 +29,54 @@ dependencies {
     testImplementation "org.assertj:assertj-core:3.26.0"
 }
 
-generateGrammarSource {
-    arguments += ["-visitor", "-package", "com.as400parser.rpg3.generated"]
-    outputDirectory = file("${project.buildDir}/generated-src/antlr/main/com/as400parser/rpg3/generated")
+// Custom ANTLR generation: lexer first, then parser (split grammar support)
+def antlrOutDir = file("${project.buildDir}/generated-src/antlr/main/com/as400parser/rpg3/generated")
+def antlrSrcDir = file("src/main/antlr/com/as400parser/rpg3/generated")
+
+task generateLexer(type: JavaExec) {
+    classpath = configurations.antlr
+    mainClass = 'org.antlr.v4.Tool'
+    args = [
+        '-visitor',
+        '-package', 'com.as400parser.rpg3.generated',
+        '-o', antlrOutDir.absolutePath,
+        file("${antlrSrcDir}/Rpg3Lexer.g4").absolutePath
+    ]
+    inputs.file("${antlrSrcDir}/Rpg3Lexer.g4")
+    outputs.dir(antlrOutDir)
+    doFirst {
+        antlrOutDir.mkdirs()
+    }
 }
+
+task generateParser(type: JavaExec) {
+    dependsOn generateLexer
+    classpath = configurations.antlr
+    mainClass = 'org.antlr.v4.Tool'
+    args = [
+        '-visitor',
+        '-package', 'com.as400parser.rpg3.generated',
+        '-lib', antlrOutDir.absolutePath,
+        '-o', antlrOutDir.absolutePath,
+        file("${antlrSrcDir}/Rpg3Parser.g4").absolutePath
+    ]
+    inputs.file("${antlrSrcDir}/Rpg3Parser.g4")
+    outputs.dir(antlrOutDir)
+}
+
+task generateGrammarSource {
+    dependsOn generateParser
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir antlrOutDir
+        }
+    }
+}
+
+compileJava.dependsOn generateGrammarSource
 
 test {
     useJUnitPlatform()

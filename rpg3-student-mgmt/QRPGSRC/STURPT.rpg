@@ -1,0 +1,282 @@
+     H*================================================================
+     H* プログラム名: STURPT
+     H* 説明        : 学生名簿レポート印刷プログラム
+     H* 作成日      : 2026/03/14
+     H* 作成者      : システム開発部
+     H*
+     H* 機能概要:
+     H*   学生マスターを学校別に読み込み、
+     H*   レベルブレイク（学校コード変更時）で小計を出力する
+     H*   最終行に総合計を出力する
+     H*
+     H* 使用ファイル:
+     H*   STUDNTL2 - 学生マスター論理ファイル（学校別）
+     H*   SCHOOLPF  - 学校マスター（参照）
+     H*   STURPTPF  - 学生レポート印刷ファイル
+     H*
+     H* 使用標識:
+     H*   01 - オーバーフロー
+     H*   90 - 読取結果（EOF）
+     H*   99 - 読取エラー
+     H*   LR - 最終レコード
+     H*
+     H* 出力:
+     H*   O-spec を使用したレポート出力
+     H*   EXCPT による例外出力
+     H*================================================================
+     F*
+     F* --- ファイル定義 ---
+     FSTUDNTL2IF  E        K           DISK
+     FSCHOOLPFIF  E        K           DISK
+     FSTURPTPFO   E           01       PRINTER
+     F*
+     E*================================================================
+     E* 配列定義: 学校別集計用
+     E*================================================================
+     E                    SCLARR  20  4
+     E                    SCTARR  20  5 0
+     E*
+     I*================================================================
+     I* プログラム状態データ構造 (SDS)
+     I*================================================================
+     I            SDS
+     I*  --- プログラム名 ---
+     I                                        1  10 SDPGM
+     I*  --- プログラム状態コード ---
+     I                                       11  15 SDSTS
+     I*  --- 前回の状態コード ---
+     I                                       16  20 SDPSTS
+     I*  --- ソースリスト行番号 ---
+     I                                       21  28 SDSLIN
+     I*  --- 実行中のルーチン名 ---
+     I                                       29  36 SDRTN
+     I*  --- 例外タイプ ---
+     I                                       40  42 SDEXTP
+     I*  --- 例外番号 ---
+     I                                       43  46 SDEXNB
+     I*  --- ジョブ名 ---
+     I                                      244 253 SDJOB
+     I*  --- ユーザー名 ---
+     I                                      254 263 SDUSER
+     I*  --- ジョブ番号 ---
+     I                                      264 269 SDJNBR
+     I*
+     C*================================================================
+     C* 初期処理
+     C*================================================================
+     C                     EXSR RPINIT
+     C*
+     C*================================================================
+     C* メインループ: 学生マスター読み込み
+     C*================================================================
+     C                     READ STUDNTL2              9099
+     C*
+     C*  --- 読取エラーチェック ---
+     C           *IN99     IFEQ *ON
+     C                     SETON                         LR
+     C                     RETRN
+     C                     ENDIF
+     C*
+     C           *IN90     DOWEQ*OFF
+     C*
+     C*  --- レベルブレイク判定 ---
+     C*  --- 学校コードが変わった場合 ---
+     C           STUSCL    IFNE SVSCL
+     C*
+     C*    前の学校の小計出力（初回以外）
+     C           TOTCNT    IFGT 0
+     C                     EXCPT SCHSUB
+     C                     ENDIF
+     C*
+     C*    新しい学校ヘッダー出力
+     C                     EXSR SCHLDR
+     C*
+     C*    小計カウンター初期化
+     C                     Z-ADD0         SCLSUB  50
+     C                     MOVELSTUSCL    SVSCL   4
+     C                     ENDIF
+     C*
+     C*  --- オーバーフローチェック ---
+     C           *IN01     IFEQ *ON
+     C                     EXCPT RPTHDR
+     C                     EXCPT RPTHDC
+     C                     SETOF                    01
+     C                     ENDIF
+     C*
+     C*  --- 明細行出力 ---
+     C                     EXCPT RPTDTL
+     C*
+     C*  --- カウンター加算 ---
+     C                     ADD  1         TOTCNT  50
+     C                     ADD  1         SCLSUB
+     C                     ADD  1         PAGCNT  50
+     C*
+     C*  --- 学校別集計配列更新 ---
+     C                     EXSR ARRUPD
+     C*
+     C*  --- 次のレコード読み込み ---
+     C                     READ STUDNTL2              9099
+     C*  --- ループ内読取エラーチェック ---
+     C           *IN99     IFEQ *ON
+     C                     GOTO RPTERR
+     C                     ENDIF
+     C*
+     C                     ENDDO
+     C*
+     C*================================================================
+     C* 最終処理: 最後の学校の小計と総合計を出力
+     C*================================================================
+     C           TOTCNT    IFGT 0
+     C*  --- 最後の学校の小計 ---
+     C                     EXCPT SCHSUB
+     C*
+     C*  --- 総合計出力 ---
+     C                     EXCPT RPTGRD
+     C                     ENDIF
+     C*
+     C*  --- 配列集計（XFOOT）---
+     C                     XFOOTSCTARR    XFTOT   50
+     C*
+     C*  --- プログラム終了 ---
+     C                     GOTO RPTEND
+     C*
+     C*  --- 読取エラー処理 ---
+     C           RPTERR    TAG
+     C                     EXCPT RPTGRD
+     C*
+     C           RPTEND    TAG
+     C                     SETON                         LR
+     C                     RETRN
+     C*
+     C*================================================================
+     C* サブルーチン: RPINIT - レポート初期処理
+     C*================================================================
+     C           RPINIT    BEGSR
+     C*
+     C*  --- 変数初期化 ---
+     C                     Z-ADD0         TOTCNT
+     C                     Z-ADD0         SCLSUB
+     C                     Z-ADD0         PAGCNT
+     C                     Z-ADD1         PAGNO   40
+     C                     MOVEL*BLANKS   SVSCL
+     C                     Z-ADD0         SCLCNT  30
+     C*
+     C*  --- システム日付取得 ---
+     C                     TIME      RPDATE  80
+     C*
+     C*  --- レポートヘッダー出力 ---
+     C                     EXCPT RPTHDR
+     C                     EXCPT RPTHDC
+     C*
+     C                     ENDSR
+     C*
+     C*================================================================
+     C* サブルーチン: SCHLDR - 学校ヘッダー出力
+     C* 学校コードから学校名を取得しヘッダーを出力する
+     C*================================================================
+     C           SCHLDR    BEGSR
+     C*
+     C*  --- 学校マスター検索 ---
+     C           STUSCL    CHAINSCHOOLPF              9099
+     C*
+     C*  --- 読取エラーまたは未検出 ---
+     C           *IN99     IFEQ *ON
+     C                     MOVEL'*ERROR*' RHSNAM
+     C                     LEAVESR
+     C                     ENDIF
+     C*
+     C           *IN90     IFEQ *OFF
+     C                     MOVELSCLNAM    RHSNAM
+     C                     ELSE
+     C                     MOVEL'*UNKNWN*'RHSNAM
+     C                     ENDIF
+     C*
+     C                     MOVELSTUSCL    RHSCL
+     C*
+     C*  --- 学校ヘッダー出力 ---
+     C                     EXCPT RPTSCH
+     C                     EXCPT RPTHDC
+     C*
+     C                     ENDSR
+     C*
+     C*================================================================
+     C* サブルーチン: ARRUPD - 学校別集計配列更新
+     C* LOKUP で学校コードを検索し、カウントを加算する
+     C*================================================================
+     C           ARRUPD    BEGSR
+     C*
+     C           STUSCL    LOKUP SCLARR                   30
+     C*
+     C*  --- 既存の学校コードならカウント加算 ---
+     C   30                ADD  1         SCTARR(X)
+     C*
+     C*  --- 新規学校コードなら配列に追加 ---
+     C  N30                ADD  1         SCLCNT
+     C  N30                MOVELSTUSCL    SCLARR(SCLCNT)
+     C  N30                Z-ADD1         SCTARR(SCLCNT)
+     C*
+     C                     ENDSR
+     C*
+     C*================================================================
+     C* O-spec: レポート出力定義
+     C* EXCPT名に対応する出力レコードを定義する
+     C*================================================================
+     O*
+     O* --- レポートタイトル ---
+     OSTURPTPFE  206      RPTHDR
+     O                         RPDATE    10
+     O                                   50 '学 生 名 簿 一 覧 表'
+     O                                   70 'ページ:'
+     O                         PAGNO  Z  78
+     O*
+     O* --- 列ヘッダー ---
+     OSTURPTPFE  1        RPTHDC
+     O                                    6 '------'
+     O                                   38 '--------------------'
+     O                                   48 '--------'
+     O                                   52 '--'
+     O                                   62 '--------'
+     O                                   78 '---------------'
+     OSTURPTPFE  1
+     O                                    6 '学生ID'
+     O                                   38 '学生氏名'
+     O                                   48 '生年月日'
+     O                                   52 '性別'
+     O                                   62 '入学年度'
+     O                                   78 '電話番号'
+     OSTURPTPFE  1
+     O                                    6 '------'
+     O                                   38 '--------------------'
+     O                                   48 '--------'
+     O                                   52 '--'
+     O                                   62 '--------'
+     O                                   78 '---------------'
+     O*
+     O* --- 学校ヘッダー ---
+     OSTURPTPFE  2        RPTSCH
+     O                                    5 '学校:'
+     O                         RHSCL      9
+     O                         RHSNAM    49
+     O*
+     O* --- 明細行 ---
+     OSTURPTPFE  1        RPTDTL
+     O                         STUID      6
+     O                         STUNAM    38
+     O                         STUBDTY   48
+     O                         STUGND    52
+     O                         STUYR  Z  62
+     O                         STUTEL    78
+     O*
+     O* --- 学校小計 ---
+     OSTURPTPFE  1        SCHSUB
+     O                                   25 '*** 学校小計 ***'
+     O                         SCLSUB Z  35
+     O                                   38 '名'
+     O*
+     O* --- 総合計 ---
+     OSTURPTPFE  2        RPTGRD
+     O                                   25 '*** 総 合 計 ***'
+     O                         TOTCNT Z  35
+     O                                   38 '名'
+     OSTURPTPFE  1
+     O                                   25 '*** レポート終了 ***'

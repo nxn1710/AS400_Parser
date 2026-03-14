@@ -1,0 +1,45 @@
+     A*================================================================
+     A* ファイル名: CLASSPF
+     A* 説明      : クラスマスター物理ファイル
+     A* 作成日    : 2026/03/14
+     A* 作成者    : システム開発部
+     A*================================================================
+     A                                      UNIQUE
+     A          R CLSREC                     TEXT('クラスマスターレコード')
+     A*
+     A*   --- 主キー ---
+     A            CLSID          6A         TEXT('クラスID') +
+     A                                      COLHDG('クラス' 'ID')
+     A*
+     A*   --- 基本情報 ---
+     A            CLSNAM        30A         TEXT('クラス名') +
+     A                                      COLHDG('クラス' '名称')
+     A            CLSYR          4S 0       TEXT('年度') +
+     A                                      COLHDG('年度')
+     A            CLSGRD         2S 0       TEXT('学年') +
+     A                                      COLHDG('学年')
+     A            CLSSEC         1A         TEXT('組 A-Z') +
+     A                                      COLHDG('組')
+     A*
+     A*   --- 担当情報 ---
+     A            CLSTCH        20A         TEXT('担任教師名') +
+     A                                      COLHDG('担任' '教師名')
+     A*
+     A*   --- 所属学校 ---
+     A            CLSSCL         4A         TEXT('学校コード') +
+     A                                      COLHDG('学校' 'コード')
+     A*
+     A*   --- 定員管理 ---
+     A            CLSCAP         3S 0       TEXT('定員') +
+     A                                      COLHDG('定員')
+     A            CLSCUR         3S 0       TEXT('現在人数') +
+     A                                      COLHDG('現在' '人数')
+     A*
+     A*   --- 監査情報 ---
+     A            CLSADD         8S 0       TEXT('登録日 YYYYMMDD') +
+     A                                      COLHDG('登録日')
+     A            CLSUPD         8S 0       TEXT('更新日 YYYYMMDD') +
+     A                                      COLHDG('更新日')
+     A*
+     A*   --- 主キー定義 ---
+     A          K CLSID

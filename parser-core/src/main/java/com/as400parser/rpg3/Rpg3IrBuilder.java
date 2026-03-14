@@ -96,20 +96,55 @@ public class Rpg3IrBuilder extends Rpg3ParserBaseVisitor<Void> {
         spec.setRawSourceLine(rawLine);
         spec.setLocation(getLocation(ctx));
 
-        // Extract from grammar tokens
-        spec.setFileName(safeText(ctx.FS_RecordName()));
-        spec.setFileType(safeText(ctx.FS_Type()));
-        spec.setFileDesignation(safeText(ctx.FS_Designation()));
-        spec.setEndOfFile(safeText(ctx.FS_EndOfFile()));
-        spec.setFileAddition(safeText(ctx.FS_Addution()));
-        spec.setSequence(safeText(ctx.FS_Sequence()));
-        spec.setFileFormat(safeText(ctx.FS_Format()));
-        spec.setRecordLength(safeInteger(ctx.FS_RecordLength()));
-        spec.setLimits(safeText(ctx.FS_Limits()));
-        spec.setKeyLength(safeInteger(ctx.FS_LengthOfKey()));
-        spec.setRecordAddressType(safeText(ctx.FS_RecordAddressType()));
-        spec.setFileOrganization(safeText(ctx.FS_Organization()));
-        spec.setDevice(safeText(ctx.FS_Device()));
+        // RPG III F-spec uses different column layout than RPG IV.
+        // Grammar tokens (inherited from RPG IV) have misaligned widths.
+        // Override with column-based extraction from raw source line.
+        // RPG III F-spec columns (1-indexed):
+        //   7-14:  File name (8 chars)       — RPG IV uses 7-16 (10 chars)
+        //  15:     File type (I/O/U/C/D)
+        //  16:     File designation (P/S/R/T/F/blank)
+        //  17:     End of file (E/blank)
+        //  18:     File addition (A/blank)
+        //  19:     Sequence (A/D/blank)
+        //  20:     File format (E/F/blank)
+        //  21-24:  Record length
+        //  25:     Limits processing
+        //  26-28:  Key length
+        //  29:     Record address type
+        //  30:     File organization
+        //  31-34:  Overflow indicator / additional info
+        //  35-38:  (reserved)
+        //  40-46:  Device (DISK, PRINTER, WORKSTN, etc.)
+        if (rawLine != null && rawLine.length() >= 46) {
+            spec.setFileName(safeSubstring(rawLine, 6, 14));         // cols 7-14
+            spec.setFileType(safeSubstring(rawLine, 14, 15));        // col 15
+            spec.setFileDesignation(safeSubstring(rawLine, 15, 16)); // col 16
+            spec.setEndOfFile(safeSubstring(rawLine, 16, 17));       // col 17
+            spec.setFileAddition(safeSubstring(rawLine, 17, 18));    // col 18
+            spec.setSequence(safeSubstring(rawLine, 18, 19));        // col 19
+            spec.setFileFormat(safeSubstring(rawLine, 19, 20));      // col 20
+            spec.setRecordLength(safeParseInt(safeSubstring(rawLine, 20, 24)));  // cols 21-24
+            spec.setLimits(safeSubstring(rawLine, 24, 25));           // col 25
+            spec.setKeyLength(safeParseInt(safeSubstring(rawLine, 25, 28)));     // cols 26-28
+            spec.setRecordAddressType(safeSubstring(rawLine, 28, 29)); // col 29
+            spec.setFileOrganization(safeSubstring(rawLine, 29, 30));  // col 30
+            spec.setDevice(safeSubstring(rawLine, 39, 46));           // cols 40-46
+        } else {
+            // Fallback to grammar tokens if raw line is too short
+            spec.setFileName(safeText(ctx.FS_RecordName()));
+            spec.setFileType(safeText(ctx.FS_Type()));
+            spec.setFileDesignation(safeText(ctx.FS_Designation()));
+            spec.setEndOfFile(safeText(ctx.FS_EndOfFile()));
+            spec.setFileAddition(safeText(ctx.FS_Addution()));
+            spec.setSequence(safeText(ctx.FS_Sequence()));
+            spec.setFileFormat(safeText(ctx.FS_Format()));
+            spec.setRecordLength(safeInteger(ctx.FS_RecordLength()));
+            spec.setLimits(safeText(ctx.FS_Limits()));
+            spec.setKeyLength(safeInteger(ctx.FS_LengthOfKey()));
+            spec.setRecordAddressType(safeText(ctx.FS_RecordAddressType()));
+            spec.setFileOrganization(safeText(ctx.FS_Organization()));
+            spec.setDevice(safeText(ctx.FS_Device()));
+        }
 
         // GAP-4: F-spec continuation lines
         // In RPG3, F-spec continuations have F at col 6 with cols 7-18 blank,
@@ -1270,6 +1305,22 @@ public class Rpg3IrBuilder extends Rpg3ParserBaseVisitor<Void> {
         if (ctx == null) return "";
         String text = ctx.getText().trim();
         return text.isEmpty() ? "" : text;
+    }
+
+    /** Safely extract a trimmed substring from a raw source line. */
+    private String safeSubstring(String line, int beginIndex, int endIndex) {
+        if (line == null || line.length() < endIndex) return null;
+        return line.substring(beginIndex, endIndex).trim();
+    }
+
+    /** Safely parse an integer from a string (for column-based extraction). */
+    private Integer safeParseInt(String text) {
+        if (text == null || text.isBlank()) return null;
+        try {
+            return Integer.parseInt(text.trim());
+        } catch (NumberFormatException e) {
+            return null;
+        }
     }
 
     /** Check if a statement comes after the ELSE in the context. */

@@ -1,0 +1,142 @@
+     A*================================================================
+     A* ファイル名: STUDSPF
+     A* 説明      : 学生メンテナンス画面ファイル
+     A*             追加・変更・削除・照会の各モードに対応
+     A* 作成日    : 2026/03/14
+     A* 作成者    : システム開発部
+     A*================================================================
+     A                                      DSPSIZ(24 80 *DS3)
+     A                                      CA03(03 '終了')
+     A                                      CA05(05 '更新')
+     A                                      CA06(06 '追加')
+     A                                      CA10(10 '削除')
+     A                                      CA12(12 '戻る')
+     A                                      PRINT
+     A*
+     A*================================================================
+     A* 学生ID入力レコード（検索用）
+     A*================================================================
+     A          R STUSRCH
+     A*
+     A                                  1 25'学 生 メ ン テ ナ ン ス'
+     A                                      DSPATR(HI)
+     A                                  2  2'STUMNT'
+     A                                  2 70DATE
+     A                                      EDTCDE(Y)
+     A                                  3  1'──────────────────────────'
+     A*
+     A*   --- 処理モード表示 ---
+     A            SCMODE        10A  O  4  2
+     A                                      DSPATR(HI)
+     A*
+     A*   --- 学生ID入力 ---
+     A                                  6  5'学生ID     :'
+     A            SCSTID         6A  B  6 20
+     A                                      DSPATR(UL)
+     A*
+     A*   --- メッセージ ---
+     A            SCMSG         50A  O 20  2
+     A                                      DSPATR(RI)
+     A*
+     A                                 23  2'F3=終了  F5=更新  F6=追加'
+     A                                      DSPATR(CS)
+     A                                 24  2'F10=削除  F12=戻る'
+     A                                      DSPATR(CS)
+     A*
+     A*================================================================
+     A* 学生詳細レコード
+     A*================================================================
+     A          R STUDETL
+     A*
+     A                                  1 25'学 生 詳 細 情 報'
+     A                                      DSPATR(HI)
+     A                                  2  2'STUDTL'
+     A                                  2 70DATE
+     A                                      EDTCDE(Y)
+     A                                  3  1'──────────────────────────'
+     A*
+     A*   --- 処理モード表示 ---
+     A            DTMODE        10A  O  4  2
+     A                                      DSPATR(HI)
+     A*
+     A*   --- 学生基本情報 ---
+     A                                  6  5'学生ID     :'
+     A            DTSTID         6A  O  6 20
+     A                                      DSPATR(HI)
+     A*
+     A                                  7  5'学生氏名   :'
+     A  60                              7  5'学生氏名   :'
+     A            DTNAM         30A  B  7 20
+     A N60                                  DSPATR(PR)
+     A  60                                  DSPATR(UL)
+     A*
+     A                                  8  5'カナ氏名   :'
+     A            DTKNA         30A  B  8 20
+     A N60                                  DSPATR(PR)
+     A  60                                  DSPATR(UL)
+     A*
+     A                                  9  5'生年月日   :'
+     A            DTBDT          8S 0B  9 20
+     A N60                                  DSPATR(PR)
+     A  60                                  DSPATR(UL)
+     A                                      EDTCDE(Y)
+     A*
+     A                                 10  5'性別       :'
+     A            DTGND          1A  B 10 20
+     A N60                                  DSPATR(PR)
+     A  60                                  DSPATR(UL)
+     A                                 10 25'(M=男 F=女)'
+     A*
+     A*   --- 連絡先情報 ---
+     A                                 12  5'住所       :'
+     A            DTADR         50A  B 12 20
+     A N60                                  DSPATR(PR)
+     A  60                                  DSPATR(UL)
+     A*
+     A                                 13  5'電話番号   :'
+     A            DTTEL         15A  B 13 20
+     A N60                                  DSPATR(PR)
+     A  60                                  DSPATR(UL)
+     A*
+     A                                 14  5'メール     :'
+     A            DTMAL         40A  B 14 20
+     A N60                                  DSPATR(PR)
+     A  60                                  DSPATR(UL)
+     A*
+     A*   --- 所属情報 ---
+     A                                 16  5'学校コード :'
+     A            DTSCL          4A  B 16 20
+     A N60                                  DSPATR(PR)
+     A  60                                  DSPATR(UL)
+     A            DTSNAM        40A  O 16 27
+     A*
+     A                                 17  5'入学年度   :'
+     A            DTYR           4S 0B 17 20
+     A N60                                  DSPATR(PR)
+     A  60                                  DSPATR(UL)
+     A*
+     A*   --- 状態表示 ---
+     A                                 18  5'状態       :'
+     A            DTSTS          1A  O 18 20
+     A            DTSTNM        10A  O 18 25
+     A*
+     A*   --- メッセージ ---
+     A            DTMSG         50A  O 20  2
+     A                                      DSPATR(RI)
+     A*
+     A*   --- 確認メッセージ ---
+     A            DTCFM         50A  O 21  2
+     A                                      DSPATR(HI)
+     A*
+     A*   --- ファンクションキー案内 ---
+     A                                 23  2'F3=終了  F5=更新  F12=戻る'
+     A                                      DSPATR(CS)
+     A*
+     A*================================================================
+     A* 削除確認レコード
+     A*================================================================
+     A          R STUDEL
+     A                                 20  2'削除してよろしいですか？  '
+     A                                      DSPATR(RI)
+     A                                 21  2'(F5=実行  F12=キャンセル)'
+     A                                      DSPATR(HI)

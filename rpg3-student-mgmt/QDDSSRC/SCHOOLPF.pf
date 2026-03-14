@@ -1,0 +1,44 @@
+     A*================================================================
+     A* ファイル名: SCHOOLPF
+     A* 説明      : 学校マスター物理ファイル
+     A* 作成日    : 2026/03/14
+     A* 作成者    : システム開発部
+     A*================================================================
+     A                                      UNIQUE
+     A          R SCLREC                     TEXT('学校マスターレコード')
+     A*
+     A*   --- 主キー ---
+     A            SCLID          4A         TEXT('学校コード') +
+     A                                      COLHDG('学校' 'コード')
+     A*
+     A*   --- 基本情報 ---
+     A            SCLNAM        40A         TEXT('学校名') +
+     A                                      COLHDG('学校名')
+     A            SCLTYP         1A         TEXT('種別 E=小 M=中 H=高 U=大') +
+     A                                      COLHDG('種別') +
+     A                                      VALUES('E' 'M' 'H' 'U')
+     A*
+     A*   --- 所在地情報 ---
+     A            SCLADR        50A         TEXT('住所') +
+     A                                      COLHDG('住所')
+     A            SCLTEL        15A         TEXT('電話番号') +
+     A                                      COLHDG('電話' '番号')
+     A            SCLFAX        15A         TEXT('FAX番号') +
+     A                                      COLHDG('FAX' '番号')
+     A*
+     A*   --- 責任者情報 ---
+     A            SCLPRI        20A         TEXT('校長名') +
+     A                                      COLHDG('校長名')
+     A*
+     A*   --- 統計情報 ---
+     A            SCLCNT         5S 0       TEXT('在籍生徒数') +
+     A                                      COLHDG('在籍' '生徒数')
+     A*
+     A*   --- 監査情報 ---
+     A            SCLADD         8S 0       TEXT('登録日 YYYYMMDD') +
+     A                                      COLHDG('登録日')
+     A            SCLUPD         8S 0       TEXT('更新日 YYYYMMDD') +
+     A                                      COLHDG('更新日')
+     A*
+     A*   --- 主キー定義 ---
+     A          K SCLID

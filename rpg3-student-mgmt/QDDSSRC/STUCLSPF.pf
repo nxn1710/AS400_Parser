@@ -1,0 +1,43 @@
+     A*================================================================
+     A* ファイル名: STUCLSPF
+     A* 説明      : 学生・クラス関連物理ファイル
+     A*             学生がどのクラスに所属するかを管理する
+     A* 作成日    : 2026/03/14
+     A* 作成者    : システム開発部
+     A*================================================================
+     A                                      UNIQUE
+     A          R SCRREC                     TEXT('学生・クラス関連レコード')
+     A*
+     A*   --- 複合キー ---
+     A            SCSTID         6A         TEXT('学生ID') +
+     A                                      COLHDG('学生' 'ID')
+     A            SCCLID         6A         TEXT('クラスID') +
+     A                                      COLHDG('クラス' 'ID')
+     A*
+     A*   --- 所属情報 ---
+     A            SCENDT         8S 0       TEXT('入級日 YYYYMMDD') +
+     A                                      COLHDG('入級日')
+     A            SCLVDT         8S 0       TEXT('退級日 YYYYMMDD') +
+     A                                      COLHDG('退級日')
+     A*
+     A*   --- 成績情報 ---
+     A            SCGRAD         3S 0       TEXT('成績点 0-100') +
+     A                                      COLHDG('成績点')
+     A            SCRANK         1A         TEXT('評価 A/B/C/D/F') +
+     A                                      COLHDG('評価') +
+     A                                      VALUES('A' 'B' 'C' 'D' 'F')
+     A*
+     A*   --- 状態管理 ---
+     A            SCSTS          1A         TEXT('状態 A=有効 D=退級') +
+     A                                      COLHDG('状態') +
+     A                                      DFT('A')
+     A*
+     A*   --- 監査情報 ---
+     A            SCADD          8S 0       TEXT('登録日 YYYYMMDD') +
+     A                                      COLHDG('登録日')
+     A            SCUPD          8S 0       TEXT('更新日 YYYYMMDD') +
+     A                                      COLHDG('更新日')
+     A*
+     A*   --- 複合キー定義 ---
+     A          K SCSTID
+     A          K SCCLID

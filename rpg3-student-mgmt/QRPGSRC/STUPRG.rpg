@@ -1,0 +1,527 @@
+     H*================================================================
+     H* プログラム名: STUPRG
+     H* 説明        : 学生メンテナンスプログラム
+     H* 作成日      : 2026/03/14
+     H* 作成者      : システム開発部
+     H*
+     H* 機能概要:
+     H*   学生マスターの追加・変更・削除・照会を行う
+     H*   F5=更新、F6=追加、F10=削除モード
+     H*
+     H* 使用ファイル:
+     H*   STUDNTPF - 学生マスター (更新)
+     H*   SCHOOLPF  - 学校マスター (参照)
+     H*   STUDSPF   - 学生メンテナンス画面
+     H*
+     H* 使用標識:
+     H*   03 - F3=終了
+     H*   05 - F5=更新/実行
+     H*   06 - F6=追加
+     H*   10 - F10=削除
+     H*   12 - F12=戻る
+     H*   50 - レコード検索結果 (見つからない場合ON)
+     H*   60 - 入力可能モード
+     H*   70 - エラー発生
+     H*   90 - 読取エラー
+     H*   99 - ファイル入出力エラー
+     H*================================================================
+     F*
+     F* --- ファイル定義 ---
+     FSTUDNTPFUF  E        K           DISK
+     FSCHOOLPFIF  E        K           DISK
+     FSTUDSPF CF  E                    WORKSTN
+     F*
+     I*================================================================
+     I* プログラム状態データ構造 (SDS)
+     I* システムがプログラム実行時に自動的に設定する情報
+     I*================================================================
+     I            SDS
+     I*  --- プログラム名 ---
+     I                                        1  10 SDPGM
+     I*  --- プログラム状態コード ---
+     I                                       11  15 SDSTS
+     I*  --- 前回の状態コード ---
+     I                                       16  20 SDPSTS
+     I*  --- ソースリスト行番号 ---
+     I                                       21  28 SDSLIN
+     I*  --- 実行中のルーチン名 ---
+     I                                       29  36 SDRTN
+     I*  --- パラメーター数 ---
+     I                                       37  39 SDPARM
+     I*  --- 例外タイプ ---
+     I                                       40  42 SDEXTP
+     I*  --- 例外番号 ---
+     I                                       43  46 SDEXNB
+     I*  --- 例外データ ---
+     I                                       47  50 SDEXDT
+     I*  --- ジョブ名 ---
+     I                                      244 253 SDJOB
+     I*  --- ユーザー名 ---
+     I                                      254 263 SDUSER
+     I*  --- ジョブ番号 ---
+     I                                      264 269 SDJNBR
+     I*  --- 日付（ジョブ入力日） ---
+     I                                      270 2750SDDATE
+     I*  --- 実行日 ---
+     I                                      276 2810SDUDAT
+     I*
+     I*================================================================
+     I* データ構造: 日付取得用
+     I*================================================================
+     I            DS
+     I                                        1   80WKDATE
+     I                                        1   40WKYEAR
+     I                                        5   60WKMON
+     I                                        7   80WKDAY
+     I*
+     I* データ構造: エラーメッセージ用
+     I            DS
+     I                                        1  50 ERRMSG
+     I*
+     I* データ構造: 処理モード管理
+     I            DS
+     I                                        1   1 MODE
+     I*
+     I*================================================================
+     I* エラーメッセージ データ構造
+     I* 各メッセージを短い変数名で参照可能にする
+     I*================================================================
+     I            DS
+     I   I    'FILE I/O ERROR'                1  50 EMERRF
+     I            DS
+     I   I    'NOT FOUND'                     1  50 EMNTFD
+     I            DS
+     I   I    'ENTER STUDENT ID'              1  50 EMIDRQ
+     I            DS
+     I   I    'ID ALREADY EXISTS'             1  50 EMIDEX
+     I            DS
+     I   I    'ADDED'                         1  50 EMADD
+     I            DS
+     I   I    'F5=UPD OR ENTER'               1  50 EMCFMX
+     I            DS
+     I   I    'RECORD NOT FOUND'              1  50 EMRNFD
+     I            DS
+     I   I    'UPDATED'                       1  50 EMUPD
+     I            DS
+     I   I    'DELETED'                       1  50 EMDLTD
+     I            DS
+     I   I    'NAME REQUIRED'                 1  50 EMNREQ
+     I            DS
+     I   I    'GENDER: M OR F'                1  50 EMGNDR
+     I            DS
+     I   I    'INVALID SCHOOL'                1  50 EMSINV
+     I            DS
+     I   I    'SCHOOL FILE ERR'               1  50 EMSERR
+     I            DS
+     I   I    'BAD BIRTHDATE'                 1  50 EMBDTE
+     I*
+     C*================================================================
+     C* 初期処理
+     C*================================================================
+     C                     EXSR INIT
+     C*
+     C*================================================================
+     C* メインループ: 学生ID検索画面
+     C* F3=終了が押されるまで繰り返す
+     C*================================================================
+     C           *IN03     DOWEQ*OFF
+     C*
+     C*  --- 検索画面初期化 ---
+     C                     MOVEL*BLANKS   SCMSG
+     C                     MOVEL*BLANKS   SCSTID
+     C                     MOVEL'SEARCH'  SCMODE
+     C*
+     C*  --- 検索画面表示 ---
+     C                     EXFMTSTUSRCH
+     C*
+     C*  --- F3=終了チェック ---
+     C           *IN03     IFEQ *ON
+     C                     GOTO PGEXIT
+     C                     ENDIF
+     C*
+     C*  --- F12=戻るチェック ---
+     C           *IN12     IFEQ *ON
+     C                     GOTO PGEXIT
+     C                     ENDIF
+     C*
+     C*  --- F6=追加モード ---
+     C           *IN06     IFEQ *ON
+     C                     MOVEL'A'       MODE
+     C                     EXSR ADDSTU
+     C                     GOTO MLOOP
+     C                     ENDIF
+     C*
+     C*  --- 学生IDが入力された場合 ---
+     C           SCSTID    IFNE *BLANKS
+     C*
+     C*    学生マスター検索
+     C           SCSTID    CHAINSTUDNTPF            5099
+     C*
+     C*    ファイル入出力エラーチェック
+     C           *IN99     IFEQ *ON
+     C                     MOVELEMERRFSCMSG
+     C                     GOTO MLOOP
+     C                     ENDIF
+     C*
+     C           *IN50     IFEQ *ON
+     C*    レコードが見つからない
+     C                     MOVELEMNTFDSCMSG
+     C                     ELSE
+     C*    レコードが見つかった - 詳細画面表示
+     C                     EXSR DTLSHO
+     C                     ENDIF
+     C*
+     C                     ENDIF
+     C*
+     C           MLOOP     TAG
+     C                     ENDDO
+     C*
+     C*================================================================
+     C* プログラム終了処理
+     C*================================================================
+     C           PGEXIT    TAG
+     C                     SETON                         LR
+     C                     RETRN
+     C*
+     C*================================================================
+     C* サブルーチン: INIT - 初期処理
+     C* 日付を取得し、処理モードを初期化する
+     C*================================================================
+     C           INIT      BEGSR
+     C*
+     C*  --- システム日付取得 ---
+     C                     TIME      WKDATE
+     C*
+     C*  --- 標識初期化 ---
+     C                     SETOF                    506070
+     C*
+     C*  --- モード初期化 ---
+     C                     MOVEL'S'       MODE
+     C*
+     C                     ENDSR
+     C*
+     C*================================================================
+     C* サブルーチン: DTLSHO - 詳細画面表示
+     C* 検索結果の学生情報を詳細画面に表示する
+     C*================================================================
+     C           DTLSHO    BEGSR
+     C*
+     C*  --- 画面フィールドへ転送 ---
+     C                     EXSR MOVSCN
+     C*
+     C*  --- 学校名取得 ---
+     C           STUSCL    CHAINSCHOOLPF              9099
+     C*  --- 学校検索エラーチェック ---
+     C           *IN99     IFEQ *ON
+     C                     MOVEL*BLANKS   DTSNAM
+     C                     ELSE
+     C           *IN90     IFEQ *OFF
+     C                     MOVELSCLNAM    DTSNAM
+     C                     ELSE
+     C                     MOVEL*BLANKS   DTSNAM
+     C                     ENDIF
+     C                     ENDIF
+     C*
+     C*  --- 状態名設定 ---
+     C                     EXSR STSNM
+     C*
+     C*  --- 入力不可モード（照会） ---
+     C                     SETOF                    60
+     C                     MOVEL'VIEW'    DTMODE
+     C                     MOVEL*BLANKS   DTMSG
+     C                     MOVEL*BLANKS   DTCFM
+     C*
+     C*  --- 詳細画面表示ループ ---
+     C           *IN03     DOWEQ*OFF
+     C*
+     C                     EXFMTSTUDETL
+     C*
+     C*    F3=終了
+     C           *IN03     IFEQ *ON
+     C                     SETON                    03
+     C                     LEAVESR
+     C                     ENDIF
+     C*
+     C*    F12=戻る
+     C           *IN12     IFEQ *ON
+     C                     LEAVESR
+     C                     ENDIF
+     C*
+     C*    F5=更新モード
+     C           *IN05     IFEQ *ON
+     C                     MOVEL'U'       MODE
+     C                     EXSR UPDSTU
+     C                     LEAVESR
+     C                     ENDIF
+     C*
+     C*    F10=削除モード
+     C           *IN10     IFEQ *ON
+     C                     MOVEL'D'       MODE
+     C                     EXSR DELSTU
+     C                     LEAVESR
+     C                     ENDIF
+     C*
+     C                     ENDDO
+     C*
+     C                     ENDSR
+     C*
+     C*================================================================
+     C* サブルーチン: MOVSCN - マスターから画面へデータ転送
+     C*================================================================
+     C           MOVSCN    BEGSR
+     C*
+     C                     MOVELSTUID     DTSTID
+     C                     MOVELSTUNAM    DTNAM
+     C                     MOVELSTUKNA    DTKNA
+     C                     Z-ADDSTUBDT    DTBDT
+     C                     MOVELSTUGND    DTGND
+     C                     MOVELSTUADR    DTADR
+     C                     MOVELSTUTEL    DTTEL
+     C                     MOVELSTUMAL    DTMAL
+     C                     MOVELSTUSCL    DTSCL
+     C                     Z-ADDSTUYR     DTYR
+     C                     MOVELSTUSTS    DTSTS
+     C*
+     C                     ENDSR
+     C*
+     C*================================================================
+     C* サブルーチン: SCNMOV - 画面からマスターへデータ転送
+     C*================================================================
+     C           SCNMOV    BEGSR
+     C*
+     C                     MOVELDTNAM     STUNAM
+     C                     MOVELDTKNA     STUKNA
+     C                     Z-ADDDTBDT     STUBDT
+     C                     MOVELDTGND     STUGND
+     C                     MOVELDTADR     STUADR
+     C                     MOVELDTTEL     STUTEL
+     C                     MOVELDTMAL     STUMAL
+     C                     MOVELDTSCL     STUSCL
+     C                     Z-ADDDTYR      STUYR
+     C*
+     C                     ENDSR
+     C*
+     C*================================================================
+     C* サブルーチン: STSNM - 状態名称設定
+     C*================================================================
+     C           STSNM     BEGSR
+     C*
+     C           STUSTS    COMP 'A'                  2121
+     C   21                MOVEL'ACTIVE'  DTSTNM
+     C*
+     C           STUSTS    COMP 'D'                  2222
+     C   22                MOVEL'DELETED' DTSTNM
+     C*
+     C           STUSTS    COMP 'G'                  2323
+     C   23                MOVEL'GRADUAT' DTSTNM
+     C*
+     C  N21N22N23          MOVEL'UNKNOWN' DTSTNM
+     C*
+     C                     ENDSR
+     C*
+     C*================================================================
+     C* サブルーチン: ADDSTU - 学生追加処理
+     C*================================================================
+     C           ADDSTU    BEGSR
+     C*
+     C*  --- 画面初期化 ---
+     C                     MOVEL'ADD'     DTMODE
+     C                     SETON                    60
+     C                     MOVEL*BLANKS   DTNAM
+     C                     MOVEL*BLANKS   DTKNA
+     C                     Z-ADD0         DTBDT
+     C                     MOVEL*BLANKS   DTGND
+     C                     MOVEL*BLANKS   DTADR
+     C                     MOVEL*BLANKS   DTTEL
+     C                     MOVEL*BLANKS   DTMAL
+     C                     MOVEL*BLANKS   DTSCL
+     C                     Z-ADD0         DTYR
+     C                     MOVEL*BLANKS   DTMSG
+     C                     MOVEL*BLANKS   DTCFM
+     C*
+     C*  --- 学生ID入力確認 ---
+     C           SCSTID    IFEQ *BLANKS
+     C                     MOVELEMIDRQDTMSG
+     C                     LEAVESR
+     C                     ENDIF
+     C*
+     C                     MOVELSCSTID    DTSTID
+     C*
+     C*  --- 重複チェック ---
+     C           SCSTID    CHAINSTUDNTPF            5099
+     C*  --- 重複チェックエラー ---
+     C           *IN99     IFEQ *ON
+     C                     MOVELEMERFFDTMSG
+     C                     LEAVESR
+     C                     ENDIF
+     C           *IN50     IFEQ *OFF
+     C                     MOVELEMIDEXDTMSG
+     C                     LEAVESR
+     C                     ENDIF
+     C*
+     C*  --- 追加画面表示 ---
+     C                     EXFMTSTUDETL
+     C*
+     C*  --- F5=実行チェック ---
+     C           *IN05     IFEQ *ON
+     C*
+     C*    入力チェック
+     C                     EXSR CHKINP
+     C           *IN70     IFEQ *ON
+     C                     LEAVESR
+     C                     ENDIF
+     C*
+     C*    マスター書き込み
+     C                     MOVELSCSTID    STUID
+     C                     EXSR SCNMOV
+     C                     MOVEL'A'       STUSTS
+     C                     Z-ADDWKDATE    STUADD
+     C                     Z-ADDWKDATE    STUUPD
+     C                     MOVEL'STUPRG'  STUADB
+     C                     MOVEL'STUPRG'  STUUPB
+     C                     WRITESTUREC
+     C*
+     C                     MOVELEMADDSCMSG
+     C*
+     C                     ENDIF
+     C*
+     C                     ENDSR
+     C*
+     C*================================================================
+     C* サブルーチン: UPDSTU - 学生更新処理
+     C*================================================================
+     C           UPDSTU    BEGSR
+     C*
+     C*  --- 更新モード設定 ---
+     C                     MOVEL'UPDATE'  DTMODE
+     C                     SETON                    60
+     C                     MOVEL*BLANKS   DTMSG
+     C                     MOVELEMCFMXDTCFM
+     C*
+     C*  --- 更新画面表示 ---
+     C                     EXFMTSTUDETL
+     C*
+     C*  --- F5=実行チェック ---
+     C           *IN05     IFEQ *ON
+     C*
+     C*    入力チェック
+     C                     EXSR CHKINP
+     C           *IN70     IFEQ *ON
+     C                     LEAVESR
+     C                     ENDIF
+     C*
+     C*    学生マスター再読み込み（ロック）
+     C           DTSTID    CHAINSTUDNTPF            5099
+     C*  --- 再読み込みエラーチェック ---
+     C           *IN99     IFEQ *ON
+     C                     MOVELEMERFFDTMSG
+     C                     LEAVESR
+     C                     ENDIF
+     C           *IN50     IFEQ *ON
+     C                     MOVELEMRNFDDTMSG
+     C                     LEAVESR
+     C                     ENDIF
+     C*
+     C*    画面データを転送して更新
+     C                     EXSR SCNMOV
+     C                     Z-ADDWKDATE    STUUPD
+     C                     MOVEL'STUPRG'  STUUPB
+     C                     UPDATSTUREC
+     C*
+     C                     MOVELEMUPD SCMSG
+     C*
+     C                     ENDIF
+     C*
+     C                     ENDSR
+     C*
+     C*================================================================
+     C* サブルーチン: DELSTU - 学生削除処理
+     C*================================================================
+     C           DELSTU    BEGSR
+     C*
+     C*  --- 削除モード設定 ---
+     C                     MOVEL'DELETE'  DTMODE
+     C                     SETOF                    60
+     C                     MOVEL*BLANKS   DTMSG
+     C*
+     C*  --- 削除確認画面表示 ---
+     C                     EXFMTSTUDETL
+     C                     WRITESTUDEL
+     C                     EXFMTSTUDETL
+     C*
+     C*  --- F5=実行チェック ---
+     C           *IN05     IFEQ *ON
+     C*
+     C*    学生マスター再読み込み
+     C           DTSTID    CHAINSTUDNTPF            5099
+     C*  --- 削除時読み込みエラーチェック ---
+     C           *IN99     IFEQ *ON
+     C                     MOVELEMERFFDTMSG
+     C                     LEAVESR
+     C                     ENDIF
+     C           *IN50     IFEQ *ON
+     C                     MOVELEMRNFDDTMSG
+     C                     LEAVESR
+     C                     ENDIF
+     C*
+     C*    論理削除（状態を'D'に変更）
+     C                     MOVEL'D'       STUSTS
+     C                     Z-ADDWKDATE    STUUPD
+     C                     MOVEL'STUPRG'  STUUPB
+     C                     UPDATSTUREC
+     C*
+     C                     MOVELEMDLTDSCMSG
+     C*
+     C                     ENDIF
+     C*
+     C                     ENDSR
+     C*
+     C*================================================================
+     C* サブルーチン: CHKINP - 入力チェック
+     C* エラーがある場合は標識70をONにする
+     C*================================================================
+     C           CHKINP    BEGSR
+     C*
+     C                     SETOF                    70
+     C*
+     C*  --- 氏名必須チェック ---
+     C           DTNAM     IFEQ *BLANKS
+     C                     MOVELEMNREQDTMSG
+     C                     SETON                    70
+     C                     LEAVESR
+     C                     ENDIF
+     C*
+     C*  --- 性別チェック ---
+     C           DTGND     IFNE 'M'
+     C           DTGND     ANDNE'F'
+     C           DTGND     ANDNE*BLANKS
+     C                     MOVELEMGNDRDTMSG
+     C                     SETON                    70
+     C                     LEAVESR
+     C                     ENDIF
+     C*
+     C*  --- 学校コード存在チェック ---
+     C           DTSCL     IFNE *BLANKS
+     C           DTSCL     CHAINSCHOOLPF              9099
+     C*  --- 学校コード検索エラー ---
+     C           *IN99     IFEQ *ON
+     C                     MOVELEMSERRDTMSG
+     C                     SETON                    70
+     C                     LEAVESR
+     C                     ENDIF
+     C           *IN90     IFEQ *ON
+     C                     MOVELEMINVDTMSG
+     C                     SETON                    70
+     C                     LEAVESR
+     C                     ENDIF
+     C                     ENDIF
+     C*
+     C*  --- 生年月日範囲チェック ---
+     C           DTBDT     IFGT 0
+     C           DTBDT     COMP 19000101             2525
+     C   25                MOVELEMBDTEDTMSG
+     C   25                SETON                    70
+     C   25                LEAVESR
+     C                     ENDIF
+     C*
+     C                     ENDSR

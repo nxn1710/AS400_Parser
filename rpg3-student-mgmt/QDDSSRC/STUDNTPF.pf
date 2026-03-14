@@ -1,0 +1,55 @@
+     A*================================================================
+     A* ファイル名: STUDNTPF
+     A* 説明      : 学生マスター物理ファイル
+     A* 作成日    : 2026/03/14
+     A* 作成者    : システム開発部
+     A*================================================================
+     A                                      UNIQUE
+     A          R STUREC                     TEXT('学生マスターレコード')
+     A*
+     A*   --- 主キー ---
+     A            STUID          6A         TEXT('学生ID') +
+     A                                      COLHDG('学生' 'ID')
+     A*
+     A*   --- 基本情報 ---
+     A            STUNAM        30A         TEXT('学生氏名') +
+     A                                      COLHDG('学生' '氏名')
+     A            STUKNA        30A         TEXT('学生カナ名') +
+     A                                      COLHDG('カナ' '氏名')
+     A            STUBDT         8S 0       TEXT('生年月日 YYYYMMDD') +
+     A                                      COLHDG('生年' '月日')
+     A            STUGND         1A         TEXT('性別 M/F') +
+     A                                      COLHDG('性別') +
+     A                                      VALUES('M' 'F')
+     A*
+     A*   --- 連絡先情報 ---
+     A            STUADR        50A         TEXT('住所') +
+     A                                      COLHDG('住所')
+     A            STUTEL        15A         TEXT('電話番号') +
+     A                                      COLHDG('電話' '番号')
+     A            STUMAL        40A         TEXT('メールアドレス') +
+     A                                      COLHDG('メール' 'アドレス')
+     A*
+     A*   --- 所属情報 ---
+     A            STUSCL         4A         TEXT('学校コード') +
+     A                                      COLHDG('学校' 'コード')
+     A            STUYR          4S 0       TEXT('入学年度') +
+     A                                      COLHDG('入学' '年度')
+     A*
+     A*   --- 状態管理 ---
+     A            STUSTS         1A         TEXT('状態 A=有効 D=削除 G=卒業') +
+     A                                      COLHDG('状態') +
+     A                                      DFT('A')
+     A*
+     A*   --- 監査情報 ---
+     A            STUADD         8S 0       TEXT('登録日 YYYYMMDD') +
+     A                                      COLHDG('登録日')
+     A            STUUPD         8S 0       TEXT('更新日 YYYYMMDD') +
+     A                                      COLHDG('更新日')
+     A            STUADB        10A         TEXT('登録者') +
+     A                                      COLHDG('登録者')
+     A            STUUPB        10A         TEXT('更新者') +
+     A                                      COLHDG('更新者')
+     A*
+     A*   --- 主キー定義 ---
+     A          K STUID

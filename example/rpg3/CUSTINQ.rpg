@@ -1,0 +1,42 @@
+     H                                                                         
+     F* File declarations                                                      
+     FCUSTMAST IF  E           K        DISK                                    
+     FCUSTDSP  CF  E                    WORKSTN                                 
+     FQSYSPRT  O   F     132            PRINTER                            OA   
+     E                    ARR        10  5 0                                    
+     LQSYSPRT  066 056                                                          
+     ICUSTREC                                                                   
+     I                                        1   5 0CUSTNO                     
+     I                                        6  30  CUSTNM                     
+     I                                       31  40  CUSTCT                     
+     I            DS                                                            
+     I                                        1  80 DTEFLD                      
+     I                                        1   2 0DTEMON                     
+     I                                        3   4 0DTEDAY                     
+     I                                        5   8 0DTEYER                     
+     C* Main calculation logic                                                  
+     C           *IN03     DOWEQ*OFF                                            
+     C           CUSTNO    CHAINCUSTREC                50                       
+     C  N50                EXSR DSPREC           DISPLAY RECORD                  
+     C   50                EXSR ERRMSG           SHOW ERROR                      
+     C                     READ CUSTDSP                                         
+     C                     END                                                  
+     C* Subroutine - Display customer record                                    
+     C           DSPREC    BEGSR                                                
+     C                     MOVELCUSTNM    DSPNAM 25            MOVE NAME        
+     C                     Z-ADDCUSTNO    DSPNUM  5 0          MOVE NUMBER       
+     C           AMT1      ADD  AMT2      TOTAL   9 2          CALC TOTAL        
+     C           COUNT     IFGT 0                                                
+     C                     WRITEDTLREC                   90    WRITE DETAIL      
+     C  N90                EXCPTHDRREC                         PRINT HEADER      
+     C                     ELSE                                                  
+     C                     MOVEL*BLANKS  DSPNAM                CLEAR NAME        
+     C                     END                                                   
+     C                     ENDSR                                                 
+     C* Subroutine - Error message                                               
+     C           ERRMSG    BEGSR                                                 
+     C                     MOVEL'NOTFND' ERRCDE  6             SET ERROR CODE    
+     C                     SETON                     LR        SET LR ON         
+     C                     ENDSR                                                 
+     OQSYSPRT  H          1P                                                     
+     O                              CUSTNM    30                                  
