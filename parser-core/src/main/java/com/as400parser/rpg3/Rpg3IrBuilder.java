@@ -100,35 +100,35 @@ public class Rpg3IrBuilder extends Rpg3ParserBaseVisitor<Void> {
         // Grammar tokens (inherited from RPG IV) have misaligned widths.
         // Override with column-based extraction from raw source line.
         // RPG III F-spec columns (1-indexed):
-        //   7-14:  File name (8 chars)       — RPG IV uses 7-16 (10 chars)
-        //  15:     File type (I/O/U/C/D)
-        //  16:     File designation (P/S/R/T/F/blank)
-        //  17:     End of file (E/blank)
-        //  18:     File addition (A/blank)
-        //  19:     Sequence (A/D/blank)
-        //  20:     File format (E/F/blank)
-        //  21-24:  Record length
-        //  25:     Limits processing
-        //  26-28:  Key length
-        //  29:     Record address type
-        //  30:     File organization
-        //  31-34:  Overflow indicator / additional info
-        //  35-38:  (reserved)
-        //  40-46:  Device (DISK, PRINTER, WORKSTN, etc.)
+        // 7-14: File name (8 chars) — RPG IV uses 7-16 (10 chars)
+        // 15: File type (I/O/U/C/D)
+        // 16: File designation (P/S/R/T/F/blank)
+        // 17: End of file (E/blank)
+        // 18: File addition (A/blank)
+        // 19: Sequence (A/D/blank)
+        // 20: File format (E/F/blank)
+        // 21-24: Record length
+        // 25: Limits processing
+        // 26-28: Key length
+        // 29: Record address type
+        // 30: File organization
+        // 31-34: Overflow indicator / additional info
+        // 35-38: (reserved)
+        // 40-46: Device (DISK, PRINTER, WORKSTN, etc.)
         if (rawLine != null && rawLine.length() >= 46) {
-            spec.setFileName(safeSubstring(rawLine, 6, 14));         // cols 7-14
-            spec.setFileType(safeSubstring(rawLine, 14, 15));        // col 15
+            spec.setFileName(safeSubstring(rawLine, 6, 14)); // cols 7-14
+            spec.setFileType(safeSubstring(rawLine, 14, 15)); // col 15
             spec.setFileDesignation(safeSubstring(rawLine, 15, 16)); // col 16
-            spec.setEndOfFile(safeSubstring(rawLine, 16, 17));       // col 17
-            spec.setFileAddition(safeSubstring(rawLine, 17, 18));    // col 18
-            spec.setSequence(safeSubstring(rawLine, 18, 19));        // col 19
-            spec.setFileFormat(safeSubstring(rawLine, 19, 20));      // col 20
-            spec.setRecordLength(safeParseInt(safeSubstring(rawLine, 20, 24)));  // cols 21-24
-            spec.setLimits(safeSubstring(rawLine, 24, 25));           // col 25
-            spec.setKeyLength(safeParseInt(safeSubstring(rawLine, 25, 28)));     // cols 26-28
+            spec.setEndOfFile(safeSubstring(rawLine, 16, 17)); // col 17
+            spec.setFileAddition(safeSubstring(rawLine, 17, 18)); // col 18
+            spec.setSequence(safeSubstring(rawLine, 18, 19)); // col 19
+            spec.setFileFormat(safeSubstring(rawLine, 19, 20)); // col 20
+            spec.setRecordLength(safeParseInt(safeSubstring(rawLine, 20, 24))); // cols 21-24
+            spec.setLimits(safeSubstring(rawLine, 24, 25)); // col 25
+            spec.setKeyLength(safeParseInt(safeSubstring(rawLine, 25, 28))); // cols 26-28
             spec.setRecordAddressType(safeSubstring(rawLine, 28, 29)); // col 29
-            spec.setFileOrganization(safeSubstring(rawLine, 29, 30));  // col 30
-            spec.setDevice(safeSubstring(rawLine, 39, 46));           // cols 40-46
+            spec.setFileOrganization(safeSubstring(rawLine, 29, 30)); // col 30
+            spec.setDevice(safeSubstring(rawLine, 39, 46)); // cols 40-46
         } else {
             // Fallback to grammar tokens if raw line is too short
             spec.setFileName(safeText(ctx.FS_RecordName()));
@@ -178,7 +178,8 @@ public class Rpg3IrBuilder extends Rpg3ParserBaseVisitor<Void> {
                     if (line.length() > 18) {
                         String keyword = line.substring(18).trim();
                         if (!keyword.isEmpty()) {
-                            if (contBuilder.length() > 0) contBuilder.append(" ");
+                            if (contBuilder.length() > 0)
+                                contBuilder.append(" ");
                             contBuilder.append(keyword);
                         }
                     }
@@ -366,10 +367,12 @@ public class Rpg3IrBuilder extends Rpg3ParserBaseVisitor<Void> {
 
         // Get the operation from cspec_fixed_standard
         Rpg3Parser.Cspec_fixed_standardContext stdCtx = ctx.cspec_fixed_standard();
-        if (stdCtx == null) return null;
+        if (stdCtx == null)
+            return null;
 
         Operation op = buildOperation(ctx, stdCtx);
-        if (op == null) return null;
+        if (op == null)
+            return null;
 
         // Special handling for TAG, GOTO, EXSR
         String opcode = op.getOpcode();
@@ -396,7 +399,7 @@ public class Rpg3IrBuilder extends Rpg3ParserBaseVisitor<Void> {
                 callSr.setSubroutineName(srName);
                 // Track for cross-reference
                 exsrCalls.computeIfAbsent(srName.trim().toUpperCase(), k -> new ArrayList<>())
-                    .add(op.getLocation());
+                        .add(op.getLocation());
                 content.getCalculationSpecs().add(callSr);
                 return null;
             }
@@ -462,7 +465,7 @@ public class Rpg3IrBuilder extends Rpg3ParserBaseVisitor<Void> {
 
             // Extract conditioning indicators from the context (all 3 positions)
             extractConditioningIndicators(block, ctx.cs_controlLevel(), ctx.indicators, ctx.indicatorsOff,
-                ctx.cspec_continuedIndicators());
+                    ctx.cspec_continuedIndicators());
 
             for (Rpg3Parser.StatementContext stmt : ctx.statement()) {
                 visitStatementIntoList(stmt, block.getBodyOps());
@@ -517,12 +520,12 @@ public class Rpg3IrBuilder extends Rpg3ParserBaseVisitor<Void> {
         for (int i = 0; i < ctx.getChildCount(); i++) {
             ParseTree child = ctx.getChild(i);
             if (child instanceof Rpg3Parser.CsCASEQContext ||
-                child instanceof Rpg3Parser.CsCASNEContext ||
-                child instanceof Rpg3Parser.CsCASLEContext ||
-                child instanceof Rpg3Parser.CsCASLTContext ||
-                child instanceof Rpg3Parser.CsCASGEContext ||
-                child instanceof Rpg3Parser.CsCASGTContext ||
-                child instanceof Rpg3Parser.CsCASContext) {
+                    child instanceof Rpg3Parser.CsCASNEContext ||
+                    child instanceof Rpg3Parser.CsCASLEContext ||
+                    child instanceof Rpg3Parser.CsCASLTContext ||
+                    child instanceof Rpg3Parser.CsCASGEContext ||
+                    child instanceof Rpg3Parser.CsCASGTContext ||
+                    child instanceof Rpg3Parser.CsCASContext) {
 
                 CaseEntry entry = buildCaseEntry(child);
                 if (entry != null) {
@@ -628,7 +631,8 @@ public class Rpg3IrBuilder extends Rpg3ParserBaseVisitor<Void> {
 
     @Override
     public Void visitCompileTimeData(Rpg3Parser.CompileTimeDataContext ctx) {
-        if (ctx.endSource() == null) return null;
+        if (ctx.endSource() == null)
+            return null;
 
         CompileTimeData ctd = new CompileTimeData();
         List<CompileTimeBlock> blocks = new ArrayList<>();
@@ -695,20 +699,22 @@ public class Rpg3IrBuilder extends Rpg3ParserBaseVisitor<Void> {
 
     /** Build an Operation from a cspec_fixed context. */
     private Operation buildOperation(Rpg3Parser.Cspec_fixedContext cspecCtx,
-                                     Rpg3Parser.Cspec_fixed_standardContext stdCtx) {
+            Rpg3Parser.Cspec_fixed_standardContext stdCtx) {
         Operation op = new Operation();
         op.setRawSourceLine(getRawLine(cspecCtx));
         op.setLocation(getLocation(cspecCtx));
 
         // Control level and conditioning indicators (all 3 positions)
         extractConditioningIndicators(op, cspecCtx.cs_controlLevel(), cspecCtx.indicators, cspecCtx.indicatorsOff,
-            cspecCtx.cspec_continuedIndicators());
+                cspecCtx.cspec_continuedIndicators());
 
-        // Find the opcode — it's in one of the specific rule alternatives inside cspec_fixed_standard
+        // Find the opcode — it's in one of the specific rule alternatives inside
+        // cspec_fixed_standard
         op.setOpcode(extractOpcode(stdCtx));
         op.setExtendedOpcode(extractExtendedOpcode(stdCtx));
 
-        // Find cspec_fixed_standard_parts (contains factor2, result, len, decimal, indicators)
+        // Find cspec_fixed_standard_parts (contains factor2, result, len, decimal,
+        // indicators)
         Rpg3Parser.Cspec_fixed_standard_partsContext parts = findStandardParts(stdCtx);
         if (parts != null) {
             Location loc = getLocation(cspecCtx);
@@ -790,7 +796,7 @@ public class Rpg3IrBuilder extends Rpg3ParserBaseVisitor<Void> {
         }
 
         boolean isCompound = (andConds != null && !andConds.isEmpty())
-                          || (orConds != null && !orConds.isEmpty());
+                || (orConds != null && !orConds.isEmpty());
 
         if (isCompound) {
             block.setCondition(condition);
@@ -804,7 +810,7 @@ public class Rpg3IrBuilder extends Rpg3ParserBaseVisitor<Void> {
 
         // Extract conditioning indicators (all 3 positions)
         extractConditioningIndicators(block, ctx.cs_controlLevel(), ctx.indicators, ctx.indicatorsOff,
-            ctx.cspec_continuedIndicators());
+                ctx.cspec_continuedIndicators());
 
         return block;
     }
@@ -857,7 +863,7 @@ public class Rpg3IrBuilder extends Rpg3ParserBaseVisitor<Void> {
         }
 
         extractConditioningIndicators(block, ctx.cs_controlLevel(), ctx.indicators, ctx.indicatorsOff,
-            ctx.cspec_continuedIndicators());
+                ctx.cspec_continuedIndicators());
         return block;
     }
 
@@ -909,7 +915,7 @@ public class Rpg3IrBuilder extends Rpg3ParserBaseVisitor<Void> {
         }
 
         extractConditioningIndicators(block, ctx.cs_controlLevel(), ctx.indicators, ctx.indicatorsOff,
-            ctx.cspec_continuedIndicators());
+                ctx.cspec_continuedIndicators());
         return block;
     }
 
@@ -918,18 +924,34 @@ public class Rpg3IrBuilder extends Rpg3ParserBaseVisitor<Void> {
         CaseEntry entry = new CaseEntry();
         entry.setLocation(getLocation(child));
 
-        // The child is one of: csCASEQ, csCASNE, csCASLE, csCASLT, csCASGE, csCASGT, csCAS
+        // The child is one of: csCASEQ, csCASNE, csCASLE, csCASLT, csCASGE, csCASGT,
+        // csCAS
         String compType = null;
         Rpg3Parser.Cspec_fixed_standard_partsContext parts = null;
 
-        if (child instanceof Rpg3Parser.CsCASEQContext) { compType = "EQ"; parts = ((Rpg3Parser.CsCASEQContext)child).cspec_fixed_standard_parts(); }
-        else if (child instanceof Rpg3Parser.CsCASNEContext) { compType = "NE"; parts = ((Rpg3Parser.CsCASNEContext)child).cspec_fixed_standard_parts(); }
-        else if (child instanceof Rpg3Parser.CsCASLEContext) { compType = "LE"; parts = ((Rpg3Parser.CsCASLEContext)child).cspec_fixed_standard_parts(); }
-        else if (child instanceof Rpg3Parser.CsCASLTContext) { compType = "LT"; parts = ((Rpg3Parser.CsCASLTContext)child).cspec_fixed_standard_parts(); }
-        else if (child instanceof Rpg3Parser.CsCASGEContext) { compType = "GE"; parts = ((Rpg3Parser.CsCASGEContext)child).cspec_fixed_standard_parts(); }
-        else if (child instanceof Rpg3Parser.CsCASGTContext) { compType = "GT"; parts = ((Rpg3Parser.CsCASGTContext)child).cspec_fixed_standard_parts(); }
-        else if (child instanceof Rpg3Parser.CsCASContext) { compType = null; parts = ((Rpg3Parser.CsCASContext)child).cspec_fixed_standard_parts(); }
-        else return null;
+        if (child instanceof Rpg3Parser.CsCASEQContext) {
+            compType = "EQ";
+            parts = ((Rpg3Parser.CsCASEQContext) child).cspec_fixed_standard_parts();
+        } else if (child instanceof Rpg3Parser.CsCASNEContext) {
+            compType = "NE";
+            parts = ((Rpg3Parser.CsCASNEContext) child).cspec_fixed_standard_parts();
+        } else if (child instanceof Rpg3Parser.CsCASLEContext) {
+            compType = "LE";
+            parts = ((Rpg3Parser.CsCASLEContext) child).cspec_fixed_standard_parts();
+        } else if (child instanceof Rpg3Parser.CsCASLTContext) {
+            compType = "LT";
+            parts = ((Rpg3Parser.CsCASLTContext) child).cspec_fixed_standard_parts();
+        } else if (child instanceof Rpg3Parser.CsCASGEContext) {
+            compType = "GE";
+            parts = ((Rpg3Parser.CsCASGEContext) child).cspec_fixed_standard_parts();
+        } else if (child instanceof Rpg3Parser.CsCASGTContext) {
+            compType = "GT";
+            parts = ((Rpg3Parser.CsCASGTContext) child).cspec_fixed_standard_parts();
+        } else if (child instanceof Rpg3Parser.CsCASContext) {
+            compType = null;
+            parts = ((Rpg3Parser.CsCASContext) child).cspec_fixed_standard_parts();
+        } else
+            return null;
 
         entry.setComparisonType(compType);
 
@@ -1070,12 +1092,18 @@ public class Rpg3IrBuilder extends Rpg3ParserBaseVisitor<Void> {
         for (int i = 0; i < ctx.getChildCount(); i++) {
             ParseTree child = ctx.getChild(i);
             String childName = child.getClass().getSimpleName();
-            if (childName.contains("EQ")) return "EQ";
-            if (childName.contains("NE")) return "NE";
-            if (childName.contains("LE")) return "LE";
-            if (childName.contains("LT")) return "LT";
-            if (childName.contains("GE")) return "GE";
-            if (childName.contains("GT")) return "GT";
+            if (childName.contains("EQ"))
+                return "EQ";
+            if (childName.contains("NE"))
+                return "NE";
+            if (childName.contains("LE"))
+                return "LE";
+            if (childName.contains("LT"))
+                return "LT";
+            if (childName.contains("GE"))
+                return "GE";
+            if (childName.contains("GT"))
+                return "GT";
         }
         return null;
     }
@@ -1087,8 +1115,8 @@ public class Rpg3IrBuilder extends Rpg3ParserBaseVisitor<Void> {
             if (child instanceof ParserRuleContext) {
                 for (int j = 0; j < child.getChildCount(); j++) {
                     if (child.getChild(j) instanceof Rpg3Parser.Cspec_fixed_standard_partsContext) {
-                        Rpg3Parser.Cspec_fixed_standard_partsContext parts =
-                            (Rpg3Parser.Cspec_fixed_standard_partsContext) child.getChild(j);
+                        Rpg3Parser.Cspec_fixed_standard_partsContext parts = (Rpg3Parser.Cspec_fixed_standard_partsContext) child
+                                .getChild(j);
                         return buildFactorExpression(parts.factor2, getLocation(ctx));
                     }
                 }
@@ -1103,8 +1131,8 @@ public class Rpg3IrBuilder extends Rpg3ParserBaseVisitor<Void> {
             if (child instanceof ParserRuleContext) {
                 for (int j = 0; j < child.getChildCount(); j++) {
                     if (child.getChild(j) instanceof Rpg3Parser.Cspec_fixed_standard_partsContext) {
-                        Rpg3Parser.Cspec_fixed_standard_partsContext parts =
-                            (Rpg3Parser.Cspec_fixed_standard_partsContext) child.getChild(j);
+                        Rpg3Parser.Cspec_fixed_standard_partsContext parts = (Rpg3Parser.Cspec_fixed_standard_partsContext) child
+                                .getChild(j);
                         return buildFactorExpression(parts.factor2, getLocation(ctx));
                     }
                 }
@@ -1120,8 +1148,8 @@ public class Rpg3IrBuilder extends Rpg3ParserBaseVisitor<Void> {
             if (child instanceof ParserRuleContext) {
                 for (int j = 0; j < child.getChildCount(); j++) {
                     if (child.getChild(j) instanceof Rpg3Parser.Cspec_fixed_standard_partsContext) {
-                        Rpg3Parser.Cspec_fixed_standard_partsContext parts =
-                            (Rpg3Parser.Cspec_fixed_standard_partsContext) child.getChild(j);
+                        Rpg3Parser.Cspec_fixed_standard_partsContext parts = (Rpg3Parser.Cspec_fixed_standard_partsContext) child
+                                .getChild(j);
                         return buildFactorExpression(parts.factor2, getLocation(ctx));
                     }
                 }
@@ -1132,22 +1160,26 @@ public class Rpg3IrBuilder extends Rpg3ParserBaseVisitor<Void> {
 
     /** Build an ExpressionNode from a factor context. */
     private ExpressionNode buildFactorExpression(Rpg3Parser.FactorContext factorCtx, Location loc) {
-        if (factorCtx == null) return null;
+        if (factorCtx == null)
+            return null;
         String text = getFactorText(factorCtx);
         return ExpressionBuilder.build(text, loc);
     }
 
     /** Build an ExpressionNode from a resultType context. */
     private ExpressionNode buildResultExpression(Rpg3Parser.ResultTypeContext resultCtx, Location loc) {
-        if (resultCtx == null) return null;
+        if (resultCtx == null)
+            return null;
         String text = resultCtx.getText();
-        if (text == null || text.isBlank()) return null;
+        if (text == null || text.isBlank())
+            return null;
         return ExpressionBuilder.build(text.trim(), loc);
     }
 
     /** Get text from a factor context. */
     private String getFactorText(Rpg3Parser.FactorContext ctx) {
-        if (ctx == null) return null;
+        if (ctx == null)
+            return null;
         if (ctx.content != null) {
             return ctx.content.getText();
         }
@@ -1160,10 +1192,12 @@ public class Rpg3IrBuilder extends Rpg3ParserBaseVisitor<Void> {
         return ctx.getText();
     }
 
-    /** Extract conditioning indicators from control level and indicator contexts.
-     *  Handles up to 3 conditioning indicator positions per the RPG3 spec:
-     *  - Position "first" from the main indicators context (cols 9-11)
-     *  - Positions "second"/"third" from cspec_continuedIndicators (cols 12-14, 15-17)
+    /**
+     * Extract conditioning indicators from control level and indicator contexts.
+     * Handles up to 3 conditioning indicator positions per the RPG3 spec:
+     * - Position "first" from the main indicators context (cols 9-11)
+     * - Positions "second"/"third" from cspec_continuedIndicators (cols 12-14,
+     * 15-17)
      */
     private void extractConditioningIndicators(CalcNode node,
             Rpg3Parser.Cs_controlLevelContext ctrlLevel,
@@ -1183,7 +1217,7 @@ public class Rpg3IrBuilder extends Rpg3ParserBaseVisitor<Void> {
 
         // Positions "second", "third" — from cspec_continuedIndicators
         if (continuedIndicators != null) {
-            String[] positionNames = {"second", "third", "fourth"};
+            String[] positionNames = { "second", "third", "fourth" };
             for (int i = 0; i < continuedIndicators.size() && i < positionNames.length; i++) {
                 Rpg3Parser.Cspec_continuedIndicatorsContext contCtx = continuedIndicators.get(i);
                 addIndicatorIfPresent(node, contCtx.indicators, contCtx.indicatorsOff, positionNames[i]);
@@ -1204,8 +1238,7 @@ public class Rpg3IrBuilder extends Rpg3ParserBaseVisitor<Void> {
                     negated = true;
                 }
                 node.getConditioningIndicators().add(
-                    new ConditioningIndicator(negated, indText, position)
-                );
+                        new ConditioningIndicator(negated, indText, position));
             }
         }
     }
@@ -1217,13 +1250,6 @@ public class Rpg3IrBuilder extends Rpg3ParserBaseVisitor<Void> {
             return normalizedSource.getLines()[line - 1];
         }
         return ctx.getText();
-    }
-
-    private String getRawLine(ParseTree tree) {
-        if (tree instanceof ParserRuleContext) {
-            return getRawLine((ParserRuleContext) tree);
-        }
-        return tree.getText();
     }
 
     /** Get the original line number for a context. */
@@ -1268,20 +1294,17 @@ public class Rpg3IrBuilder extends Rpg3ParserBaseVisitor<Void> {
 
     /** Safely get trimmed text from a terminal node. */
     private String safeText(TerminalNode node) {
-        if (node == null) return null;
+        if (node == null)
+            return null;
         String text = node.getText();
         return text != null ? text.trim() : null;
-    }
-
-    private String safeText(org.antlr.v4.runtime.Token token) {
-        if (token == null) return null;
-        return token.getText().trim();
     }
 
     /** Safely parse an integer from a terminal node. */
     private Integer safeInteger(TerminalNode node) {
         String text = safeText(node);
-        if (text == null || text.isBlank()) return null;
+        if (text == null || text.isBlank())
+            return null;
         try {
             return Integer.parseInt(text.trim());
         } catch (NumberFormatException e) {
@@ -1290,9 +1313,11 @@ public class Rpg3IrBuilder extends Rpg3ParserBaseVisitor<Void> {
     }
 
     private Integer safeInteger(org.antlr.v4.runtime.Token token) {
-        if (token == null) return null;
+        if (token == null)
+            return null;
         String text = token.getText().trim();
-        if (text.isBlank()) return null;
+        if (text.isBlank())
+            return null;
         try {
             return Integer.parseInt(text);
         } catch (NumberFormatException e) {
@@ -1302,20 +1327,23 @@ public class Rpg3IrBuilder extends Rpg3ParserBaseVisitor<Void> {
 
     /** Get indicator text from a resultIndicator context. */
     private String safeIndicatorText(Rpg3Parser.ResultIndicatorContext ctx) {
-        if (ctx == null) return "";
+        if (ctx == null)
+            return "";
         String text = ctx.getText().trim();
         return text.isEmpty() ? "" : text;
     }
 
     /** Safely extract a trimmed substring from a raw source line. */
     private String safeSubstring(String line, int beginIndex, int endIndex) {
-        if (line == null || line.length() < endIndex) return null;
+        if (line == null || line.length() < endIndex)
+            return null;
         return line.substring(beginIndex, endIndex).trim();
     }
 
     /** Safely parse an integer from a string (for column-based extraction). */
     private Integer safeParseInt(String text) {
-        if (text == null || text.isBlank()) return null;
+        if (text == null || text.isBlank())
+            return null;
         try {
             return Integer.parseInt(text.trim());
         } catch (NumberFormatException e) {
@@ -1330,13 +1358,15 @@ public class Rpg3IrBuilder extends Rpg3ParserBaseVisitor<Void> {
 
     /** Get text from copyText context. */
     private String getCopyText(Rpg3Parser.CopyTextContext ctx) {
-        if (ctx == null) return null;
+        if (ctx == null)
+            return null;
         return ctx.getText().trim();
     }
 
     /** Parse field positions from I-spec IFD_FIELD_LOCATION. */
     private Integer parseFieldPosition(String fieldLoc, boolean isFrom) {
-        if (fieldLoc == null || fieldLoc.isBlank()) return null;
+        if (fieldLoc == null || fieldLoc.isBlank())
+            return null;
         // Field location is typically a numeric value
         String trimmed = fieldLoc.trim();
         try {
@@ -1367,15 +1397,34 @@ public class Rpg3IrBuilder extends Rpg3ParserBaseVisitor<Void> {
             if (line.length() >= 6) {
                 char specChar = Character.toUpperCase(line.charAt(5));
                 switch (specChar) {
-                    case 'H': sl.setSpecType("H"); break;
-                    case 'F': sl.setSpecType("F"); break;
-                    case 'E': sl.setSpecType("E"); break;
-                    case 'L': sl.setSpecType("L"); break;
-                    case 'I': sl.setSpecType("I"); break;
-                    case 'C': sl.setSpecType("C"); break;
-                    case 'O': sl.setSpecType("O"); break;
-                    case '*': sl.setSpecType("comment"); sl.setComment(true); break;
-                    default: sl.setSpecType(null); break;
+                    case 'H':
+                        sl.setSpecType("H");
+                        break;
+                    case 'F':
+                        sl.setSpecType("F");
+                        break;
+                    case 'E':
+                        sl.setSpecType("E");
+                        break;
+                    case 'L':
+                        sl.setSpecType("L");
+                        break;
+                    case 'I':
+                        sl.setSpecType("I");
+                        break;
+                    case 'C':
+                        sl.setSpecType("C");
+                        break;
+                    case 'O':
+                        sl.setSpecType("O");
+                        break;
+                    case '*':
+                        sl.setSpecType("comment");
+                        sl.setComment(true);
+                        break;
+                    default:
+                        sl.setSpecType(null);
+                        break;
                 }
             }
 

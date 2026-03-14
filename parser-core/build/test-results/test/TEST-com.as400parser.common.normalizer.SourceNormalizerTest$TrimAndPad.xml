@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.as400parser.common.normalizer.SourceNormalizerTest$TrimAndPad" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-03-14T08:04:31" hostname="NXN-PC" time="0.008">
+<testsuite name="com.as400parser.common.normalizer.SourceNormalizerTest$TrimAndPad" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-03-14T12:07:02" hostname="NXN-PC" time="0.006">
   <properties/>
-  <testcase name="truncateLongLineWithWarning()" classname="com.as400parser.common.normalizer.SourceNormalizerTest$TrimAndPad" time="0.004"/>
-  <testcase name="allLinesExactly80()" classname="com.as400parser.common.normalizer.SourceNormalizerTest$TrimAndPad" time="0.001"/>
-  <testcase name="trimTrailingWhitespace()" classname="com.as400parser.common.normalizer.SourceNormalizerTest$TrimAndPad" time="0.001"/>
-  <testcase name="exactly80CharsUnchanged()" classname="com.as400parser.common.normalizer.SourceNormalizerTest$TrimAndPad" time="0.001"/>
+  <testcase name="truncateLongLineWithWarning()" classname="com.as400parser.common.normalizer.SourceNormalizerTest$TrimAndPad" time="0.002"/>
+  <testcase name="allLinesExactly80()" classname="com.as400parser.common.normalizer.SourceNormalizerTest$TrimAndPad" time="0.0"/>
+  <testcase name="trimTrailingWhitespace()" classname="com.as400parser.common.normalizer.SourceNormalizerTest$TrimAndPad" time="0.0"/>
+  <testcase name="exactly80CharsUnchanged()" classname="com.as400parser.common.normalizer.SourceNormalizerTest$TrimAndPad" time="0.0"/>
   <testcase name="padShortLineTo80()" classname="com.as400parser.common.normalizer.SourceNormalizerTest$TrimAndPad" time="0.0"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>

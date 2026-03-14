@@ -1,4 +1,4 @@
-// Generated from d:/Code/AS400_Parser/grammar/rpg3/Rpg3Parser.g4 by ANTLR 4.13.2
+// Generated from D:/Code/AS400_Parser/parser-core/src/main/antlr/com/as400parser/rpg3/generated/Rpg3Parser.g4 by ANTLR 4.13.2
 package com.as400parser.rpg3.generated;
 
 import org.antlr.v4.runtime.ParserRuleContext;
