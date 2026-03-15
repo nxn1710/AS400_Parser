@@ -42,6 +42,9 @@ public class Rpg3ParserFacade implements As400Parser {
     @Override
     public IrDocument parse(Path sourceFile, ParseOptions options) {
         try {
+            // Auto-detect sibling copy directories (QCPYSRC, etc.)
+            options = autoDetectCopyPaths(sourceFile, options);
+
             SourceNormalizer normalizer = createNormalizer(options);
             NormalizedSource normalized = normalizer.normalize(sourceFile, options.getCharset());
             IrDocument doc = runPipeline(normalized, options);
@@ -50,6 +53,48 @@ public class Rpg3ParserFacade implements As400Parser {
         } catch (IOException e) {
             return createFailedDocument(e.getMessage());
         }
+    }
+
+    /**
+     * Auto-detect sibling copy source directories from the source file location.
+     * If source is in QRPGSRC, looks for QCPYSRC (and other Q*SRC) siblings.
+     */
+    private ParseOptions autoDetectCopyPaths(Path sourceFile, ParseOptions options) {
+        // Skip if user already specified copy paths
+        if (options.getCopyPaths() != null && !options.getCopyPaths().isEmpty()) {
+            return options;
+        }
+
+        Path sourceDir = sourceFile.getParent();
+        if (sourceDir == null) return options;
+
+        Path projectRoot = sourceDir.getParent();
+        if (projectRoot == null) return options;
+
+        // Look for sibling directories that look like copy source (QCPYSRC, etc.)
+        java.io.File[] siblings = projectRoot.toFile().listFiles(java.io.File::isDirectory);
+        if (siblings == null) return options;
+
+        List<String> copyPaths = new ArrayList<>();
+        for (java.io.File sibling : siblings) {
+            String name = sibling.getName().toUpperCase();
+            if (name.equals("QCPYSRC") || name.endsWith("CPYSRC")) {
+                // Add the project root as copy path (resolver appends FILE/ to it)
+                copyPaths.add(projectRoot.toAbsolutePath().toString());
+                break;
+            }
+        }
+
+        if (!copyPaths.isEmpty()) {
+            return ParseOptions.builder()
+                    .charset(options.getCharset())
+                    .tabStops(options.getTabStops())
+                    .copyPaths(copyPaths)
+                    .resolveCopies(true)
+                    .sourceRoot(projectRoot.toAbsolutePath().toString())
+                    .build();
+        }
+        return options;
     }
 
     @Override

@@ -25,7 +25,7 @@ import java.util.List;
  */
 public class Rpg3CopyResolver {
 
-    private static final String[] EXTENSIONS = {".rpg", ".rpg3", ".mbr", ""};
+    private static final String[] EXTENSIONS = {".cpy", ".rpg", ".rpg3", ".cpysrc", ".mbr", ""};
 
     private final List<Path> copyPaths;
     private final Path sourceRoot;
