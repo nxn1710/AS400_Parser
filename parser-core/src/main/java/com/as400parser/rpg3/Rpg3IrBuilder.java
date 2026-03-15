@@ -327,6 +327,12 @@ public class Rpg3IrBuilder {
                 ds.setLocation(Location.ofLine(origLine));
                 ds.setType("dataStructure");
                 content.getDataStructures().add(ds);
+            } else if (isInitializationConstant(trimmed)) {
+                // DS subfield with initialization: I   I    'constant value'
+                // Extract constant from full cols 7-42 area (not truncated identifier)
+                spec.setSpecLevel("fieldDefinition");
+                String initArea = sub(line, 6, 42);
+                spec.setInitializationValue(extractInitConstant(initArea != null ? initArea : trimmed));
             } else {
                 spec.setSpecLevel("recordIdentification");
                 spec.setFileName(trimmed);
@@ -346,6 +352,21 @@ public class Rpg3IrBuilder {
         }
 
         content.getInputSpecs().add(spec);
+    }
+
+    /** Detect I-spec DS initialization pattern: starts with I and contains a quoted constant. */
+    private boolean isInitializationConstant(String trimmedIdentifier) {
+        return trimmedIdentifier.startsWith("I") && trimmedIdentifier.contains("'");
+    }
+
+    /** Extract the constant value from between single quotes. */
+    private String extractInitConstant(String text) {
+        int first = text.indexOf('\'');
+        int last = text.lastIndexOf('\'');
+        if (first >= 0 && last > first) {
+            return text.substring(first + 1, last);
+        }
+        return text;
     }
 
     // =========================================================================

@@ -237,6 +237,7 @@ public class Rpg3Content {
         private Integer decimalPositions;
         private String dataFormat;
         private String fieldIndicators;
+        private String initializationValue;  // DS subfield init: I 'constant'
 
         public String getRawSourceLine() { return rawSourceLine; }
         public void setRawSourceLine(String s) { this.rawSourceLine = s; }
@@ -268,6 +269,8 @@ public class Rpg3Content {
         public void setDataFormat(String v) { this.dataFormat = v; }
         public String getFieldIndicators() { return fieldIndicators; }
         public void setFieldIndicators(String v) { this.fieldIndicators = v; }
+        public String getInitializationValue() { return initializationValue; }
+        public void setInitializationValue(String v) { this.initializationValue = v; }
     }
 
     /** O-spec */
