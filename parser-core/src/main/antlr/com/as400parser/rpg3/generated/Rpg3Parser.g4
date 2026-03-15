@@ -1,1066 +1,470 @@
+/**
+ * RPG III Parser Grammar
+ *
+ * A purpose-built ANTLR4 parser for IBM RPG III fixed-format source code.
+ * Works with Rpg3Lexer.g4. Follows the RPG III specification ordering:
+ *   H-spec -> F-spec -> E-spec -> I-spec -> C-spec -> O-spec -> End Source
+ *
+ * IMPORTANT: Input must be space-padded to 80 columns before parsing.
+ *
+ * The parser handles nested control structures (IF/DO/CAS) and
+ * subroutine boundaries (BEGSR/ENDSR) within C-specs.
+ *
+ * RPG IV-only constructs NOT supported:
+ *   - D-spec, P-spec (use E-spec and I-spec DS instead)
+ *   - Free-format expressions
+ *   - WHENxx/SELECT/OTHER/ENDSL (use CASxx/CAS/ENDCS)
+ *   - CHECKR, LEAVESR (6-char opcodes don't fit 5-char RPG III op field)
+ *   - Built-in functions (%SUBST, etc.)
+ */
+
 parser grammar Rpg3Parser;
 
 options { tokenVocab = Rpg3Lexer; }
 
-
-// =============================================
-// RPG3 PROGRAM STRUCTURE  
-// =============================================
+// =================================================================
+// Top-level Program Structure
+// RPG III requires specifications in order: H, F, E, I, C, O
+// =================================================================
 
 rpg3Program
-    : (hspec_fixed | fspec_fixed | extensionSpec | lineCounterSpec
-       | ispec_fixed | cspec_fixed | ospec_fixed
-       | block | subroutine
-       | star_comments | blank_line | blank_spec | directive)*
-      compileTimeData?
+    : headerSpec*
+      fileSpec*
+      extensionSpec*
+      inputSpec*
+      calculationSpec*
+      outputSpec*
+      endSource?
       EOF
     ;
 
-statement:
-    ospec_fixed
-    | fspec_fixed 
-    | block
-    | cspec_fixed
-    | blank_spec
-    | ispec_fixed 
-    | hspec_fixed
-    | star_comments
-    | blank_line 
-    | directive
+// =================================================================
+// H-spec (Header Specification)
+// =================================================================
+
+headerSpec
+    : HS_FIXED HS_Content? EOL
     ;
 
-block:
-    ((csDOUxx | csDOWxx) statement* enddo)
-    | ((CS_FIXED cspec_continuedIndicators* cs_controlLevel 
-        indicatorsOff=onOffIndicatorsFlag indicators=cs_indicators factor1=factor 
-        csDO) statement* enddo)
-    | ifstatement
-    | casestatement
+// =================================================================
+// F-spec (File Specification)
+// =================================================================
+
+fileSpec
+    : FS_FIXED
+      FS_RecordName          // File name (cols 7-14)
+      FS_Type                // I/O/U/C/D (col 15)
+      FS_Designation         // blank/P/S/R/T/F (col 16)
+      FS_EndOfFile           // E/blank (col 17)
+      FS_Sequence            // A/D/blank (col 18)
+      FS_Format              // F/E (col 19)
+      FS_RecordLength        // Record length (cols 20-23)
+      FS_Mode                // Mode of processing (col 24)
+      FS_LengthOfKeyArea     // Length of key area (cols 25-27)
+      FS_KeyLength           // Key length (cols 28-29)
+      FS_RecordAddressType   // Record address type (col 31)
+      FS_Organization        // File organization (col 32)
+      FS_OverflowIndicator   // Overflow indicator (cols 33-34)
+      FS_KeyFieldStart       // Key field start (cols 35-38)
+      FS_ExtensionCode       // Extension code (col 39)
+      FS_Device              // Device (cols 40-46)
+      FS_Continuation?       // Keywords like SFILE(...) (cols 53-80)
+      EOL
     ;
 
-ifstatement:
-    csIFxx
-    statement*
-    (elsestmt statement*)?
-    endif
+// =================================================================
+// E-spec (Extension Specification) — RPG III Only
+// Defines arrays and tables
+// =================================================================
+
+extensionSpec
+    : ES_FIXED
+      ES_FromFileName        // From file name (cols 11-18)
+      ES_ToFileName          // To file name (cols 19-26)
+      ES_ArrayName           // Array/table name (cols 27-32)
+      ES_EntriesPerRecord    // Entries per record (cols 33-35)
+      ES_EntriesPerArray     // Total entries (cols 36-39)
+      ES_Length              // Length of entry (cols 40-42)
+      ES_DataFormat          // Data format P/B/L/R (col 43)
+      ES_DecimalPositions    // Decimal positions (col 44)
+      ES_Sequence            // Sequence A/D (col 45)
+      alternatingArray?
+      EOL
     ;
 
-elsestmt:
-    CS_FIXED cspec_continuedIndicators*
-    cs_controlLevel indicatorsOff=onOffIndicatorsFlag 
-    indicators=cs_indicators factor1=factor 
-    OP_ELSE cspec_fixed_standard_parts
+alternatingArray
+    : ES_AltArrayName        // Alt array name (cols 46-51)
+      ES_AltLength           // Alt length (cols 52-54)
+      ES_AltDataFormat       // Alt data format (col 55)
+      ES_AltDecimalPositions // Alt decimal positions (col 56)
+      ES_AltSequence         // Alt sequence (col 57)
     ;
 
-beginif: csIFxx;
+// =================================================================
+// I-spec (Input Specification)
+// The IS_Identifier token (cols 7-20) determines the sub-format:
+//   - Contains file name -> record identification
+//   - Contains 'DS'/'SDS' -> data structure header
+//   - All blank -> field description
+// =================================================================
 
-begsr: csBEGSR;
-endsr: csENDSR;
-
-endif:
-    CS_FIXED cspec_continuedIndicators*
-    cs_controlLevel indicatorsOff=onOffIndicatorsFlag 
-    indicators=cs_indicators factor1=factor 
-    (csEND | csENDIF_rule)
+inputSpec
+    : IS_FIXED
+      IS_Identifier          // Cols 7-20: file name, DS/SDS, or blank
+      IS_RecordIdArea        // Cols 21-42: record ID codes or blank
+      inputFieldDetail?      // Cols 43-70: field detail (if field desc line)
+      EOL
     ;
 
-csENDIF_rule: operation=OP_ENDIF cspec_fixed_standard_parts;
-
-enddo:
-    CS_FIXED cspec_continuedIndicators*
-    cs_controlLevel indicatorsOff=onOffIndicatorsFlag 
-    indicators=cs_indicators factor1=factor 
-    (csEND | csENDDO)
+inputFieldDetail
+    : IS_DataFormat          // Col 43: P/B/L/R/blank
+      IS_FromPosition        // Cols 44-47: from position
+      IS_ToPosition          // Cols 48-51: to position
+      IS_DecimalPositions    // Col 52: decimal positions
+      IS_FieldName           // Cols 53-58: field name (6 chars)
+      IS_ControlLevel        // Cols 59-60: control level
+      IS_MatchingFields      // Cols 61-62: matching fields
+      IS_FieldRelation       // Cols 63-64: field record relation
+      IS_FieldIndPlus        // Cols 65-66: plus indicator
+      IS_FieldIndMinus       // Cols 67-68: minus indicator
+      IS_FieldIndZero        // Cols 69-70: zero/blank indicator
     ;
 
-cspec_fixed_standard: 
-    csACQ | csADD | csADDDUR
-    | csBITOFF | csBITON
-    | csCABxx | csCABEQ | csCABNE | csCABLE | csCABLT | csCABGE | csCABGT
-    | csCALL | csCAT | csCHAIN | csCHECK | csCHECKR
-    | csCLEAR | csCLOSE | csCOMMIT | csCOMP
-    | csDEFINE | csDELETE | csDIV | csDO
-    | csDSPLY | csDUMP
-    | csELSE | csEND | csENDCS | csENDDO
-    | csEXCEPT | csEXFMT | csEXSR | csEXTRCT
-    | csFEOD | csFORCE | csGOTO
-    | csIN | csITER | csKLIST | csLEAVE | csLOOKUP
-    | csMHHZO | csMHLZO | csMLHZO | csMLLZO
-    | csMOVE | csMOVEA | csMOVEL | csMULT
-    | csNEXT | csOCCUR | csOPEN | csOUT
-    | csPLIST | csPOST
-    | csREAD | csREADC | csREADE | csREADP | csREADPE
-    | csREL | csRESET | csRETURN_FIXED | csROLBK
-    | csSCAN | csSETGT | csSETLL | csSETOFF | csSETON | csSHTDN
-    | csSORTA_FIXED | csSQRT | csSUB | csSUBDUR | csSUBST
-    | csTAG | csTEST | csTESTB | csTESTN | csTESTZ | csTIME
-    | csUNLOCK | csUPDATE | csWRITE
-    | csXFOOT | csXLATE | csZ_ADD | csZ_SUB
-    |(operation=CS_OperationAndExtender
-    operationExtender=cs_operationExtender?
-    cspec_fixed_standard_parts);
+// =================================================================
+// C-spec (Calculation Specification)
+// All business logic. Supports nested IF/DO/CAS and subroutines.
+// =================================================================
 
-csRETURN_FIXED: operation=OP_RETURN cspec_fixed_standard_parts;
-csSORTA_FIXED: operation=OP_SORTA cspec_fixed_standard_parts;
+calculationSpec
+    : subroutine
+    | calcStatement
+    ;
 
-// =============================================
-// EXTENSION SPEC (E-SPEC) - RPG3 specific  
-// =============================================
-extensionSpec: ES_FIXED 
-    ES_FromFileName ES_ToFileName ES_TableName
-    ES_EntriesPerRecord ES_NumberOfEntries ES_EntryLength ES_DataFormat
-    ES_DecimalPositions ES_Sequence ES_AlternatingName ES_AlternatingLength
-    ES_AlternatingDataFormat ES_AlternatingDecimalPositions ES_AlternatingSequence
-    ES_Comments? (EOL|EOF) ;
+// ----- Subroutine -----
+subroutine
+    : cspecBEGSR
+      calcStatement*
+      cspecENDSR
+    ;
 
-// =============================================
-// LINE COUNTER SPEC (L-SPEC)
-// =============================================
-lineCounterSpec: LS_FIXED 
-    LS_FileName LS_LinesPerPage LS_OverflowLine (EOL|EOF) ;
+// ----- Single calculation statement or block -----
+calcStatement
+    : ifBlock
+    | doBlock
+    | douBlock
+    | dowBlock
+    | caseBlock
+    | calcLine
+    | commentLine
+    ;
 
-// =============================================
-// COMPILE-TIME DATA
-// =============================================
-compileTimeData: endSource;
+commentLine
+    : COMMENT_SPEC
+    | COMMENT_SPEC_STAR
+    ;
 
-// =============================================
-// DIRECTIVE (no /FREE or /END-FREE)
-// =============================================
-directive: DIRECTIVE 
-        ( title_directive
-        | DIR_EJECT
-        | space_directive
-        | DIR_SET
-        | DIR_RESTORE
-        | dir_copy
-        | dir_include 
-        | dir_eof
-        | dir_define
-        | dir_undefine
-        | dir_if
-        | dir_elseif
-        | dir_else
-        | dir_endif
-        )
-    (EOL|EOF);
+// ----- IF block -----
+ifBlock
+    : cspecIFxx
+      calcStatement*
+      (cspecELSE calcStatement*)?
+      cspecENDIF
+    ;
 
-// =============================================
-// SYMBOLIC CONSTANTS
-// =============================================
-symbolicConstants:
-   SPLAT_ALL | SPLAT_NONE | SPLAT_NO | SPLAT_YES
-   | SPLAT_ILERPG | SPLAT_COMPAT | SPLAT_CRTBNDRPG | SPLAT_CRTRPGMOD | SPLAT_VRM
-   | SPLAT_ALLG | SPLAT_ALLU | SPLAT_ALLTHREAD | SPLAT_ALLX
-   | SPLAT_BLANKS | SPLAT_CANCL
-   | SPLAT_CYMD | SPLAT_CMDY | SPLAT_CDMY | SPLAT_MDY | SPLAT_DMY | SPLAT_DFT | SPLAT_YMD
-   | SPLAT_JUL | SPLAT_INPUT | SPLAT_OUTPUT | SPLAT_ISO | SPLAT_KEY | SPLAT_NEXT
-   | SPLAT_USA | SPLAT_EUR | SPLAT_JIS | SPLAT_JAVA
-   | SPLAT_DATE | SPLAT_DAY | SPLAT_DETC | SPLAT_DETL | SPLAT_DTAARA
-   | SPLAT_END | SPLAT_ENTRY | SPLAT_EQUATE | SPLAT_EXTDFT | SPLAT_EXT
-   | SPLAT_FILE | SPLAT_GETIN | SPLAT_HIVAL | SPLAT_INIT | SPLAT_INDICATOR | SPLAT_INZSR
-   | SPLAT_IN | SPLAT_JOBRUN | SPLAT_JOB | SPLAT_LDA | SPLAT_LIKE | SPLAT_LONGJUL
-   | SPLAT_LOVAL | SPLAT_MONTH | SPLAT_NOIND | SPLAT_NOKEY | SPLAT_NULL
-   | SPLAT_OFL | SPLAT_ON | SPLAT_ONLY | SPLAT_OFF | SPLAT_PDA | SPLAT_PLACE
-   | SPLAT_PSSR | SPLAT_ROUTINE | SPLAT_START | SPLAT_SYS | SPLAT_TERM
-   | SPLAT_TOTC | SPLAT_TOTL | SPLAT_USER | SPLAT_VAR | SPLAT_YEAR | SPLAT_ZEROS
-   | SPLAT_HMS | SPLAT_INLR | SPLAT_INOF | SPLAT_DATA | SPLAT_ASTFILL | SPLAT_CURSYM
-   | SPLAT_MAX | SPLAT_LOCK | SPLAT_PROGRAM
-   | SPLAT_D | SPLAT_DAYS | SPLAT_H | SPLAT_HOURS | SPLAT_M | SPLAT_MINUTES
-   | SPLAT_MONTHS | SPLAT_MN | SPLAT_MS | SPLAT_MSECONDS | SPLAT_S | SPLAT_SECONDS
-   | SPLAT_Y | SPLAT_YEARS | SPLAT_EXTDESC | SPLAT_STRING
-   | SPLAT_CONSTRUCTOR | SPLAT_LIKEDS | SPLAT_VARSIZE | SPLAT_NOPASS | SPLAT_PROC | SPLAT_STATUS
-   ;
+// ----- DO block -----
+doBlock
+    : cspecDO
+      calcStatement*
+      cspecENDDO
+    ;
 
-endSource: endSourceHead endSourceLine*;
-endSourceHead: END_SOURCE ;
-endSourceLine: EOS_Text (EOL|EOF);
+// ----- DOWxx block -----
+dowBlock
+    : cspecDOWxx
+      calcStatement*
+      cspecENDDO
+    ;
 
-star_comments: COMMENT_SPEC_FIXED comments?;//comments COMMENTS_EOL;
-comments: COMMENTS_TEXT; 
-casestatement:
-	((CS_FIXED
-	cspec_continuedIndicators*
-	cs_controlLevel 
-	indicatorsOff=onOffIndicatorsFlag indicators=cs_indicators factor1=factor)
-	(csCASEQ
-	| csCASNE
-	| csCASLE
-	| csCASLT
-	| csCASGE
-	| csCASGT
-	| csCAS))+
-	casestatementend
-;
-casestatementend:
-	CS_FIXED
-	cspec_continuedIndicators*
-	cs_controlLevel 
-	indicatorsOff=onOffIndicatorsFlag indicators=cs_indicators factor1=factor
-	(csEND | csENDCS)
-;
+// ----- DOUxx block -----
+douBlock
+    : cspecDOUxx
+      calcStatement*
+      cspecENDDO
+    ;
 
-csIFxx:
-CS_FIXED
-	cspec_continuedIndicators*
-	cs_controlLevel 
-	indicatorsOff=onOffIndicatorsFlag indicators=cs_indicators factor1=factor 
-	 (csIFEQ
-	| csIFNE
-	| csIFLE
-	| csIFLT
-	| csIFGE
-	| csIFGT)
-	andConds=csANDxx*
-	orConds=csORxx*
-;
-csDOUxx:
-CS_FIXED
-	cspec_continuedIndicators*
-	cs_controlLevel 
-	indicatorsOff=onOffIndicatorsFlag indicators=cs_indicators factor1=factor 
-	 (csDOUEQ
-	| csDOUNE
-	| csDOULE
-	| csDOULT
-	| csDOUGE
-	| csDOUGT)
-	andConds=csANDxx*
-	orConds=csORxx*
-;
+// ----- CASxx block (RPG III multi-way branch) -----
+caseBlock
+    : cspecCASxx+
+      cspecCAS?
+      cspecENDCS
+    ;
 
-csDOWxx:
-CS_FIXED
-	cspec_continuedIndicators*
-	cs_controlLevel 
-	indicatorsOff=onOffIndicatorsFlag indicators=cs_indicators factor1=factor 
-	 (csDOWEQ
-	| csDOWNE
-	| csDOWLE
-	| csDOWLT
-	| csDOWGE
-	| csDOWGT)
-	andConds=csANDxx*
-	orConds=csORxx*
-;
-		
-complexCondxx:
-	csANDxx
-	|csORxx
-;
+// =================================================================
+// Individual C-spec line helpers
+// =================================================================
 
-csANDxx:
-CS_FIXED
-	cspec_continuedIndicators*
-	cs_controlLevel 
-	indicatorsOff=onOffIndicatorsFlag indicators=cs_indicators factor1=factor 
-	(csANDEQ
-	| csANDNE
-	| csANDLE
-	| csANDLT
-	| csANDGE
-	| csANDGT
-	)
-;
+// Common C-spec line prefix: spec type + control level + indicator
+cspecPrefix
+    : CS_FIXED CS_ControlLevel onOffFlag csIndicator CS_Factor1 CS_OpExtender
+    ;
 
-csORxx:
-CS_FIXED
-	cspec_continuedIndicators*
-	cs_controlLevel 
-	indicatorsOff=onOffIndicatorsFlag indicators=cs_indicators factor1=factor 
-	(csOREQ
-	| csORNE
-	| csORLE
-	| csORLT
-	| csORGE
-	| csORGT
-	)
-	andConds=csANDxx*
-;
-ospec_fixed: OS_FIXED (((OS_RecordName 
-	OS_Type
-	(os_fixed_pgmdesc1 | os_fixed_pgmdesc2)) | os_fixed_pgmfield) 
-	  |os_fixed_pgmdesc_compound)
-	OS_Comments?
-	(EOL | EOF);
+// Common C-spec line suffix: after operation code
+cspecSuffix
+    : CS_Factor2 CS_Result CS_FieldLength CS_DecimalPositions
+      CS_HalfAdjust csResultIndicators EOL
+    ;
 
-os_fixed_pgmdesc1:
-	OS_FetchOverflow
-	outputConditioningOnOffIndicator
-	outputConditioningOnOffIndicator
-	outputConditioningOnOffIndicator
-	OS_ExceptName
-	OS_Space3 OS_Space3 OS_Space3 OS_Space3
-	OS_RemainingSpace;
+// =================================================================
+// Individual C-spec line patterns
+// =================================================================
 
-outputConditioningOnOffIndicator:
-	onOffIndicatorsFlag
-	outputConditioningIndicator;
+calcLine
+    : cspecPrefix csOperation cspecSuffix
+    ;
 
-outputConditioningIndicator:
-	BlankIndicator
-	| GeneralIndicator
-	| FunctionKeyIndicator
-	| ControlLevelIndicator
-	| HaltIndicator
-	| ExternalIndicator
-	| OverflowIndicator
-	| MatchingRecordIndicator
-	| LastRecordIndicator
-	| ReturnIndicator
-	| FirstPageIndicator;
-	
-os_fixed_pgmdesc_compound:
-	OS_AndOr
-	outputConditioningOnOffIndicator
-	outputConditioningOnOffIndicator
-	outputConditioningOnOffIndicator
-	OS_ExceptName
-	OS_Space3 OS_Space3 OS_Space3 OS_Space3
-	OS_RemainingSpace;
-	
-os_fixed_pgmdesc2:
-	OS_AddDelete
-	outputConditioningOnOffIndicator
-	outputConditioningOnOffIndicator
-	outputConditioningOnOffIndicator
-	OS_ExceptName
-	OS_RemainingSpace;
-	
-os_fixed_pgmfield:
-	OS_FieldReserved
-	outputConditioningOnOffIndicator
-	outputConditioningOnOffIndicator
-	outputConditioningOnOffIndicator
-	OS_FieldName 
-	OS_EditNames
-	OS_BlankAfter
-	OS_EndPosition
-	OS_DataFormat;
-fspec_fixed: FS_FIXED FS_RecordName FS_Type FS_Designation FS_EndOfFile FS_Addution 
-	FS_Sequence FS_Format FS_RecordLength FS_Limits FS_LengthOfKey FS_RecordAddressType FS_Organization FS_Device FS_Reserved? 
-	(EOL|EOF);	
-cspec_fixed:
-	CS_FIXED
-	cspec_continuedIndicators*
-	cs_controlLevel 
-	indicatorsOff=onOffIndicatorsFlag indicators=cs_indicators factor1=factor 
-	cspec_fixed_standard;
+// ----- Control structure entry lines -----
+cspecIFxx
+    : cspecPrefix
+      ( CS_Operation_IFEQ | CS_Operation_IFNE | CS_Operation_IFLE
+      | CS_Operation_IFLT | CS_Operation_IFGE | CS_Operation_IFGT )
+      cspecSuffix
+      (cspecANDxx | cspecORxx)*
+    ;
 
-cspec_continuedIndicators:
-	cs_controlLevel 
-	indicatorsOff=onOffIndicatorsFlag 
-	indicators=cs_indicators 
-	EOL
-	CS_FIXED 
-	;
-	
-cspec_blank:
-	CS_FIXED
-	BlankIndicator
-	BlankFlag 
-	BlankIndicator
-	CS_BlankFactor
-	CS_OperationAndExtender_Blank
-	CS_BlankFactor
-	CS_BlankFactor
-	CS_FieldLength
-	CS_DecimalPositions
-	BlankIndicator
-	BlankIndicator
-	BlankIndicator
-	(EOL | EOF);
+cspecELSE
+    : cspecPrefix CS_Operation_ELSE cspecSuffix
+    ;
 
-blank_spec:
-  cspec_blank
-  | ( FS_FIXED | IS_FIXED | OS_FIXED)
-	BLANK_SPEC
-	(EOL | EOF)
- ;
-subroutine:
-begin=begsr
-statement*
-end=endsr
-;
-csBEGSR:
-	CS_FIXED
-	cspec_continuedIndicators*
-	cs_controlLevel 
-	indicatorsOff=onOffIndicatorsFlag indicators=cs_indicators factor1=factor 
-	operation=OP_BEGSR
-	cspec_fixed_standard_parts;
-csENDSR:
-	CS_FIXED
-	cspec_continuedIndicators*
-	cs_controlLevel 
-	indicatorsOff=onOffIndicatorsFlag indicators=cs_indicators factor1=factor 
-	operation=OP_ENDSR
-	cspec_fixed_standard_parts;
-onOffIndicatorsFlag:
-    BlankFlag
-    | NoFlag;
+cspecENDIF
+    : cspecPrefix ( CS_Operation_ENDIF | CS_Operation_END ) cspecSuffix
+    ;
 
-cs_controlLevel:
-    BlankIndicator
-	| ControlLevel0Indicator
-	| ControlLevelIndicator
-	| LastRecordIndicator
-	| SubroutineIndicator
-	| AndIndicator
-	| OrIndicator
-;
-cs_indicators:
-BlankIndicator
-	| GeneralIndicator
-	| ControlLevelIndicator
-	| FunctionKeyIndicator 
-	| LastRecordIndicator
-	| MatchingRecordIndicator
-	| HaltIndicator
-	| ReturnIndicator
-	| ExternalIndicator
-	| OverflowIndicator
-;
-resultIndicator:
- BlankIndicator
+cspecDO
+    : cspecPrefix CS_Operation_DO cspecSuffix
+    ;
+
+cspecDOWxx
+    : cspecPrefix
+      ( CS_Operation_DOWEQ | CS_Operation_DOWNE | CS_Operation_DOWLE
+      | CS_Operation_DOWLT | CS_Operation_DOWGE | CS_Operation_DOWGT )
+      cspecSuffix
+      (cspecANDxx | cspecORxx)*
+    ;
+
+cspecDOUxx
+    : cspecPrefix
+      ( CS_Operation_DOUEQ | CS_Operation_DOUNE | CS_Operation_DOULE
+      | CS_Operation_DOULT | CS_Operation_DOUGE | CS_Operation_DOUGT )
+      cspecSuffix
+      (cspecANDxx | cspecORxx)*
+    ;
+
+cspecENDDO
+    : cspecPrefix ( CS_Operation_ENDDO | CS_Operation_END ) cspecSuffix
+    ;
+
+// ----- CASxx -----
+cspecCASxx
+    : cspecPrefix
+      ( CS_Operation_CASEQ | CS_Operation_CASNE | CS_Operation_CASLE
+      | CS_Operation_CASLT | CS_Operation_CASGE | CS_Operation_CASGT )
+      cspecSuffix
+    ;
+
+cspecCAS
+    : cspecPrefix CS_Operation_CAS cspecSuffix
+    ;
+
+cspecENDCS
+    : cspecPrefix ( CS_Operation_ENDCS | CS_Operation_END ) cspecSuffix
+    ;
+
+// ----- ANDxx / ORxx continuation -----
+cspecANDxx
+    : cspecPrefix
+      ( CS_Operation_ANDEQ | CS_Operation_ANDNE | CS_Operation_ANDLE
+      | CS_Operation_ANDLT | CS_Operation_ANDGE | CS_Operation_ANDGT )
+      cspecSuffix
+    ;
+
+cspecORxx
+    : cspecPrefix
+      ( CS_Operation_OREQ | CS_Operation_ORNE | CS_Operation_ORLE
+      | CS_Operation_ORLT | CS_Operation_ORGE | CS_Operation_ORGT )
+      cspecSuffix
+    ;
+
+// ----- Subroutine boundaries -----
+cspecBEGSR
+    : cspecPrefix CS_Operation_BEGSR cspecSuffix
+    ;
+
+cspecENDSR
+    : cspecPrefix CS_Operation_ENDSR cspecSuffix
+    ;
+
+// =================================================================
+// C-spec operation code (all valid RPG III opcodes)
+// =================================================================
+csOperation
+    // Conditional
+    : CS_Operation_IFEQ | CS_Operation_IFNE | CS_Operation_IFLE
+    | CS_Operation_IFLT | CS_Operation_IFGE | CS_Operation_IFGT
+    // DOWxx
+    | CS_Operation_DOWEQ | CS_Operation_DOWNE | CS_Operation_DOWLE
+    | CS_Operation_DOWLT | CS_Operation_DOWGE | CS_Operation_DOWGT
+    // DOUxx
+    | CS_Operation_DOUEQ | CS_Operation_DOUNE | CS_Operation_DOULE
+    | CS_Operation_DOULT | CS_Operation_DOUGE | CS_Operation_DOUGT
+    // ANDxx / ORxx
+    | CS_Operation_ANDEQ | CS_Operation_ANDNE | CS_Operation_ANDLE
+    | CS_Operation_ANDLT | CS_Operation_ANDGE | CS_Operation_ANDGT
+    | CS_Operation_OREQ | CS_Operation_ORNE | CS_Operation_ORLE
+    | CS_Operation_ORLT | CS_Operation_ORGE | CS_Operation_ORGT
+    // CASxx (multi-way branch)
+    | CS_Operation_CASEQ | CS_Operation_CASNE | CS_Operation_CASLE
+    | CS_Operation_CASLT | CS_Operation_CASGE | CS_Operation_CASGT
+    | CS_Operation_CAS
+    // CABxx
+    | CS_Operation_CABEQ | CS_Operation_CABNE | CS_Operation_CABLE
+    | CS_Operation_CABLT | CS_Operation_CABGE | CS_Operation_CABGT
+    // Move
+    | CS_Operation_MOVEL | CS_Operation_MOVEA | CS_Operation_MOVE
+    // Arithmetic
+    | CS_Operation_Z_ADD | CS_Operation_Z_SUB
+    | CS_Operation_ADD | CS_Operation_SUB | CS_Operation_MULT
+    | CS_Operation_DIV | CS_Operation_MVR | CS_Operation_SQRT
+    | CS_Operation_XFOOT
+    // File I/O
+    | CS_Operation_CHAIN | CS_Operation_READ | CS_Operation_READC
+    | CS_Operation_READE | CS_Operation_READP | CS_Operation_REDPE
+    | CS_Operation_WRITE | CS_Operation_UPDAT | CS_Operation_DELET
+    | CS_Operation_SETLL | CS_Operation_SETGT
+    | CS_Operation_OPEN | CS_Operation_CLOSE | CS_Operation_FORCE
+    | CS_Operation_FEOD | CS_Operation_NEXT | CS_Operation_UNLCK
+    | CS_Operation_ACQ | CS_Operation_REL | CS_Operation_POST
+    | CS_Operation_COMIT | CS_Operation_ROLBK
+    // Control flow
+    | CS_Operation_GOTO | CS_Operation_TAG
+    | CS_Operation_BEGSR | CS_Operation_ENDSR | CS_Operation_EXSR
+    | CS_Operation_ENDIF | CS_Operation_ENDDO | CS_Operation_ENDCS
+    | CS_Operation_END | CS_Operation_ELSE
+    | CS_Operation_DO | CS_Operation_LEAVE | CS_Operation_ITER
+    // CALL / PARM / PLIST
+    | CS_Operation_CALL | CS_Operation_PARM | CS_Operation_PLIST
+    // KLIST / KFLD
+    | CS_Operation_KLIST | CS_Operation_KFLD
+    // Screen / Output
+    | CS_Operation_EXCPT | CS_Operation_EXFMT | CS_Operation_DSPLY
+    // Indicator
+    | CS_Operation_SETON | CS_Operation_SETOF
+    // String
+    | CS_Operation_CAT | CS_Operation_SCAN | CS_Operation_SUBST
+    | CS_Operation_XLATE | CS_Operation_CHECK
+    // Compare / Lookup / Sort
+    | CS_Operation_COMP | CS_Operation_LOKUP | CS_Operation_SORTA
+    // Time / Occur
+    | CS_Operation_TIME | CS_Operation_OCCUR
+    // Testing
+    | CS_Operation_TESTB | CS_Operation_TESTN | CS_Operation_TESTZ
+    // Bit manipulation
+    | CS_Operation_BITON | CS_Operation_BITOF
+    // Zone manipulation
+    | CS_Operation_MHHZO | CS_Operation_MHLZO
+    | CS_Operation_MLHZO | CS_Operation_MLLZO
+    // Misc
+    | CS_Operation_CLEAR | CS_Operation_DUMP | CS_Operation_SHTDN
+    | CS_Operation_DEFN | CS_Operation_IN | CS_Operation_OUT
+    | CS_Operation_RETRN | CS_Operation_RESET
+    // Catch-all
+    | CS_Operation_Other
+    ;
+
+// =================================================================
+// Indicator helper rules
+// =================================================================
+
+onOffFlag
+    : BlankFlag
+    | NoFlag
+    ;
+
+csIndicator
+    : BlankIndicator
     | GeneralIndicator
-	| ControlLevelIndicator
-	| FunctionKeyIndicator 
-	| LastRecordIndicator
-	| MatchingRecordIndicator
-	| HaltIndicator
-	| ExternalIndicator
-	| OverflowIndicator
-	| ReturnIndicator
-;
-cspec_fixed_standard_parts: 
-	factor2=factor
-	result=resultType 
-	len=CS_FieldLength 
-	decimalPositions=CS_DecimalPositions 
-	hi=resultIndicator 
-	lo=resultIndicator
-	eq=resultIndicator 
-	cs_fixed_comments? (EOL|EOF);	
+    | FunctionKeyIndicator
+    | ControlLevelIndicator
+    | ControlLevel0Indicator
+    | LastRecordIndicator
+    | MatchingRecordIndicator
+    | HaltIndicator
+    | ReturnIndicator
+    | ExternalIndicator
+    | OverflowIndicator
+    | SubroutineIndicator
+    | AndIndicator
+    | OrIndicator
+    | FirstPageIndicator
+    | OtherIndicator
+    ;
 
-/*
- * Fixed op codes 
- */	
-csACQ:
-	operation=OP_ACQ
-	operationExtender=cs_operationExtender? 
-	cspec_fixed_standard_parts;	
-csADD:
-	operation=OP_ADD
-	operationExtender=cs_operationExtender? 
-	cspec_fixed_standard_parts;	
-csADDDUR:
-	operation=OP_ADDDUR
-	operationExtender=cs_operationExtender? 
-	cspec_fixed_standard_parts;
-csANDEQ:
-	operation=OP_ANDEQ
-	cspec_fixed_standard_parts;
-csANDNE:
-	operation=OP_ANDNE
-	cspec_fixed_standard_parts;
-csANDLE:
-	operation=OP_ANDLE
-	cspec_fixed_standard_parts;
-csANDLT:
-	operation=OP_ANDLT
-	cspec_fixed_standard_parts;
-csANDGE:
-	operation=OP_ANDGE
-	cspec_fixed_standard_parts;
-csANDGT:
-	operation=OP_ANDGT
-	cspec_fixed_standard_parts;
-//csBEGSR:
-//	operation=OP_BEGSR
-//	cspec_fixed_standard_parts;
-csBITOFF:
-	operation=OP_BITOFF
-	cspec_fixed_standard_parts;
-csBITON:
-	operation=OP_BITON
-	cspec_fixed_standard_parts;
-csCABxx:
-	operation=OP_CABxx
-	cspec_fixed_standard_parts;
-csCABEQ:
-	operation=OP_CABEQ
-	cspec_fixed_standard_parts;
-csCABNE:
-	operation=OP_CABNE
-	cspec_fixed_standard_parts;
-csCABLE:
-	operation=OP_CABLE
-	cspec_fixed_standard_parts;
-csCABLT:
-	operation=OP_CABLT
-	cspec_fixed_standard_parts;
-csCABGE:
-	operation=OP_CABGE
-	cspec_fixed_standard_parts;
-csCABGT:
-	operation=OP_CABGT
-	cspec_fixed_standard_parts;
-csCALL:
-	operation=OP_CALL
-	operationExtender=cs_operationExtender? 
-	cspec_fixed_standard_parts
-	csPARM*;
-csCASEQ:
-	operation=OP_CASEQ
-	cspec_fixed_standard_parts;
-csCASNE:
-	operation=OP_CASNE
-	cspec_fixed_standard_parts;
-csCASLE:
-	operation=OP_CASLE
-	cspec_fixed_standard_parts;
-csCASLT:
-	operation=OP_CASLT
-	cspec_fixed_standard_parts;
-csCASGE:
-	operation=OP_CASGE
-	cspec_fixed_standard_parts;
-csCASGT:
-	operation=OP_CASGT
-	cspec_fixed_standard_parts;
-csCAS:
-	operation=OP_CAS
-	cspec_fixed_standard_parts;
-csCAT:
-	operation=OP_CAT
-	operationExtender=cs_operationExtender? 
-	cspec_fixed_standard_parts;
-csCHAIN:
-	operation=OP_CHAIN
-	operationExtender=cs_operationExtender? 
-	cspec_fixed_standard_parts;
-csCHECK:
-	operation=OP_CHECK
-	operationExtender=cs_operationExtender? 
-	cspec_fixed_standard_parts;
-csCHECKR:
-	operation=OP_CHECKR
-	operationExtender=cs_operationExtender? 
-	cspec_fixed_standard_parts;
-csCLEAR:
-	operation=OP_CLEAR
-	cspec_fixed_standard_parts;
-csCLOSE:
-	operation=OP_CLOSE
-	operationExtender=cs_operationExtender? 
-	cspec_fixed_standard_parts;
-csCOMMIT:
-	operation=OP_COMMIT
-	operationExtender=cs_operationExtender? 
-	cspec_fixed_standard_parts;
-csCOMP:
-	operation=OP_COMP
-	cspec_fixed_standard_parts;
-csDEFINE:
-	operation=OP_DEFINE
-	cspec_fixed_standard_parts;
-csDELETE:
-	operation=OP_DELETE
-	operationExtender=cs_operationExtender? 
-	cspec_fixed_standard_parts;
-csDIV:
-	operation=OP_DIV
-	operationExtender=cs_operationExtender? 
-	cspec_fixed_standard_parts
-	csMVR?;
-csDO:
-	operation=OP_DO
-	cspec_fixed_standard_parts;
-csDOUEQ:
-	operation=OP_DOUEQ
-	cspec_fixed_standard_parts;
-csDOUNE:
-	operation=OP_DOUNE
-	cspec_fixed_standard_parts;
-csDOULE:
-	operation=OP_DOULE
-	cspec_fixed_standard_parts;
-csDOULT:
-	operation=OP_DOULT
-	cspec_fixed_standard_parts;
-csDOUGE:
-	operation=OP_DOUGE
-	cspec_fixed_standard_parts;
-csDOUGT:
-	operation=OP_DOUGT
-	cspec_fixed_standard_parts;
-csDOWEQ:
-	operation=OP_DOWEQ
-	cspec_fixed_standard_parts;
-csDOWNE:
-	operation=OP_DOWNE
-	cspec_fixed_standard_parts;
-csDOWLE:
-	operation=OP_DOWLE
-	cspec_fixed_standard_parts;
-csDOWLT:
-	operation=OP_DOWLT
-	cspec_fixed_standard_parts;
-csDOWGE:
-	operation=OP_DOWGE
-	cspec_fixed_standard_parts;
-csDOWGT:
-	operation=OP_DOWGT
-	cspec_fixed_standard_parts;
-csDSPLY:
-	operation=OP_DSPLY
-	operationExtender=cs_operationExtender? 
-	cspec_fixed_standard_parts;
-csDUMP:
-	operation=OP_DUMP
-	operationExtender=cs_operationExtender? 
-	cspec_fixed_standard_parts;
-csELSE:
-	operation=OP_ELSE
-	cspec_fixed_standard_parts;
-csEND:
-	operation=OP_END
-	cspec_fixed_standard_parts;
-csENDCS:
-	operation=OP_ENDCS
-	cspec_fixed_standard_parts;
-csENDDO:
-	operation=OP_ENDDO
-	cspec_fixed_standard_parts;
-csEXCEPT:
-	operation=OP_EXCEPT
-	cspec_fixed_standard_parts;
-csEXFMT:
-	operation=OP_EXFMT
-	operationExtender=cs_operationExtender? 
-	cspec_fixed_standard_parts;
-csEXSR:
-	operation=OP_EXSR
-	cspec_fixed_standard_parts;
-csEXTRCT:
-	operation=OP_EXTRCT
-	operationExtender=cs_operationExtender? 
-	cspec_fixed_standard_parts;
-csFEOD:
-	operation=OP_FEOD
-	operationExtender=cs_operationExtender? 
-	cspec_fixed_standard_parts;
-csFORCE:
-	operation=OP_FORCE
-	cspec_fixed_standard_parts;
-csGOTO:
-	operation=OP_GOTO
-	cspec_fixed_standard_parts;
-csIFEQ:
-	operation=OP_IFEQ
-	cspec_fixed_standard_parts;
-csIFNE:
-	operation=OP_IFNE
-	cspec_fixed_standard_parts;
-csIFLE:
-	operation=OP_IFLE
-	cspec_fixed_standard_parts;
-csIFLT:
-	operation=OP_IFLT
-	cspec_fixed_standard_parts;
-csIFGE:
-	operation=OP_IFGE
-	cspec_fixed_standard_parts;
-csIFGT:
-	operation=OP_IFGT
-	cspec_fixed_standard_parts;
-csIN:
-	operation=OP_IN
-	operationExtender=cs_operationExtender? 
-	cspec_fixed_standard_parts;
-csITER:
-	operation=OP_ITER
-	cspec_fixed_standard_parts;
-csKLIST:
-	operation=OP_KLIST
-	cspec_fixed_standard_parts
-	csKFLD*;
-csKFLD:
-	CS_FIXED
-	BlankIndicator
-	BlankFlag 
-	BlankIndicator
-	CS_BlankFactor
-	operation=OP_KFLD
-	cspec_fixed_standard_parts;
-csLEAVE:
-	operation=OP_LEAVE
-	cspec_fixed_standard_parts;
-csLOOKUP:
-	operation=OP_LOOKUP
-	cspec_fixed_standard_parts;
-csMHHZO:
-	operation=OP_MHHZO
-	cspec_fixed_standard_parts;
-csMHLZO:
-	operation=OP_MHLZO
-	cspec_fixed_standard_parts;
-csMLHZO:
-	operation=OP_MLHZO
-	cspec_fixed_standard_parts;
-csMLLZO:
-	operation=OP_MLLZO
-	cspec_fixed_standard_parts;
-csMOVE:
-	operation=OP_MOVE
-	operationExtender=cs_operationExtender? 
-	cspec_fixed_standard_parts;
-csMOVEA:
-	operation=OP_MOVEA
-	operationExtender=cs_operationExtender? 
-	cspec_fixed_standard_parts;
-csMOVEL:
-	operation=OP_MOVEL
-	operationExtender=cs_operationExtender? 
-	cspec_fixed_standard_parts;
-csMULT:
-	operation=OP_MULT
-	operationExtender=cs_operationExtender? 
-	cspec_fixed_standard_parts;
-csMVR:
-	CS_FIXED
-	BlankIndicator
-	BlankFlag 
-	BlankIndicator
-	CS_BlankFactor
-	operation=OP_MVR
-	cspec_fixed_standard_parts;
-csNEXT:
-	operation=OP_NEXT
-	operationExtender=cs_operationExtender? 
-	cspec_fixed_standard_parts;
-csOCCUR:
-	operation=OP_OCCUR
-	operationExtender=cs_operationExtender? 
-	cspec_fixed_standard_parts;
-csOPEN:
-	operation=OP_OPEN
-	operationExtender=cs_operationExtender? 
-	cspec_fixed_standard_parts;
-csOREQ:
-	operation=OP_OREQ
-	cspec_fixed_standard_parts;
-csORNE:
-	operation=OP_ORNE
-	cspec_fixed_standard_parts;
-csORLE:
-	operation=OP_ORLE
-	cspec_fixed_standard_parts;
-csORLT:
-	operation=OP_ORLT
-	cspec_fixed_standard_parts;
-csORGE:
-	operation=OP_ORGE
-	cspec_fixed_standard_parts;
-csORGT:
-	operation=OP_ORGT
-	cspec_fixed_standard_parts;
-csOUT:
-	operation=OP_OUT
-	operationExtender=cs_operationExtender? 
-	cspec_fixed_standard_parts;
-csPARM:
-	CS_FIXED
-	cspec_continuedIndicators*
-	cs_controlLevel
-	indicatorsOff=onOffIndicatorsFlag indicators=cs_indicators
-	factor1=factor
-	operation=OP_PARM
-	cspec_fixed_standard_parts;
-csPLIST:
-	operation=OP_PLIST
-	cspec_fixed_standard_parts
-	csPARM*;
-csPOST:
-	operation=OP_POST
-	operationExtender=cs_operationExtender? 
-	cspec_fixed_standard_parts;
-csREAD:
-	operation=OP_READ
-	operationExtender=cs_operationExtender? 
-	cspec_fixed_standard_parts;
-csREADC:
-	operation=OP_READC
-	operationExtender=cs_operationExtender? 
-	cspec_fixed_standard_parts;
-csREADE:
-	operation=OP_READE
-	operationExtender=cs_operationExtender? 
-	cspec_fixed_standard_parts;
-csREADP:
-	operation=OP_READP
-	operationExtender=cs_operationExtender? 
-	cspec_fixed_standard_parts;
-csREADPE:
-	operation=OP_READPE
-	operationExtender=cs_operationExtender? 
-	cspec_fixed_standard_parts;
-csREL:
-	operation=OP_REL
-	operationExtender=cs_operationExtender? 
-	cspec_fixed_standard_parts;
-csRESET:
-	operation=OP_RESET
-	operationExtender=cs_operationExtender? 
-	cspec_fixed_standard_parts;
-csROLBK:
-	operation=OP_ROLBK
-	operationExtender=cs_operationExtender? 
-	cspec_fixed_standard_parts;
-csSCAN:
-	operation=OP_SCAN
-	operationExtender=cs_operationExtender? 
-	cspec_fixed_standard_parts;
-csSETGT:
-	operation=OP_SETGT
-	operationExtender=cs_operationExtender? 
-	cspec_fixed_standard_parts;
-csSETLL:
-	operation=OP_SETLL
-	operationExtender=cs_operationExtender? 
-	cspec_fixed_standard_parts;
-csSETOFF:
-	operation=OP_SETOFF
-	cspec_fixed_standard_parts;
-csSETON:
-	operation=OP_SETON
-	cspec_fixed_standard_parts;
-csSHTDN:
-	operation=OP_SHTDN
-	cspec_fixed_standard_parts;
-csSQRT:
-	operation=OP_SQRT
-	operationExtender=cs_operationExtender? 
-	cspec_fixed_standard_parts;
-csSUB:
-	operation=OP_SUB
-	operationExtender=cs_operationExtender? 
-	cspec_fixed_standard_parts;
-csSUBDUR:
-	operation=OP_SUBDUR
-	operationExtender=cs_operationExtender? 
-	cspec_fixed_standard_parts;
-csSUBST:
-	operation=OP_SUBST
-	operationExtender=cs_operationExtender? 
-	cspec_fixed_standard_parts;
-csTAG:
-	operation=OP_TAG
-	cspec_fixed_standard_parts;
-csTEST:
-	operation=OP_TEST
-	operationExtender=cs_operationExtender? 
-	cspec_fixed_standard_parts;
-csTESTB:
-	operation=OP_TESTB
-	cspec_fixed_standard_parts;
-csTESTN:
-	operation=OP_TESTN
-	cspec_fixed_standard_parts;
-csTESTZ:
-	operation=OP_TESTZ
-	cspec_fixed_standard_parts;
-csTIME:
-	operation=OP_TIME
-	cspec_fixed_standard_parts;
-csUNLOCK:
-	operation=OP_UNLOCK
-	operationExtender=cs_operationExtender? 
-	cspec_fixed_standard_parts;
-csUPDATE:
-	operation=OP_UPDATE
-	operationExtender=cs_operationExtender? 
-	cspec_fixed_standard_parts;
-csWHENEQ:
-	operation=OP_WHENEQ
-	cspec_fixed_standard_parts;
-csWHENNE:
-	operation=OP_WHENNE
-	cspec_fixed_standard_parts;
-csWHENLE:
-	operation=OP_WHENLE
-	cspec_fixed_standard_parts;
-csWHENLT:
-	operation=OP_WHENLT
-	cspec_fixed_standard_parts;
-csWHENGE:
-	operation=OP_WHENGE
-	cspec_fixed_standard_parts;
-csWHENGT:
-	operation=OP_WHENGT
-	cspec_fixed_standard_parts;
-csWRITE:
-	operation=OP_WRITE
-	operationExtender=cs_operationExtender? 
-	cspec_fixed_standard_parts;
-csXFOOT:
-	operation=OP_XFOOT
-	operationExtender=cs_operationExtender? 
-	cspec_fixed_standard_parts;
-csXLATE:
-	operation=OP_XLATE
-	operationExtender=cs_operationExtender? 
-	cspec_fixed_standard_parts;
-csZ_ADD:
-	operation=OP_Z_ADD
-	operationExtender=cs_operationExtender? 
-	cspec_fixed_standard_parts;
-csZ_SUB:
-	operation=OP_Z_SUB
-	operationExtender=cs_operationExtender? 
-	cspec_fixed_standard_parts;
-			
-cs_operationExtender:
-  OPEN_PAREN?
-  extender=CS_OperationAndExtender
-  extender2=CS_OperationAndExtender?
-  extender3=CS_OperationAndExtender?
-  extender4=CS_OperationAndExtender?
-  CLOSE_PAREN;	
-factor:
-   content=factorContent (COLON (content2=factorContent | constant2=symbolicConstants))? | CS_BlankFactor | constant=symbolicConstants literal?;
-   
-factorContent:
-CS_FactorContent | literal;
+csResultIndicators
+    : CS_ResultInd1 CS_ResultInd2 CS_ResultInd3
+    ;
 
-resultType:	
-   CS_FactorContent (COLON (constant=symbolicConstants))?  | CS_BlankFactor;
-cs_fixed_comments:CS_FixedComments;		
+// =================================================================
+// O-spec (Output Specification)
+// =================================================================
 
-ispec_fixed: IS_FIXED 
-	((IS_FileName
-	//IS_LogicalRelationship
-		(is_external_rec
-		|is_rec)
-		(EOL|EOF)
-	)
-	| (is_external_field
-		(EOL|EOF)
-	)
-	| (IFD_DATA_ATTR
-		IFD_DATETIME_SEP
-		IFD_DATA_FORMAT
-		IFD_FIELD_LOCATION
-		IFD_DECIMAL_POSITIONS
-		IFD_FIELD_NAME
-		IFD_CONTROL_LEVEL
-		IFD_MATCHING_FIELDS
-		fieldRecordRelation
-		fieldIndicator
-		fieldIndicator
-		fieldIndicator
-		IFD_COMMENTS?
-		(EOL|EOF)
-	))
-	;
-	
-fieldRecordRelation:
- BlankIndicator
-    | GeneralIndicator
-	| ControlLevelIndicator
-	| MatchingRecordIndicator
-	| ExternalIndicator
-	| HaltIndicator
-	| ReturnIndicator
-;	
+outputSpec
+    : outputRecordSpec
+    | outputFieldSpec
+    ;
 
-fieldIndicator:
- BlankIndicator
-    | GeneralIndicator
-	| ControlLevelIndicator
-	| HaltIndicator
-	| ExternalIndicator
-	| ReturnIndicator
-;	
-is_external_rec:	
-			IS_ExtRecordReserved
-			resultIndicator
-			WS?; 
-is_rec:				
-			IS_Sequence
-			IS_Number
-			IS_Option
-			recordIdIndicator
-			IS_RecordIdCode;
-recordIdIndicator:
-	GeneralIndicator
-  | HaltIndicator
-  | ControlLevelIndicator
-  | LastRecordIndicator
-  | ExternalIndicator
-  | ReturnIndicator
-  | BlankIndicator;
+outputRecordSpec
+    : OS_FIXED
+      OS_RecordName
+      OS_Type
+      OS_AddDelete
+      OS_SpaceBefore
+      OS_SpaceAfter
+      OS_SkipBefore
+      OS_SkipAfter
+      outputCondIndicators
+      OS_ExceptName
+      OS_Remaining?
+      EOL
+    ;
 
-is_external_field:
-			IF_Name
-			IF_FieldName
-			controlLevelIndicator
-			matchingFieldsIndicator
-			resultIndicator
-			resultIndicator
-			resultIndicator
-;
+outputFieldSpec
+    : OS_FIXED
+      OS_RecordName
+      OS_Type?
+      OS_AddDelete?
+      OS_SpaceBefore?
+      OS_SpaceAfter?
+      OS_SkipBefore?
+      OS_SkipAfter?
+      outputCondIndicators?
+      OS_ExceptName?
+      OS_Remaining?
+      EOL
+    ;
 
-controlLevelIndicator:
-ControlLevelIndicator
-| BlankIndicator;
+outputCondIndicators
+    : OS_CondInd1_Flag OS_CondInd1
+      OS_CondInd2_Flag OS_CondInd2
+      OS_CondInd3_Flag OS_CondInd3
+    ;
 
-matchingFieldsIndicator:
-MatchingRecordIndicator
-| BlankIndicator;
+// =================================================================
+// End of Source
+// =================================================================
 
-hspec_fixed: HS_FIXED 
-	hs_expression*
-	(EOL|EOF);
-hs_expression: (ID (OPEN_PAREN (hs_parm (COLON hs_parm)*)? CLOSE_PAREN)?);
-hs_parm: ID | hs_string | symbolicConstants;
-hs_string: StringLiteralStart (StringContent | StringEscapedQuote )* StringLiteralEnd;
-blank_line: BLANK_LINE;
-space_directive: DIR_SPACE (NUMBER)?;
-dir_copy: (DIR_COPY
-		   ( 
-			(((library=copyText DIR_Slash)? file=copyText)? member=copyText)
-			| (DIR_Slash? (copyText DIR_Slash)+ copyText)
-		   )
-		  );
-dir_include: (DIR_INCLUDE 
-		   (
-			(((library=copyText DIR_Slash)? file=copyText)? member=copyText)
-			| (DIR_Slash? (copyText DIR_Slash)+ copyText)
-		   )
-		   (DIR_OtherText+)?
-		  );
-dir_if:
-	DIR_IF not=DIR_NOT? DIR_DEFINED OPEN_PAREN copyText CLOSE_PAREN;
-dir_elseif:
-	DIR_ELSEIF not=DIR_NOT? DIR_DEFINED OPEN_PAREN copyText CLOSE_PAREN;
-dir_else: DIR_ELSE;
-dir_endif: DIR_ENDIF;
-dir_define: DIR_DEFINE name=DIR_OtherText;
-dir_undefine: DIR_UNDEFINE name=DIR_OtherText;
-dir_eof:DIR_EOF;
-copyText: DIR_OtherText
- | (StringLiteralStart StringContent StringLiteralEnd)
- | DIR_NOT
- | DIR_DEFINE;
-trailing_ws: DIR_FREE_OTHER_TEXT;
-//title_directive: DIR_TITLE title_text;
-//title_directive: DIR_TITLE (DIR_OtherText)?;
-title_directive: DIR_TITLE title_text*;
-//title_text: (NUMBER | DIR_OtherText) (NUMBER | DIR_OtherText);
-title_text: (NUMBER | DIR_OtherText);
+endSource
+    : END_SOURCE endSourceLine*
+    ;
 
-literal: (StringLiteralStart|HexLiteralStart|DateLiteralStart|TimeLiteralStart|TimeStampLiteralStart|UCS2LiteralStart|GraphicLiteralStart) 
-	content=(StringContent | StringEscapedQuote | PlusOrMinus)* StringLiteralEnd;
-
+endSourceLine
+    : EOS_Text? EOL
+    ;

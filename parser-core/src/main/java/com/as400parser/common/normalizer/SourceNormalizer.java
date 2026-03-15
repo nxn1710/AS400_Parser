@@ -315,12 +315,48 @@ public class SourceNormalizer {
                 // SI itself doesn't occupy a display column
             } else if (inDbcs) {
                 width += 2; // DBCS character = 2 column positions
+            } else if (isFullWidthChar(c)) {
+                width += 2; // Unicode full-width character = 2 column positions
             } else {
                 width += 1; // SBCS character = 1 column position
             }
         }
 
         return width;
+    }
+
+    /**
+     * Determine if a Unicode character is full-width (occupies 2 column positions).
+     * This covers CJK Unified Ideographs, Katakana, Hiragana, CJK symbols, and
+     * other common fullwidth ranges used in Japanese/Chinese/Korean text.
+     */
+    static boolean isFullWidthChar(char c) {
+        // CJK Unified Ideographs (U+4E00–U+9FFF)
+        if (c >= 0x4E00 && c <= 0x9FFF) return true;
+        // CJK Unified Ideographs Extension A (U+3400–U+4DBF)
+        if (c >= 0x3400 && c <= 0x4DBF) return true;
+        // CJK Compatibility Ideographs (U+F900–U+FAFF)
+        if (c >= 0xF900 && c <= 0xFAFF) return true;
+        // Hiragana (U+3040–U+309F)
+        if (c >= 0x3040 && c <= 0x309F) return true;
+        // Katakana (U+30A0–U+30FF)
+        if (c >= 0x30A0 && c <= 0x30FF) return true;
+        // Katakana Phonetic Extensions (U+31F0–U+31FF)
+        if (c >= 0x31F0 && c <= 0x31FF) return true;
+        // CJK Symbols and Punctuation (U+3000–U+303F)
+        if (c >= 0x3000 && c <= 0x303F) return true;
+        // Fullwidth Latin and Halfwidth Katakana (U+FF00–U+FFEF)
+        // Fullwidth ASCII variants (U+FF01–U+FF60) are fullwidth
+        if (c >= 0xFF01 && c <= 0xFF60) return true;
+        // Hangul Syllables (U+AC00–U+D7AF)
+        if (c >= 0xAC00 && c <= 0xD7AF) return true;
+        // Enclosed CJK Letters and Months (U+3200–U+32FF)
+        if (c >= 0x3200 && c <= 0x32FF) return true;
+        // CJK Compatibility (U+3300–U+33FF)
+        if (c >= 0x3300 && c <= 0x33FF) return true;
+        // Bopomofo (U+3100–U+312F)
+        if (c >= 0x3100 && c <= 0x312F) return true;
+        return false;
     }
 
     /**
@@ -340,7 +376,7 @@ public class SourceNormalizer {
                 inDbcs = false;
                 sb.append(c);
             } else {
-                int charWidth = inDbcs ? 2 : 1;
+                int charWidth = inDbcs ? 2 : (isFullWidthChar(c) ? 2 : 1);
                 if (width + charWidth > maxWidth) {
                     break;
                 }

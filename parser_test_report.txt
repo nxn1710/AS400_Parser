@@ -1,0 +1,80 @@
+=== MNUPRG.rpg ===
+Parse status: complete
+Total lines: 124
+H-specs: 0
+F-specs: 1
+  Files: [MNUDSPF]
+E-specs: 0
+I-specs: 11
+C-specs: 2
+O-specs: 0
+Comments: 77
+Data structures: 1
+Subroutines: 5
+  Names: [OPT01, OPT02, OPT03, OPT09, OPTER]
+Symbol table entries: 12
+Called programs: [STUPRG, STULST, STURPT]
+Referenced files: [MNUDSPF]
+Errors: 0
+JSON IR saved to: d:/Code/AS400_Parser/MNUPRG_ir.json
+
+=== STULST.rpg ===
+Parse status: complete
+Total lines: 305
+H-specs: 0
+F-specs: 4
+  Files: [STUDNTL1, SCHOOLPF, STULSTD, ]
+E-specs: 3
+I-specs: 17
+C-specs: 12
+O-specs: 0
+Comments: 152
+Data structures: 4
+Subroutines: 3
+  Names: [LODSFL, SCLCAL, PRCSFL]
+Symbol table entries: 33
+Called programs: [STUPRG, STUPRG, STUPRG]
+Referenced files: [STUDNTL1, SCHOOLPF, STULSTD]
+Errors: 0
+JSON IR saved to: d:/Code/AS400_Parser/STULST_ir.json
+
+=== STUPRG.rpg ===
+Parse status: complete
+Total lines: 527
+H-specs: 0
+F-specs: 3
+  Files: [STUDNTPF, SCHOOLPF, STUDSPF]
+E-specs: 0
+I-specs: 52
+C-specs: 14
+O-specs: 0
+Comments: 232
+Data structures: 18
+Subroutines: 9
+  Names: [INIT, DTLSHO, MOVSCN, SCNMOV, STSNM, ADDSTU, UPDSTU, DELSTU, CHKINP]
+Symbol table entries: 57
+Called programs: []
+Referenced files: [STUDNTPF, SCHOOLPF, STUDSPF]
+Errors: 0
+JSON IR saved to: d:/Code/AS400_Parser/STUPRG_ir.json
+
+=== STURPT.rpg ===
+Parse status: complete
+Total lines: 282
+H-specs: 0
+F-specs: 3
+  Files: [STUDNTL2, SCHOOLPF, STURPTPF]
+E-specs: 2
+I-specs: 11
+C-specs: 15
+O-specs: 47
+Comments: 145
+Data structures: 1
+Subroutines: 3
+  Names: [RPINIT, SCHLDR, ARRUPD]
+Symbol table entries: 22
+Called programs: []
+Referenced files: [STUDNTL2, SCHOOLPF, STURPTPF]
+Errors: 0
+JSON IR saved to: d:/Code/AS400_Parser/STURPT_ir.json
+

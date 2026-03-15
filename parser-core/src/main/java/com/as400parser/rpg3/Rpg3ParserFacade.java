@@ -6,15 +6,11 @@ import com.as400parser.common.normalizer.SourceNormalizer;
 import com.as400parser.common.parser.As400Parser;
 import com.as400parser.common.parser.ParseOptions;
 import com.as400parser.common.serializer.IrJsonSerializer;
-import com.as400parser.rpg3.generated.Rpg3Lexer;
-import com.as400parser.rpg3.generated.Rpg3Parser;
 import com.as400parser.rpg3.model.Rpg3Content;
 
-import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.atn.PredictionMode;
-import org.antlr.v4.runtime.tree.ParseTree;
-
 import java.io.IOException;
+import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.time.Instant;
 import java.util.*;
@@ -78,65 +74,29 @@ public class Rpg3ParserFacade implements As400Parser {
     // =========================================================================
 
     private IrDocument runPipeline(NormalizedSource normalized, ParseOptions options) {
-        // Step 2: Lex
-        String joinedSource = String.join("\n", normalized.getLines());
-        Rpg3Lexer lexer = new Rpg3Lexer(CharStreams.fromString(joinedSource));
-        lexer.removeErrorListeners();
-
-        CommonTokenStream tokenStream = new CommonTokenStream(lexer);
-
-        // Step 3: Parse (SLL first, LL fallback)
-        Rpg3ErrorListener errorListener = new Rpg3ErrorListener(normalized.getOriginalLineNumbers());
-        ParseTree tree = parseWithFallback(tokenStream, errorListener);
-
-        // Step 4: Build IR
+        // Build IR using raw-line column extraction (grammar-independent)
         Rpg3IrBuilder irBuilder = new Rpg3IrBuilder(normalized);
-        irBuilder.visit(tree);
-        IrDocument document = irBuilder.getResult();
+        IrDocument document = irBuilder.build();
 
-        // Step 5: Resolve /COPY members (if enabled)
+        // Resolve /COPY members (if enabled)
         if (options.isResolveCopies()) {
             resolveCopyMembers(document, options);
         }
 
-        // Step 6: Build symbol table
+        // Build symbol table
         Object content = document.getContent();
         if (content instanceof Rpg3Content rpg3Content) {
             new Rpg3SymbolTableBuilder(rpg3Content).build();
         }
 
-        // Step 7: Populate metadata
+        // Populate metadata (no grammar errors since we don't parse with ANTLR)
+        Rpg3ErrorListener errorListener = new Rpg3ErrorListener(normalized.getOriginalLineNumbers());
         populateMetadata(document, normalized, errorListener);
 
         return document;
     }
 
-    /**
-     * Parse with SLL prediction mode first for speed.
-     * Falls back to LL mode if SLL fails.
-     */
-    private ParseTree parseWithFallback(CommonTokenStream tokenStream,
-                                        Rpg3ErrorListener errorListener) {
-        Rpg3Parser parser = new Rpg3Parser(tokenStream);
-        parser.removeErrorListeners();
 
-        // Try SLL first (fast)
-        parser.getInterpreter().setPredictionMode(PredictionMode.SLL);
-        parser.setErrorHandler(new BailErrorStrategy());
-        try {
-            return parser.rpg3Program();
-        } catch (Exception ignored) {
-            // SLL failed — fall back to LL
-        }
-
-        // Reset and try LL (complete)
-        tokenStream.seek(0);
-        parser.reset();
-        parser.getInterpreter().setPredictionMode(PredictionMode.LL);
-        parser.setErrorHandler(new DefaultErrorStrategy());
-        parser.addErrorListener(errorListener);
-        return parser.rpg3Program();
-    }
 
     // =========================================================================
     // Copy resolution
@@ -332,6 +292,8 @@ public class Rpg3ParserFacade implements As400Parser {
         IrDocument doc = facade.parse(Path.of(sourcePath), optBuilder.build());
 
         IrJsonSerializer serializer = new IrJsonSerializer();
-        System.out.println(serializer.serialize(doc));
+        // Use UTF-8 output to preserve non-ASCII characters (e.g., Japanese)
+        PrintStream utf8Out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
+        utf8Out.println(serializer.serialize(doc));
     }
 }

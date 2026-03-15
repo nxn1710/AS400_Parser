@@ -71,7 +71,7 @@ task generateGrammarSource {
 sourceSets {
     main {
         java {
-            srcDir antlrOutDir
+            srcDir "${project.buildDir}/generated-src/antlr/main"
         }
     }
 }
