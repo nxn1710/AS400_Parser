@@ -366,9 +366,33 @@ public class Rpg3IrBuilder {
                 if (fullDirective != null) {
                     String[] parts = fullDirective.trim().split("\\s+", 2);
                     spec.setOption(parts[0]);  // /COPY or /INCLUDE
-                    if (parts.length > 1) {
-                        spec.setFileName(parts[1].trim());  // QCPYSRC,STUDNTCPY
+                    String target = parts.length > 1 ? parts[1].trim() : "";
+                    spec.setFileName(target);
+
+                    // Populate dependencies.copyMembers
+                    IrDocument.CopyMemberRef copyRef = new IrDocument.CopyMemberRef();
+                    copyRef.setDirective(parts[0]);  // /COPY or /INCLUDE
+                    copyRef.setLocation(Location.ofLine(origLine));
+                    copyRef.setResolved(false);
+
+                    // Parse target: LIB/FILE,MEMBER or FILE,MEMBER or MEMBER
+                    String lib = null;
+                    String file = null;
+                    String member = target;
+                    int slashPos = target.indexOf('/');
+                    if (slashPos >= 0) {
+                        lib = target.substring(0, slashPos);
+                        target = target.substring(slashPos + 1);
                     }
+                    int commaPos = target.indexOf(',');
+                    if (commaPos >= 0) {
+                        file = target.substring(0, commaPos);
+                        member = target.substring(commaPos + 1);
+                    }
+                    copyRef.setLibraryName(lib);
+                    copyRef.setFileName(file);
+                    copyRef.setMemberName(member);
+                    dependencies.getCopyMembers().add(copyRef);
                 }
             } else if (trimmed.equalsIgnoreCase("DS") || trimmed.equalsIgnoreCase("SDS")) {
                 spec.setSpecLevel("recordIdentification");
