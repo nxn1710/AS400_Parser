@@ -828,6 +828,12 @@ public class Rpg3IrBuilder {
         // Decimal positions (col 52)
         op.setDecimalPositions(safeInt(sub(rawLine, 51, 52)));
 
+        // Propagate length/decimal into result field IdentifierNode
+        if (op.getResultField() instanceof IdentifierNode idNode) {
+            if (op.getFieldLength() != null) idNode.setLength(op.getFieldLength());
+            if (op.getDecimalPositions() != null) idNode.setDecimalPositions(op.getDecimalPositions());
+        }
+
         // Half adjust (col 53)
         String halfAdj = sub(rawLine, 52, 53);
         if (halfAdj != null && halfAdj.equalsIgnoreCase("H")) {

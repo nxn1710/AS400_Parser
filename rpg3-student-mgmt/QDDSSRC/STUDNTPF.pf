@@ -51,5 +51,6 @@
      A            STUUPB        10A         TEXT('更新者') +
      A                                      COLHDG('更新者')
      A*
-     A*   --- 主キー定義 ---
+     A*   --- 主キー定義 (複合キー: 学校コード + 学生ID) ---
+     A          K STUSCL
      A          K STUID

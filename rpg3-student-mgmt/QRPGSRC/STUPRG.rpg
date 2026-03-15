@@ -116,6 +116,20 @@
      I   I    'BAD BIRTHDATE'                 1  50 EMBDTE
      I*
      C*================================================================
+     C* キーリスト定義: 学校コード + 学生ID
+     C*================================================================
+     C           STUKEY    KLIST
+     C                     KFLD           SCSCL
+     C                     KFLD           SCSTID
+     C*
+     C*================================================================
+     C* パラメーター受取: 学校コード + 学生ID
+     C*================================================================
+     C           *ENTRY    PLIST
+     C                     PARM           PMSCL   4
+     C                     PARM           PMSTID  6
+     C*
+     C*================================================================
      C* 初期処理
      C*================================================================
      C                     EXSR INIT
@@ -128,6 +142,7 @@
      C*
      C*  --- 検索画面初期化 ---
      C                     MOVEL*BLANKS   SCMSG
+     C                     MOVEL*BLANKS   SCSCL
      C                     MOVEL*BLANKS   SCSTID
      C                     MOVEL'SEARCH'  SCMODE
      C*
@@ -155,7 +170,7 @@
      C           SCSTID    IFNE *BLANKS
      C*
      C*    学生マスター検索
-     C           SCSTID    CHAINSTUDNTPF            5099
+     C           STUKEY    CHAINSTUDNTPF            5099
      C*
      C*    ファイル入出力エラーチェック
      C           *IN99     IFEQ *ON
@@ -348,7 +363,7 @@
      C                     MOVELSCSTID    DTSTID
      C*
      C*  --- 重複チェック ---
-     C           SCSTID    CHAINSTUDNTPF            5099
+     C           STUKEY    CHAINSTUDNTPF            5099
      C*  --- 重複チェックエラー ---
      C           *IN99     IFEQ *ON
      C                     MOVELEMERFFDTMSG
@@ -411,7 +426,7 @@
      C                     ENDIF
      C*
      C*    学生マスター再読み込み（ロック）
-     C           DTSTID    CHAINSTUDNTPF            5099
+     C           STUKEY    CHAINSTUDNTPF            5099
      C*  --- 再読み込みエラーチェック ---
      C           *IN99     IFEQ *ON
      C                     MOVELEMERFFDTMSG
@@ -453,7 +468,7 @@
      C           *IN05     IFEQ *ON
      C*
      C*    学生マスター再読み込み
-     C           DTSTID    CHAINSTUDNTPF            5099
+     C           STUKEY    CHAINSTUDNTPF            5099
      C*  --- 削除時読み込みエラーチェック ---
      C           *IN99     IFEQ *ON
      C                     MOVELEMERFFDTMSG

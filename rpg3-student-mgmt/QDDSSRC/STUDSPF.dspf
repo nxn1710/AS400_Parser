@@ -30,8 +30,12 @@
      A                                      DSPATR(HI)
      A*
      A*   --- 学生ID入力 ---
-     A                                  6  5'学生ID     :'
-     A            SCSTID         6A  B  6 20
+     A                                  6  5'学校コード :'
+     A            SCSCL          4A  B  6 20
+     A                                      DSPATR(UL)
+     A*
+     A                                  7  5'学生ID     :'
+     A            SCSTID         6A  B  7 20
      A                                      DSPATR(UL)
      A*
      A*   --- メッセージ ---
