@@ -28,9 +28,19 @@
      F*
      F* --- ファイル定義 ---
      FSTUDNTPFUF  E        K           DISK
+     F                                        RENAME(STUREC:S1REC)
      FSCHOOLPFIF  E        K           DISK
+     F                                        RENAME(SCLREC:S2REC)
      FSTUDSPF CF  E                    WORKSTN
      F*
+     I*================================================================
+     I* フィールドリネーム (/COPY)
+     I*================================================================
+     ISTUDNTPF
+     I/COPY QCPYSRC,STUDNTCPY
+     ISCHOOLPF
+     I/COPY QCPYSRC,SCHOOLCPY
+     I*
      I*================================================================
      I* プログラム状態データ構造 (SDS)
      I* システムがプログラム実行時に自動的に設定する情報
@@ -225,13 +235,13 @@
      C                     EXSR MOVSCN
      C*
      C*  --- 学校名取得 ---
-     C           STUSCL    CHAINSCHOOLPF               9099
+     C           S1SCL     CHAINSCHOOLPF               9099
      C*  --- 学校検索エラーチェック ---
      C           *IN99     IFEQ *ON
      C                     MOVEL*BLANKS   DTSNAM
      C                     ELSE
      C           *IN90     IFEQ *OFF
-     C                     MOVELSCLNAM    DTSNAM
+     C                     MOVELS2NAM     DTSNAM
      C                     ELSE
      C                     MOVEL*BLANKS   DTSNAM
      C                     ENDIF
@@ -285,17 +295,17 @@
      C*================================================================
      C           MOVSCN    BEGSR
      C*
-     C                     MOVELSTUID     DTSTID
-     C                     MOVELSTUNAM    DTNAM
-     C                     MOVELSTUKNA    DTKNA
-     C                     Z-ADDSTUBDT    DTBDT
-     C                     MOVELSTUGND    DTGND
-     C                     MOVELSTUADR    DTADR
-     C                     MOVELSTUTEL    DTTEL
-     C                     MOVELSTUMAL    DTMAL
-     C                     MOVELSTUSCL    DTSCL
-     C                     Z-ADDSTUYR     DTYR
-     C                     MOVELSTUSTS    DTSTS
+     C                     MOVELS1ID      DTSTID
+     C                     MOVELS1NAM     DTNAM
+     C                     MOVELS1KNA     DTKNA
+     C                     Z-ADDS1BDT     DTBDT
+     C                     MOVELS1GND     DTGND
+     C                     MOVELS1ADR     DTADR
+     C                     MOVELS1TEL     DTTEL
+     C                     MOVELS1MAL     DTMAL
+     C                     MOVELS1SCL     DTSCL
+     C                     Z-ADDS1YR      DTYR
+     C                     MOVELS1STS     DTSTS
      C*
      C                     ENDSR
      C*
@@ -304,15 +314,15 @@
      C*================================================================
      C           SCNMOV    BEGSR
      C*
-     C                     MOVELDTNAM     STUNAM
-     C                     MOVELDTKNA     STUKNA
-     C                     Z-ADDDTBDT     STUBDT
-     C                     MOVELDTGND     STUGND
-     C                     MOVELDTADR     STUADR
-     C                     MOVELDTTEL     STUTEL
-     C                     MOVELDTMAL     STUMAL
-     C                     MOVELDTSCL     STUSCL
-     C                     Z-ADDDTYR      STUYR
+     C                     MOVELDTNAM     S1NAM
+     C                     MOVELDTKNA     S1KNA
+     C                     Z-ADDDTBDT     S1BDT
+     C                     MOVELDTGND     S1GND
+     C                     MOVELDTADR     S1ADR
+     C                     MOVELDTTEL     S1TEL
+     C                     MOVELDTMAL     S1MAL
+     C                     MOVELDTSCL     S1SCL
+     C                     Z-ADDDTYR      S1YR
      C*
      C                     ENDSR
      C*
@@ -321,13 +331,13 @@
      C*================================================================
      C           STSNM     BEGSR
      C*
-     C           STUSTS    COMP 'A'                  2121
+     C           S1STS     COMP 'A'                  2121
      C   21                MOVEL'ACTIVE'  DTSTNM
      C*
-     C           STUSTS    COMP 'D'                  2222
+     C           S1STS     COMP 'D'                  2222
      C   22                MOVEL'DELETED' DTSTNM
      C*
-     C           STUSTS    COMP 'G'                  2323
+     C           S1STS     COMP 'G'                  2323
      C   23                MOVEL'GRADUAT' DTSTNM
      C*
      C  N21N22N23          MOVEL'UNKNOWN' DTSTNM
@@ -387,14 +397,14 @@
      C                     ENDIF
      C*
      C*    マスター書き込み
-     C                     MOVELSCSTID    STUID
+     C                     MOVELSCSTID    S1ID
      C                     EXSR SCNMOV
-     C                     MOVEL'A'       STUSTS
-     C                     Z-ADDWKDATE    STUADD
-     C                     Z-ADDWKDATE    STUUPD
-     C                     MOVEL'STUPRG'  STUADB
-     C                     MOVEL'STUPRG'  STUUPB
-     C                     WRITESTUREC
+     C                     MOVEL'A'       S1STS
+     C                     Z-ADDWKDATE    S1ADD
+     C                     Z-ADDWKDATE    S1UPD
+     C                     MOVEL'STUPRG'  S1ADB
+     C                     MOVEL'STUPRG'  S1UPB
+     C                     WRITES1REC
      C*
      C                     MOVELEMADD     SCMSG
      C*
@@ -439,9 +449,9 @@
      C*
      C*    画面データを転送して更新
      C                     EXSR SCNMOV
-     C                     Z-ADDWKDATE    STUUPD
-     C                     MOVEL'STUPRG'  STUUPB
-     C                     UPDATSTUREC
+     C                     Z-ADDWKDATE    S1UPD
+     C                     MOVEL'STUPRG'  S1UPB
+     C                     UPDATS1REC
      C*
      C                     MOVELEMUPD     SCMSG
      C*
@@ -480,10 +490,10 @@
      C                     ENDIF
      C*
      C*    論理削除（状態を'D'に変更）
-     C                     MOVEL'D'       STUSTS
-     C                     Z-ADDWKDATE    STUUPD
-     C                     MOVEL'STUPRG'  STUUPB
-     C                     UPDATSTUREC
+     C                     MOVEL'D'       S1STS
+     C                     Z-ADDWKDATE    S1UPD
+     C                     MOVEL'STUPRG'  S1UPB
+     C                     UPDATS1REC
      C*
      C                     MOVELEMDLTD    SCMSG
      C*

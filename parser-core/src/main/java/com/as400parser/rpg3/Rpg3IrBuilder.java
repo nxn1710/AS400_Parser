@@ -223,11 +223,27 @@ public class Rpg3IrBuilder {
     // =========================================================================
 
     private void scanFileSpec(String line, int origLine) {
+        String fileName = sub(line, 6, 14);
+
+        // Continuation line: blank fileName → merge into previous F-spec
+        if (fileName == null || fileName.isBlank()) {
+            String contKeyword = sub(line, 46, 80); // cols 47-80: keyword + data (e.g., RENAME(STUREC:S1REC))
+            if (contKeyword != null && !contKeyword.isBlank() && !content.getFileSpecs().isEmpty()) {
+                FileSpec parent = content.getFileSpecs().get(content.getFileSpecs().size() - 1);
+                List<String> existing = parent.getContinuationLines() != null
+                        ? new ArrayList<>(parent.getContinuationLines())
+                        : new ArrayList<>();
+                existing.add(contKeyword.trim());
+                parent.setContinuationLines(existing);
+            }
+            return; // don't create a new FileSpec for continuation
+        }
+
         FileSpec spec = new FileSpec();
         spec.setRawSourceLine(line);
         spec.setLocation(Location.ofLine(origLine));
 
-        spec.setFileName(sub(line, 6, 14));
+        spec.setFileName(fileName);
         spec.setFileType(sub(line, 14, 15));
         spec.setFileDesignation(sub(line, 15, 16));
         spec.setEndOfFile(sub(line, 16, 17));
@@ -241,21 +257,18 @@ public class Rpg3IrBuilder {
         spec.setFileOrganization(sub(line, 31, 32));
         spec.setDevice(sub(line, 39, 46));
 
-        String cont = sub(line, 52, 80);
-        if (cont != null && !cont.isEmpty()) {
-            spec.setContinuationLines(cont);
+        // Continuation on same line (cols 47-80)
+        String cont = sub(line, 46, 80);
+        if (cont != null && !cont.isBlank()) {
+            spec.setContinuationLines(new ArrayList<>(List.of(cont.trim())));
         }
 
         content.getFileSpecs().add(spec);
 
-        String fileName = spec.getFileName();
-        if (fileName != null && !fileName.isBlank()) {
-            String fileType = spec.getFileType();
-            String refType = "I".equals(fileType) ? "input" : "O".equals(fileType) ? "output" : "combined";
-            IrDocument.DependencyRef ref = new IrDocument.DependencyRef(fileName.trim(), refType);
-            ref.getLocations().add(spec.getLocation());
-            dependencies.getReferencedFiles().add(ref);
-        }
+        String refType = "I".equals(spec.getFileType()) ? "input" : "O".equals(spec.getFileType()) ? "output" : "combined";
+        IrDocument.DependencyRef ref = new IrDocument.DependencyRef(fileName.trim(), refType);
+        ref.getLocations().add(spec.getLocation());
+        dependencies.getReferencedFiles().add(ref);
     }
 
     // =========================================================================
@@ -318,7 +331,18 @@ public class Rpg3IrBuilder {
         String identifier = sub(line, 6, 22);
         if (identifier != null && !identifier.isBlank()) {
             String trimmed = identifier.trim();
-            if (trimmed.equalsIgnoreCase("DS") || trimmed.equalsIgnoreCase("SDS")) {
+            // /COPY or /INCLUDE compiler directive — read full text from col 7 onward
+            if (trimmed.startsWith("/COPY") || trimmed.startsWith("/INCLUDE")) {
+                spec.setSpecLevel("compilerDirective");
+                String fullDirective = sub(line, 6, 80);
+                if (fullDirective != null) {
+                    String[] parts = fullDirective.trim().split("\\s+", 2);
+                    spec.setOption(parts[0]);  // /COPY or /INCLUDE
+                    if (parts.length > 1) {
+                        spec.setFileName(parts[1].trim());  // QCPYSRC,STUDNTCPY
+                    }
+                }
+            } else if (trimmed.equalsIgnoreCase("DS") || trimmed.equalsIgnoreCase("SDS")) {
                 spec.setSpecLevel("recordIdentification");
                 spec.setOption(trimmed);
 

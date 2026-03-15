@@ -27,7 +27,9 @@
      F*
      F* --- ファイル定義 ---
      FSTUDNTL1IF  E        K           DISK
+     F                                        RENAME(STUREC:S1REC)
      FSCHOOLPFIF  E        K           DISK
+     F                                        RENAME(SCLREC:S2REC)
      FSTULSTD CF  E                    WORKSTN
      F                                        SFILE(STUSFL:RRN)
      F*
@@ -41,6 +43,14 @@
      E                    ARSCL   20  4
      E                    ARSCT   20  5 0
      C*
+     I*================================================================
+     I* フィールドリネーム (/COPY)
+     I*================================================================
+     ISTUDNTL1
+     I/COPY QCPYSRC,STUDNTCPY
+     ISCHOOLPF
+     I/COPY QCPYSRC,SCHOOLCPY
+     I*
      I*================================================================
      I* プログラム状態データ構造 (SDS)
      I*================================================================
@@ -94,7 +104,7 @@
      C                     EXSR LODSFL
      C*
      C*  --- 制御レコード表示 ---
-     C                     SETON                    41
+     C                     SETON                     41
      C                     EXFMTSTUSFC
      C*
      C*  --- F3=終了チェック ---
@@ -128,9 +138,9 @@
      C           LODSFL    BEGSR
      C*
      C*  --- サブファイルクリア ---
-     C                     SETON                    42
+     C                     SETON                     42
      C                     WRITESTUSFC
-     C                     SETOF                    42
+     C                     SETOF                     42
      C*
      C*  --- カウンター初期化 ---
      C                     Z-ADD0         RRN
@@ -163,7 +173,7 @@
      C*
      C*  --- 読取エラーチェック ---
      C           *IN99     IFEQ *ON
-     C                     MOVELEMERRFFCMSG
+     C                     MOVELEMERRF    FCMSG
      C                     GOTO LODEND
      C                     ENDIF
      C*
@@ -171,19 +181,19 @@
      C*
      C*    最大件数チェック（100件）
      C           RRN       IFGE 100
-     C                     MOVELEMMXRWFCMSG
+     C                     MOVELEMMXRW    FCMSG
      C                     GOTO LODEND
      C                     ENDIF
      C*
      C*    --- 学校コードフィルタ ---
      C           FCSCL     IFNE *BLANKS
-     C           STUSCL    IFNE FCSCL
+     C           S1SCL     IFNE FCSCL
      C                     GOTO LODNXT
      C                     ENDIF
      C                     ENDIF
      C*
      C*    --- 状態フィルタ: 有効レコードのみ ---
-     C           STUSTS    IFNE 'A'
+     C           S1STS     IFNE 'A'
      C                     GOTO LODNXT
      C                     ENDIF
      C*
@@ -191,16 +201,16 @@
      C                     ADD  1         RRN
      C                     ADD  1         SFLIDX
      C                     MOVEL*BLANKS   SFOPT
-     C                     MOVELSTUID     SFSTID
-     C                     MOVELSTUNAM    SFNAM
-     C                     MOVELSTUSCL    SFSCL
-     C                     MOVELSTUGND    SFGND
-     C                     Z-ADDSTUBDT    SFBDT
-     C                     MOVELSTUSTS    SFSTS
-     C                     MOVELSTUTEL    SFTEL
+     C                     MOVELS1ID      SFSTID
+     C                     MOVELS1NAM     SFNAM
+     C                     MOVELS1SCL     SFSCL
+     C                     MOVELS1GND     SFGND
+     C                     Z-ADDS1BDT     SFBDT
+     C                     MOVELS1STS     SFSTS
+     C                     MOVELS1TEL     SFTEL
      C*
      C*    --- 学生ID配列に保持 ---
-     C                     MOVELSTUID     ARRID(SFLIDX)
+     C                     MOVELS1ID      ARRID(SFLIDX)
      C*
      C*    --- 学校コード集計 ---
      C                     EXSR SCLCAL
@@ -213,7 +223,7 @@
      C                     READ STUDNTL1             9099
      C*  --- ループ内読取エラーチェック ---
      C           *IN99     IFEQ *ON
-     C                     MOVELEMERRFFCMSG
+     C                     MOVELEMERRF    FCMSG
      C                     GOTO LODEND
      C                     ENDIF
      C                     ENDDO
@@ -222,9 +232,9 @@
      C*
      C*  --- サブファイル表示制御 ---
      C           RRN       IFGT 0
-     C                     SETON                    4043
+     C                     SETON                     4043
      C                     ELSE
-     C                     SETOF                    40
+     C                     SETOF                     40
      C                     MOVELEMNODT FCMSG
      C                     ENDIF
      C*
@@ -237,13 +247,13 @@
      C           SCLCAL    BEGSR
      C*
      C*  --- 学校コード検索(LOKUP) ---
-     C           STUSCL    LOKUP ARSCL                   30
+     C           S1SCL     LOKUP ARSCL                   30
      C*
      C   30                ADD  1         ARSCT(X)
      C*
      C*  --- 見つからない場合は新規追加 ---
      C  N30                ADD  1         SCLCNT
-     C  N30                MOVELSTUSCL    ARSCL(SCLCNT)
+     C  N30                MOVELS1SCL     ARSCL(SCLCNT)
      C  N30                Z-ADD1         ARSCT(SCLCNT)
      C*
      C                     ENDSR

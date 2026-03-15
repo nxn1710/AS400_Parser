@@ -105,7 +105,7 @@ public class Rpg3Content {
         private String recordAddressType;
         private String fileOrganization;
         private String device;
-        private String continuationLines;
+        private List<String> continuationLines;
 
         public String getRawSourceLine() { return rawSourceLine; }
         public void setRawSourceLine(String s) { this.rawSourceLine = s; }
@@ -139,8 +139,8 @@ public class Rpg3Content {
         public void setFileOrganization(String v) { this.fileOrganization = v; }
         public String getDevice() { return device; }
         public void setDevice(String v) { this.device = v; }
-        public String getContinuationLines() { return continuationLines; }
-        public void setContinuationLines(String v) { this.continuationLines = v; }
+        public List<String> getContinuationLines() { return continuationLines; }
+        public void setContinuationLines(List<String> v) { this.continuationLines = v; }
     }
 
     /** E-spec */

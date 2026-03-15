@@ -27,7 +27,9 @@
      F*
      F* --- ファイル定義 ---
      FSTUDNTL2IF  E        K           DISK
+     F                                        RENAME(STUREC:S1REC)
      FSCHOOLPFIF  E        K           DISK
+     F                                        RENAME(SCLREC:S2REC)
      FSTURPTPFO   E           01       PRINTER
      F*
      E*================================================================
@@ -36,6 +38,14 @@
      E                    SCLARR  20  4
      E                    SCTARR  20  5 0
      E*
+     I*================================================================
+     I* フィールドリネーム (/COPY)
+     I*================================================================
+     ISTUDNTL2
+     I/COPY QCPYSRC,STUDNTCPY
+     ISCHOOLPF
+     I/COPY QCPYSRC,SCHOOLCPY
+     I*
      I*================================================================
      I* プログラム状態データ構造 (SDS)
      I*================================================================
@@ -81,7 +91,7 @@
      C*
      C*  --- レベルブレイク判定 ---
      C*  --- 学校コードが変わった場合 ---
-     C           STUSCL    IFNE SVSCL
+     C           S1SCL     IFNE SVSCL
      C*
      C*    前の学校の小計出力（初回以外）
      C           TOTCNT    IFGT 0
@@ -93,14 +103,14 @@
      C*
      C*    小計カウンター初期化
      C                     Z-ADD0         SCLSUB  50
-     C                     MOVELSTUSCL    SVSCL   4
+     C                     MOVELS1SCL     SVSCL   4
      C                     ENDIF
      C*
      C*  --- オーバーフローチェック ---
      C           *IN01     IFEQ *ON
      C                     EXCPT RPTHDR
      C                     EXCPT RPTHDC
-     C                     SETOF                    01
+     C                     SETOF                     01
      C                     ENDIF
      C*
      C*  --- 明細行出力 ---
@@ -177,7 +187,7 @@
      C           SCHLDR    BEGSR
      C*
      C*  --- 学校マスター検索 ---
-     C           STUSCL    CHAINSCHOOLPF              9099
+     C           S1SCL     CHAINSCHOOLPF               9099
      C*
      C*  --- 読取エラーまたは未検出 ---
      C           *IN99     IFEQ *ON
@@ -186,12 +196,12 @@
      C                     ENDIF
      C*
      C           *IN90     IFEQ *OFF
-     C                     MOVELSCLNAM    RHSNAM
+     C                     MOVELS2NAM     RHSNAM
      C                     ELSE
      C                     MOVEL'*UNKNWN*'RHSNAM
      C                     ENDIF
      C*
-     C                     MOVELSTUSCL    RHSCL
+     C                     MOVELS1SCL     RHSCL
      C*
      C*  --- 学校ヘッダー出力 ---
      C                     EXCPT RPTSCH
@@ -205,14 +215,14 @@
      C*================================================================
      C           ARRUPD    BEGSR
      C*
-     C           STUSCL    LOKUP SCLARR                   30
+     C           S1SCL     LOKUP SCLARR                   30
      C*
      C*  --- 既存の学校コードならカウント加算 ---
      C   30                ADD  1         SCTARR(X)
      C*
      C*  --- 新規学校コードなら配列に追加 ---
      C  N30                ADD  1         SCLCNT
-     C  N30                MOVELSTUSCL    SCLARR(SCLCNT)
+     C  N30                MOVELS1SCL     SCLARR(SCLCNT)
      C  N30                Z-ADD1         SCTARR(SCLCNT)
      C*
      C                     ENDSR
@@ -260,12 +270,12 @@
      O*
      O* --- 明細行 ---
      OSTURPTPFE  1        RPTDTL
-     O                         STUID      6
-     O                         STUNAM    38
+     O                         S1ID       6
+     O                         S1NAM     38
      O                         STUBDTY   48
-     O                         STUGND    52
-     O                         STUYR  Z  62
-     O                         STUTEL    78
+     O                         S1GND     52
+     O                         S1YR   Z  62
+     O                         S1TEL     78
      O*
      O* --- 学校小計 ---
      OSTURPTPFE  1        SCHSUB
