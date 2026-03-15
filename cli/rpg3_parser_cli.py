@@ -68,7 +68,7 @@ def cmd_parse(args):
 def cmd_batch(args):
     """Parse all RPG3 source files in a directory."""
     jar = find_jar()
-    extensions = {".rpg", ".rpg3", ".rpgsrc", ".mbr"}
+    extensions = {".rpg", ".rpg3", ".rpgsrc", ".mbr", ".cpy", ".cpysrc"}
     source_files = [f for f in args.source_dir.rglob("*") if f.suffix.lower() in extensions]
 
     if not source_files:

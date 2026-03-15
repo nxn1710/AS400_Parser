@@ -111,7 +111,7 @@ public class Rpg3ParserFacade implements As400Parser {
 
     @Override
     public List<String> getSupportedExtensions() {
-        return List.of(".rpg", ".rpg3", ".rpgsrc", ".mbr");
+        return List.of(".rpg", ".rpg3", ".rpgsrc", ".mbr", ".cpy", ".cpysrc");
     }
 
     // =========================================================================
@@ -387,7 +387,8 @@ public class Rpg3ParserFacade implements As400Parser {
             java.io.File[] files = sourceDir.toFile().listFiles((dir, name) -> {
                 String lower = name.toLowerCase();
                 return lower.endsWith(".rpg") || lower.endsWith(".rpg3") || lower.endsWith(".rpg38")
-                    || lower.endsWith(".sqlrpg") || lower.endsWith(".mbr");
+                    || lower.endsWith(".sqlrpg") || lower.endsWith(".mbr")
+                    || lower.endsWith(".cpy") || lower.endsWith(".cpysrc");
             });
 
             if (files == null || files.length == 0) {
