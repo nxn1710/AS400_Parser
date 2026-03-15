@@ -259,25 +259,38 @@ public class Rpg3ParserFacade implements As400Parser {
     /**
      * CLI entry point. Usage:
      * <pre>
-     *   java -jar as400-parser-core.jar --source FILE [--charset CHARSET] [--copy-path PATHS]
+     *   java -jar as400-parser-core.jar --source FILE [--output FILE] [--charset CHARSET] [--copy-path PATHS]
+     *   java -jar as400-parser-core.jar --source-dir DIR [--output-dir DIR] [--charset CHARSET] [--copy-path PATHS]
      * </pre>
-     * Prints IR JSON to stdout.
+     * Prints IR JSON to stdout if --output is not specified.
      */
     public static void main(String[] args) {
+        if (args.length == 0 || List.of(args).contains("--help") || List.of(args).contains("-h")) {
+            printUsage();
+            return;
+        }
+
         String sourcePath = null;
+        String sourceDirPath = null;
+        String outputPath = null;
+        String outputDirPath = null;
         String charset = "UTF-8";
         String copyPath = null;
 
         for (int i = 0; i < args.length; i++) {
             switch (args[i]) {
                 case "--source" -> { if (i + 1 < args.length) sourcePath = args[++i]; }
+                case "--source-dir" -> { if (i + 1 < args.length) sourceDirPath = args[++i]; }
+                case "--output", "-o" -> { if (i + 1 < args.length) outputPath = args[++i]; }
+                case "--output-dir" -> { if (i + 1 < args.length) outputDirPath = args[++i]; }
                 case "--charset" -> { if (i + 1 < args.length) charset = args[++i]; }
                 case "--copy-path" -> { if (i + 1 < args.length) copyPath = args[++i]; }
             }
         }
 
-        if (sourcePath == null) {
-            System.err.println("Usage: java -jar as400-parser-core.jar --source FILE [--charset CHARSET] [--copy-path PATHS]");
+        if (sourcePath == null && sourceDirPath == null) {
+            System.err.println("Error: --source FILE or --source-dir DIR is required.");
+            printUsage();
             System.exit(1);
         }
 
@@ -290,11 +303,96 @@ public class Rpg3ParserFacade implements As400Parser {
         }
 
         Rpg3ParserFacade facade = new Rpg3ParserFacade();
-        IrDocument doc = facade.parse(Path.of(sourcePath), optBuilder.build());
-
         IrJsonSerializer serializer = new IrJsonSerializer();
-        // Use UTF-8 output to preserve non-ASCII characters (e.g., Japanese)
-        PrintStream utf8Out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
-        utf8Out.println(serializer.serialize(doc));
+
+        if (sourceDirPath != null) {
+            // Batch mode
+            parseBatch(facade, serializer, Path.of(sourceDirPath), outputDirPath, optBuilder.build());
+        } else {
+            // Single file mode
+            parseSingleFile(facade, serializer, Path.of(sourcePath), outputPath, optBuilder.build());
+        }
+    }
+
+    private static void parseSingleFile(Rpg3ParserFacade facade, IrJsonSerializer serializer,
+                                         Path source, String outputPath, ParseOptions options) {
+        try {
+            IrDocument doc = facade.parse(source, options);
+            String json = serializer.serialize(doc);
+
+            if (outputPath != null) {
+                java.nio.file.Files.writeString(Path.of(outputPath), json, StandardCharsets.UTF_8);
+                System.err.println("Written: " + outputPath);
+            } else {
+                PrintStream utf8Out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
+                utf8Out.println(json);
+            }
+        } catch (Exception e) {
+            System.err.println("Error parsing " + source + ": " + e.getMessage());
+            System.exit(1);
+        }
+    }
+
+    private static void parseBatch(Rpg3ParserFacade facade, IrJsonSerializer serializer,
+                                    Path sourceDir, String outputDirPath, ParseOptions options) {
+        try {
+            Path outDir = outputDirPath != null ? Path.of(outputDirPath) : sourceDir.resolve("output");
+            java.nio.file.Files.createDirectories(outDir);
+
+            java.io.File[] files = sourceDir.toFile().listFiles((dir, name) -> {
+                String lower = name.toLowerCase();
+                return lower.endsWith(".rpg") || lower.endsWith(".rpg3") || lower.endsWith(".rpg38")
+                    || lower.endsWith(".sqlrpg") || lower.endsWith(".mbr");
+            });
+
+            if (files == null || files.length == 0) {
+                System.err.println("No RPG3 source files found in: " + sourceDir);
+                return;
+            }
+
+            int success = 0, failed = 0;
+            for (java.io.File file : files) {
+                try {
+                    IrDocument doc = facade.parse(file.toPath(), options);
+                    String json = serializer.serialize(doc);
+                    String outName = file.getName().replaceFirst("\\.[^.]+$", "") + "_ir.json";
+                    Path outFile = outDir.resolve(outName);
+                    java.nio.file.Files.writeString(outFile, json, StandardCharsets.UTF_8);
+                    System.err.println("  ✓ " + file.getName() + " → " + outFile.getFileName());
+                    success++;
+                } catch (Exception e) {
+                    System.err.println("  ✗ " + file.getName() + ": " + e.getMessage());
+                    failed++;
+                }
+            }
+            System.err.println("\nBatch complete: " + success + " succeeded, " + failed + " failed");
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
+            System.exit(1);
+        }
+    }
+
+    private static void printUsage() {
+        System.out.println("AS400 RPG3 Parser v1.0.0");
+        System.out.println();
+        System.out.println("Usage:");
+        System.out.println("  java -jar as400-parser-core-all.jar --source FILE [OPTIONS]");
+        System.out.println("  java -jar as400-parser-core-all.jar --source-dir DIR [OPTIONS]");
+        System.out.println();
+        System.out.println("Options:");
+        System.out.println("  --source FILE       Parse a single RPG3 source file");
+        System.out.println("  --source-dir DIR    Parse all RPG3 files in a directory");
+        System.out.println("  --output FILE       Write output to file (single mode, default: stdout)");
+        System.out.println("  --output-dir DIR    Write output files to directory (batch mode)");
+        System.out.println("  --charset CHARSET   Source encoding (default: UTF-8)");
+        System.out.println("  --copy-path PATHS   Semicolon-separated /COPY search paths");
+        System.out.println("  --help, -h          Show this help message");
+        System.out.println();
+        System.out.println("Supported extensions: .rpg, .rpg3, .rpg38, .sqlrpg, .mbr");
+        System.out.println();
+        System.out.println("Examples:");
+        System.out.println("  java -jar as400-parser-core-all.jar --source CUSTINQ.rpg");
+        System.out.println("  java -jar as400-parser-core-all.jar --source CUSTINQ.rpg -o output.json");
+        System.out.println("  java -jar as400-parser-core-all.jar --source-dir ./rpg3-src --output-dir ./output");
     }
 }
