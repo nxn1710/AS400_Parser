@@ -383,21 +383,18 @@ public class Rpg3Content {
         public void setDataStructureName(String v) { this.dataStructureName = v; }
     }
 
-    /** Subroutine reference */
+    /** Subroutine index entry (operations live only in calculationSpecs SubroutineBlock) */
     public static class Subroutine {
         private String name;
-        private Location location;
+        private int definedAtLine;
         private List<Integer> calledFrom = new ArrayList<>();
-        private List<Object> operations = new ArrayList<>();
 
         public String getName() { return name; }
         public void setName(String v) { this.name = v; }
-        public Location getLocation() { return location; }
-        public void setLocation(Location l) { this.location = l; }
+        public int getDefinedAtLine() { return definedAtLine; }
+        public void setDefinedAtLine(int v) { this.definedAtLine = v; }
         public List<Integer> getCalledFrom() { return calledFrom; }
         public void setCalledFrom(List<Integer> v) { this.calledFrom = v; }
-        public List<Object> getOperations() { return operations; }
-        public void setOperations(List<Object> v) { this.operations = v; }
     }
 
     /** Compile-time data (** blocks) */

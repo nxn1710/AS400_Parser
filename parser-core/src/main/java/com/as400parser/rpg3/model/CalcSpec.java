@@ -250,22 +250,39 @@ public class CalcSpec {
     }
 
     public static class ResultingIndicators {
-        private String high;
-        private String low;
-        private String equal;
+        private IndicatorRef high;
+        private IndicatorRef low;
+        private IndicatorRef equal;
 
         public ResultingIndicators() {}
-        public ResultingIndicators(String high, String low, String equal) {
+        public ResultingIndicators(IndicatorRef high, IndicatorRef low, IndicatorRef equal) {
             this.high = high;
             this.low = low;
             this.equal = equal;
         }
 
-        public String getHigh() { return high; }
-        public void setHigh(String v) { this.high = v; }
-        public String getLow() { return low; }
-        public void setLow(String v) { this.low = v; }
-        public String getEqual() { return equal; }
-        public void setEqual(String v) { this.equal = v; }
+        public IndicatorRef getHigh() { return high; }
+        public void setHigh(IndicatorRef v) { this.high = v; }
+        public IndicatorRef getLow() { return low; }
+        public void setLow(IndicatorRef v) { this.low = v; }
+        public IndicatorRef getEqual() { return equal; }
+        public void setEqual(IndicatorRef v) { this.equal = v; }
+    }
+
+    /** Typed indicator reference with classification. */
+    public static class IndicatorRef {
+        private String name;   // "03", "LR", "H1", "L2", "OA"
+        private String type;   // "numeric", "special", "halt", "level", "overflow"
+
+        public IndicatorRef() {}
+        public IndicatorRef(String name, String type) {
+            this.name = name;
+            this.type = type;
+        }
+
+        public String getName() { return name; }
+        public void setName(String v) { this.name = v; }
+        public String getType() { return type; }
+        public void setType(String v) { this.type = v; }
     }
 }

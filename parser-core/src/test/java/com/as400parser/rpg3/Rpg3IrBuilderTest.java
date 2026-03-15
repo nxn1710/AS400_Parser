@@ -361,8 +361,7 @@ class Rpg3IrBuilderTest {
             assertThat(c.getSubroutines()).hasSize(1);
             Subroutine sub = c.getSubroutines().get(0);
             assertThat(sub.getName()).isEqualTo("SR01");
-            assertThat(sub.getOperations()).isNotEmpty();
-            assertThat(sub.getLocation()).isNotNull();
+            assertThat(sub.getDefinedAtLine()).isGreaterThan(0);
         }
 
         @Test
@@ -616,12 +615,14 @@ class Rpg3IrBuilderTest {
 
         @Test
         void resultingIndicatorsExtracted() {
-            //              cols 54-55 high="50"
+            //              cols 58-59 equal="50"
             String source = "     C                     READ CUSTMAST                 50                      ";
             IrDocument doc = parse(source);
             Operation op = (Operation) content(doc).getCalculationSpecs().get(0);
             assertThat(op.getResultingIndicators()).isNotNull();
-            assertThat(op.getResultingIndicators().getHigh()).isNotNull();
+            assertThat(op.getResultingIndicators().getEqual()).isNotNull();
+            assertThat(op.getResultingIndicators().getEqual().getName()).isEqualTo("50");
+            assertThat(op.getResultingIndicators().getEqual().getType()).isEqualTo("numeric");
         }
 
         @Test
@@ -632,7 +633,8 @@ class Rpg3IrBuilderTest {
             IrDocument doc = parse(source);
             Operation op = (Operation) content(doc).getCalculationSpecs().get(0);
             assertThat(op.getResultingIndicators()).isNotNull();
-            assertThat(op.getResultingIndicators().getEqual().trim()).isEqualTo("LR");
+            assertThat(op.getResultingIndicators().getEqual().getName()).isEqualTo("LR");
+            assertThat(op.getResultingIndicators().getEqual().getType()).isEqualTo("special");
         }
     }
 

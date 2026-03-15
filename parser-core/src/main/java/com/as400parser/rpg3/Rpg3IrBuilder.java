@@ -716,8 +716,7 @@ public class Rpg3IrBuilder {
 
         Subroutine sub = new Subroutine();
         sub.setName(block.getSubroutineName());
-        sub.setLocation(block.getLocation());
-        sub.setOperations(block.getOperations());
+        sub.setDefinedAtLine(begsrLine.origLine);
         content.getSubroutines().add(sub);
 
         return endIdx + 1;
@@ -846,9 +845,9 @@ public class Rpg3IrBuilder {
         String ri3 = sub(rawLine, 57, 59);
         if ((ri1 != null && !ri1.isBlank()) || (ri2 != null && !ri2.isBlank()) || (ri3 != null && !ri3.isBlank())) {
             ResultingIndicators ri = new ResultingIndicators();
-            ri.setHigh(ri1);
-            ri.setLow(ri2);
-            ri.setEqual(ri3);
+            ri.setHigh(toIndicatorRef(ri1));
+            ri.setLow(toIndicatorRef(ri2));
+            ri.setEqual(toIndicatorRef(ri3));
             op.setResultingIndicators(ri);
         }
 
@@ -982,6 +981,38 @@ public class Rpg3IrBuilder {
             return null;
         }
         return line.substring(begin, end).trim();
+    }
+
+    private IndicatorRef toIndicatorRef(String raw) {
+        if (raw == null || raw.isBlank()) return null;
+        String name = raw.trim();
+        return new IndicatorRef(name, classifyIndicator(name));
+    }
+
+    static String classifyIndicator(String name) {
+        if (name == null || name.isEmpty()) return "unknown";
+        String upper = name.toUpperCase();
+        // Numeric: 01-99
+        if (upper.length() == 2 && Character.isDigit(upper.charAt(0)) && Character.isDigit(upper.charAt(1))) {
+            return "numeric";
+        }
+        // Special: LR, MR, RT, KA-KN, 1P, U1-U8
+        if (upper.matches("LR|MR|RT|1P|K[A-N]|U[1-8]")) {
+            return "special";
+        }
+        // Halt: H1-H9
+        if (upper.matches("H[1-9]")) {
+            return "halt";
+        }
+        // Level: L0-L9
+        if (upper.matches("L[0-9]")) {
+            return "level";
+        }
+        // Overflow: OA-OG, OV
+        if (upper.matches("O[A-GV]")) {
+            return "overflow";
+        }
+        return "unknown";
     }
 
     private Integer safeInt(String text) {

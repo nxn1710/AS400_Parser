@@ -434,7 +434,7 @@ class Rpg3IntegrationTest {
             assertThat(c.getSubroutines()).isNotEmpty();
             Subroutine sub = c.getSubroutines().get(0);
             assertThat(sub.getName()).isEqualTo("SR01");
-            assertThat(sub.getOperations()).as("subroutine operations").isNotEmpty();
+            assertThat(sub.getDefinedAtLine()).as("subroutine definedAtLine").isGreaterThan(0);
         }
 
         @Test
