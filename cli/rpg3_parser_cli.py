@@ -42,7 +42,7 @@ def run_parser(jar_path, source_path, charset="UTF-8", copy_path=None):
     if copy_path:
         cmd.extend(["--copy-path", copy_path])
 
-    result = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
+    result = subprocess.run(cmd, capture_output=True, text=True, timeout=60, encoding="utf-8")
     if result.returncode != 0:
         print(f"Error parsing {source_path}:", file=sys.stderr)
         print(result.stderr, file=sys.stderr)

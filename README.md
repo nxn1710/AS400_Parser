@@ -73,6 +73,31 @@ java -jar as400-parser-core-1.0.0-SNAPSHOT-all.jar --source-dir ./QRPGSRC --outp
 
 **Supported extensions:** `.rpg`, `.rpg3`, `.rpg38`, `.sqlrpg`, `.mbr`
 
+## Python CLI (Wrapper)
+
+The Python CLI wraps the Java JAR with extra features like parallel batch processing and IR JSON validation.
+
+```bash
+# Parse a single file
+python cli/rpg3_parser_cli.py parse CUSTINQ.rpg -o output.json
+
+# Batch parse a directory (4 parallel workers)
+python cli/rpg3_parser_cli.py batch ./QRPGSRC -o ./output --parallel 4
+
+# Validate an IR JSON file
+python cli/rpg3_parser_cli.py validate output.json
+```
+
+### Python CLI Commands
+
+| Command | Description |
+|---------|-------------|
+| `parse SOURCE [-o OUTPUT]` | Parse a single file |
+| `batch SOURCE_DIR [-o DIR] [--parallel N]` | Batch parse with parallelism |
+| `validate JSON_FILE` | Validate IR JSON structure |
+
+> **Note:** Requires Python 3.8+ and `java` on PATH. Build the JAR first with `./gradlew :parser-core:shadowJar`.
+
 ## Java API Usage
 
 ```java
