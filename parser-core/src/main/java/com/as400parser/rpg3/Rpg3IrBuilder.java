@@ -411,7 +411,7 @@ public class Rpg3IrBuilder {
     private void scanComment(String line, int origLine) {
         Comment comment = new Comment();
         comment.setLineNumber(origLine);
-        comment.setText(sub(line, 6, 80));
+        comment.setText(sub(line, 7, 80));  // skip col 7 '*' marker
         comment.setRawSourceLine(line);
         comment.setLocation(new Location(origLine, origLine, 1, 80));
 
