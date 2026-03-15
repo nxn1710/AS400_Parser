@@ -103,6 +103,15 @@ public class Rpg3IrBuilder {
             // Inline comment check (column 7 = '*')
             boolean isInlineComment = line.length() > 6 && line.charAt(6) == '*';
 
+            // /COPY or /INCLUDE directive — can appear in any spec section
+            if (!isInlineComment && line.length() > 6) {
+                String col7onward = sub(line, 6, 80);
+                if (col7onward != null && (col7onward.trim().startsWith("/COPY") || col7onward.trim().startsWith("/INCLUDE"))) {
+                    handleCopyDirective(line, origLine, String.valueOf(specChar));
+                    continue;
+                }
+            }
+
             switch (specChar) {
                 case 'H' -> {
                     if (isInlineComment) scanComment(line, origLine);
@@ -346,6 +355,53 @@ public class Rpg3IrBuilder {
     }
 
     // =========================================================================
+    // /COPY and /INCLUDE compiler directives (any spec section)
+    // =========================================================================
+
+    private void handleCopyDirective(String line, int origLine, String specContext) {
+        InputSpec spec = new InputSpec();
+        spec.setRawSourceLine(line);
+        spec.setLocation(Location.ofLine(origLine));
+        spec.setSpecLevel("compilerDirective");
+        spec.setDataFormat(specContext); // preserve which spec section (H/F/E/I/C/O)
+
+        String fullDirective = sub(line, 6, 80);
+        if (fullDirective == null) return;
+
+        String[] parts = fullDirective.trim().split("\\s+", 2);
+        spec.setOption(parts[0]);  // /COPY or /INCLUDE
+        String target = parts.length > 1 ? parts[1].trim() : "";
+        spec.setFileName(target);
+
+        content.getInputSpecs().add(spec);
+
+        // Populate dependencies.copyMembers
+        IrDocument.CopyMemberRef copyRef = new IrDocument.CopyMemberRef();
+        copyRef.setDirective(parts[0]);
+        copyRef.setLocation(Location.ofLine(origLine));
+        copyRef.setResolved(false);
+
+        // Parse target: LIB/FILE,MEMBER or FILE,MEMBER or MEMBER
+        String lib = null;
+        String file = null;
+        String member = target;
+        int slashPos = target.indexOf('/');
+        if (slashPos >= 0) {
+            lib = target.substring(0, slashPos);
+            target = target.substring(slashPos + 1);
+        }
+        int commaPos = target.indexOf(',');
+        if (commaPos >= 0) {
+            file = target.substring(0, commaPos);
+            member = target.substring(commaPos + 1);
+        }
+        copyRef.setLibraryName(lib);
+        copyRef.setFileName(file);
+        copyRef.setMemberName(member);
+        dependencies.getCopyMembers().add(copyRef);
+    }
+
+    // =========================================================================
     // I-spec (Input Specification)
     // =========================================================================
 
@@ -359,41 +415,11 @@ public class Rpg3IrBuilder {
         String identifier = sub(line, 6, 22);
         if (identifier != null && !identifier.isBlank()) {
             String trimmed = identifier.trim();
-            // /COPY or /INCLUDE compiler directive — read full text from col 7 onward
+            // /COPY and /INCLUDE are handled at the dispatcher level (handleCopyDirective)
+            // — this branch should no longer be reached but kept as safety net
             if (trimmed.startsWith("/COPY") || trimmed.startsWith("/INCLUDE")) {
-                spec.setSpecLevel("compilerDirective");
-                String fullDirective = sub(line, 6, 80);
-                if (fullDirective != null) {
-                    String[] parts = fullDirective.trim().split("\\s+", 2);
-                    spec.setOption(parts[0]);  // /COPY or /INCLUDE
-                    String target = parts.length > 1 ? parts[1].trim() : "";
-                    spec.setFileName(target);
-
-                    // Populate dependencies.copyMembers
-                    IrDocument.CopyMemberRef copyRef = new IrDocument.CopyMemberRef();
-                    copyRef.setDirective(parts[0]);  // /COPY or /INCLUDE
-                    copyRef.setLocation(Location.ofLine(origLine));
-                    copyRef.setResolved(false);
-
-                    // Parse target: LIB/FILE,MEMBER or FILE,MEMBER or MEMBER
-                    String lib = null;
-                    String file = null;
-                    String member = target;
-                    int slashPos = target.indexOf('/');
-                    if (slashPos >= 0) {
-                        lib = target.substring(0, slashPos);
-                        target = target.substring(slashPos + 1);
-                    }
-                    int commaPos = target.indexOf(',');
-                    if (commaPos >= 0) {
-                        file = target.substring(0, commaPos);
-                        member = target.substring(commaPos + 1);
-                    }
-                    copyRef.setLibraryName(lib);
-                    copyRef.setFileName(file);
-                    copyRef.setMemberName(member);
-                    dependencies.getCopyMembers().add(copyRef);
-                }
+                handleCopyDirective(line, origLine, "I");
+                return;
             } else if (trimmed.equalsIgnoreCase("DS") || trimmed.equalsIgnoreCase("SDS")) {
                 spec.setSpecLevel("recordIdentification");
                 spec.setOption(trimmed);
