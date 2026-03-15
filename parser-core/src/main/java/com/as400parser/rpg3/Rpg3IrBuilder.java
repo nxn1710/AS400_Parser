@@ -227,13 +227,13 @@ public class Rpg3IrBuilder {
 
         // Continuation line: blank fileName → merge into previous F-spec
         if (fileName == null || fileName.isBlank()) {
-            String contKeyword = sub(line, 46, 80); // cols 47-80: keyword + data (e.g., RENAME(STUREC:S1REC))
+            String contKeyword = sub(line, 46, 80); // cols 47-80: keyword + data
             if (contKeyword != null && !contKeyword.isBlank() && !content.getFileSpecs().isEmpty()) {
                 FileSpec parent = content.getFileSpecs().get(content.getFileSpecs().size() - 1);
-                List<String> existing = parent.getContinuationLines() != null
+                List<FileKeyword> existing = parent.getContinuationLines() != null
                         ? new ArrayList<>(parent.getContinuationLines())
                         : new ArrayList<>();
-                existing.add(contKeyword.trim());
+                existing.add(parseFileKeyword(contKeyword.trim()));
                 parent.setContinuationLines(existing);
             }
             return; // don't create a new FileSpec for continuation
@@ -260,7 +260,7 @@ public class Rpg3IrBuilder {
         // Continuation on same line (cols 47-80)
         String cont = sub(line, 46, 80);
         if (cont != null && !cont.isBlank()) {
-            spec.setContinuationLines(new ArrayList<>(List.of(cont.trim())));
+            spec.setContinuationLines(new ArrayList<>(List.of(parseFileKeyword(cont.trim()))));
         }
 
         content.getFileSpecs().add(spec);
@@ -269,6 +269,34 @@ public class Rpg3IrBuilder {
         IrDocument.DependencyRef ref = new IrDocument.DependencyRef(fileName.trim(), refType);
         ref.getLocations().add(spec.getLocation());
         dependencies.getReferencedFiles().add(ref);
+    }
+
+    /**
+     * Parse a F-spec continuation keyword string into a structured FileKeyword.
+     * Handles: RENAME(old:new), IGNORE(rec), INCLUDE(rec), SFILE(rec:rrn)
+     */
+    private FileKeyword parseFileKeyword(String raw) {
+        int parenStart = raw.indexOf('(');
+        if (parenStart < 0) {
+            // No parentheses — simple keyword or unknown
+            return new FileKeyword(raw, null, null, raw);
+        }
+        String keyword = raw.substring(0, parenStart).trim().toUpperCase();
+        int parenEnd = raw.indexOf(')', parenStart);
+        String args = (parenEnd > parenStart)
+                ? raw.substring(parenStart + 1, parenEnd)
+                : raw.substring(parenStart + 1);
+
+        int colonPos = args.indexOf(':');
+        if (colonPos >= 0) {
+            // RENAME(old:new) or SFILE(rec:rrn)
+            String first = args.substring(0, colonPos).trim();
+            String second = args.substring(colonPos + 1).trim();
+            return new FileKeyword(keyword, first, second, raw);
+        } else {
+            // IGNORE(rec) or INCLUDE(rec) — single argument
+            return new FileKeyword(keyword, args.trim(), null, raw);
+        }
     }
 
     // =========================================================================

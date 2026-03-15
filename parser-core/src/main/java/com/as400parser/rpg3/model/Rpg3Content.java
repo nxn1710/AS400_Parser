@@ -105,7 +105,7 @@ public class Rpg3Content {
         private String recordAddressType;
         private String fileOrganization;
         private String device;
-        private List<String> continuationLines;
+        private List<FileKeyword> continuationLines;
 
         public String getRawSourceLine() { return rawSourceLine; }
         public void setRawSourceLine(String s) { this.rawSourceLine = s; }
@@ -139,8 +139,33 @@ public class Rpg3Content {
         public void setFileOrganization(String v) { this.fileOrganization = v; }
         public String getDevice() { return device; }
         public void setDevice(String v) { this.device = v; }
-        public List<String> getContinuationLines() { return continuationLines; }
-        public void setContinuationLines(List<String> v) { this.continuationLines = v; }
+        public List<FileKeyword> getContinuationLines() { return continuationLines; }
+        public void setContinuationLines(List<FileKeyword> v) { this.continuationLines = v; }
+    }
+
+    /** F-spec continuation keyword (RENAME, IGNORE, INCLUDE, SFILE, etc.) */
+    public static class FileKeyword {
+        private String keyword;       // "RENAME", "IGNORE", "INCLUDE", "SFILE"
+        private String originalName;  // original record name (before colon)
+        private String newName;       // new record name (after colon)
+        private String rawText;       // full raw text for fallback
+
+        public FileKeyword() {}
+        public FileKeyword(String keyword, String originalName, String newName, String rawText) {
+            this.keyword = keyword;
+            this.originalName = originalName;
+            this.newName = newName;
+            this.rawText = rawText;
+        }
+
+        public String getKeyword() { return keyword; }
+        public void setKeyword(String v) { this.keyword = v; }
+        public String getOriginalName() { return originalName; }
+        public void setOriginalName(String v) { this.originalName = v; }
+        public String getNewName() { return newName; }
+        public void setNewName(String v) { this.newName = v; }
+        public String getRawText() { return rawText; }
+        public void setRawText(String v) { this.rawText = v; }
     }
 
     /** E-spec */
