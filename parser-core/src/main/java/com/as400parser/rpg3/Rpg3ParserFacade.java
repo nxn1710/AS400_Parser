@@ -384,30 +384,41 @@ public class Rpg3ParserFacade implements As400Parser {
             Path outDir = outputDirPath != null ? Path.of(outputDirPath) : sourceDir.resolve("output");
             java.nio.file.Files.createDirectories(outDir);
 
-            java.io.File[] files = sourceDir.toFile().listFiles((dir, name) -> {
-                String lower = name.toLowerCase();
-                return lower.endsWith(".rpg") || lower.endsWith(".rpg3") || lower.endsWith(".rpg38")
-                    || lower.endsWith(".sqlrpg") || lower.endsWith(".mbr")
-                    || lower.endsWith(".cpy") || lower.endsWith(".cpysrc");
-            });
+            // Recursively find all source files
+            java.util.Set<String> validExts = java.util.Set.of(
+                ".rpg", ".rpg3", ".rpg38", ".sqlrpg", ".mbr", ".cpy", ".cpysrc");
+            List<Path> files;
+            try (var stream = java.nio.file.Files.walk(sourceDir)) {
+                files = stream.filter(java.nio.file.Files::isRegularFile)
+                    .filter(p -> {
+                        String name = p.getFileName().toString().toLowerCase();
+                        int dot = name.lastIndexOf('.');
+                        return dot >= 0 && validExts.contains(name.substring(dot));
+                    })
+                    .toList();
+            }
 
-            if (files == null || files.length == 0) {
+            if (files.isEmpty()) {
                 System.err.println("No RPG3 source files found in: " + sourceDir);
                 return;
             }
 
             int success = 0, failed = 0;
-            for (java.io.File file : files) {
+            for (Path file : files) {
                 try {
-                    IrDocument doc = facade.parse(file.toPath(), options);
+                    IrDocument doc = facade.parse(file, options);
                     String json = serializer.serialize(doc);
-                    String outName = file.getName().replaceFirst("\\.[^.]+$", "") + "_ir.json";
-                    Path outFile = outDir.resolve(outName);
+                    // Preserve directory structure: sourceDir/QRPGSRC/STUPRG.rpg → outDir/QRPGSRC/STUPRG.rpg.json
+                    Path relPath = sourceDir.relativize(file);
+                    Path outFile = outDir.resolve(relPath.getParent() != null
+                            ? relPath.getParent().resolve(file.getFileName() + ".json")
+                            : Path.of(file.getFileName() + ".json"));
+                    java.nio.file.Files.createDirectories(outFile.getParent());
                     java.nio.file.Files.writeString(outFile, json, StandardCharsets.UTF_8);
-                    System.err.println("  ✓ " + file.getName() + " → " + outFile.getFileName());
+                    System.err.println("  ✓ " + relPath + " → " + outDir.relativize(outFile));
                     success++;
                 } catch (Exception e) {
-                    System.err.println("  ✗ " + file.getName() + ": " + e.getMessage());
+                    System.err.println("  ✗ " + file.getFileName() + ": " + e.getMessage());
                     failed++;
                 }
             }

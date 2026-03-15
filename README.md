@@ -55,8 +55,19 @@ java -jar as400-parser-core-1.0.0-SNAPSHOT-all.jar --source CUSTINQ.rpg -o CUSTI
 ### Parse a Directory (Batch)
 
 ```bash
-# Parse all RPG3 files in a directory
-java -jar as400-parser-core-1.0.0-SNAPSHOT-all.jar --source-dir ./QRPGSRC --output-dir ./output
+# Parse all RPG3 files recursively, preserving directory structure
+java -jar as400-parser-core-1.0.0-SNAPSHOT-all.jar --source-dir ./rpg3-project --output-dir ./output
+```
+
+Output structure mirrors the source:
+```
+output/
+  QRPGSRC/
+    STUPRG.rpg.json
+    STULST.rpg.json
+  QCPYSRC/
+    STUDNTCPY.cpy.json
+    SCHOOLCPY.cpy.json
 ```
 
 ### Options
@@ -71,7 +82,9 @@ java -jar as400-parser-core-1.0.0-SNAPSHOT-all.jar --source-dir ./QRPGSRC --outp
 | `--copy-path PATHS` | Semicolon-separated `/COPY` search paths |
 | `--help` / `-h` | Show help |
 
-**Supported extensions:** `.rpg`, `.rpg3`, `.rpg38`, `.sqlrpg`, `.mbr`
+**Supported extensions:** `.rpg`, `.rpg3`, `.rpg38`, `.sqlrpg`, `.mbr`, `.cpy`, `.cpysrc`
+
+> **Auto-detection:** When parsing a file from a standard AS400 directory structure (e.g., `QRPGSRC/`), sibling `QCPYSRC` directories are automatically detected for `/COPY` member resolution — no `--copy-path` needed.
 
 ## Python CLI (Wrapper)
 
@@ -81,8 +94,8 @@ The Python CLI wraps the Java JAR with extra features like parallel batch proces
 # Parse a single file
 python cli/rpg3_parser_cli.py parse CUSTINQ.rpg -o output.json
 
-# Batch parse a directory (4 parallel workers)
-python cli/rpg3_parser_cli.py batch ./QRPGSRC -o ./output --parallel 4
+# Batch parse a project directory (recursive, preserves structure)
+python cli/rpg3_parser_cli.py batch ./rpg3-project -o ./output --parallel 4
 
 # Validate an IR JSON file
 python cli/rpg3_parser_cli.py validate output.json

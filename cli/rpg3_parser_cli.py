@@ -82,7 +82,10 @@ def cmd_batch(args):
     def parse_one(source_file):
         output = run_parser(jar, source_file, args.charset, args.copy_path)
         if output:
-            out_file = output_dir / (source_file.stem + ".json")
+            # Preserve directory structure relative to source_dir
+            rel_path = source_file.relative_to(args.source_dir)
+            out_file = output_dir / rel_path.parent / (source_file.name + ".json")
+            out_file.parent.mkdir(parents=True, exist_ok=True)
             out_file.write_text(output, encoding="utf-8")
             return source_file.name, True
         return source_file.name, False
