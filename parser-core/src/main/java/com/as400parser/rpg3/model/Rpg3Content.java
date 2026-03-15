@@ -1,6 +1,7 @@
 package com.as400parser.rpg3.model;
 
 import com.as400parser.common.model.Location;
+import com.as400parser.common.model.SourceLine;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,7 @@ public class Rpg3Content {
     private List<Subroutine> subroutines = new ArrayList<>();
     private CompileTimeData compileTimeData;
     private List<Comment> comments = new ArrayList<>();
+    private List<SourceLine> sourceLines = new ArrayList<>();
 
     // Getters and setters
     public List<HeaderSpec> getHeaderSpecs() { return headerSpecs; }
@@ -48,6 +50,8 @@ public class Rpg3Content {
     public void setCompileTimeData(CompileTimeData compileTimeData) { this.compileTimeData = compileTimeData; }
     public List<Comment> getComments() { return comments; }
     public void setComments(List<Comment> comments) { this.comments = comments; }
+    public List<SourceLine> getSourceLines() { return sourceLines; }
+    public void setSourceLines(List<SourceLine> sourceLines) { this.sourceLines = sourceLines; }
 
     // ---- Inner model classes for spec types ----
 
@@ -384,6 +388,7 @@ public class Rpg3Content {
         private String name;
         private Location location;
         private List<Integer> calledFrom = new ArrayList<>();
+        private List<Object> operations = new ArrayList<>();
 
         public String getName() { return name; }
         public void setName(String v) { this.name = v; }
@@ -391,6 +396,8 @@ public class Rpg3Content {
         public void setLocation(Location l) { this.location = l; }
         public List<Integer> getCalledFrom() { return calledFrom; }
         public void setCalledFrom(List<Integer> v) { this.calledFrom = v; }
+        public List<Object> getOperations() { return operations; }
+        public void setOperations(List<Object> v) { this.operations = v; }
     }
 
     /** Compile-time data (** blocks) */
@@ -419,6 +426,8 @@ public class Rpg3Content {
         private String text;
         private int lineNumber;
         private String specContext;
+        private String rawSourceLine;
+        private Location location;
 
         public String getText() { return text; }
         public void setText(String v) { this.text = v; }
@@ -426,5 +435,9 @@ public class Rpg3Content {
         public void setLineNumber(int v) { this.lineNumber = v; }
         public String getSpecContext() { return specContext; }
         public void setSpecContext(String v) { this.specContext = v; }
+        public String getRawSourceLine() { return rawSourceLine; }
+        public void setRawSourceLine(String v) { this.rawSourceLine = v; }
+        public Location getLocation() { return location; }
+        public void setLocation(Location v) { this.location = v; }
     }
 }

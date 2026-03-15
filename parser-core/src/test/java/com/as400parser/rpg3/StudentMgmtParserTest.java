@@ -35,7 +35,7 @@ class StudentMgmtParserTest {
         assertThat(doc).as(fileName + " should produce a document").isNotNull();
         assertThat(doc.getContent()).as(fileName + " content not null").isNotNull();
         assertThat(doc.getMetadata()).as(fileName + " metadata not null").isNotNull();
-        assertThat(doc.getMetadata().getParseInfo().get("parseStatus"))
+        assertThat(doc.getMetadata().getParseInfo().getParseStatus())
             .as(fileName + " parse status")
             .isEqualTo("complete");
     }
@@ -78,7 +78,9 @@ class StudentMgmtParserTest {
         assertThat(srNames).contains("OPT01", "OPT02", "OPT03", "OPT09", "OPTER");
 
         // CALL programs
-        assertThat(doc.getDependencies().getCalledPrograms())
+        var calledNames = doc.getDependencies().getCalledPrograms().stream()
+            .map(IrDocument.DependencyRef::getName).toList();
+        assertThat(calledNames)
             .contains("STUPRG", "STULST", "STURPT");
     }
 
@@ -96,8 +98,8 @@ class StudentMgmtParserTest {
                 Rpg3Content content = (Rpg3Content) doc.getContent();
 
                 out.println("=== " + fileName + " ===");
-                out.println("Parse status: " + doc.getMetadata().getParseInfo().get("parseStatus"));
-                out.println("Total lines: " + doc.getMetadata().getParseInfo().get("totalLines"));
+                out.println("Parse status: " + doc.getMetadata().getParseInfo().getParseStatus());
+                out.println("Total lines: " + doc.getMetadata().getParseInfo().getTotalLines());
                 out.println("H-specs: " + content.getHeaderSpecs().size());
                 out.println("F-specs: " + content.getFileSpecs().size());
                 if (!content.getFileSpecs().isEmpty()) {

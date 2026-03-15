@@ -7,6 +7,8 @@ import com.as400parser.rpg3.model.CalcSpec.*;
 import com.as400parser.rpg3.model.Rpg3Content.*;
 
 import java.util.*;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * Builds the RPG3 IR model from normalized source lines using
@@ -78,11 +80,24 @@ public class Rpg3IrBuilder {
         // First pass: collect all C-spec lines for control flow processing
         List<CSpecLine> cspecLines = new ArrayList<>();
 
+        // Collect E-spec array names that use compile-time data (no fromFileName)
+        List<String> ctdArrayNames = new ArrayList<>();
+
         for (int i = 0; i < lines.length; i++) {
             String line = lines[i];
             if (line.length() < 6) continue;
 
             int origLine = origLineNums[i];
+
+            // Check for compile-time data separator: ** at columns 1-2
+            // (normalizer extracts cols 1-5 into sequenceNumbers, so ** is there)
+            String seqNum = normalizedSource.getSequenceNumbers()[i];
+            if (seqNum != null && seqNum.startsWith("**")) {
+                // Enter compile-time data mode — process all remaining lines
+                processCompileTimeData(lines, origLineNums, i, ctdArrayNames);
+                break; // no more spec lines after **
+            }
+
             char specChar = Character.toUpperCase(line.charAt(5));
 
             // Inline comment check (column 7 = '*')
@@ -99,7 +114,17 @@ public class Rpg3IrBuilder {
                 }
                 case 'E' -> {
                     if (isInlineComment) scanComment(line, origLine);
-                    else scanExtensionSpec(line, origLine);
+                    else {
+                        scanExtensionSpec(line, origLine);
+                        // Track array names for compile-time data association
+                        String fromFile = sub(line, 10, 18);
+                        if (fromFile == null || fromFile.isBlank()) {
+                            String arrName = sub(line, 26, 32);
+                            if (arrName != null && !arrName.isBlank()) {
+                                ctdArrayNames.add(arrName.trim());
+                            }
+                        }
+                    }
                 }
                 case 'L' -> scanLineCounterSpec(line, origLine);
                 case 'I' -> {
@@ -124,6 +149,46 @@ public class Rpg3IrBuilder {
 
         // Process C-spec lines with control-flow nesting
         processCSpecLines(cspecLines);
+    }
+
+    private void processCompileTimeData(String[] lines, int[] origLineNums, int separatorIdx, List<String> ctdArrayNames) {
+        CompileTimeData ctd = new CompileTimeData();
+        List<CompileTimeBlock> blocks = new ArrayList<>();
+        CompileTimeBlock currentBlock = null;
+        int arrayIdx = 0;
+
+        for (int i = separatorIdx; i < lines.length; i++) {
+            String line = lines[i];
+            String seqNum = normalizedSource.getSequenceNumbers()[i];
+            int origLine = origLineNums[i];
+
+            if (seqNum != null && seqNum.startsWith("**")) {
+                // Start a new block
+                if (currentBlock != null) {
+                    blocks.add(currentBlock);
+                }
+                currentBlock = new CompileTimeBlock();
+                currentBlock.setLocation(Location.ofLine(origLine));
+                // Associate with E-spec array name by order
+                if (arrayIdx < ctdArrayNames.size()) {
+                    currentBlock.setArrayName(ctdArrayNames.get(arrayIdx));
+                }
+                arrayIdx++;
+            } else if (currentBlock != null) {
+                // Add data line to current block
+                currentBlock.getData().add(line);
+            }
+        }
+
+        // Don't forget the last block
+        if (currentBlock != null) {
+            blocks.add(currentBlock);
+        }
+
+        if (!blocks.isEmpty()) {
+            ctd.setBlocks(blocks);
+            content.setCompileTimeData(ctd);
+        }
     }
 
     // =========================================================================
@@ -185,7 +250,11 @@ public class Rpg3IrBuilder {
 
         String fileName = spec.getFileName();
         if (fileName != null && !fileName.isBlank()) {
-            dependencies.getReferencedFiles().add(fileName.trim());
+            String fileType = spec.getFileType();
+            String refType = "I".equals(fileType) ? "input" : "O".equals(fileType) ? "output" : "combined";
+            IrDocument.DependencyRef ref = new IrDocument.DependencyRef(fileName.trim(), refType);
+            ref.getLocations().add(spec.getLocation());
+            dependencies.getReferencedFiles().add(ref);
         }
     }
 
@@ -322,6 +391,8 @@ public class Rpg3IrBuilder {
         Comment comment = new Comment();
         comment.setLineNumber(origLine);
         comment.setText(sub(line, 6, 80));
+        comment.setRawSourceLine(line);
+        comment.setLocation(new Location(origLine, origLine, 1, 80));
 
         if (line.length() > 5) {
             char specC = Character.toUpperCase(line.charAt(5));
@@ -373,6 +444,12 @@ public class Rpg3IrBuilder {
                 i = processCaseBlock(lines, i, end, target);
             } else if (upper.equals("BEGSR")) {
                 i = processSubroutine(lines, i, end, target);
+            } else if (upper.equals("TAG")) {
+                target.add(buildLabelNode(cline));
+                i++;
+            } else if (upper.equals("GOTO")) {
+                target.add(buildGotoNode(cline));
+                i++;
             } else {
                 // Simple operation
                 target.add(buildOperation(cline));
@@ -381,6 +458,25 @@ public class Rpg3IrBuilder {
         }
         return i;
     }
+
+    private CalcSpec.LabelNode buildLabelNode(CSpecLine cline) {
+        CalcSpec.LabelNode node = new CalcSpec.LabelNode();
+        node.setRawSourceLine(cline.rawLine);
+        node.setLocation(Location.ofLine(cline.origLine));
+        String f1 = extractFactor1(cline.rawLine);
+        node.setLabelName(f1 != null ? f1.trim() : "");
+        return node;
+    }
+
+    private CalcSpec.GotoNode buildGotoNode(CSpecLine cline) {
+        CalcSpec.GotoNode node = new CalcSpec.GotoNode();
+        node.setRawSourceLine(cline.rawLine);
+        node.setLocation(Location.ofLine(cline.origLine));
+        String f2 = extractFactor2Raw(cline.rawLine);
+        node.setTargetLabel(f2 != null ? f2.trim() : "");
+        return node;
+    }
+
 
     private int processIfBlock(List<CSpecLine> lines, int start, int end, List<Object> target) {
         CSpecLine ifLine = lines.get(start);
@@ -394,11 +490,17 @@ public class Rpg3IrBuilder {
         block.setComparisonValue(buildFactor2(ifLine.rawLine, block.getLocation()));
         extractControlLevelAndIndicators(block, ifLine.rawLine);
 
+        // Consume ANDxx/ORxx lines to build compound conditions
+        int bodyStart = consumeAndOrLines(lines, start + 1, end,
+            block::getCondition, block::setCondition,
+            block::getComparisonType, block::setComparisonType,
+            block::getComparisonValue, block::setComparisonValue);
+
         int nesting = 1;
         int elseIdx = -1;
         int endIdx = -1;
 
-        for (int i = start + 1; i < end; i++) {
+        for (int i = bodyStart; i < end; i++) {
             String op = extractOpcode(lines.get(i).rawLine).toUpperCase();
             if (isBlockStart(op)) nesting++;
             else if (op.equals("ELSE") && nesting == 1) elseIdx = i;
@@ -411,7 +513,7 @@ public class Rpg3IrBuilder {
 
         // Then body
         int thenEnd = (elseIdx >= 0) ? elseIdx : endIdx;
-        processCalcBlock(lines, start + 1, thenEnd, block.getThenOps());
+        processCalcBlock(lines, bodyStart, thenEnd, block.getThenOps());
 
         // Else body
         if (elseIdx >= 0) {
@@ -420,6 +522,74 @@ public class Rpg3IrBuilder {
 
         target.add(block);
         return endIdx + 1;
+    }
+
+    /**
+     * Consume sequential ANDxx/ORxx lines after a block-opening opcode (IFxx/DOWxx/DOUxx),
+     * building a compound BinaryOpNode tree. Returns the index of the first non-ANDxx/ORxx line.
+     */
+    private int consumeAndOrLines(List<CSpecLine> lines, int start, int end,
+                                   Supplier<ExpressionNode> getCondition, Consumer<ExpressionNode> setCondition,
+                                   Supplier<String> getCompType, Consumer<String> setCompType,
+                                   Supplier<ExpressionNode> getCompValue, Consumer<ExpressionNode> setCompValue) {
+        int i = start;
+        while (i < end) {
+            String nextOp = extractOpcode(lines.get(i).rawLine).toUpperCase();
+            String logicalOp = null;
+            String compSuffix = null;
+
+            if (nextOp.startsWith("AND") && nextOp.length() > 3) {
+                logicalOp = "AND";
+                compSuffix = nextOp.substring(3); // e.g. "LT", "EQ"
+            } else if (nextOp.startsWith("OR") && nextOp.length() > 2) {
+                logicalOp = "OR";
+                compSuffix = nextOp.substring(2);
+            }
+
+            if (logicalOp == null) break; // not an ANDxx/ORxx line
+
+            CSpecLine andOrLine = lines.get(i);
+            Location loc = Location.ofLine(andOrLine.origLine);
+
+            // Build the new comparison: BinaryOpNode(compSuffix, factor1, factor2)
+            ExpressionNode f1 = buildFactor1(andOrLine.rawLine, loc);
+            ExpressionNode f2 = buildFactor2(andOrLine.rawLine, loc);
+            BinaryOpNode newComp = new BinaryOpNode();
+            newComp.setOperator(compSuffix);
+            newComp.setLeft(f1);
+            newComp.setRight(f2);
+            newComp.setRawText(compSuffix);
+            newComp.setLocation(loc);
+
+            // Build initial comparison from condition/comparisonValue if this is the first ANDxx/ORxx
+            ExpressionNode existingCondition = getCondition.get();
+            if (existingCondition != null && getCompType.get() != null) {
+                // Convert the simple comparison to a BinaryOpNode first
+                BinaryOpNode initialComp = new BinaryOpNode();
+                initialComp.setOperator(getCompType.get());
+                initialComp.setLeft(existingCondition);
+                initialComp.setRight(getCompValue.get());
+                initialComp.setRawText(getCompType.get());
+                initialComp.setLocation(existingCondition.getLocation());
+                existingCondition = initialComp;
+            }
+
+            // Wrap: BinaryOpNode(logicalOp, existingCondition, newComp)
+            BinaryOpNode compound = new BinaryOpNode();
+            compound.setOperator(logicalOp);
+            compound.setLeft(existingCondition);
+            compound.setRight(newComp);
+            compound.setRawText(logicalOp);
+            compound.setLocation(loc);
+
+            // Update the block: condition = compound, comparisonType/Value = null
+            setCondition.accept(compound);
+            setCompType.accept(null);
+            setCompValue.accept(null);
+
+            i++;
+        }
+        return i;
     }
 
     private int processDoBlock(List<CSpecLine> lines, int start, int end, List<Object> target) {
@@ -451,8 +621,14 @@ public class Rpg3IrBuilder {
         block.setComparisonValue(buildFactor2(dowLine.rawLine, block.getLocation()));
         extractControlLevelAndIndicators(block, dowLine.rawLine);
 
-        int endIdx = findBlockEnd(lines, start + 1, end);
-        processCalcBlock(lines, start + 1, endIdx, block.getBodyOps());
+        // Consume ANDxx/ORxx
+        int bodyStart = consumeAndOrLines(lines, start + 1, end,
+            block::getCondition, block::setCondition,
+            block::getComparisonType, block::setComparisonType,
+            block::getComparisonValue, block::setComparisonValue);
+
+        int endIdx = findBlockEnd(lines, bodyStart, end);
+        processCalcBlock(lines, bodyStart, endIdx, block.getBodyOps());
 
         target.add(block);
         return endIdx + 1;
@@ -470,8 +646,14 @@ public class Rpg3IrBuilder {
         block.setComparisonValue(buildFactor2(douLine.rawLine, block.getLocation()));
         extractControlLevelAndIndicators(block, douLine.rawLine);
 
-        int endIdx = findBlockEnd(lines, start + 1, end);
-        processCalcBlock(lines, start + 1, endIdx, block.getBodyOps());
+        // Consume ANDxx/ORxx
+        int bodyStart = consumeAndOrLines(lines, start + 1, end,
+            block::getCondition, block::setCondition,
+            block::getComparisonType, block::setComparisonType,
+            block::getComparisonValue, block::setComparisonValue);
+
+        int endIdx = findBlockEnd(lines, bodyStart, end);
+        processCalcBlock(lines, bodyStart, endIdx, block.getBodyOps());
 
         target.add(block);
         return endIdx + 1;
@@ -535,6 +717,7 @@ public class Rpg3IrBuilder {
         Subroutine sub = new Subroutine();
         sub.setName(block.getSubroutineName());
         sub.setLocation(block.getLocation());
+        sub.setOperations(block.getOperations());
         content.getSubroutines().add(sub);
 
         return endIdx + 1;
@@ -681,7 +864,10 @@ public class Rpg3IrBuilder {
                 if (op.getFactor2() != null) {
                     String pgmName = op.getFactor2().getRawText();
                     if (pgmName != null && !pgmName.isBlank()) {
-                        dependencies.getCalledPrograms().add(pgmName.trim().replace("'", ""));
+                        String cleanName = pgmName.trim().replace("'", "");
+                        IrDocument.DependencyRef ref = new IrDocument.DependencyRef(cleanName, "call");
+                        ref.getLocations().add(op.getLocation());
+                        dependencies.getCalledPrograms().add(ref);
                     }
                 }
             }
@@ -839,7 +1025,7 @@ public class Rpg3IrBuilder {
             sl.setBlank(line.trim().isEmpty());
             sourceLines.add(sl);
         }
-        document.setSourceLines(sourceLines);
+        content.setSourceLines(sourceLines);
     }
 
     private void populateSubroutineCalledFrom() {

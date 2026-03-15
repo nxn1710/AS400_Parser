@@ -20,7 +20,7 @@ class Rpg3ParserFacadeTest {
 
     @Test
     void sourceTypeIsRpg3() {
-        assertThat(facade.getSourceType()).isEqualTo("rpg3");
+        assertThat(facade.getSourceType()).isEqualTo("RPG3");
     }
 
     @Test
@@ -44,7 +44,7 @@ class Rpg3ParserFacadeTest {
 
             assertThat(doc).isNotNull();
             assertThat(doc.getMetadata()).isNotNull();
-            assertThat(doc.getMetadata().getSourceType()).isEqualTo("rpg3");
+            assertThat(doc.getMetadata().getSourceType()).isEqualTo("RPG3");
             assertThat(doc.getMetadata().getIrVersion()).isEqualTo("1.0.0");
         }
 
@@ -72,17 +72,16 @@ class Rpg3ParserFacadeTest {
 
             Metadata meta = doc.getMetadata();
             assertThat(meta.getParseInfo()).isNotNull();
-            assertThat(meta.getParseInfo()).containsKey("parseDate");
-            assertThat(meta.getParseInfo()).containsKey("parseStatus");
-            assertThat(meta.getParseInfo()).containsKey("totalLines");
-            assertThat(meta.getParseInfo().get("totalLines")).isEqualTo(1);
+            assertThat(meta.getParseInfo().getParsedAt()).isNotNull();
+            assertThat(meta.getParseInfo().getParseStatus()).isNotNull();
+            assertThat(meta.getParseInfo().getTotalLines()).isEqualTo(1);
         }
 
         @Test
         void completeParseHasCompleteStatus() {
             String source = "     H                                                                         ";
             IrDocument doc = facade.parse(source, ParseOptions.defaults());
-            assertThat(doc.getMetadata().getParseInfo().get("parseStatus")).isEqualTo("complete");
+            assertThat(doc.getMetadata().getParseInfo().getParseStatus()).isEqualTo("complete");
         }
     }
 

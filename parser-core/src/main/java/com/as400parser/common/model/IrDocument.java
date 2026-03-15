@@ -11,7 +11,6 @@ public class IrDocument {
     private Metadata metadata;
     private Object content;       // Language-specific content (e.g., Rpg3Content)
     private Dependencies dependencies;
-    private List<SourceLine> sourceLines = new ArrayList<>();
     private List<ParseError> errors = new ArrayList<>();
 
     public IrDocument() {}
@@ -22,25 +21,46 @@ public class IrDocument {
     public void setContent(Object content) { this.content = content; }
     public Dependencies getDependencies() { return dependencies; }
     public void setDependencies(Dependencies dependencies) { this.dependencies = dependencies; }
-    public List<SourceLine> getSourceLines() { return sourceLines; }
-    public void setSourceLines(List<SourceLine> sourceLines) { this.sourceLines = sourceLines; }
     public List<ParseError> getErrors() { return errors; }
     public void setErrors(List<ParseError> errors) { this.errors = errors; }
 
     /**
      * Dependencies section of the IR document.
+     * Uses rich DependencyRef objects per the design spec.
      */
     public static class Dependencies {
-        private List<String> referencedFiles = new ArrayList<>();
-        private List<String> calledPrograms = new ArrayList<>();
+        private List<DependencyRef> referencedFiles = new ArrayList<>();
+        private List<DependencyRef> calledPrograms = new ArrayList<>();
         private List<CopyMemberRef> copyMembers = new ArrayList<>();
 
-        public List<String> getReferencedFiles() { return referencedFiles; }
-        public void setReferencedFiles(List<String> referencedFiles) { this.referencedFiles = referencedFiles; }
-        public List<String> getCalledPrograms() { return calledPrograms; }
-        public void setCalledPrograms(List<String> calledPrograms) { this.calledPrograms = calledPrograms; }
+        public List<DependencyRef> getReferencedFiles() { return referencedFiles; }
+        public void setReferencedFiles(List<DependencyRef> referencedFiles) { this.referencedFiles = referencedFiles; }
+        public List<DependencyRef> getCalledPrograms() { return calledPrograms; }
+        public void setCalledPrograms(List<DependencyRef> calledPrograms) { this.calledPrograms = calledPrograms; }
         public List<CopyMemberRef> getCopyMembers() { return copyMembers; }
         public void setCopyMembers(List<CopyMemberRef> copyMembers) { this.copyMembers = copyMembers; }
+    }
+
+    /**
+     * Rich dependency reference with name, type, and source locations.
+     */
+    public static class DependencyRef {
+        private String name;
+        private String referenceType;  // "read", "write", "update", "call", etc.
+        private List<Location> locations = new ArrayList<>();
+
+        public DependencyRef() {}
+        public DependencyRef(String name, String referenceType) {
+            this.name = name;
+            this.referenceType = referenceType;
+        }
+
+        public String getName() { return name; }
+        public void setName(String name) { this.name = name; }
+        public String getReferenceType() { return referenceType; }
+        public void setReferenceType(String referenceType) { this.referenceType = referenceType; }
+        public List<Location> getLocations() { return locations; }
+        public void setLocations(List<Location> locations) { this.locations = locations; }
     }
 
     /**

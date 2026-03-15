@@ -91,10 +91,11 @@ class Rpg3IntegrationTest {
         void metadataIsPopulated() {
             Metadata meta = doc.getMetadata();
             assertThat(meta.getIrVersion()).isEqualTo("1.0.0");
-            assertThat(meta.getSourceType()).isEqualTo("rpg3");
+            assertThat(meta.getSourceType()).isEqualTo("RPG3");
             // sourceMember is null when parsed from String (only set for file-based parse)
-            assertThat(meta.getParseInfo()).containsKey("parseDate");
-            assertThat(meta.getParseInfo().get("parseStatus"))
+            assertThat(meta.getParseInfo()).isNotNull();
+            assertThat(meta.getParseInfo().getParsedAt()).isNotNull();
+            assertThat(meta.getParseInfo().getParseStatus())
                     .isIn("complete", "partial");
         }
 
@@ -334,7 +335,8 @@ class Rpg3IntegrationTest {
                 "     C                     SETON                     LR                         "
             );
             IrDocument doc = FACADE.parse(source, ParseOptions.defaults());
-            assertThat(doc.getSourceLines()).hasSize(3);
+            Rpg3Content c = (Rpg3Content) doc.getContent();
+            assertThat(c.getSourceLines()).hasSize(3);
         }
 
         @Test
@@ -345,8 +347,9 @@ class Rpg3IntegrationTest {
                 "     C                     SETON                     LR                         "
             );
             IrDocument doc = FACADE.parse(source, ParseOptions.defaults());
-            for (int i = 0; i < doc.getSourceLines().size(); i++) {
-                assertThat(doc.getSourceLines().get(i).getLineNumber()).isEqualTo(i + 1);
+            Rpg3Content c = (Rpg3Content) doc.getContent();
+            for (int i = 0; i < c.getSourceLines().size(); i++) {
+                assertThat(c.getSourceLines().get(i).getLineNumber()).isEqualTo(i + 1);
             }
         }
 
@@ -356,7 +359,8 @@ class Rpg3IntegrationTest {
             IrDocument doc = FACADE.parse(source, ParseOptions.defaults());
             assertThat(doc).isNotNull();
             assertThat(doc.getMetadata()).isNotNull();
-            assertThat(doc.getSourceLines()).isNotEmpty();
+            Rpg3Content c = (Rpg3Content) doc.getContent();
+            assertThat(c.getSourceLines()).isNotEmpty();
         }
     }
 
@@ -386,7 +390,73 @@ class Rpg3IntegrationTest {
             // Metadata fields
             JsonObject meta = root.getAsJsonObject("metadata");
             assertThat(meta.get("irVersion").getAsString()).isEqualTo("1.0.0");
-            assertThat(meta.get("sourceType").getAsString()).isEqualTo("rpg3");
+            assertThat(meta.get("sourceType").getAsString()).isEqualTo("RPG3");
+        }
+    }
+
+    // =========================================================================
+    // Full Program Integration (all spec types + control flow)
+    // =========================================================================
+
+    @Nested
+    class FullProgramIntegration {
+
+        @Test
+        void fullProgramWithAllSpecTypes() {
+            String source = String.join("\n",
+                "     H                                                                         ",
+                "     FCUSTMAST IF  E           K        DISK                                    ",
+                "     E                    NAMES  10  20  8                                      ",
+                "     ICUSTMAST                                                                  ",
+                "     I                                         1   5 CUSTNO                     ",
+                "     C                     SETON                     LR                         ",
+                "     OCUSTPRT H                                                                 ");
+            IrDocument doc = FACADE.parse(source, ParseOptions.defaults());
+            Rpg3Content c = (Rpg3Content) doc.getContent();
+
+            assertThat(c.getHeaderSpecs()).as("H-specs").isNotEmpty();
+            assertThat(c.getFileSpecs()).as("F-specs").isNotEmpty();
+            assertThat(c.getExtensionSpecs()).as("E-specs").isNotEmpty();
+            assertThat(c.getInputSpecs()).as("I-specs").isNotEmpty();
+            assertThat(c.getCalculationSpecs()).as("C-specs").isNotEmpty();
+            assertThat(c.getOutputSpecs()).as("O-specs").isNotEmpty();
+            assertThat(c.getSourceLines()).as("sourceLines").hasSize(7);
+        }
+
+        @Test
+        void subroutineOperationsPopulated() {
+            String source = String.join("\n",
+                "     C           SR01      BEGSR                                                ",
+                "     C                     SETON                     LR                         ",
+                "     C                     ENDSR                                                ");
+            IrDocument doc = FACADE.parse(source, ParseOptions.defaults());
+            Rpg3Content c = (Rpg3Content) doc.getContent();
+            assertThat(c.getSubroutines()).isNotEmpty();
+            Subroutine sub = c.getSubroutines().get(0);
+            assertThat(sub.getName()).isEqualTo("SR01");
+            assertThat(sub.getOperations()).as("subroutine operations").isNotEmpty();
+        }
+
+        @Test
+        void dependenciesHaveRichMetadata() {
+            String source = String.join("\n",
+                "     FCUSTMAST IF  E           K        DISK                                    ",
+                "     C                     CALL 'STUPRG'                                        ");
+            IrDocument doc = FACADE.parse(source, ParseOptions.defaults());
+            IrDocument.Dependencies deps = doc.getDependencies();
+
+            // referencedFiles
+            assertThat(deps.getReferencedFiles()).isNotEmpty();
+            IrDocument.DependencyRef fileRef = deps.getReferencedFiles().get(0);
+            assertThat(fileRef.getName()).isEqualTo("CUSTMAST");
+            assertThat(fileRef.getReferenceType()).isNotNull();
+            assertThat(fileRef.getLocations()).isNotEmpty();
+
+            // calledPrograms
+            assertThat(deps.getCalledPrograms()).isNotEmpty();
+            IrDocument.DependencyRef callRef = deps.getCalledPrograms().get(0);
+            assertThat(callRef.getName()).isEqualTo("STUPRG");
+            assertThat(callRef.getReferenceType()).isEqualTo("call");
         }
     }
 }

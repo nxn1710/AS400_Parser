@@ -83,21 +83,21 @@ description: Test plan, test cases, coverage targets, and quality assurance for 
 - [ ] Inline comment extraction (cols 60-74)
 
 ### Control Flow Block Builder
-- [ ] `IFGT` → `conditionalBlock` with `comparisonType: "GT"`, `condition`, `comparisonValue`
-- [ ] `IFGT` + `ELSE` + `END` → `thenOps` and `elseOps` correctly populated
-- [ ] `DOWEQ` → `doWhileBlock` with correct condition/bodyOps
-- [ ] `DOUEQ` → `doUntilBlock` with correct condition/bodyOps
-- [ ] `DO` → `doBlock` with startValue/endValue/indexField/bodyOps
+- [x] `IFGT` → `conditionalBlock` with `comparisonType: "GT"`, `condition`, `comparisonValue`
+- [x] `IFGT` + `ELSE` + `END` → `thenOps` and `elseOps` correctly populated
+- [x] `DOWEQ` → `doWhileBlock` with correct condition/bodyOps
+- [x] `DOUEQ` → `doUntilBlock` with correct condition/bodyOps
+- [x] `DO` → `doBlock` with startValue/endValue/indexField/bodyOps
 - [ ] `CASxx` + multiple cases + `END` → `caseBlock` with cases array
-- [ ] `BEGSR` + `ENDSR` → `subroutineBlock` with name and operations
-- [ ] `TAG` → `labelNode` with name
-- [ ] `GOTO` → `gotoNode` with targetLabel
-- [ ] `EXSR` → `callSubroutine` with subroutineName
-- [ ] **Nested blocks:** IF inside DOW inside BEGSR (3-level nesting)
+- [x] `BEGSR` + `ENDSR` → `subroutineBlock` with name and operations
+- [x] `TAG` → `labelNode` with name
+- [x] `GOTO` → `gotoNode` with targetLabel
+- [x] `EXSR` → `callSubroutine` with subroutineName
+- [x] **Nested blocks:** IF inside DOW inside BEGSR (3-level nesting)
 - [ ] **ANDxx:** `IFGT` + `ANDLT` → compound `BinaryOpNode("AND", BinaryOpNode("GT",...), BinaryOpNode("LT",...))`
 - [ ] **ORxx:** `IFGT` + `OREQ` → compound `BinaryOpNode("OR", ...)`
 - [ ] **Mixed ANDxx/ORxx:** `IFGT` + `ANDLT` + `OREQ` → correct nesting
-- [ ] `END` matches correct opening block (stack validation)
+- [x] `END` matches correct opening block (stack validation)
 
 ### Symbol Table Builder
 - [ ] Fields from I-spec → symbol entries with explicit type info

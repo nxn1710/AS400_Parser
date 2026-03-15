@@ -33,7 +33,7 @@ import java.util.*;
 public class Rpg3ParserFacade implements As400Parser {
 
     private static final String IR_VERSION = "1.0.0";
-    private static final String SOURCE_TYPE = "rpg3";
+    private static final String SOURCE_TYPE = "RPG3";
 
     // =========================================================================
     // As400Parser interface implementation
@@ -154,16 +154,17 @@ public class Rpg3ParserFacade implements As400Parser {
         metadata.setSourceType(SOURCE_TYPE);
 
         // parseInfo
-        Map<String, Object> parseInfo = new LinkedHashMap<>();
-        parseInfo.put("parseDate", Instant.now().toString());
-        parseInfo.put("totalLines", normalized.getLineCount());
+        Metadata.ParseInfo parseInfo = new Metadata.ParseInfo();
+        parseInfo.setParsedAt(Instant.now().toString());
+        parseInfo.setTotalLines(normalized.getLineCount());
+        parseInfo.setParserVersion(IR_VERSION);
 
         // Determine parse status
         List<ParseError> errors = errorListener.getErrors();
         if (errors.isEmpty()) {
-            parseInfo.put("parseStatus", "complete");
+            parseInfo.setParseStatus("complete");
         } else {
-            parseInfo.put("parseStatus", "partial");
+            parseInfo.setParseStatus("partial");
         }
 
         // Convert errors and warnings
@@ -176,7 +177,7 @@ public class Rpg3ParserFacade implements As400Parser {
             errMap.put("severity", e.getSeverity().name());
             errorList.add(errMap);
         }
-        parseInfo.put("errors", errorList);
+        parseInfo.setErrors(errorList);
 
         // Normalizer warnings
         List<Map<String, Object>> warningList = new ArrayList<>();
@@ -188,7 +189,7 @@ public class Rpg3ParserFacade implements As400Parser {
             warnMap.put("type", w.getType().name());
             warningList.add(warnMap);
         }
-        parseInfo.put("warnings", warningList);
+        parseInfo.setWarnings(warningList);
 
         metadata.setParseInfo(parseInfo);
 
@@ -235,16 +236,16 @@ public class Rpg3ParserFacade implements As400Parser {
         meta.setIrVersion(IR_VERSION);
         meta.setSourceType(SOURCE_TYPE);
 
-        Map<String, Object> parseInfo = new LinkedHashMap<>();
-        parseInfo.put("parseDate", Instant.now().toString());
-        parseInfo.put("parseStatus", "failed");
-        parseInfo.put("errors", List.of(Map.of(
+        Metadata.ParseInfo parseInfo = new Metadata.ParseInfo();
+        parseInfo.setParsedAt(Instant.now().toString());
+        parseInfo.setParseStatus("failed");
+        parseInfo.setErrors(List.of(Map.of(
                 "line", 0,
                 "column", 0,
                 "message", errorMessage,
                 "severity", "ERROR"
         )));
-        parseInfo.put("warnings", List.of());
+        parseInfo.setWarnings(List.of());
         meta.setParseInfo(parseInfo);
 
         doc.setMetadata(meta);
