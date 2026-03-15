@@ -170,17 +170,17 @@
      C           SCSTID    IFNE *BLANKS
      C*
      C*    学生マスター検索
-     C           STUKEY    CHAINSTUDNTPF            5099
+     C           STUKEY    CHAINSTUDNTPF             5099
      C*
      C*    ファイル入出力エラーチェック
      C           *IN99     IFEQ *ON
-     C                     MOVELEMERRFSCMSG
+     C                     MOVELEMERRF    SCMSG
      C                     GOTO MLOOP
      C                     ENDIF
      C*
      C           *IN50     IFEQ *ON
      C*    レコードが見つからない
-     C                     MOVELEMNTFDSCMSG
+     C                     MOVELEMNTFD    SCMSG
      C                     ELSE
      C*    レコードが見つかった - 詳細画面表示
      C                     EXSR DTLSHO
@@ -208,7 +208,7 @@
      C                     TIME      WKDATE
      C*
      C*  --- 標識初期化 ---
-     C                     SETOF                    506070
+     C                     SETOF                     506070
      C*
      C*  --- モード初期化 ---
      C                     MOVEL'S'       MODE
@@ -225,7 +225,7 @@
      C                     EXSR MOVSCN
      C*
      C*  --- 学校名取得 ---
-     C           STUSCL    CHAINSCHOOLPF              9099
+     C           STUSCL    CHAINSCHOOLPF               9099
      C*  --- 学校検索エラーチェック ---
      C           *IN99     IFEQ *ON
      C                     MOVEL*BLANKS   DTSNAM
@@ -241,7 +241,7 @@
      C                     EXSR STSNM
      C*
      C*  --- 入力不可モード（照会） ---
-     C                     SETOF                    60
+     C                     SETOF                     60
      C                     MOVEL'VIEW'    DTMODE
      C                     MOVEL*BLANKS   DTMSG
      C                     MOVEL*BLANKS   DTCFM
@@ -253,7 +253,7 @@
      C*
      C*    F3=終了
      C           *IN03     IFEQ *ON
-     C                     SETON                    03
+     C                     SETON                     03
      C                     LEAVESR
      C                     ENDIF
      C*
@@ -341,7 +341,7 @@
      C*
      C*  --- 画面初期化 ---
      C                     MOVEL'ADD'     DTMODE
-     C                     SETON                    60
+     C                     SETON                     60
      C                     MOVEL*BLANKS   DTNAM
      C                     MOVEL*BLANKS   DTKNA
      C                     Z-ADD0         DTBDT
@@ -356,21 +356,21 @@
      C*
      C*  --- 学生ID入力確認 ---
      C           SCSTID    IFEQ *BLANKS
-     C                     MOVELEMIDRQDTMSG
+     C                     MOVELEMIDRQ    DTMSG
      C                     LEAVESR
      C                     ENDIF
      C*
      C                     MOVELSCSTID    DTSTID
      C*
      C*  --- 重複チェック ---
-     C           STUKEY    CHAINSTUDNTPF            5099
+     C           STUKEY    CHAINSTUDNTPF             5099
      C*  --- 重複チェックエラー ---
      C           *IN99     IFEQ *ON
-     C                     MOVELEMERFFDTMSG
+     C                     MOVELEMERRF    DTMSG
      C                     LEAVESR
      C                     ENDIF
      C           *IN50     IFEQ *OFF
-     C                     MOVELEMIDEXDTMSG
+     C                     MOVELEMIDEX    DTMSG
      C                     LEAVESR
      C                     ENDIF
      C*
@@ -396,7 +396,7 @@
      C                     MOVEL'STUPRG'  STUUPB
      C                     WRITESTUREC
      C*
-     C                     MOVELEMADDSCMSG
+     C                     MOVELEMADD     SCMSG
      C*
      C                     ENDIF
      C*
@@ -409,9 +409,9 @@
      C*
      C*  --- 更新モード設定 ---
      C                     MOVEL'UPDATE'  DTMODE
-     C                     SETON                    60
+     C                     SETON                     60
      C                     MOVEL*BLANKS   DTMSG
-     C                     MOVELEMCFMXDTCFM
+     C                     MOVELEMCFMX    DTCFM
      C*
      C*  --- 更新画面表示 ---
      C                     EXFMTSTUDETL
@@ -426,14 +426,14 @@
      C                     ENDIF
      C*
      C*    学生マスター再読み込み（ロック）
-     C           STUKEY    CHAINSTUDNTPF            5099
+     C           STUKEY    CHAINSTUDNTPF             5099
      C*  --- 再読み込みエラーチェック ---
      C           *IN99     IFEQ *ON
-     C                     MOVELEMERFFDTMSG
+     C                     MOVELEMERRF    DTMSG
      C                     LEAVESR
      C                     ENDIF
      C           *IN50     IFEQ *ON
-     C                     MOVELEMRNFDDTMSG
+     C                     MOVELEMRNFD    DTMSG
      C                     LEAVESR
      C                     ENDIF
      C*
@@ -443,7 +443,7 @@
      C                     MOVEL'STUPRG'  STUUPB
      C                     UPDATSTUREC
      C*
-     C                     MOVELEMUPD SCMSG
+     C                     MOVELEMUPD     SCMSG
      C*
      C                     ENDIF
      C*
@@ -456,7 +456,7 @@
      C*
      C*  --- 削除モード設定 ---
      C                     MOVEL'DELETE'  DTMODE
-     C                     SETOF                    60
+     C                     SETOF                     60
      C                     MOVEL*BLANKS   DTMSG
      C*
      C*  --- 削除確認画面表示 ---
@@ -468,14 +468,14 @@
      C           *IN05     IFEQ *ON
      C*
      C*    学生マスター再読み込み
-     C           STUKEY    CHAINSTUDNTPF            5099
+     C           STUKEY    CHAINSTUDNTPF             5099
      C*  --- 削除時読み込みエラーチェック ---
      C           *IN99     IFEQ *ON
-     C                     MOVELEMERFFDTMSG
+     C                     MOVELEMERRF    DTMSG
      C                     LEAVESR
      C                     ENDIF
      C           *IN50     IFEQ *ON
-     C                     MOVELEMRNFDDTMSG
+     C                     MOVELEMRNFD    DTMSG
      C                     LEAVESR
      C                     ENDIF
      C*
@@ -485,7 +485,7 @@
      C                     MOVEL'STUPRG'  STUUPB
      C                     UPDATSTUREC
      C*
-     C                     MOVELEMDLTDSCMSG
+     C                     MOVELEMDLTD    SCMSG
      C*
      C                     ENDIF
      C*
@@ -497,12 +497,12 @@
      C*================================================================
      C           CHKINP    BEGSR
      C*
-     C                     SETOF                    70
+     C                     SETOF                     70
      C*
      C*  --- 氏名必須チェック ---
      C           DTNAM     IFEQ *BLANKS
-     C                     MOVELEMNREQDTMSG
-     C                     SETON                    70
+     C                     MOVELEMNREQ    DTMSG
+     C                     SETON                     70
      C                     LEAVESR
      C                     ENDIF
      C*
@@ -510,23 +510,23 @@
      C           DTGND     IFNE 'M'
      C           DTGND     ANDNE'F'
      C           DTGND     ANDNE*BLANKS
-     C                     MOVELEMGNDRDTMSG
-     C                     SETON                    70
+     C                     MOVELEMGNDR    DTMSG
+     C                     SETON                     70
      C                     LEAVESR
      C                     ENDIF
      C*
      C*  --- 学校コード存在チェック ---
      C           DTSCL     IFNE *BLANKS
-     C           DTSCL     CHAINSCHOOLPF              9099
+     C           DTSCL     CHAINSCHOOLPF               9099
      C*  --- 学校コード検索エラー ---
      C           *IN99     IFEQ *ON
-     C                     MOVELEMSERRDTMSG
-     C                     SETON                    70
+     C                     MOVELEMSERR    DTMSG
+     C                     SETON                     70
      C                     LEAVESR
      C                     ENDIF
      C           *IN90     IFEQ *ON
-     C                     MOVELEMINVDTMSG
-     C                     SETON                    70
+     C                     MOVELEMSINV    DTMSG
+     C                     SETON                     70
      C                     LEAVESR
      C                     ENDIF
      C                     ENDIF
@@ -534,8 +534,8 @@
      C*  --- 生年月日範囲チェック ---
      C           DTBDT     IFGT 0
      C           DTBDT     COMP 19000101             2525
-     C   25                MOVELEMBDTEDTMSG
-     C   25                SETON                    70
+     C   25                MOVELEMBDTE    DTMSG
+     C   25                SETON                     70
      C   25                LEAVESR
      C                     ENDIF
      C*
