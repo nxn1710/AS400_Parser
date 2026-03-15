@@ -271,8 +271,9 @@ public class CalcSpec {
 
     /** Typed indicator reference with classification. */
     public static class IndicatorRef {
-        private String name;   // "03", "LR", "H1", "L2", "OA"
-        private String type;   // "numeric", "special", "halt", "level", "overflow"
+        private String name;     // "03", "LR", "H1", "L2", "OA"
+        private String type;     // "numeric", "special", "halt", "level", "overflow"
+        private String meaning;  // "recordNotFound", "error", "eof", "plus", "minus", "zero", etc.
 
         public IndicatorRef() {}
         public IndicatorRef(String name, String type) {
@@ -284,5 +285,7 @@ public class CalcSpec {
         public void setName(String v) { this.name = v; }
         public String getType() { return type; }
         public void setType(String v) { this.type = v; }
+        public String getMeaning() { return meaning; }
+        public void setMeaning(String v) { this.meaning = v; }
     }
 }

@@ -870,6 +870,7 @@ public class Rpg3IrBuilder {
             ri.setLow(toIndicatorRef(ri2));
             ri.setEqual(toIndicatorRef(ri3));
             op.setResultingIndicators(ri);
+            applyIndicatorMeanings(op.getOpcode(), ri);
         }
 
         // Handle special opcodes
@@ -1008,6 +1009,66 @@ public class Rpg3IrBuilder {
         if (raw == null || raw.isBlank()) return null;
         String name = raw.trim();
         return new IndicatorRef(name, classifyIndicator(name));
+    }
+
+    // =========================================================================
+    // Opcode-specific indicator meanings
+    // Key = opcode, Value = String[3] { highMeaning, lowMeaning, equalMeaning }
+    // =========================================================================
+    private static final Map<String, String[]> OPCODE_INDICATOR_MEANINGS = Map.ofEntries(
+        // File operations
+        Map.entry("CHAIN", new String[]{"recordNotFound", "error", null}),
+        Map.entry("READ",  new String[]{"eof", "error", null}),
+        Map.entry("READE", new String[]{"eof", "error", null}),
+        Map.entry("READP", new String[]{"bof", "error", null}),
+        Map.entry("READPE",new String[]{"bof", "error", null}),
+        Map.entry("SETLL", new String[]{"recordNotFound", null, "recordExists"}),
+        Map.entry("SETGT", new String[]{"recordNotFound", null, null}),
+        Map.entry("WRITE", new String[]{null, "error", null}),
+        Map.entry("UPDAT", new String[]{null, "error", null}),
+        Map.entry("DELET", new String[]{"recordNotFound", "error", null}),
+        // Arithmetic
+        Map.entry("ADD",   new String[]{"plus", "minus", "zero"}),
+        Map.entry("SUB",   new String[]{"plus", "minus", "zero"}),
+        Map.entry("MULT",  new String[]{"plus", "minus", "zero"}),
+        Map.entry("DIV",   new String[]{"plus", "minus", "zero"}),
+        Map.entry("MVR",   new String[]{"plus", "minus", "zero"}),
+        Map.entry("SQRT",  new String[]{"plus", "minus", "zero"}),
+        Map.entry("Z-ADD", new String[]{"plus", "minus", "zero"}),
+        Map.entry("Z-SUB", new String[]{"plus", "minus", "zero"}),
+        Map.entry("XFOOT", new String[]{"plus", "minus", "zero"}),
+        // Compare
+        Map.entry("COMP",  new String[]{"greater", "less", "equal"}),
+        // Lookup
+        Map.entry("LOKUP", new String[]{"highMatch", "lowMatch", "equalMatch"}),
+        // String
+        Map.entry("SCAN",  new String[]{null, null, "found"}),
+        Map.entry("SUBST", new String[]{null, "error", null}),
+        Map.entry("XLATE", new String[]{null, "error", null}),
+        // Move / assignment
+        Map.entry("MOVEL", new String[]{"plus", "minus", "zero"}),
+        Map.entry("MOVE",  new String[]{"plus", "minus", "zero"}),
+        // Call
+        Map.entry("CALL",  new String[]{null, "error", null}),
+        // Test
+        Map.entry("TESTN", new String[]{"numeric", "leadingBlanks", "allBlanks"}),
+        Map.entry("TESTB", new String[]{"allOff", "mixed", "allOn"}),
+        Map.entry("TESTZ", new String[]{"aToI", "jToR", "sToZ"}),
+        // Check
+        Map.entry("CHECK", new String[]{null, null, "found"}),
+        Map.entry("CHEKR", new String[]{null, null, "found"}),
+        // Set indicators
+        Map.entry("SETON", new String[]{"set", "set", "set"}),
+        Map.entry("SETOF", new String[]{"set", "set", "set"})
+    );
+
+    private void applyIndicatorMeanings(String opcode, ResultingIndicators ri) {
+        if (opcode == null || ri == null) return;
+        String[] meanings = OPCODE_INDICATOR_MEANINGS.get(opcode.toUpperCase());
+        if (meanings == null) return;
+        if (ri.getHigh() != null && meanings[0] != null) ri.getHigh().setMeaning(meanings[0]);
+        if (ri.getLow()  != null && meanings[1] != null) ri.getLow().setMeaning(meanings[1]);
+        if (ri.getEqual()!= null && meanings[2] != null) ri.getEqual().setMeaning(meanings[2]);
     }
 
     static String classifyIndicator(String name) {

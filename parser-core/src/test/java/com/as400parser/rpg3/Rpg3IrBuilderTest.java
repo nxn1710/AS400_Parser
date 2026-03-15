@@ -623,18 +623,20 @@ class Rpg3IrBuilderTest {
             assertThat(op.getResultingIndicators().getEqual()).isNotNull();
             assertThat(op.getResultingIndicators().getEqual().getName()).isEqualTo("50");
             assertThat(op.getResultingIndicators().getEqual().getType()).isEqualTo("numeric");
+            // READ doesn't use equal slot, so meaning should be null
+            assertThat(op.getResultingIndicators().getEqual().getMeaning()).isNull();
         }
 
         @Test
         void setonResultingIndicatorsEqualSlot() {
             // SETON with LR at resulting indicator equal slot: cols 58-59 (0-idx 57-58)
-            // 6 prefix + 21 spaces + SETON(5) + 25 spaces + LR(2) + 21 spaces = 80 chars
             String source = "     C                     SETON                         LR                     ";
             IrDocument doc = parse(source);
             Operation op = (Operation) content(doc).getCalculationSpecs().get(0);
             assertThat(op.getResultingIndicators()).isNotNull();
             assertThat(op.getResultingIndicators().getEqual().getName()).isEqualTo("LR");
             assertThat(op.getResultingIndicators().getEqual().getType()).isEqualTo("special");
+            assertThat(op.getResultingIndicators().getEqual().getMeaning()).isEqualTo("set");
         }
     }
 
