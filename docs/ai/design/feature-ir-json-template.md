@@ -299,20 +299,28 @@ Each file specification entry:
 | `blockLength` | `integer` | Block length / record address length (columns 20–23) |
 | `device` | `string` | Device (columns 40–46): `DISK`, `PRINTER`, `WORKSTN`, `SPECIAL`, `SEQ` |
 | `symbolicDevice` | `string` | Symbolic device name (if applicable) |
-| `continuationLines` | `array<object>` | Continuation entries (see below) |
+| `continuationLines` | `array<FileKeyword>` | Continuation keywords (see below), merged from continuation F-spec lines (blank fileName) into parent |
 | `externalName` | `string` | External file name (if different from fileName) |
 | `additionType` | `string` | Addition area (column 66): `A` or blank |
 | `fileConditionIndicator` | `string` | File condition indicator (columns 71–72, U1–U8 external indicator) |
 
-**File spec continuation line:**
+**`FileKeyword` — F-spec continuation keyword (cols 47–80):**
+
+Continuation lines (F in col 6, blank cols 7–14) are parsed and merged into the parent FileSpec. The keyword and its arguments are extracted from the `KEYWORD(arg:arg)` syntax.
 
 | Field | Type | Description |
 |---|---|---|
-| `location` | `location` | Source position |
-| `rawSourceLine` | `string` | Original source text |
-| `keyword` | `string` | Continuation keyword (e.g., `RENAME`, `IGNORE`, `INCLUDE`, `SFILE`, `KFLD`) |
-| `value` | `string` | Keyword value |
-| `indicator` | `string` | Associated indicator if present |
+| `keyword` | `string` | Keyword name: `RENAME`, `IGNORE`, `INCLUDE`, `SFILE` |
+| `originalName` | `string` | First argument (before colon): original record name |
+| `newName` | `string` | Second argument (after colon): new record name. `null` for single-argument keywords |
+| `rawText` | `string` | Full raw text for fallback (e.g., `RENAME(STUREC:S1REC)`) |
+
+**Example:**
+```json
+"continuationLines": [
+  { "keyword": "RENAME", "originalName": "STUREC", "newName": "S1REC", "rawText": "RENAME(STUREC:S1REC)" }
+]
+```
 
 ##### `extensionSpecs` (E-spec)
 
@@ -360,7 +368,12 @@ Each entry:
 
 ##### `inputSpecs` (I-spec)
 
-Describes record identification and field definitions for input files. Every column position is captured.
+Describes record identification, field definitions, compiler directives, and DS initialization constants for input files. Every column position is captured.
+
+The `specLevel` field classifies each I-spec entry:
+- `"recordIdentification"` — file name or DS/SDS declaration
+- `"fieldDefinition"` — field with from/to positions
+- `"compilerDirective"` — `/COPY` or `/INCLUDE` directive
 
 Structure: array of input record definitions, each containing:
 
@@ -368,17 +381,39 @@ Structure: array of input record definitions, each containing:
 |---|---|---|
 | `location` | `location` | Source position |
 | `rawSourceLine` | `string` | Original source text |
-| `inlineComment` | `string` | Inline comment if present |
-| `formType` | `string` | `I` |
-| `fileName` | `string` | Associated file name (columns 7–14) |
-| `recordName` | `string` | Record format name (columns 7–14 on record identification lines for externally-described files) |
-| `logicalRelationship` | `string` | AND/OR relationship (columns 15–16) |
+| `specLevel` | `string` | Entry type: `recordIdentification`, `fieldDefinition`, `compilerDirective` |
+| `fileName` | `string` | Associated file name (cols 7–14), or `/COPY` target (e.g., `QCPYSRC,STUDNTCPY`) |
+| `recordName` | `string` | Record format name (cols 7–14 on record identification lines for externally-described files) |
 | `sequenceNumber` | `string` | Sequence (column 17): alpha character for matching |
-| `number` | `string` | Number: `1` (no match forced), `N` (look-ahead) |
-| `option` | `string` | Option (column 20): `O` (Optional) or blank |
+| `option` | `string` | Option (column 20): `O` (Optional), `/COPY`, `/INCLUDE`, `DS`, `SDS`, or blank |
 | `recordIdIndicator` | `string` | Record-identifying indicator (columns 21–22) |
-| `recordIdentification` | `array<object>` | Identification entries (see below) |
-| `fields` | `array<object>` | Field definitions (see below) |
+| `fieldName` | `string` | Field name (columns 53–58) |
+| `fromPosition` | `integer` | Starting position in record (columns 44–47) |
+| `toPosition` | `integer` | Ending position in record (columns 48–51) |
+| `decimalPositions` | `integer` | Decimal positions (column 52): integer value or `null` if character type |
+| `dataFormat` | `string` | Data format (column 43): `P` (Packed), `B` (Binary), `L` (Left-adjust), `R` (Right-adjust) |
+| `fieldIndicators` | `object` | Field indicators (see below) |
+| `initializationValue` | `string` | DS initialization constant (e.g., `FILE I/O ERROR` from `I   I    'FILE I/O ERROR'`) |
+
+**Compiler directive example (`/COPY`):**
+```json
+{
+  "specLevel": "compilerDirective",
+  "option": "/COPY",
+  "fileName": "QCPYSRC,STUDNTCPY"
+}
+```
+
+**DS initialization constant example:**
+```json
+{
+  "specLevel": "fieldDefinition",
+  "fieldName": "EMERRF",
+  "fromPosition": 1,
+  "toPosition": 50,
+  "initializationValue": "FILE I/O ERROR"
+}
+```
 
 **Record identification entry:**
 
@@ -502,11 +537,30 @@ Each conditioning indicator entry:
 
 **Resulting indicators (columns 54–59):**
 
+Each slot is an `IndicatorRef` object (or `null` if unused):
+
 | Field | Type | Description |
 |---|---|---|
-| `high` | `string` | High/plus indicator (columns 54–55) — set when result > comparison / positive |
-| `low` | `string` | Low/minus indicator (columns 56–57) — set when result < comparison / negative |
-| `equal` | `string` | Equal/zero indicator (columns 58–59) — set when result = comparison / zero |
+| `high` | `IndicatorRef` | High/plus indicator (columns 54–55) — set when result > comparison / positive |
+| `low` | `IndicatorRef` | Low/minus indicator (columns 56–57) — set when result < comparison / negative |
+| `equal` | `IndicatorRef` | Equal/zero indicator (columns 58–59) — set when result = comparison / zero |
+
+**`IndicatorRef` object:**
+
+| Field | Type | Description |
+|---|---|---|
+| `name` | `string` | Indicator value (e.g., `50`, `99`, `LR`, `H1`) |
+| `type` | `string` | Classification: `numeric`, `special`, `halt`, `level`, `overflow` |
+| `meaning` | `string` | Opcode-specific semantic meaning (e.g., `recordNotFound`, `error`, `eof`, `plus`, `minus`, `zero`, `equal`, `greater`, `less`, `set`). `null` if the slot is unused for the opcode |
+
+**Example (CHAIN with indicators 50, 99):**
+```json
+"resultingIndicators": {
+  "high": { "name": "50", "type": "numeric", "meaning": "recordNotFound" },
+  "low":  { "name": "99", "type": "numeric", "meaning": "error" },
+  "equal": null
+}
+```
 
 ---
 
@@ -664,15 +718,15 @@ Structure: array of output record definitions:
 
 ##### `comments`
 
-Array of standalone comment lines (lines with `*` in column 7):
+Array of standalone comment lines (lines with `*` in column 7). The `*` marker is stripped from `text`.
 
 | Field | Type | Description |
 |---|---|---|
 | `location` | `location` | Source position |
 | `lineNumber` | `integer` | Line number |
 | `rawSourceLine` | `string` | Complete raw source line |
-| `text` | `string` | Comment content (columns 8–74) |
-| `specContext` | `string` | The specification section where this comment appears (e.g., `fileSpecs`, `calculationSpecs`) |
+| `text` | `string` | Comment content (columns 8–74, `*` marker at col 7 is stripped) |
+| `specContext` | `string` | The specification type where this comment appears: `H`, `F`, `E`, `I`, `C`, `O`, `*` |
 
 ##### `compileTimeData`
 
