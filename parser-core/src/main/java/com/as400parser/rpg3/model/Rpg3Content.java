@@ -257,6 +257,7 @@ public class Rpg3Content {
         private String recordIdIndicator;
         // Field definition fields
         private String fieldName;
+        private String externalFieldName;  // externally-described field rename: original name (cols 21-30)
         private Integer fromPosition;
         private Integer toPosition;
         private Integer decimalPositions;
@@ -284,6 +285,8 @@ public class Rpg3Content {
         public void setRecordIdIndicator(String v) { this.recordIdIndicator = v; }
         public String getFieldName() { return fieldName; }
         public void setFieldName(String v) { this.fieldName = v; }
+        public String getExternalFieldName() { return externalFieldName; }
+        public void setExternalFieldName(String v) { this.externalFieldName = v; }
         public Integer getFromPosition() { return fromPosition; }
         public void setFromPosition(Integer v) { this.fromPosition = v; }
         public Integer getToPosition() { return toPosition; }

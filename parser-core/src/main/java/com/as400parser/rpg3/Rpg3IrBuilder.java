@@ -443,14 +443,54 @@ public class Rpg3IrBuilder {
             spec.setSpecLevel("fieldDefinition");
         }
 
-        // Field detail
+        // Field detail extraction
+        // Two formats:
+        //   1) Program-described: from(44-47) to(48-51) decimal(52) fieldName(53-58)
+        //   2) Externally-described field rename: externalName(21-30) fieldName(53-58+)
         String fieldArea = sub(line, 42, 70);
         if (fieldArea != null && !fieldArea.isBlank()) {
             spec.setDataFormat(sub(line, 42, 43));
-            spec.setFromPosition(safeInt(sub(line, 43, 47)));
-            spec.setToPosition(safeInt(sub(line, 47, 51)));
-            spec.setDecimalPositions(safeInt(sub(line, 51, 52)));
-            spec.setFieldName(sub(line, 52, 58));
+
+            // Try program-described: from/to are numeric
+            Integer fromPos = safeInt(sub(line, 43, 47));
+            Integer toPos = safeInt(sub(line, 47, 51));
+
+            if (fromPos != null || toPos != null) {
+                // Program-described field with numeric positions
+                spec.setFromPosition(fromPos);
+                spec.setToPosition(toPos);
+                spec.setDecimalPositions(safeInt(sub(line, 51, 52)));
+                String fn = sub(line, 52, 58);
+                spec.setFieldName(fn != null ? fn.trim() : null);
+            } else {
+                // Externally-described field rename: external name at cols 21-30, RPG name at cols 53+
+                String extName = sub(line, 20, 42);
+                if (extName != null && !extName.isBlank()) {
+                    spec.setExternalFieldName(extName.trim());
+                    spec.setSpecLevel("fieldDefinition");
+                }
+                // RPG field name — scan cols 53-64 for rename target (may extend past 58)
+                String rpgName = sub(line, 52, 64);
+                if (rpgName != null && !rpgName.isBlank()) {
+                    spec.setFieldName(rpgName.trim());
+                } else {
+                    String fn = sub(line, 52, 58);
+                    spec.setFieldName(fn != null ? fn.trim() : null);
+                }
+            }
+        } else {
+            // Check for externally-described field rename with no field area content at cols 42-70
+            // but with external name at cols 21-30
+            String extName = sub(line, 20, 30);
+            if (extName != null && !extName.isBlank()) {
+                spec.setExternalFieldName(extName.trim());
+                spec.setSpecLevel("fieldDefinition");
+                // RPG field name at cols 53-64
+                String rpgName = sub(line, 52, 64);
+                if (rpgName != null && !rpgName.isBlank()) {
+                    spec.setFieldName(rpgName.trim());
+                }
+            }
         }
 
         content.getInputSpecs().add(spec);
