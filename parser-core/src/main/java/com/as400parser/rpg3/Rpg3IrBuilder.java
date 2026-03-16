@@ -577,6 +577,12 @@ public class Rpg3IrBuilder {
 
     // =========================================================================
     // O-spec (Output Specification)
+    // Record-level: cols 7-14 fileName, 14-16 logical(AND/OR), 15 type(H/D/T/E),
+    //   16-18 ADD/DEL, 16 fetchOverflow, 17 spaceBefore, 18 spaceAfter,
+    //   19-20 skipBefore, 21-22 skipAfter, 23-31 outputIndicators, 32-37 exceptName
+    // Field-level: 23-31 outputIndicators, 32-37 fieldName, 38 editCode,
+    //   39 blankAfter, 40-43 endPosition, 44 dataFormat, 45-70 constantOrEditWord
+    // Both: 75+ comment
     // =========================================================================
 
     private void scanOutputSpec(String line, int origLine) {
@@ -586,15 +592,52 @@ public class Rpg3IrBuilder {
 
         String recordName = sub(line, 6, 14);
         if (recordName != null && !recordName.isBlank()) {
+            // Record-level
             spec.setSpecLevel("recordLevel");
-            spec.setFileName(recordName.trim());
-            spec.setType(sub(line, 14, 15));
-            spec.setExceptName(sub(line, 31, 37));
+            spec.setFileName(recordName.trim());                        // cols 7-14
+
+            String logRel = sub(line, 13, 16);
+            if (logRel != null && !logRel.isBlank()) {
+                String lr = logRel.trim();
+                if ("AND".equalsIgnoreCase(lr) || "OR".equalsIgnoreCase(lr)) {
+                    spec.setLogicalRelationship(lr);
+                }
+            }
+
+            spec.setType(sub(line, 14, 15));                            // col 15
+
+            String addDel = sub(line, 15, 18);
+            if (addDel != null && !addDel.isBlank()) {
+                String ad = addDel.trim();
+                if ("ADD".equalsIgnoreCase(ad) || "DEL".equalsIgnoreCase(ad)) {
+                    spec.setAddDel(ad);
+                }
+            }
+
+            spec.setFetchOverflow(sub(line, 15, 16));                   // col 16
+            spec.setSpaceBefore(sub(line, 16, 17));                     // col 17
+            spec.setSpaceAfter(sub(line, 17, 18));                      // col 18
+            spec.setSkipBefore(sub(line, 18, 20));                      // cols 19-20
+            spec.setSkipAfter(sub(line, 20, 22));                       // cols 21-22
+            spec.setOutputIndicators(sub(line, 22, 31));                // cols 23-31
+            spec.setExceptName(sub(line, 31, 37));                      // cols 32-37
         } else {
+            // Field-level
             spec.setSpecLevel("fieldLevel");
-            String remaining = sub(line, 22, 80);
-            if (remaining != null && !remaining.isBlank()) {
-                spec.setFieldName(remaining.trim());
+            spec.setOutputIndicators(sub(line, 22, 31));                // cols 23-31
+            spec.setFieldName(sub(line, 31, 37));                       // cols 32-37
+            spec.setEditCode(sub(line, 37, 38));                        // col 38
+            spec.setBlankAfter(sub(line, 38, 39));                      // col 39
+            spec.setEndPosition(safeInt(sub(line, 39, 43)));            // cols 40-43
+            spec.setDataFormat(sub(line, 43, 44));                      // col 44
+            spec.setConstantOrEditWord(sub(line, 44, 70));              // cols 45-70
+        }
+
+        // Inline comment (col 75+)
+        if (line.length() > 74) {
+            String comment = line.substring(74).trim();
+            if (!comment.isEmpty()) {
+                spec.setInlineComment(comment);
             }
         }
 

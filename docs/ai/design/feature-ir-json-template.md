@@ -669,6 +669,77 @@ For each control flow node, the node includes:
 - All common operation fields (`rawSourceLine`, `inlineComment`, `conditioningIndicators`, `resultingIndicators`)
 - The nested `thenOps`, `elseOps`, `bodyOps` arrays contain the same operation node structures recursively
 
+##### `outputSpecs` (O-spec)
+
+Defines output record and field formatting. Every column position is captured. The `specLevel` field classifies each entry:
+- `"recordLevel"` — record identification line (file/record name in cols 7-14)
+- `"fieldLevel"` — field definition line (cols 7-22 blank)
+
+RPG III O-spec column layout:
+
+**Record-level:**
+- Col 7-14: File/record name
+- Col 14-16: Logical relationship (AND/OR)
+- Col 15: Type (H=Heading, D=Detail, T=Total, E=Exception)
+- Col 16-18: Record addition/deletion (ADD/DEL)
+- Col 16: Fetch overflow / Release
+- Col 17: Space before
+- Col 18: Space after
+- Col 19-20: Skip before
+- Col 21-22: Skip after
+- Col 23-31: Output indicators (3 slots × 3 cols)
+- Col 32-37: EXCPT name
+- Col 75+: Comment
+
+**Field-level:**
+- Col 23-31: Field output indicators (3 slots × 3 cols)
+- Col 32-37: Field name
+- Col 38: Edit code
+- Col 39: Blank after (B)
+- Col 40-43: End position
+- Col 44: Data format (P/B/L/R)
+- Col 45-70: Constant or edit word
+- Col 75+: Comment
+
+**Common fields on every O-spec entry:**
+
+| Field | Type | Description |
+|---|---|---|
+| `location` | `location` | Source position |
+| `rawSourceLine` | `string` | Original source text |
+| `parseQuality` | `string` | Parse quality: `full` |
+| `specLevel` | `string` | `recordLevel` or `fieldLevel` |
+| `outputIndicators` | `string` | Output indicators (columns 23–31), raw 9-char string |
+| `inlineComment` | `string` | Comment (column 75+) |
+
+**Record-level fields:**
+
+| Field | Type | Description |
+|---|---|---|
+| `fileName` | `string` | File or record name (columns 7–14) |
+| `logicalRelationship` | `string` | `AND` or `OR` (columns 14–16) |
+| `type` | `string` | Type (column 15): `H` (Heading), `D` (Detail), `T` (Total), `E` (Exception) |
+| `addDel` | `string` | Record addition/deletion (columns 16–18): `ADD` or `DEL` |
+| `fetchOverflow` | `string` | Fetch overflow / Release (column 16) |
+| `spaceBefore` | `string` | Space before (column 17) |
+| `spaceAfter` | `string` | Space after (column 18) |
+| `skipBefore` | `string` | Skip before (columns 19–20) |
+| `skipAfter` | `string` | Skip after (columns 21–22) |
+| `exceptName` | `string` | Exception name (columns 32–37) |
+
+**Field-level fields:**
+
+| Field | Type | Description |
+|---|---|---|
+| `fieldName` | `string` | Field name (columns 32–37) |
+| `editCode` | `string` | Edit code (column 38) |
+| `blankAfter` | `string` | Blank after (column 39): `B` |
+| `endPosition` | `integer` | End position (columns 40–43) |
+| `dataFormat` | `string` | Data format (column 44): `P` (Packed), `B` (Binary), `L` (Left-justified), `R` (Right-justified) |
+| `constantOrEditWord` | `string` | Constant or edit word (columns 45–70) |
+
+---
+
 ##### `dataStructures`
 
 Top-level array of all data structure definitions in the program, extracted from input specs for easier access.

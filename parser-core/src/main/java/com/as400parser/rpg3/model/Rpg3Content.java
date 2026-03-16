@@ -454,21 +454,61 @@ public class Rpg3Content {
     }
 
     /** O-spec */
+    /** O-spec — RPG III Output Specification column layout:
+     *
+     *  Record-level (file name or record name in cols 7-14):
+     *  Col 7-14:  File/record name
+     *  Col 14-16: Logical relationship (AND/OR)
+     *  Col 15:    Type (H=heading, D=detail, T=total, E=exception)
+     *  Col 16-18: Record addition/deletion (ADD/DEL)
+     *  Col 16:    Fetch overflow / Release
+     *  Col 17:    Space before
+     *  Col 18:    Space after
+     *  Col 19-20: Skip before
+     *  Col 21-22: Skip after
+     *  Col 23-31: Output indicators (3 slots × 3 cols)
+     *  Col 32-37: EXCPT name
+     *  Col 75+:   Comment
+     *
+     *  Field-level (cols 7-22 blank):
+     *  Col 23-31: Field output indicators (3 slots × 3 cols)
+     *  Col 32-37: Field name
+     *  Col 38:    Edit code
+     *  Col 39:    Blank after (B)
+     *  Col 40-43: End position
+     *  Col 44:    Data format (P/B/L/R)
+     *  Col 45-70: Constant or edit word
+     *  Col 75+:   Comment
+     */
     public static class OutputSpec {
         private String rawSourceLine;
         private Location location;
         private String parseQuality = "full";
-        private String specLevel;  // "recordLevel" or "fieldLevel"
-        private String fileName;
-        private String type;
-        private String fetchOverflow;
-        private String exceptName;
-        // Field-level
-        private String fieldName;
-        private Integer endPosition;
-        private String editCode;
-        private String blankAfter;
-        private String dataFormat;
+        private String specLevel;                    // "recordLevel" or "fieldLevel"
+
+        // Record-level fields
+        private String fileName;                     // cols 7-14
+        private String logicalRelationship;          // cols 14-16 (AND/OR)
+        private String type;                         // col 15 (H/D/T/E)
+        private String addDel;                       // cols 16-18 (ADD/DEL)
+        private String fetchOverflow;                // col 16
+        private String spaceBefore;                  // col 17
+        private String spaceAfter;                   // col 18
+        private String skipBefore;                   // cols 19-20
+        private String skipAfter;                    // cols 21-22
+        private String outputIndicators;             // cols 23-31 (raw 9-char string)
+        private String exceptName;                   // cols 32-37
+
+        // Field-level fields
+        private String fieldName;                    // cols 32-37
+        private String editCode;                     // col 38
+        private String blankAfter;                   // col 39
+        private Integer endPosition;                 // cols 40-43
+        private String dataFormat;                   // col 44
+        private String constantOrEditWord;           // cols 45-70
+
+        // Common
+        private String inlineComment;                // col 75+
 
         public String getRawSourceLine() { return rawSourceLine; }
         public void setRawSourceLine(String s) { this.rawSourceLine = s; }
@@ -480,22 +520,40 @@ public class Rpg3Content {
         public void setSpecLevel(String v) { this.specLevel = v; }
         public String getFileName() { return fileName; }
         public void setFileName(String v) { this.fileName = v; }
+        public String getLogicalRelationship() { return logicalRelationship; }
+        public void setLogicalRelationship(String v) { this.logicalRelationship = v; }
         public String getType() { return type; }
         public void setType(String v) { this.type = v; }
+        public String getAddDel() { return addDel; }
+        public void setAddDel(String v) { this.addDel = v; }
         public String getFetchOverflow() { return fetchOverflow; }
         public void setFetchOverflow(String v) { this.fetchOverflow = v; }
+        public String getSpaceBefore() { return spaceBefore; }
+        public void setSpaceBefore(String v) { this.spaceBefore = v; }
+        public String getSpaceAfter() { return spaceAfter; }
+        public void setSpaceAfter(String v) { this.spaceAfter = v; }
+        public String getSkipBefore() { return skipBefore; }
+        public void setSkipBefore(String v) { this.skipBefore = v; }
+        public String getSkipAfter() { return skipAfter; }
+        public void setSkipAfter(String v) { this.skipAfter = v; }
+        public String getOutputIndicators() { return outputIndicators; }
+        public void setOutputIndicators(String v) { this.outputIndicators = v; }
         public String getExceptName() { return exceptName; }
         public void setExceptName(String v) { this.exceptName = v; }
         public String getFieldName() { return fieldName; }
         public void setFieldName(String v) { this.fieldName = v; }
-        public Integer getEndPosition() { return endPosition; }
-        public void setEndPosition(Integer v) { this.endPosition = v; }
         public String getEditCode() { return editCode; }
         public void setEditCode(String v) { this.editCode = v; }
         public String getBlankAfter() { return blankAfter; }
         public void setBlankAfter(String v) { this.blankAfter = v; }
+        public Integer getEndPosition() { return endPosition; }
+        public void setEndPosition(Integer v) { this.endPosition = v; }
         public String getDataFormat() { return dataFormat; }
         public void setDataFormat(String v) { this.dataFormat = v; }
+        public String getConstantOrEditWord() { return constantOrEditWord; }
+        public void setConstantOrEditWord(String v) { this.constantOrEditWord = v; }
+        public String getInlineComment() { return inlineComment; }
+        public void setInlineComment(String v) { this.inlineComment = v; }
     }
 
     /** Data Structure (detected from I-spec with DS in cols 19-20) */
