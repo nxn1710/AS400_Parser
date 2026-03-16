@@ -19,9 +19,9 @@ import java.util.List;
  * <p>
  * Uses Gson with:
  * <ul>
- *   <li>{@code serializeNulls} — null fields included (null = N/A)</li>
  *   <li>{@code prettyPrinting} — indented output for readability</li>
  *   <li>{@code disableHtmlEscaping} — preserve raw source characters</li>
+ *   <li>Null fields are omitted from output</li>
  *   <li>Custom type adapters for polymorphic ExpressionNode, CalcNode, and SymbolEntry</li>
  * </ul>
  */
@@ -32,7 +32,6 @@ public class IrJsonSerializer {
     public IrJsonSerializer() {
         this.gson = new GsonBuilder()
                 .setPrettyPrinting()
-                .serializeNulls()
                 .disableHtmlEscaping()
                 .registerTypeHierarchyAdapter(ExpressionNode.class, new ExpressionNodeSerializer())
                 .registerTypeHierarchyAdapter(CalcNode.class, new CalcNodeSerializer())
@@ -68,37 +67,37 @@ public class IrJsonSerializer {
 
             JsonObject obj = new JsonObject();
             obj.addProperty("nodeType", src.getNodeType());
-            obj.addProperty("rawText", src.getRawText());
+            addIfNotNull(obj, "rawText", src.getRawText());
 
             if (src instanceof IdentifierNode id) {
-                obj.addProperty("name", id.getName());
+                addIfNotNull(obj, "name", id.getName());
                 obj.addProperty("isArray", id.isArray());
-                obj.addProperty("dataType", id.getDataType());
-                obj.add("length", ctx.serialize(id.getLength()));
-                obj.add("decimalPositions", ctx.serialize(id.getDecimalPositions()));
+                addIfNotNull(obj, "dataType", id.getDataType());
+                addIfNotNull(obj, "length", id.getLength(), ctx);
+                addIfNotNull(obj, "decimalPositions", id.getDecimalPositions(), ctx);
             } else if (src instanceof LiteralNode lit) {
-                obj.add("value", ctx.serialize(lit.getValue()));
-                obj.addProperty("dataType", lit.getDataType());
+                addIfNotNull(obj, "value", lit.getValue(), ctx);
+                addIfNotNull(obj, "dataType", lit.getDataType());
             } else if (src instanceof ArrayElementNode arr) {
-                obj.addProperty("arrayName", arr.getArrayName());
-                obj.add("index", ctx.serialize(arr.getIndex(), ExpressionNode.class));
+                addIfNotNull(obj, "arrayName", arr.getArrayName());
+                addIfNotNull(obj, "index", arr.getIndex(), ExpressionNode.class, ctx);
             } else if (src instanceof BinaryOpNode bin) {
-                obj.addProperty("operator", bin.getOperator());
-                obj.add("left", ctx.serialize(bin.getLeft(), ExpressionNode.class));
-                obj.add("right", ctx.serialize(bin.getRight(), ExpressionNode.class));
+                addIfNotNull(obj, "operator", bin.getOperator());
+                addIfNotNull(obj, "left", bin.getLeft(), ExpressionNode.class, ctx);
+                addIfNotNull(obj, "right", bin.getRight(), ExpressionNode.class, ctx);
             } else if (src instanceof UnaryOpNode un) {
-                obj.addProperty("operator", un.getOperator());
-                obj.add("operand", ctx.serialize(un.getOperand(), ExpressionNode.class));
+                addIfNotNull(obj, "operator", un.getOperator());
+                addIfNotNull(obj, "operand", un.getOperand(), ExpressionNode.class, ctx);
             } else if (src instanceof IndicatorNode ind) {
-                obj.addProperty("indicator", ind.getIndicator());
-                obj.addProperty("category", ind.getCategory());
+                addIfNotNull(obj, "indicator", ind.getIndicator());
+                addIfNotNull(obj, "category", ind.getCategory());
             } else if (src instanceof FigurativeConstantNode fig) {
-                obj.addProperty("constant", fig.getConstant());
+                addIfNotNull(obj, "constant", fig.getConstant());
             } else if (src instanceof SpecialValueNode sv) {
-                obj.addProperty("value", sv.getValue());
+                addIfNotNull(obj, "value", sv.getValue());
             }
 
-            obj.add("location", ctx.serialize(src.getLocation()));
+            addIfNotNull(obj, "location", src.getLocation(), ctx);
             return obj;
         }
     }
@@ -170,13 +169,13 @@ public class IrJsonSerializer {
         }
 
         private void serializeOperation(JsonObject obj, Operation op, JsonSerializationContext ctx) {
-            obj.add("factor1", ctx.serialize(op.getFactor1(), ExpressionNode.class));
-            obj.addProperty("opcode", op.getOpcode());
-            obj.addProperty("extendedOpcode", op.getExtendedOpcode());
-            obj.add("factor2", ctx.serialize(op.getFactor2(), ExpressionNode.class));
-            obj.add("resultField", ctx.serialize(op.getResultField(), ExpressionNode.class));
-            obj.add("fieldLength", ctx.serialize(op.getFieldLength()));
-            obj.add("decimalPositions", ctx.serialize(op.getDecimalPositions()));
+            addIfNotNull(obj, "factor1", op.getFactor1(), ExpressionNode.class, ctx);
+            addIfNotNull(obj, "opcode", op.getOpcode());
+            addIfNotNull(obj, "extendedOpcode", op.getExtendedOpcode());
+            addIfNotNull(obj, "factor2", op.getFactor2(), ExpressionNode.class, ctx);
+            addIfNotNull(obj, "resultField", op.getResultField(), ExpressionNode.class, ctx);
+            addIfNotNull(obj, "fieldLength", op.getFieldLength(), ctx);
+            addIfNotNull(obj, "decimalPositions", op.getDecimalPositions(), ctx);
             addResultingIndicators(obj, op.getResultingIndicators(), ctx);
         }
 
@@ -192,9 +191,9 @@ public class IrJsonSerializer {
         private void serializeComparisonBlock(JsonObject obj, ExpressionNode condition,
                                               String comparisonType, ExpressionNode comparisonValue,
                                               JsonSerializationContext ctx) {
-            obj.add("condition", ctx.serialize(condition, ExpressionNode.class));
-            obj.addProperty("comparisonType", comparisonType);
-            obj.add("comparisonValue", ctx.serialize(comparisonValue, ExpressionNode.class));
+            addIfNotNull(obj, "condition", condition, ExpressionNode.class, ctx);
+            addIfNotNull(obj, "comparisonType", comparisonType);
+            addIfNotNull(obj, "comparisonValue", comparisonValue, ExpressionNode.class, ctx);
         }
 
         private void addResultingIndicators(JsonObject obj, ResultingIndicators ri,
@@ -249,21 +248,21 @@ public class IrJsonSerializer {
         @Override
         public JsonElement serialize(SymbolEntry src, Type typeOfSrc, JsonSerializationContext ctx) {
             JsonObject obj = new JsonObject();
-            obj.addProperty("name", src.getName());
-            obj.addProperty("dataType", src.getDataType());
-            obj.add("length", ctx.serialize(src.getLength()));
-            obj.add("decimalPositions", ctx.serialize(src.getDecimalPositions()));
-            obj.addProperty("definedIn", mapDefinedIn(src.getDefinedIn()));
+            addIfNotNull(obj, "name", src.getName());
+            addIfNotNull(obj, "dataType", src.getDataType());
+            addIfNotNull(obj, "length", src.getLength(), ctx);
+            addIfNotNull(obj, "decimalPositions", src.getDecimalPositions(), ctx);
+            addIfNotNull(obj, "definedIn", mapDefinedIn(src.getDefinedIn()));
 
             // Extract line number from Location
             Integer line = null;
             if (src.getDefinitionLocation() != null) {
                 line = src.getDefinitionLocation().getStartLine();
             }
-            obj.add("definedAtLine", ctx.serialize(line));
+            addIfNotNull(obj, "definedAtLine", line, ctx);
 
             obj.addProperty("isDataStructure", src.isDataStructure());
-            obj.add("dataStructureName", ctx.serialize(src.getDataStructureName()));
+            addIfNotNull(obj, "dataStructureName", src.getDataStructureName());
             return obj;
         }
 
@@ -277,5 +276,23 @@ public class IrJsonSerializer {
                 default -> internal;
             };
         }
+    }
+
+    // =========================================================================
+    // Null-safe helpers — skip null values in JSON output
+    // =========================================================================
+
+    private static void addIfNotNull(JsonObject obj, String key, String value) {
+        if (value != null) obj.addProperty(key, value);
+    }
+
+    private static void addIfNotNull(JsonObject obj, String key, Object value,
+                                     JsonSerializationContext ctx) {
+        if (value != null) obj.add(key, ctx.serialize(value));
+    }
+
+    private static <T> void addIfNotNull(JsonObject obj, String key, T value,
+                                         Class<T> type, JsonSerializationContext ctx) {
+        if (value != null) obj.add(key, ctx.serialize(value, type));
     }
 }

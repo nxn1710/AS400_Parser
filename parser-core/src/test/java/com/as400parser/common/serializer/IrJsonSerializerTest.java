@@ -29,22 +29,20 @@ class IrJsonSerializerTest {
         assertThat(json).isNotEmpty();
         // Should be valid JSON
         JsonObject root = JsonParser.parseString(json).getAsJsonObject();
-        assertThat(root.has("metadata")).isTrue();
-        assertThat(root.get("metadata").isJsonNull()).isTrue();  // null metadata
+        assertThat(root.has("metadata")).isFalse();  // null metadata omitted
     }
 
     @Test
-    void serializeNullsIncluded() {
+    void serializeOmitsNullFields() {
         IrDocument doc = new IrDocument();
         Metadata meta = new Metadata();
         meta.setSourceType("RPG3");
         doc.setMetadata(meta);
         String json = serializer.serialize(doc);
-        // Null fields should be present
+        // Null fields should be omitted
         JsonObject root = JsonParser.parseString(json).getAsJsonObject();
         JsonObject metaObj = root.getAsJsonObject("metadata");
-        assertThat(metaObj.has("sourceMember")).isTrue();
-        assertThat(metaObj.get("sourceMember").isJsonNull()).isTrue();
+        assertThat(metaObj.has("sourceMember")).isFalse();
         assertThat(metaObj.get("sourceType").getAsString()).isEqualTo("RPG3");
     }
 
@@ -178,7 +176,7 @@ class IrJsonSerializerTest {
         }
 
         @Test
-        void serializesNullExpressionAsJsonNull() {
+        void serializesNullExpressionAsOmitted() {
             Operation op = new Operation();
             op.setOpcode("SETON");
             op.setLocation(LOC);
@@ -193,9 +191,9 @@ class IrJsonSerializerTest {
             JsonObject root = JsonParser.parseString(json).getAsJsonObject();
             JsonObject contentObj = root.getAsJsonObject("content");
             JsonObject calcNode = contentObj.getAsJsonArray("calculationSpecs").get(0).getAsJsonObject();
-            assertThat(calcNode.get("factor1").isJsonNull()).isTrue();
-            assertThat(calcNode.get("factor2").isJsonNull()).isTrue();
-            assertThat(calcNode.get("resultField").isJsonNull()).isTrue();
+            assertThat(calcNode.has("factor1")).isFalse();
+            assertThat(calcNode.has("factor2")).isFalse();
+            assertThat(calcNode.has("resultField")).isFalse();
         }
 
         // Helper: wrap expression in an Operation to serialize through IrDocument
@@ -406,7 +404,7 @@ class IrJsonSerializerTest {
         }
 
         @Test
-        void symbolWithNullDecimalShowsNull() {
+        void symbolWithNullDecimalOmitsField() {
             Rpg3Content content = new Rpg3Content();
             addSymbol(content, "NAME", "A", 25, null, "I-spec", 10);
 
@@ -418,7 +416,7 @@ class IrJsonSerializerTest {
                     .getAsJsonArray("symbolTable")
                     .get(0).getAsJsonObject();
 
-            assertThat(entry.get("decimalPositions").isJsonNull()).isTrue();
+            assertThat(entry.has("decimalPositions")).isFalse();
         }
 
         private void addSymbol(Rpg3Content content, String name, String dataType,
