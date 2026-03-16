@@ -97,7 +97,6 @@ public class IrJsonSerializer {
                 addIfNotNull(obj, "value", sv.getValue());
             }
 
-            addIfNotNull(obj, "location", src.getLocation(), ctx);
             return obj;
         }
     }
