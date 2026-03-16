@@ -130,29 +130,35 @@ public class IrJsonSerializer {
                 serializeOperation(obj, op, ctx);
             } else if (src instanceof ConditionalBlock cb) {
                 serializeConditionalBlock(obj, cb, ctx);
+                addIfNotNull(obj, "endStatement", cb.getEndStatement(), CalcNode.class, ctx);
             } else if (src instanceof DoWhileBlock dw) {
                 serializeComparisonBlock(obj, dw.getCondition(), dw.getComparisonType(),
                         dw.getComparisonValue(), ctx);
                 addResultingIndicators(obj, null, ctx);
                 obj.add("bodyOps", serializeCalcList(dw.getBodyOps(), ctx));
+                addIfNotNull(obj, "endStatement", dw.getEndStatement(), CalcNode.class, ctx);
             } else if (src instanceof DoUntilBlock du) {
                 serializeComparisonBlock(obj, du.getCondition(), du.getComparisonType(),
                         du.getComparisonValue(), ctx);
                 addResultingIndicators(obj, null, ctx);
                 obj.add("bodyOps", serializeCalcList(du.getBodyOps(), ctx));
+                addIfNotNull(obj, "endStatement", du.getEndStatement(), CalcNode.class, ctx);
             } else if (src instanceof DoBlock db) {
-                obj.add("startValue", ctx.serialize(db.getStartValue(), ExpressionNode.class));
-                obj.add("endValue", ctx.serialize(db.getEndValue(), ExpressionNode.class));
-                obj.add("indexField", ctx.serialize(db.getIndexVariable(), ExpressionNode.class));
+                addIfNotNull(obj, "startValue", db.getStartValue(), ExpressionNode.class, ctx);
+                addIfNotNull(obj, "endValue", db.getEndValue(), ExpressionNode.class, ctx);
+                addIfNotNull(obj, "indexField", db.getIndexVariable(), ExpressionNode.class, ctx);
                 addResultingIndicators(obj, null, ctx);
                 obj.add("bodyOps", serializeCalcList(db.getBodyOps(), ctx));
+                addIfNotNull(obj, "endStatement", db.getEndStatement(), CalcNode.class, ctx);
             } else if (src instanceof CaseBlock cas) {
                 obj.add("cases", ctx.serialize(cas.getEntries()));
                 addResultingIndicators(obj, null, ctx);
+                addIfNotNull(obj, "endStatement", cas.getEndStatement(), CalcNode.class, ctx);
             } else if (src instanceof SubroutineBlock sr) {
                 obj.addProperty("name", sr.getSubroutineName());
                 addResultingIndicators(obj, null, ctx);
                 obj.add("operations", serializeCalcList(sr.getOperations(), ctx));
+                addIfNotNull(obj, "endStatement", sr.getEndStatement(), CalcNode.class, ctx);
             } else if (src instanceof LabelNode lbl) {
                 obj.addProperty("name", lbl.getLabelName());
                 addResultingIndicators(obj, null, ctx);
