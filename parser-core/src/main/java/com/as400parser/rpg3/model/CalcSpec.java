@@ -91,6 +91,7 @@ public class CalcSpec {
         private ExpressionNode comparisonValue;
         private List<Object> thenOps = new ArrayList<>();
         private List<Object> elseOps = new ArrayList<>();
+        private Operation endStatement;
 
         public ConditionalBlock() { super("conditionalBlock"); }
 
@@ -104,6 +105,8 @@ public class CalcSpec {
         public void setThenOps(List<Object> v) { this.thenOps = v; }
         public List<Object> getElseOps() { return elseOps; }
         public void setElseOps(List<Object> v) { this.elseOps = v; }
+        public Operation getEndStatement() { return endStatement; }
+        public void setEndStatement(Operation v) { this.endStatement = v; }
     }
 
     public static class DoWhileBlock extends CalcNode {
@@ -111,6 +114,7 @@ public class CalcSpec {
         private ExpressionNode condition;
         private ExpressionNode comparisonValue;
         private List<Object> bodyOps = new ArrayList<>();
+        private Operation endStatement;
 
         public DoWhileBlock() { super("doWhileBlock"); }
 
@@ -122,6 +126,8 @@ public class CalcSpec {
         public void setComparisonValue(ExpressionNode v) { this.comparisonValue = v; }
         public List<Object> getBodyOps() { return bodyOps; }
         public void setBodyOps(List<Object> v) { this.bodyOps = v; }
+        public Operation getEndStatement() { return endStatement; }
+        public void setEndStatement(Operation v) { this.endStatement = v; }
     }
 
     public static class DoUntilBlock extends CalcNode {
@@ -129,6 +135,7 @@ public class CalcSpec {
         private ExpressionNode condition;
         private ExpressionNode comparisonValue;
         private List<Object> bodyOps = new ArrayList<>();
+        private Operation endStatement;
 
         public DoUntilBlock() { super("doUntilBlock"); }
 
@@ -140,6 +147,8 @@ public class CalcSpec {
         public void setComparisonValue(ExpressionNode v) { this.comparisonValue = v; }
         public List<Object> getBodyOps() { return bodyOps; }
         public void setBodyOps(List<Object> v) { this.bodyOps = v; }
+        public Operation getEndStatement() { return endStatement; }
+        public void setEndStatement(Operation v) { this.endStatement = v; }
     }
 
     public static class DoBlock extends CalcNode {
@@ -147,6 +156,7 @@ public class CalcSpec {
         private ExpressionNode endValue;
         private ExpressionNode indexVariable;
         private List<Object> bodyOps = new ArrayList<>();
+        private Operation endStatement;
 
         public DoBlock() { super("doBlock"); }
 
@@ -158,15 +168,20 @@ public class CalcSpec {
         public void setIndexVariable(ExpressionNode v) { this.indexVariable = v; }
         public List<Object> getBodyOps() { return bodyOps; }
         public void setBodyOps(List<Object> v) { this.bodyOps = v; }
+        public Operation getEndStatement() { return endStatement; }
+        public void setEndStatement(Operation v) { this.endStatement = v; }
     }
 
     public static class CaseBlock extends CalcNode {
         private List<CaseEntry> entries = new ArrayList<>();
+        private Operation endStatement;
 
         public CaseBlock() { super("caseBlock"); }
 
         public List<CaseEntry> getEntries() { return entries; }
         public void setEntries(List<CaseEntry> v) { this.entries = v; }
+        public Operation getEndStatement() { return endStatement; }
+        public void setEndStatement(Operation v) { this.endStatement = v; }
     }
 
     public static class CaseEntry {
@@ -194,6 +209,7 @@ public class CalcSpec {
     public static class SubroutineBlock extends CalcNode {
         private String subroutineName;
         private List<Object> operations = new ArrayList<>();
+        private Operation endStatement;
 
         public SubroutineBlock() { super("subroutineBlock"); }
 
@@ -201,6 +217,8 @@ public class CalcSpec {
         public void setSubroutineName(String v) { this.subroutineName = v; }
         public List<Object> getOperations() { return operations; }
         public void setOperations(List<Object> v) { this.operations = v; }
+        public Operation getEndStatement() { return endStatement; }
+        public void setEndStatement(Operation v) { this.endStatement = v; }
     }
 
     public static class LabelNode extends CalcNode {

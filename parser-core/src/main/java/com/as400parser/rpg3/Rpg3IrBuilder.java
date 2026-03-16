@@ -795,6 +795,11 @@ public class Rpg3IrBuilder {
             processCalcBlock(lines, elseIdx + 1, endIdx, block.getElseOps());
         }
 
+        // Capture END/ENDIF line as endStatement
+        if (endIdx < end) {
+            block.setEndStatement(buildOperation(lines.get(endIdx)));
+        }
+
         target.add(block);
         return endIdx + 1;
     }
@@ -880,6 +885,11 @@ public class Rpg3IrBuilder {
         int endIdx = findBlockEnd(lines, start + 1, end);
         processCalcBlock(lines, start + 1, endIdx, block.getBodyOps());
 
+        // Capture END/ENDDO line
+        if (endIdx < end) {
+            block.setEndStatement(buildOperation(lines.get(endIdx)));
+        }
+
         target.add(block);
         return endIdx + 1;
     }
@@ -904,6 +914,11 @@ public class Rpg3IrBuilder {
 
         int endIdx = findBlockEnd(lines, bodyStart, end);
         processCalcBlock(lines, bodyStart, endIdx, block.getBodyOps());
+
+        // Capture END/ENDDO line
+        if (endIdx < end) {
+            block.setEndStatement(buildOperation(lines.get(endIdx)));
+        }
 
         target.add(block);
         return endIdx + 1;
@@ -930,6 +945,11 @@ public class Rpg3IrBuilder {
         int endIdx = findBlockEnd(lines, bodyStart, end);
         processCalcBlock(lines, bodyStart, endIdx, block.getBodyOps());
 
+        // Capture END/ENDDO line
+        if (endIdx < end) {
+            block.setEndStatement(buildOperation(lines.get(endIdx)));
+        }
+
         target.add(block);
         return endIdx + 1;
     }
@@ -954,6 +974,8 @@ public class Rpg3IrBuilder {
                 if (e != null) block.getEntries().add(e);
                 i++;
             } else if (isBlockEnd(op)) {
+                // Capture END line as endStatement
+                block.setEndStatement(buildOperation(lines.get(i)));
                 i++; // consume END
                 break;
             } else {
@@ -986,6 +1008,11 @@ public class Rpg3IrBuilder {
         if (endIdx == -1) endIdx = end;
 
         processCalcBlock(lines, start + 1, endIdx, block.getOperations());
+
+        // Capture ENDSR line
+        if (endIdx < end) {
+            block.setEndStatement(buildOperation(lines.get(endIdx)));
+        }
 
         target.add(block);
 
