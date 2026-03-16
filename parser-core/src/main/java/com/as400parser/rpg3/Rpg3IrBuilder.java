@@ -709,6 +709,11 @@ public class Rpg3IrBuilder {
             } else if (upper.equals("GOTO")) {
                 target.add(buildGotoNode(cline));
                 i++;
+            } else if (isBlockEnd(upper)) {
+                // Block-end opcodes (END/ENDDO/ENDIF/ENDCS) should be consumed
+                // by their parent block processor. If we see one here, it's an
+                // orphaned end — skip it silently.
+                i++;
             } else {
                 // Simple operation
                 target.add(buildOperation(cline));
