@@ -574,43 +574,92 @@ public class Rpg3Content {
         public void setInlineComment(String v) { this.inlineComment = v; }
     }
 
-    /** Data Structure (detected from I-spec with DS in cols 19-20) */
+    /** Data Structure (detected from I-spec with DS/SDS in cols 19-20) */
     public static class DataStructure {
         private String name;
+        private String rawSourceLine;
         private Location location;
+        private String sourceSequence;
         private Integer length;
-        private String type;  // "dataStructure"
+        private String type;  // "dataStructure" or "programStatusDS"
+        private String inlineComment;
         private List<DataStructureSubfield> subfields = new ArrayList<>();
 
         public String getName() { return name; }
         public void setName(String v) { this.name = v; }
+        public String getRawSourceLine() { return rawSourceLine; }
+        public void setRawSourceLine(String v) { this.rawSourceLine = v; }
         public Location getLocation() { return location; }
         public void setLocation(Location l) { this.location = l; }
+        public String getSourceSequence() { return sourceSequence; }
+        public void setSourceSequence(String v) { this.sourceSequence = v; }
         public Integer getLength() { return length; }
         public void setLength(Integer v) { this.length = v; }
         public String getType() { return type; }
         public void setType(String v) { this.type = v; }
+        public String getInlineComment() { return inlineComment; }
+        public void setInlineComment(String v) { this.inlineComment = v; }
         public List<DataStructureSubfield> getSubfields() { return subfields; }
         public void setSubfields(List<DataStructureSubfield> v) { this.subfields = v; }
     }
 
+    /** Data Structure subfield — full field info matching InputSpec */
     public static class DataStructureSubfield {
-        private String name;
+        private String rawSourceLine;
+        private Location location;
+        private String sourceSequence;
+        private String fieldName;
+        private String externalFieldName;
         private Integer fromPosition;
         private Integer toPosition;
-        private String dataType;
         private Integer decimalPositions;
+        private String dataFormat;
+        private String controlLevel;
+        private String matchingFields;
+        private String fieldRecordRelation;
+        private String plusIndicator;
+        private String minusIndicator;
+        private String zeroBlankIndicator;
+        private String fieldIndicators;
+        private String initializationValue;
+        private String inlineComment;
 
-        public String getName() { return name; }
-        public void setName(String v) { this.name = v; }
+        public String getRawSourceLine() { return rawSourceLine; }
+        public void setRawSourceLine(String v) { this.rawSourceLine = v; }
+        public Location getLocation() { return location; }
+        public void setLocation(Location l) { this.location = l; }
+        public String getSourceSequence() { return sourceSequence; }
+        public void setSourceSequence(String v) { this.sourceSequence = v; }
+        public String getFieldName() { return fieldName; }
+        public void setFieldName(String v) { this.fieldName = v; }
+        public String getExternalFieldName() { return externalFieldName; }
+        public void setExternalFieldName(String v) { this.externalFieldName = v; }
         public Integer getFromPosition() { return fromPosition; }
         public void setFromPosition(Integer v) { this.fromPosition = v; }
         public Integer getToPosition() { return toPosition; }
         public void setToPosition(Integer v) { this.toPosition = v; }
-        public String getDataType() { return dataType; }
-        public void setDataType(String v) { this.dataType = v; }
         public Integer getDecimalPositions() { return decimalPositions; }
         public void setDecimalPositions(Integer v) { this.decimalPositions = v; }
+        public String getDataFormat() { return dataFormat; }
+        public void setDataFormat(String v) { this.dataFormat = v; }
+        public String getControlLevel() { return controlLevel; }
+        public void setControlLevel(String v) { this.controlLevel = v; }
+        public String getMatchingFields() { return matchingFields; }
+        public void setMatchingFields(String v) { this.matchingFields = v; }
+        public String getFieldRecordRelation() { return fieldRecordRelation; }
+        public void setFieldRecordRelation(String v) { this.fieldRecordRelation = v; }
+        public String getPlusIndicator() { return plusIndicator; }
+        public void setPlusIndicator(String v) { this.plusIndicator = v; }
+        public String getMinusIndicator() { return minusIndicator; }
+        public void setMinusIndicator(String v) { this.minusIndicator = v; }
+        public String getZeroBlankIndicator() { return zeroBlankIndicator; }
+        public void setZeroBlankIndicator(String v) { this.zeroBlankIndicator = v; }
+        public String getFieldIndicators() { return fieldIndicators; }
+        public void setFieldIndicators(String v) { this.fieldIndicators = v; }
+        public String getInitializationValue() { return initializationValue; }
+        public void setInitializationValue(String v) { this.initializationValue = v; }
+        public String getInlineComment() { return inlineComment; }
+        public void setInlineComment(String v) { this.inlineComment = v; }
     }
 
     /** Symbol table entry */

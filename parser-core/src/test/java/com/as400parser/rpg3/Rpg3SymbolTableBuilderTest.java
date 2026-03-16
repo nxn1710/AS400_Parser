@@ -95,7 +95,7 @@ class Rpg3SymbolTableBuilderTest {
         ds.setName("MYDS");
         ds.setLocation(LOC);
         DataStructureSubfield sub = new DataStructureSubfield();
-        sub.setName("DSFLD1");
+        sub.setFieldName("DSFLD1");
         sub.setFromPosition(1);
         sub.setToPosition(10);
         ds.getSubfields().add(sub);

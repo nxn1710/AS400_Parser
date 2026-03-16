@@ -30,6 +30,9 @@ public class Rpg3IrBuilder {
     // Track subroutine EXSR calls for cross-reference
     private final Map<String, List<Location>> exsrCalls = new LinkedHashMap<>();
 
+    // Track current DS/SDS for grouping I-spec field definitions into subfields
+    private DataStructure currentDataStructure;
+
     public Rpg3IrBuilder(NormalizedSource normalizedSource) {
         this.normalizedSource = normalizedSource;
         this.document = new IrDocument();
@@ -441,71 +444,154 @@ public class Rpg3IrBuilder {
     // =========================================================================
 
     private void scanInputSpec(String line, int origLine, int lineIndex) {
-        InputSpec spec = new InputSpec();
-        spec.setRawSourceLine(line);
-        spec.setLocation(Location.ofLine(origLine));
-        spec.setSourceSequence(normalizedSource.getSequenceNumbers()[lineIndex]);
+        String seqNum = normalizedSource.getSequenceNumbers()[lineIndex];
+        Location loc = Location.ofLine(origLine);
 
         // cols 7-22: identifier area (file name, DS/SDS keyword, etc.)
-        // SDS keyword appears at columns 19-21 (0-indexed: 18-20)
         String identifier = sub(line, 6, 22);
         if (identifier != null && !identifier.isBlank()) {
             String trimmed = identifier.trim();
-            // /COPY and /INCLUDE are handled at the dispatcher level (handleCopyDirective)
-            // — this branch should no longer be reached but kept as safety net
+
+            // /COPY and /INCLUDE are handled at the dispatcher level
             if (trimmed.startsWith("/COPY") || trimmed.startsWith("/INCLUDE")) {
                 handleCopyDirective(line, origLine, "I");
                 return;
-            } else if (trimmed.equalsIgnoreCase("DS") || trimmed.equalsIgnoreCase("SDS")) {
+            }
+
+            if (trimmed.equalsIgnoreCase("DS") || trimmed.equalsIgnoreCase("SDS")) {
+                // Start a new DataStructure block
+                DataStructure ds = new DataStructure();
+                ds.setName(trimmed.toUpperCase());
+                ds.setRawSourceLine(line);
+                ds.setLocation(loc);
+                ds.setSourceSequence(seqNum);
+                ds.setType(trimmed.equalsIgnoreCase("SDS") ? "programStatusDS" : "dataStructure");
+                // Inline comment
+                if (line.length() > 74) {
+                    String c = line.substring(74).trim();
+                    if (!c.isEmpty()) ds.setInlineComment(c);
+                }
+                content.getDataStructures().add(ds);
+                currentDataStructure = ds;
+
+                // Also add DS declaration as record-level InputSpec
+                InputSpec spec = new InputSpec();
+                spec.setRawSourceLine(line);
+                spec.setLocation(loc);
+                spec.setSourceSequence(seqNum);
                 spec.setSpecLevel("recordIdentification");
                 spec.setOption(trimmed);
-
-                DataStructure ds = new DataStructure();
-                ds.setName(trimmed);
-                ds.setLocation(Location.ofLine(origLine));
-                ds.setType("dataStructure");
-                content.getDataStructures().add(ds);
-            } else if (isInitializationConstant(trimmed)) {
-                // DS subfield with initialization: I   I    'constant value'
-                // Extract constant from full cols 7-42 area (not truncated identifier)
-                spec.setSpecLevel("fieldDefinition");
-                String initArea = sub(line, 6, 42);
-                spec.setInitializationValue(extractInitConstant(initArea != null ? initArea : trimmed));
-            } else {
-                spec.setSpecLevel("recordIdentification");
-                spec.setFileName(trimmed);
+                content.getInputSpecs().add(spec);
+                return;
             }
-        } else {
-            spec.setSpecLevel("fieldDefinition");
+
+            if (isInitializationConstant(trimmed)) {
+                // DS subfield with initialization constant — route to current DS if active
+                String initArea = sub(line, 6, 42);
+                String initValue = extractInitConstant(initArea != null ? initArea : trimmed);
+                if (currentDataStructure != null) {
+                    DataStructureSubfield sub = buildDsSubfield(line, loc, seqNum);
+                    sub.setInitializationValue(initValue);
+                    currentDataStructure.getSubfields().add(sub);
+                    return;
+                }
+                // Fallthrough: no active DS, treat as regular InputSpec
+                InputSpec spec = buildInputSpec(line, loc, seqNum);
+                spec.setSpecLevel("fieldDefinition");
+                spec.setInitializationValue(initValue);
+                content.getInputSpecs().add(spec);
+                return;
+            }
+
+            // File name or record name → ends current DS context
+            currentDataStructure = null;
+            InputSpec spec = buildInputSpec(line, loc, seqNum);
+            spec.setSpecLevel("recordIdentification");
+            spec.setFileName(trimmed);
+            content.getInputSpecs().add(spec);
+            return;
         }
 
+        // Field-level line (no identifier in cols 7-22)
+        if (currentDataStructure != null) {
+            // Route into current DS subfields
+            DataStructureSubfield sub = buildDsSubfield(line, loc, seqNum);
+            currentDataStructure.getSubfields().add(sub);
+            return;
+        }
+
+        // Regular field-level InputSpec (not inside a DS)
+        InputSpec spec = buildInputSpec(line, loc, seqNum);
+        spec.setSpecLevel("fieldDefinition");
+        content.getInputSpecs().add(spec);
+    }
+
+    /** Build a DataStructureSubfield from an I-spec field-level line. */
+    private DataStructureSubfield buildDsSubfield(String line, Location loc, String seqNum) {
+        DataStructureSubfield sub = new DataStructureSubfield();
+        sub.setRawSourceLine(line);
+        sub.setLocation(loc);
+        sub.setSourceSequence(seqNum);
+        sub.setDataFormat(sub(line, 42, 43));
+
+        Integer fromPos = safeInt(sub(line, 43, 47));
+        Integer toPos = safeInt(sub(line, 47, 51));
+        if (fromPos != null || toPos != null) {
+            sub.setFromPosition(fromPos);
+            sub.setToPosition(toPos);
+            sub.setDecimalPositions(safeInt(sub(line, 51, 52)));
+            String fn = sub(line, 52, 58);
+            sub.setFieldName(fn != null ? fn.trim() : null);
+        } else {
+            String extName = sub(line, 20, 42);
+            if (extName != null && !extName.isBlank()) sub.setExternalFieldName(extName.trim());
+            String rpgName = sub(line, 52, 64);
+            if (rpgName != null && !rpgName.isBlank()) {
+                sub.setFieldName(rpgName.trim());
+            } else {
+                String fn = sub(line, 52, 58);
+                sub.setFieldName(fn != null ? fn.trim() : null);
+            }
+        }
+
+        sub.setControlLevel(sub(line, 58, 60));
+        sub.setMatchingFields(sub(line, 60, 62));
+        sub.setFieldRecordRelation(sub(line, 62, 64));
+        sub.setPlusIndicator(sub(line, 64, 66));
+        sub.setMinusIndicator(sub(line, 66, 68));
+        sub.setZeroBlankIndicator(sub(line, 68, 70));
+        if (line.length() > 74) {
+            String c = line.substring(74).trim();
+            if (!c.isEmpty()) sub.setInlineComment(c);
+        }
+        return sub;
+    }
+
+    /** Build a standard InputSpec from an I-spec line with all field extraction. */
+    private InputSpec buildInputSpec(String line, Location loc, String seqNum) {
+        InputSpec spec = new InputSpec();
+        spec.setRawSourceLine(line);
+        spec.setLocation(loc);
+        spec.setSourceSequence(seqNum);
+
         // Field detail extraction
-        // Two formats:
-        //   1) Program-described: from(44-47) to(48-51) decimal(52) fieldName(53-58)
-        //   2) Externally-described field rename: externalName(21-30) fieldName(53-58+)
         String fieldArea = sub(line, 42, 70);
         if (fieldArea != null && !fieldArea.isBlank()) {
             spec.setDataFormat(sub(line, 42, 43));
-
-            // Try program-described: from/to are numeric
             Integer fromPos = safeInt(sub(line, 43, 47));
             Integer toPos = safeInt(sub(line, 47, 51));
-
             if (fromPos != null || toPos != null) {
-                // Program-described field with numeric positions
                 spec.setFromPosition(fromPos);
                 spec.setToPosition(toPos);
                 spec.setDecimalPositions(safeInt(sub(line, 51, 52)));
                 String fn = sub(line, 52, 58);
                 spec.setFieldName(fn != null ? fn.trim() : null);
             } else {
-                // Externally-described field rename: external name at cols 21-30, RPG name at cols 53+
                 String extName = sub(line, 20, 42);
                 if (extName != null && !extName.isBlank()) {
                     spec.setExternalFieldName(extName.trim());
                     spec.setSpecLevel("fieldDefinition");
                 }
-                // RPG field name — scan cols 53-64 for rename target (may extend past 58)
                 String rpgName = sub(line, 52, 64);
                 if (rpgName != null && !rpgName.isBlank()) {
                     spec.setFieldName(rpgName.trim());
@@ -515,13 +601,10 @@ public class Rpg3IrBuilder {
                 }
             }
         } else {
-            // Check for externally-described field rename with no field area content at cols 42-70
-            // but with external name at cols 21-30
             String extName = sub(line, 20, 30);
             if (extName != null && !extName.isBlank()) {
                 spec.setExternalFieldName(extName.trim());
                 spec.setSpecLevel("fieldDefinition");
-                // RPG field name at cols 53-64
                 String rpgName = sub(line, 52, 64);
                 if (rpgName != null && !rpgName.isBlank()) {
                     spec.setFieldName(rpgName.trim());
@@ -529,23 +612,17 @@ public class Rpg3IrBuilder {
             }
         }
 
-        // Control level and field indicators (cols 59-70)
-        spec.setControlLevel(sub(line, 58, 60));           // cols 59-60
-        spec.setMatchingFields(sub(line, 60, 62));         // cols 61-62
-        spec.setFieldRecordRelation(sub(line, 62, 64));    // cols 63-64
-        spec.setPlusIndicator(sub(line, 64, 66));          // cols 65-66
-        spec.setMinusIndicator(sub(line, 66, 68));         // cols 67-68
-        spec.setZeroBlankIndicator(sub(line, 68, 70));     // cols 69-70
-
-        // Inline comment: I-spec comment starts at col 75
+        spec.setControlLevel(sub(line, 58, 60));
+        spec.setMatchingFields(sub(line, 60, 62));
+        spec.setFieldRecordRelation(sub(line, 62, 64));
+        spec.setPlusIndicator(sub(line, 64, 66));
+        spec.setMinusIndicator(sub(line, 66, 68));
+        spec.setZeroBlankIndicator(sub(line, 68, 70));
         if (line.length() > 74) {
-            String comment = line.substring(74).trim();
-            if (!comment.isEmpty()) {
-                spec.setInlineComment(comment);
-            }
+            String c = line.substring(74).trim();
+            if (!c.isEmpty()) spec.setInlineComment(c);
         }
-
-        content.getInputSpecs().add(spec);
+        return spec;
     }
 
     /** Detect I-spec DS initialization pattern: starts with I and contains a quoted constant. */

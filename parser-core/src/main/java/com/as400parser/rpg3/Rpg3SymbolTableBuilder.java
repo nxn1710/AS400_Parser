@@ -98,7 +98,7 @@ public class Rpg3SymbolTableBuilder {
     private void scanDataStructureSubfields() {
         for (DataStructure ds : content.getDataStructures()) {
             for (DataStructureSubfield sub : ds.getSubfields()) {
-                String subName = sub.getName();
+                String subName = sub.getFieldName();
                 if (subName == null || subName.isBlank()) continue;
 
                 String name = subName.trim().toUpperCase();
@@ -107,12 +107,14 @@ public class Rpg3SymbolTableBuilder {
                 SymbolEntry entry = new SymbolEntry();
                 entry.setName(name);
                 entry.setDefinedIn("DS");
-                entry.setDefinitionLocation(ds.getLocation());
+                entry.setDefinitionLocation(sub.getLocation() != null ? sub.getLocation() : ds.getLocation());
                 entry.setDataStructure(true);
                 entry.setDataStructureName(ds.getName());
 
-                if (sub.getDataType() != null && !sub.getDataType().isBlank()) {
-                    entry.setDataType(sub.getDataType().trim());
+                // Derive data type from data format or decimal positions
+                String dataFormat = sub.getDataFormat();
+                if (dataFormat != null && !dataFormat.isBlank()) {
+                    entry.setDataType(mapDataFormat(dataFormat.trim()));
                 } else if (sub.getDecimalPositions() != null) {
                     entry.setDataType("S");
                 } else {
