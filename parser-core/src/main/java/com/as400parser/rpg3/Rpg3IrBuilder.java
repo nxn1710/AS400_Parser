@@ -235,22 +235,25 @@ public class Rpg3IrBuilder {
 
     // =========================================================================
     // F-spec (File Specification)
-    // RPG III cols: 7-14  FileName
-    //              15     FileType (I/O/U/C/D)
-    //              16     FileDesignation (P/S/R/T/F/blank)
-    //              17     EndOfFile (E/blank)
+    // RPG III cols: 7-14  File name
+    //              15     File type (I/O/U/C/D)
+    //              16     File designation (P/S/R/T/F/blank)
+    //              17     End of file (E/blank)
     //              18     Sequence (A/D/blank)
-    //              19     FileFormat (F/E/blank)
-    //              20-23  RecordLength
-    //              24     Limits (L/blank)
-    //              25-27  Length of Key/Record Address
-    //              28     Record Address Type (A/P/K/blank)
-    //              29     File Organization (I/T/blank)
-    //              33-34  Overflow Indicator
-    //              35-38  Key Field Starting Position
-    //              39     Extension Code (E/L/blank)
+    //              19     File format (F/E/blank)
+    //              20-23  Record length
+    //              24     Limits processing (L/blank)
+    //              25-27  Length of key / record address
+    //              28     Record address type (A/P/K/blank)
+    //              29     File organization (I/T/blank)
+    //              33-34  Overflow indicator
+    //              35-38  Key field starting position
+    //              39     Extension code (E/L/blank)
     //              40-46  Device (DISK/PRINTER/WORKSTN/SPECIAL/SEQ)
-    //              53-80  Continuation
+    //              53     Continuation lines indicator
+    //              66     File addition (A/blank)
+    //              71-72  File condition (U1-U8, UC)
+    //              75+    Comment
     // =========================================================================
 
     private void scanFileSpec(String line, int origLine) {
@@ -274,19 +277,32 @@ public class Rpg3IrBuilder {
         spec.setRawSourceLine(line);
         spec.setLocation(Location.ofLine(origLine));
 
-        spec.setFileName(fileName);
-        spec.setFileType(sub(line, 14, 15));
-        spec.setFileDesignation(sub(line, 15, 16));
-        spec.setEndOfFile(sub(line, 16, 17));
-        spec.setFileAddition(sub(line, 17, 18));
-        spec.setSequence(sub(line, 18, 19));
-        spec.setFileFormat(sub(line, 19, 20));
-        spec.setRecordLength(safeInt(sub(line, 19, 23)));
-        spec.setLimits(sub(line, 23, 24));
-        spec.setKeyLength(safeInt(sub(line, 24, 27)));
-        spec.setRecordAddressType(sub(line, 30, 31));
-        spec.setFileOrganization(sub(line, 31, 32));
-        spec.setDevice(sub(line, 39, 46));
+        spec.setFileName(fileName);                                     // cols 7-14
+        spec.setFileType(sub(line, 14, 15));                            // col 15
+        spec.setFileDesignation(sub(line, 15, 16));                     // col 16
+        spec.setEndOfFile(sub(line, 16, 17));                           // col 17
+        spec.setSequence(sub(line, 17, 18));                            // col 18
+        spec.setFileFormat(sub(line, 18, 19));                          // col 19
+        spec.setRecordLength(safeInt(sub(line, 19, 23)));               // cols 20-23
+        spec.setLimits(sub(line, 23, 24));                              // col 24
+        spec.setKeyLength(safeInt(sub(line, 24, 27)));                  // cols 25-27
+        spec.setRecordAddressType(sub(line, 27, 28));                   // col 28
+        spec.setFileOrganization(sub(line, 28, 29));                    // col 29
+        spec.setOverflowIndicator(sub(line, 32, 34));                   // cols 33-34
+        spec.setKeyFieldStartPosition(safeInt(sub(line, 34, 38)));      // cols 35-38
+        spec.setExtensionCode(sub(line, 38, 39));                       // col 39
+        spec.setDevice(sub(line, 39, 46));                              // cols 40-46
+        spec.setContinuationIndicator(sub(line, 52, 53));               // col 53
+        spec.setFileAddition(sub(line, 65, 66));                        // col 66
+        spec.setFileCondition(sub(line, 70, 72));                       // cols 71-72
+
+        // Inline comment (col 75+)
+        if (line.length() > 74) {
+            String comment = line.substring(74).trim();
+            if (!comment.isEmpty()) {
+                spec.setInlineComment(comment);
+            }
+        }
 
         // Continuation on same line (cols 47-80)
         String cont = sub(line, 46, 80);

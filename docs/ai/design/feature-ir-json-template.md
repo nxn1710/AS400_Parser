@@ -278,33 +278,54 @@ Controls compilation and runtime options for the program. Every column position 
 
 Declares files used by the program. Every column position is captured.
 
+RPG III F-spec column layout:
+- Col 7-14: File name
+- Col 15: File type (I/O/U/C/D)
+- Col 16: File designation (P/S/R/T/F/blank)
+- Col 17: End of file (E/blank)
+- Col 18: Sequence (A/D/blank)
+- Col 19: File format (F/E/blank)
+- Col 20-23: Record length
+- Col 24: Limits processing (L/blank)
+- Col 25-27: Length of key / record address
+- Col 28: Record address type (A/P/K/blank)
+- Col 29: File organization (I/T/blank)
+- Col 33-34: Overflow indicator
+- Col 35-38: Key field starting position
+- Col 39: Extension code (E/L/blank)
+- Col 40-46: Device (DISK/PRINTER/WORKSTN/SPECIAL/SEQ)
+- Col 53: Continuation lines indicator
+- Col 66: File addition (A/blank)
+- Col 71-72: File condition (U1-U8, UC)
+- Col 75+: Comment
+
 Each file specification entry:
 
 | Field | Type | Description |
 |---|---|---|
 | `location` | `location` | Source position |
 | `rawSourceLine` | `string` | Original source text |
-| `inlineComment` | `string` | Inline comment if present |
-| `formType` | `string` | `F` |
+| `parseQuality` | `string` | Parse quality: `full` |
 | `fileName` | `string` | File name (columns 7–14) |
 | `fileType` | `string` | File type (column 15): `I` (Input), `O` (Output), `U` (Update), `C` (Combined) |
 | `fileDesignation` | `string` | File designation (column 16): `P` (Primary), `S` (Secondary), `R` (Record addr), `T` (Table), `F` (Full procedural) |
 | `endOfFile` | `string` | End of file (column 17): `E` or blank |
-| `fileSequence` | `string` | Sequence (column 18): `A` (Ascending), `D` (Descending), or blank |
+| `sequence` | `string` | Sequence (column 18): `A` (Ascending), `D` (Descending), or blank |
 | `fileFormat` | `string` | File format (column 19): `F` (Fixed/Program-described) or `E` (Externally-described) |
-| `recordLength` | `integer` | Record length (columns 24–27) |
-| `limitsProcessing` | `string` | Limits processing (column 28): `L` or blank |
-| `keyLength` | `integer` | Key field length (columns 29–33) |
-| `recordAddressType` | `string` | Record address type (column 31): `A`, `P`, `K`, `D`, `F`, `T` |
-| `fileOrganization` | `string` | File organization (column 32): `I` (Indexed), `T` (Table), etc. |
+| `recordLength` | `integer` | Record length (columns 20–23) |
+| `limits` | `string` | Limits processing (column 24): `L` or blank |
+| `keyLength` | `integer` | Key field length (columns 25–27) |
+| `recordAddressType` | `string` | Record address type (column 28): `A`, `P`, `K` |
+| `fileOrganization` | `string` | File organization (column 29): `I` (Indexed), `T` (Table) |
 | `overflowIndicator` | `string` | Overflow indicator (columns 33–34): `OA`–`OG`, `OV` |
-| `blockLength` | `integer` | Block length / record address length (columns 20–23) |
+| `keyFieldStartPosition` | `integer` | Key field starting position (columns 35–38) |
+| `extensionCode` | `string` | Extension code (column 39): `E` (Extension), `L` (Line counter) |
 | `device` | `string` | Device (columns 40–46): `DISK`, `PRINTER`, `WORKSTN`, `SPECIAL`, `SEQ` |
-| `symbolicDevice` | `string` | Symbolic device name (if applicable) |
+| `continuationIndicator` | `string` | Continuation lines indicator (column 53) |
+| `fileAddition` | `string` | File addition (column 66): `A` or blank |
+| `fileCondition` | `string` | File condition indicator (columns 71–72): `U1`–`U8`, `UC` |
+| `inlineComment` | `string` | Comment (column 75+) |
 | `continuationLines` | `array<FileKeyword>` | Continuation keywords (see below), merged from continuation F-spec lines (blank fileName) into parent |
-| `externalName` | `string` | External file name (if different from fileName) |
-| `additionType` | `string` | Addition area (column 66): `A` or blank |
-| `fileConditionIndicator` | `string` | File condition indicator (columns 71–72, U1–U8 external indicator) |
 
 **`FileKeyword` — F-spec continuation keyword (cols 47–80):**
 

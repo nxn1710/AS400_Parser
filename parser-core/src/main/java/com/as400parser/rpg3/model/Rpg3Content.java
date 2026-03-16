@@ -127,23 +127,57 @@ public class Rpg3Content {
     }
 
     /** F-spec */
+    /** F-spec — RPG III File Specification column layout:
+     *  Col 1-5:   Sequence number / Comment
+     *  Col 6:     Form type (F)
+     *  Col 7-14:  File name
+     *  Col 15:    File type (I/O/U/C/D)
+     *  Col 16:    File designation (P/S/R/T/F/blank)
+     *  Col 17:    End of file (E/blank)
+     *  Col 18:    Sequence (A/D/blank)
+     *  Col 19:    File format (F/E/blank)
+     *  Col 20-23: Record length
+     *  Col 24:    Limits processing (L/blank)
+     *  Col 25-27: Length of key / record address
+     *  Col 28:    Record address type (A/P/K/blank)
+     *  Col 29:    File organization (I/T/blank)
+     *  Col 30-32: (reserved)
+     *  Col 33-34: Overflow indicator
+     *  Col 35-38: Key field starting position
+     *  Col 39:    Extension code (E/L/blank)
+     *  Col 40-46: Device (DISK/PRINTER/WORKSTN/SPECIAL/SEQ)
+     *  Col 47-52: (reserved / continuation keyword area)
+     *  Col 53:    Continuation lines indicator
+     *  Col 54-65: (reserved)
+     *  Col 66:    File addition (A/blank)
+     *  Col 67-70: (reserved)
+     *  Col 71-72: File condition (U1-U8, UC)
+     *  Col 73-74: (reserved)
+     *  Col 75+:   Comment
+     */
     public static class FileSpec {
         private String rawSourceLine;
         private Location location;
         private String parseQuality = "full";
-        private String fileName;
-        private String fileType;
-        private String fileDesignation;
-        private String endOfFile;
-        private String fileAddition;
-        private String sequence;
-        private String fileFormat;
-        private Integer recordLength;
-        private String limits;
-        private Integer keyLength;
-        private String recordAddressType;
-        private String fileOrganization;
-        private String device;
+        private String fileName;                     // cols 7-14
+        private String fileType;                     // col 15
+        private String fileDesignation;              // col 16
+        private String endOfFile;                    // col 17
+        private String sequence;                     // col 18
+        private String fileFormat;                   // col 19
+        private Integer recordLength;                // cols 20-23
+        private String limits;                       // col 24
+        private Integer keyLength;                   // cols 25-27
+        private String recordAddressType;            // col 28
+        private String fileOrganization;             // col 29
+        private String overflowIndicator;            // cols 33-34
+        private Integer keyFieldStartPosition;       // cols 35-38
+        private String extensionCode;                // col 39
+        private String device;                       // cols 40-46
+        private String continuationIndicator;        // col 53
+        private String fileAddition;                 // col 66
+        private String fileCondition;                // cols 71-72
+        private String inlineComment;                // col 75+
         private List<FileKeyword> continuationLines;
 
         public String getRawSourceLine() { return rawSourceLine; }
@@ -160,8 +194,6 @@ public class Rpg3Content {
         public void setFileDesignation(String v) { this.fileDesignation = v; }
         public String getEndOfFile() { return endOfFile; }
         public void setEndOfFile(String v) { this.endOfFile = v; }
-        public String getFileAddition() { return fileAddition; }
-        public void setFileAddition(String v) { this.fileAddition = v; }
         public String getSequence() { return sequence; }
         public void setSequence(String v) { this.sequence = v; }
         public String getFileFormat() { return fileFormat; }
@@ -176,8 +208,22 @@ public class Rpg3Content {
         public void setRecordAddressType(String v) { this.recordAddressType = v; }
         public String getFileOrganization() { return fileOrganization; }
         public void setFileOrganization(String v) { this.fileOrganization = v; }
+        public String getOverflowIndicator() { return overflowIndicator; }
+        public void setOverflowIndicator(String v) { this.overflowIndicator = v; }
+        public Integer getKeyFieldStartPosition() { return keyFieldStartPosition; }
+        public void setKeyFieldStartPosition(Integer v) { this.keyFieldStartPosition = v; }
+        public String getExtensionCode() { return extensionCode; }
+        public void setExtensionCode(String v) { this.extensionCode = v; }
         public String getDevice() { return device; }
         public void setDevice(String v) { this.device = v; }
+        public String getContinuationIndicator() { return continuationIndicator; }
+        public void setContinuationIndicator(String v) { this.continuationIndicator = v; }
+        public String getFileAddition() { return fileAddition; }
+        public void setFileAddition(String v) { this.fileAddition = v; }
+        public String getFileCondition() { return fileCondition; }
+        public void setFileCondition(String v) { this.fileCondition = v; }
+        public String getInlineComment() { return inlineComment; }
+        public void setInlineComment(String v) { this.inlineComment = v; }
         public List<FileKeyword> getContinuationLines() { return continuationLines; }
         public void setContinuationLines(List<FileKeyword> v) { this.continuationLines = v; }
     }
