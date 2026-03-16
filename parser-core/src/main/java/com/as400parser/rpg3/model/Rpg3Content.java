@@ -81,6 +81,7 @@ public class Rpg3Content {
         private String rawSourceLine;
         private Location location;
         private String parseQuality = "full";
+        private String sourceSequence;               // cols 1-5
         private String debugOption;                  // col 15
         private String currencySymbol;               // col 18
         private String dateFormat;                   // col 19
@@ -100,6 +101,8 @@ public class Rpg3Content {
         public void setLocation(Location l) { this.location = l; }
         public String getParseQuality() { return parseQuality; }
         public void setParseQuality(String q) { this.parseQuality = q; }
+        public String getSourceSequence() { return sourceSequence; }
+        public void setSourceSequence(String v) { this.sourceSequence = v; }
         public String getDebugOption() { return debugOption; }
         public void setDebugOption(String v) { this.debugOption = v; }
         public String getCurrencySymbol() { return currencySymbol; }
@@ -159,6 +162,7 @@ public class Rpg3Content {
         private String rawSourceLine;
         private Location location;
         private String parseQuality = "full";
+        private String sourceSequence;               // cols 1-5
         private String fileName;                     // cols 7-14
         private String fileType;                     // col 15
         private String fileDesignation;              // col 16
@@ -186,6 +190,8 @@ public class Rpg3Content {
         public void setLocation(Location l) { this.location = l; }
         public String getParseQuality() { return parseQuality; }
         public void setParseQuality(String q) { this.parseQuality = q; }
+        public String getSourceSequence() { return sourceSequence; }
+        public void setSourceSequence(String v) { this.sourceSequence = v; }
         public String getFileName() { return fileName; }
         public void setFileName(String v) { this.fileName = v; }
         public String getFileType() { return fileType; }
@@ -277,6 +283,7 @@ public class Rpg3Content {
         private String rawSourceLine;
         private Location location;
         private String parseQuality = "full";
+        private String sourceSequence;               // cols 1-5
         private String fromFileName;                 // cols 11-18
         private String toFileName;                   // cols 19-26
         private String arrayOrTableName;             // cols 27-32
@@ -299,6 +306,8 @@ public class Rpg3Content {
         public void setLocation(Location l) { this.location = l; }
         public String getParseQuality() { return parseQuality; }
         public void setParseQuality(String q) { this.parseQuality = q; }
+        public String getSourceSequence() { return sourceSequence; }
+        public void setSourceSequence(String v) { this.sourceSequence = v; }
         public String getFromFileName() { return fromFileName; }
         public void setFromFileName(String v) { this.fromFileName = v; }
         public String getToFileName() { return toFileName; }
@@ -336,6 +345,7 @@ public class Rpg3Content {
         private String rawSourceLine;
         private Location location;
         private String parseQuality = "full";
+        private String sourceSequence;               // cols 1-5
         private String fileName;
         private Integer linesPerPage;
         private Integer overflowLine;
@@ -346,6 +356,8 @@ public class Rpg3Content {
         public void setLocation(Location l) { this.location = l; }
         public String getParseQuality() { return parseQuality; }
         public void setParseQuality(String q) { this.parseQuality = q; }
+        public String getSourceSequence() { return sourceSequence; }
+        public void setSourceSequence(String v) { this.sourceSequence = v; }
         public String getFileName() { return fileName; }
         public void setFileName(String v) { this.fileName = v; }
         public Integer getLinesPerPage() { return linesPerPage; }
@@ -380,6 +392,7 @@ public class Rpg3Content {
         private String rawSourceLine;
         private Location location;
         private String parseQuality = "full";
+        private String sourceSequence;               // cols 1-5
         private String specLevel;  // "recordIdentification" or "fieldDefinition"
         private String fileName;
         private String recordName;
@@ -409,6 +422,8 @@ public class Rpg3Content {
         public void setLocation(Location l) { this.location = l; }
         public String getParseQuality() { return parseQuality; }
         public void setParseQuality(String q) { this.parseQuality = q; }
+        public String getSourceSequence() { return sourceSequence; }
+        public void setSourceSequence(String v) { this.sourceSequence = v; }
         public String getSpecLevel() { return specLevel; }
         public void setSpecLevel(String v) { this.specLevel = v; }
         public String getFileName() { return fileName; }
@@ -484,6 +499,7 @@ public class Rpg3Content {
         private String rawSourceLine;
         private Location location;
         private String parseQuality = "full";
+        private String sourceSequence;               // cols 1-5
         private String specLevel;                    // "recordLevel" or "fieldLevel"
 
         // Record-level fields
@@ -516,6 +532,8 @@ public class Rpg3Content {
         public void setLocation(Location l) { this.location = l; }
         public String getParseQuality() { return parseQuality; }
         public void setParseQuality(String q) { this.parseQuality = q; }
+        public String getSourceSequence() { return sourceSequence; }
+        public void setSourceSequence(String v) { this.sourceSequence = v; }
         public String getSpecLevel() { return specLevel; }
         public void setSpecLevel(String v) { this.specLevel = v; }
         public String getFileName() { return fileName; }

@@ -206,10 +206,10 @@ Every specification node includes at minimum these common fields:
 |---|---|---|
 | `location` | `location` | Source position (see Common `location` Object above) |
 | `rawSourceLine` | `string` | The complete original source line text exactly as it appears |
-| `inlineComment` | `string` | Inline comment text (columns 60–74 in C-specs, or trailing comments) |
-| `formType` | `string` | Specification form type character (column 6: `H`, `F`, `E`, `L`, `I`, `C`, `O`) |
+| `sourceSequence` | `string` | Source sequence number / comment (columns 1–5) |
+| `inlineComment` | `string` | Inline comment text (column offset varies by spec type) |
 
-> **Note:** Standalone comment lines (lines with `*` in column 7) are captured separately in the `comments` array, not as a field on spec nodes. Source sequence numbers (columns 1–5) are captured in the `sourceLines` array.
+> **Note:** Standalone comment lines (lines with `*` in column 7) are captured separately in the `comments` array, not as a field on spec nodes. `sourceSequence` is extracted by the normalizer from columns 1–5 before line processing, so the normalized line has these columns blanked out.
 
 ---
 

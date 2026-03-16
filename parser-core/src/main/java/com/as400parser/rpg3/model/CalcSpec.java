@@ -25,6 +25,7 @@ public class CalcSpec {
         protected String rawSourceLine;
         protected Location location;
         protected String parseQuality = "full";
+        protected String sourceSequence;
         protected String controlLevel;
         protected List<ConditioningIndicator> conditioningIndicators = new ArrayList<>();
         protected String inlineComment;
@@ -40,6 +41,8 @@ public class CalcSpec {
         public void setLocation(Location l) { this.location = l; }
         public String getParseQuality() { return parseQuality; }
         public void setParseQuality(String q) { this.parseQuality = q; }
+        public String getSourceSequence() { return sourceSequence; }
+        public void setSourceSequence(String v) { this.sourceSequence = v; }
         public String getControlLevel() { return controlLevel; }
         public void setControlLevel(String v) { this.controlLevel = v; }
         public List<ConditioningIndicator> getConditioningIndicators() { return conditioningIndicators; }

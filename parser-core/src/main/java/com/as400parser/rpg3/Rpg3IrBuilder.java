@@ -119,12 +119,12 @@ public class Rpg3IrBuilder {
                 }
                 case 'F' -> {
                     if (isInlineComment) scanComment(line, origLine);
-                    else scanFileSpec(line, origLine);
+                    else scanFileSpec(line, origLine, i);
                 }
                 case 'E' -> {
                     if (isInlineComment) scanComment(line, origLine);
                     else {
-                        scanExtensionSpec(line, origLine);
+                        scanExtensionSpec(line, origLine, i);
                         // Track array names for compile-time data association
                         String fromFile = sub(line, 10, 18);
                         if (fromFile == null || fromFile.isBlank()) {
@@ -135,7 +135,7 @@ public class Rpg3IrBuilder {
                         }
                     }
                 }
-                case 'L' -> scanLineCounterSpec(line, origLine);
+                case 'L' -> scanLineCounterSpec(line, origLine, i);
                 case 'I' -> {
                     if (isInlineComment) scanComment(line, origLine);
                     else scanInputSpec(line, origLine, i);
@@ -149,7 +149,7 @@ public class Rpg3IrBuilder {
                 }
                 case 'O' -> {
                     if (isInlineComment) scanComment(line, origLine);
-                    else scanOutputSpec(line, origLine);
+                    else scanOutputSpec(line, origLine, i);
                 }
                 case '*' -> scanComment(line, origLine);
                 default -> { /* skip non-spec lines (blank, directives, etc.) */ }
@@ -208,6 +208,7 @@ public class Rpg3IrBuilder {
         HeaderSpec spec = new HeaderSpec();
         spec.setRawSourceLine(line);
         spec.setLocation(Location.ofLine(origLine));
+        spec.setSourceSequence(normalizedSource.getSequenceNumbers()[lineIndex]);
 
         // Extract column fields (0-based index = RPG col - 1)
         spec.setDebugOption(sub(line, 14, 15));                  // col 15
@@ -256,7 +257,7 @@ public class Rpg3IrBuilder {
     //              75+    Comment
     // =========================================================================
 
-    private void scanFileSpec(String line, int origLine) {
+    private void scanFileSpec(String line, int origLine, int lineIndex) {
         String fileName = sub(line, 6, 14);
 
         // Continuation line: blank fileName → merge into previous F-spec
@@ -276,6 +277,7 @@ public class Rpg3IrBuilder {
         FileSpec spec = new FileSpec();
         spec.setRawSourceLine(line);
         spec.setLocation(Location.ofLine(origLine));
+        spec.setSourceSequence(normalizedSource.getSequenceNumbers()[lineIndex]);
 
         spec.setFileName(fileName);                                     // cols 7-14
         spec.setFileType(sub(line, 14, 15));                            // col 15
@@ -366,10 +368,11 @@ public class Rpg3IrBuilder {
     //              58+    Comment
     // =========================================================================
 
-    private void scanExtensionSpec(String line, int origLine) {
+    private void scanExtensionSpec(String line, int origLine, int lineIndex) {
         ExtensionSpec spec = new ExtensionSpec();
         spec.setRawSourceLine(line);
         spec.setLocation(Location.ofLine(origLine));
+        spec.setSourceSequence(normalizedSource.getSequenceNumbers()[lineIndex]);
 
         spec.setFromFileName(sub(line, 10, 18));
         spec.setToFileName(sub(line, 18, 26));
@@ -457,6 +460,7 @@ public class Rpg3IrBuilder {
         InputSpec spec = new InputSpec();
         spec.setRawSourceLine(line);
         spec.setLocation(Location.ofLine(origLine));
+        spec.setSourceSequence(normalizedSource.getSequenceNumbers()[lineIndex]);
 
         // cols 7-22: identifier area (file name, DS/SDS keyword, etc.)
         // SDS keyword appears at columns 19-21 (0-indexed: 18-20)
@@ -585,10 +589,11 @@ public class Rpg3IrBuilder {
     // Both: 75+ comment
     // =========================================================================
 
-    private void scanOutputSpec(String line, int origLine) {
+    private void scanOutputSpec(String line, int origLine, int lineIndex) {
         OutputSpec spec = new OutputSpec();
         spec.setRawSourceLine(line);
         spec.setLocation(Location.ofLine(origLine));
+        spec.setSourceSequence(normalizedSource.getSequenceNumbers()[lineIndex]);
 
         String recordName = sub(line, 6, 14);
         if (recordName != null && !recordName.isBlank()) {
@@ -648,7 +653,7 @@ public class Rpg3IrBuilder {
     // L-spec (Line Counter Specification) — minimal support
     // =========================================================================
 
-    private void scanLineCounterSpec(String line, int origLine) {
+    private void scanLineCounterSpec(String line, int origLine, int lineIndex) {
         // L-spec not fully supported but we record it
         // Could add to a lineCounterSpecs list if needed
     }
@@ -1056,6 +1061,7 @@ public class Rpg3IrBuilder {
         Operation op = new Operation();
         op.setRawSourceLine(rawLine);
         op.setLocation(loc);
+        op.setSourceSequence(normalizedSource.getSequenceNumbers()[cline.arrayIndex]);
 
         // Control level (cols 7-8)
         String ctrlLevel = sub(rawLine, 6, 8);
