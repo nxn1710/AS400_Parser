@@ -6,9 +6,12 @@ import java.util.List;
 /**
  * Result of source normalization.
  * <p>
- * Contains the normalized lines (each exactly 80 characters, padded),
+ * Contains the normalized lines (at least 80 characters, short lines padded),
  * original line number mapping, extracted sequence numbers, and any
  * warnings generated during normalization.
+ * <p>
+ * Lines longer than 80 characters are preserved in full — the parser can
+ * access columns beyond 80 directly (e.g. for spec-type-specific comments).
  */
 public class NormalizedSource {
 
@@ -25,7 +28,7 @@ public class NormalizedSource {
         this.warnings = Collections.unmodifiableList(warnings);
     }
 
-    /** Normalized lines, each exactly 80 characters (right-padded with spaces). */
+    /** Normalized lines, at least 80 characters (right-padded). Lines longer than 80 are kept in full. */
     public String[] getLines() {
         return lines;
     }

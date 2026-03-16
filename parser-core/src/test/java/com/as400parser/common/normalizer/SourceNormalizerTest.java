@@ -177,14 +177,14 @@ class SourceNormalizerTest {
         }
 
         @Test
-        void truncateLongLineWithWarning() {
-            // Build a >80-char line
+        void longLinePreservedInFull() {
+            // Build a >80-char line — should be kept in full, not truncated
             String source = "     H" + "X".repeat(80);
             NormalizedSource result = normalizer.normalize(source);
-            assertThat(result.getLines()[0]).hasSize(80);
-            assertThat(result.getWarnings()).hasSize(1);
-            assertThat(result.getWarnings().get(0).getType())
-                    .isEqualTo(NormalizationWarning.WarningType.TRUNCATION);
+            // Line should be > 80 chars (full content preserved)
+            assertThat(result.getLines()[0].length()).isGreaterThan(80);
+            // No truncation warning
+            assertThat(result.getWarnings()).isEmpty();
         }
 
         @Test
@@ -197,11 +197,11 @@ class SourceNormalizerTest {
         }
 
         @Test
-        void allLinesExactly80() {
+        void allLinesAtLeast80() {
             String source = "     H\n     FCUSTMAST\n     C           CUSTNO";
             NormalizedSource result = normalizer.normalize(source);
             for (String line : result.getLines()) {
-                assertThat(line).hasSize(80);
+                assertThat(line.length()).isGreaterThanOrEqualTo(80);
             }
         }
     }

@@ -55,17 +55,44 @@ public class Rpg3Content {
 
     // ---- Inner model classes for spec types ----
 
-    /** H-spec */
+    /** H-spec — RPG III Control Specification column layout:
+     *  Col 1-5:   Sequence number / Comment
+     *  Col 6:     Form type (H)
+     *  Col 7-14:  Reserved
+     *  Col 15:    Debug
+     *  Col 16-17: Reserved
+     *  Col 18:    Currency symbol
+     *  Col 19:    Date format
+     *  Col 20:    Date edit
+     *  Col 21:    Decimal notation
+     *  Col 22-25: Reserved
+     *  Col 26:    Alternate collating sequence
+     *  Col 27-39: Reserved
+     *  Col 40:    Sign handling
+     *  Col 41:    Forms alignment (inverted print)
+     *  Col 42:    Reserved
+     *  Col 43:    File translation
+     *  Col 44-56: Reserved
+     *  Col 57:    Transparency check
+     *  Col 58-74: Reserved
+     *  Col 75-80: Program identification
+     */
     public static class HeaderSpec {
         private String rawSourceLine;
         private Location location;
         private String parseQuality = "full";
-        private String debugOption;         // col 15
-        private String currencySymbol;      // col 18
-        private String dateFormat;          // col 19
-        private String dateEdit;            // col 20
-        private String decimalNotation;     // col 21
-        private String invertedPrint;       // col 26
+        private String debugOption;                  // col 15
+        private String currencySymbol;               // col 18
+        private String dateFormat;                   // col 19
+        private String dateEdit;                     // col 20
+        private String decimalNotation;              // col 21
+        private String alternateCollatingSequence;   // col 26
+        private String signHandling;                 // col 40
+        private String formsAlignment;               // col 41 (inverted print)
+        private String fileTranslation;              // col 43
+        private String transparencyCheck;            // col 57
+        private String inlineComment;                // cols 58-74
+        private String programIdentification;        // cols 75-80
 
         public String getRawSourceLine() { return rawSourceLine; }
         public void setRawSourceLine(String s) { this.rawSourceLine = s; }
@@ -83,8 +110,20 @@ public class Rpg3Content {
         public void setDateEdit(String v) { this.dateEdit = v; }
         public String getDecimalNotation() { return decimalNotation; }
         public void setDecimalNotation(String v) { this.decimalNotation = v; }
-        public String getInvertedPrint() { return invertedPrint; }
-        public void setInvertedPrint(String v) { this.invertedPrint = v; }
+        public String getAlternateCollatingSequence() { return alternateCollatingSequence; }
+        public void setAlternateCollatingSequence(String v) { this.alternateCollatingSequence = v; }
+        public String getSignHandling() { return signHandling; }
+        public void setSignHandling(String v) { this.signHandling = v; }
+        public String getFormsAlignment() { return formsAlignment; }
+        public void setFormsAlignment(String v) { this.formsAlignment = v; }
+        public String getFileTranslation() { return fileTranslation; }
+        public void setFileTranslation(String v) { this.fileTranslation = v; }
+        public String getTransparencyCheck() { return transparencyCheck; }
+        public void setTransparencyCheck(String v) { this.transparencyCheck = v; }
+        public String getInlineComment() { return inlineComment; }
+        public void setInlineComment(String v) { this.inlineComment = v; }
+        public String getProgramIdentification() { return programIdentification; }
+        public void setProgramIdentification(String v) { this.programIdentification = v; }
     }
 
     /** F-spec */
@@ -168,24 +207,45 @@ public class Rpg3Content {
         public void setRawText(String v) { this.rawText = v; }
     }
 
-    /** E-spec */
+    /** E-spec — RPG III Extension Specification column layout:
+     *  Col 1-5:   Sequence number / Comment
+     *  Col 6:     Form type (E)
+     *  Col 7-10:  Reserved
+     *  Col 11-18: From file name
+     *  Col 19-26: To file name
+     *  Col 27-32: Array or table name
+     *  Col 33-35: Entries per record
+     *  Col 36-39: Entries per array or table
+     *  Col 40-42: Length of entry
+     *  Col 43:    Data format
+     *  Col 44:    Decimal positions
+     *  Col 45:    Sequence
+     *  Col 46-51: Alternate array or table name
+     *  Col 52-54: Alternate entry length
+     *  Col 55:    Alternate data format
+     *  Col 56:    Alternate decimal positions
+     *  Col 57:    Alternate sequence
+     *  Col 58+:   Comment
+     */
     public static class ExtensionSpec {
         private String rawSourceLine;
         private Location location;
         private String parseQuality = "full";
-        private String fromFileName;
-        private String toFileName;
-        private String arrayOrTableName;
-        private Integer entriesPerRecord;
-        private Integer entriesPerArray;
-        private Integer entryLength;
-        private String dataFormat;
-        private Integer decimalPositions;
-        private String sequenceType;
-        private String alternateArrayName;
-        private Integer alternateEntryLength;
-        private String alternateDataFormat;
-        private Integer alternateDecimalPositions;
+        private String fromFileName;                 // cols 11-18
+        private String toFileName;                   // cols 19-26
+        private String arrayOrTableName;             // cols 27-32
+        private Integer entriesPerRecord;            // cols 33-35
+        private Integer entriesPerArray;             // cols 36-39
+        private Integer entryLength;                 // cols 40-42
+        private String dataFormat;                   // col 43
+        private Integer decimalPositions;            // col 44
+        private String sequenceType;                 // col 45
+        private String alternateArrayName;           // cols 46-51
+        private Integer alternateEntryLength;        // cols 52-54
+        private String alternateDataFormat;          // col 55
+        private Integer alternateDecimalPositions;   // col 56
+        private String alternateSequenceType;        // col 57
+        private String inlineComment;                // col 58+
 
         public String getRawSourceLine() { return rawSourceLine; }
         public void setRawSourceLine(String s) { this.rawSourceLine = s; }
@@ -219,6 +279,10 @@ public class Rpg3Content {
         public void setAlternateDataFormat(String v) { this.alternateDataFormat = v; }
         public Integer getAlternateDecimalPositions() { return alternateDecimalPositions; }
         public void setAlternateDecimalPositions(Integer v) { this.alternateDecimalPositions = v; }
+        public String getAlternateSequenceType() { return alternateSequenceType; }
+        public void setAlternateSequenceType(String v) { this.alternateSequenceType = v; }
+        public String getInlineComment() { return inlineComment; }
+        public void setInlineComment(String v) { this.inlineComment = v; }
     }
 
     /** L-spec */
@@ -244,7 +308,28 @@ public class Rpg3Content {
         public void setOverflowLine(Integer v) { this.overflowLine = v; }
     }
 
-    /** I-spec */
+    /** I-spec — RPG III Input Specification column layout:
+     *  Col 1-5:   Sequence number / Comment
+     *  Col 6:     Form type (I)
+     *  Col 7:     Reserved
+     *  Col 8:     Initialization option
+     *  Col 9-20:  Reserved (record ID area on record-level lines)
+     *  Col 21-30: External field name (externally-described rename)
+     *  Col 31-42: Reserved
+     *  Col 43:    Internal data format (P/B/L/R/blank)
+     *  Col 44-47: From position
+     *  Col 48-51: To position
+     *  Col 52:    Decimal positions
+     *  Col 53-58: Subfield/field name
+     *  Col 59-60: Control level (L1-L9)
+     *  Col 61-62: Matching fields (M1-M9)
+     *  Col 63-64: Field record relation
+     *  Col 65-66: Plus indicator (field > 0)
+     *  Col 67-68: Minus indicator (field < 0)
+     *  Col 69-70: Zero/blank indicator (field = 0 or blank)
+     *  Col 71-74: Reserved
+     *  Col 75+:   Comment
+     */
     public static class InputSpec {
         private String rawSourceLine;
         private Location location;
@@ -258,12 +343,19 @@ public class Rpg3Content {
         // Field definition fields
         private String fieldName;
         private String externalFieldName;  // externally-described field rename: original name (cols 21-30)
-        private Integer fromPosition;
-        private Integer toPosition;
-        private Integer decimalPositions;
-        private String dataFormat;
-        private String fieldIndicators;
-        private String initializationValue;  // DS subfield init: I 'constant'
+        private Integer fromPosition;          // cols 44-47
+        private Integer toPosition;            // cols 48-51
+        private Integer decimalPositions;      // col 52
+        private String dataFormat;             // col 43
+        private String controlLevel;           // cols 59-60 (L1-L9)
+        private String matchingFields;         // cols 61-62 (M1-M9)
+        private String fieldRecordRelation;    // cols 63-64
+        private String plusIndicator;          // cols 65-66 (field > 0)
+        private String minusIndicator;         // cols 67-68 (field < 0)
+        private String zeroBlankIndicator;     // cols 69-70 (field = 0 or blank)
+        private String fieldIndicators;        // legacy: raw cols 65-70
+        private String initializationValue;    // DS subfield init: I 'constant'
+        private String inlineComment;          // col 75+ (from normalizer lineComments)
 
         public String getRawSourceLine() { return rawSourceLine; }
         public void setRawSourceLine(String s) { this.rawSourceLine = s; }
@@ -295,10 +387,24 @@ public class Rpg3Content {
         public void setDecimalPositions(Integer v) { this.decimalPositions = v; }
         public String getDataFormat() { return dataFormat; }
         public void setDataFormat(String v) { this.dataFormat = v; }
+        public String getControlLevel() { return controlLevel; }
+        public void setControlLevel(String v) { this.controlLevel = v; }
+        public String getMatchingFields() { return matchingFields; }
+        public void setMatchingFields(String v) { this.matchingFields = v; }
+        public String getFieldRecordRelation() { return fieldRecordRelation; }
+        public void setFieldRecordRelation(String v) { this.fieldRecordRelation = v; }
+        public String getPlusIndicator() { return plusIndicator; }
+        public void setPlusIndicator(String v) { this.plusIndicator = v; }
+        public String getMinusIndicator() { return minusIndicator; }
+        public void setMinusIndicator(String v) { this.minusIndicator = v; }
+        public String getZeroBlankIndicator() { return zeroBlankIndicator; }
+        public void setZeroBlankIndicator(String v) { this.zeroBlankIndicator = v; }
         public String getFieldIndicators() { return fieldIndicators; }
         public void setFieldIndicators(String v) { this.fieldIndicators = v; }
         public String getInitializationValue() { return initializationValue; }
         public void setInitializationValue(String v) { this.initializationValue = v; }
+        public String getInlineComment() { return inlineComment; }
+        public void setInlineComment(String v) { this.inlineComment = v; }
     }
 
     /** O-spec */

@@ -115,7 +115,7 @@ public class Rpg3IrBuilder {
             switch (specChar) {
                 case 'H' -> {
                     if (isInlineComment) scanComment(line, origLine);
-                    else scanHeaderSpec(line, origLine);
+                    else scanHeaderSpec(line, origLine, i);
                 }
                 case 'F' -> {
                     if (isInlineComment) scanComment(line, origLine);
@@ -138,7 +138,7 @@ public class Rpg3IrBuilder {
                 case 'L' -> scanLineCounterSpec(line, origLine);
                 case 'I' -> {
                     if (isInlineComment) scanComment(line, origLine);
-                    else scanInputSpec(line, origLine);
+                    else scanInputSpec(line, origLine, i);
                 }
                 case 'C' -> {
                     if (isInlineComment) {
@@ -204,10 +204,32 @@ public class Rpg3IrBuilder {
     // H-spec
     // =========================================================================
 
-    private void scanHeaderSpec(String line, int origLine) {
+    private void scanHeaderSpec(String line, int origLine, int lineIndex) {
         HeaderSpec spec = new HeaderSpec();
         spec.setRawSourceLine(line);
         spec.setLocation(Location.ofLine(origLine));
+
+        // Extract column fields (0-based index = RPG col - 1)
+        spec.setDebugOption(sub(line, 14, 15));                  // col 15
+        spec.setCurrencySymbol(sub(line, 17, 18));               // col 18
+        spec.setDateFormat(sub(line, 18, 19));                   // col 19
+        spec.setDateEdit(sub(line, 19, 20));                     // col 20
+        spec.setDecimalNotation(sub(line, 20, 21));              // col 21
+        spec.setAlternateCollatingSequence(sub(line, 25, 26));   // col 26
+        spec.setSignHandling(sub(line, 39, 40));                 // col 40
+        spec.setFormsAlignment(sub(line, 40, 41));               // col 41
+        spec.setFileTranslation(sub(line, 42, 43));              // col 43
+        spec.setTransparencyCheck(sub(line, 56, 57));            // col 57
+        spec.setProgramIdentification(sub(line, 74, 80));        // cols 75-80
+
+        // Inline comment from col 81+ (line is no longer truncated)
+        if (line.length() > 80) {
+            String comment = line.substring(80).trim();
+            if (!comment.isEmpty()) {
+                spec.setInlineComment(comment);
+            }
+        }
+
         content.getHeaderSpecs().add(spec);
     }
 
@@ -325,7 +347,7 @@ public class Rpg3IrBuilder {
     //              55     Alternating Data Format
     //              56     Alternating Decimal Positions
     //              57     Alternating Sequence
-    //              58-80  Comments
+    //              58+    Comment
     // =========================================================================
 
     private void scanExtensionSpec(String line, int origLine) {
@@ -343,12 +365,22 @@ public class Rpg3IrBuilder {
         spec.setDecimalPositions(safeInt(sub(line, 43, 44)));
         spec.setSequenceType(sub(line, 44, 45));
 
+        // Alternate array/table fields
         String altName = sub(line, 45, 51);
         if (altName != null && !altName.isEmpty()) {
             spec.setAlternateArrayName(altName);
             spec.setAlternateEntryLength(safeInt(sub(line, 51, 54)));
             spec.setAlternateDataFormat(sub(line, 54, 55));
             spec.setAlternateDecimalPositions(safeInt(sub(line, 55, 56)));
+            spec.setAlternateSequenceType(sub(line, 56, 57));           // col 57
+        }
+
+        // Inline comment (col 58+)
+        if (line.length() > 57) {
+            String comment = line.substring(57).trim();
+            if (!comment.isEmpty()) {
+                spec.setInlineComment(comment);
+            }
         }
 
         content.getExtensionSpecs().add(spec);
@@ -405,7 +437,7 @@ public class Rpg3IrBuilder {
     // I-spec (Input Specification)
     // =========================================================================
 
-    private void scanInputSpec(String line, int origLine) {
+    private void scanInputSpec(String line, int origLine, int lineIndex) {
         InputSpec spec = new InputSpec();
         spec.setRawSourceLine(line);
         spec.setLocation(Location.ofLine(origLine));
@@ -490,6 +522,22 @@ public class Rpg3IrBuilder {
                 if (rpgName != null && !rpgName.isBlank()) {
                     spec.setFieldName(rpgName.trim());
                 }
+            }
+        }
+
+        // Control level and field indicators (cols 59-70)
+        spec.setControlLevel(sub(line, 58, 60));           // cols 59-60
+        spec.setMatchingFields(sub(line, 60, 62));         // cols 61-62
+        spec.setFieldRecordRelation(sub(line, 62, 64));    // cols 63-64
+        spec.setPlusIndicator(sub(line, 64, 66));          // cols 65-66
+        spec.setMinusIndicator(sub(line, 66, 68));         // cols 67-68
+        spec.setZeroBlankIndicator(sub(line, 68, 70));     // cols 69-70
+
+        // Inline comment: I-spec comment starts at col 75
+        if (line.length() > 74) {
+            String comment = line.substring(74).trim();
+            if (!comment.isEmpty()) {
+                spec.setInlineComment(comment);
             }
         }
 
@@ -1013,6 +1061,14 @@ public class Rpg3IrBuilder {
             ri.setEqual(toIndicatorRef(ri3));
             op.setResultingIndicators(ri);
             applyIndicatorMeanings(op.getOpcode(), ri);
+        }
+
+        // Inline comment (col 60+)
+        if (rawLine.length() > 59) {
+            String comment = rawLine.substring(59).trim();
+            if (!comment.isEmpty()) {
+                op.setInlineComment(comment);
+            }
         }
 
         // Handle special opcodes

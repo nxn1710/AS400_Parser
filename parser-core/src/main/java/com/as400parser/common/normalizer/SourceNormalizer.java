@@ -107,7 +107,8 @@ public class SourceNormalizer {
             // Step 3: Strip control characters (preserve SO/SI for DBCS)
             line = stripControlChars(line, lineNum, warnings);
 
-            // Step 4: Trim trailing whitespace + right-pad to 80 chars
+            // Step 4: Trim trailing whitespace + right-pad to at least 80 chars
+            //         Lines longer than 80 are kept in full (parser accesses col 81+ for comments)
             line = trimAndPad(line, lineNum, warnings);
 
             // Step 5: Extract sequence numbers (cols 1-5)
@@ -252,7 +253,8 @@ public class SourceNormalizer {
     }
 
     /**
-     * Step 4: Trim trailing whitespace and right-pad to exactly 80 chars.
+     * Step 4: Trim trailing whitespace and right-pad to at least 80 chars.
+     * Lines longer than 80 chars are preserved in full.
      * DBCS-aware: characters between SO/SI count as 2 column positions each.
      */
     String trimAndPad(String line, int lineNum, List<NormalizationWarning> warnings) {
@@ -262,18 +264,7 @@ public class SourceNormalizer {
         // Calculate display width (DBCS-aware)
         int displayWidth = calculateDisplayWidth(trimmed);
 
-        if (displayWidth > LINE_WIDTH) {
-            // Truncate to 80 display columns
-            warnings.add(new NormalizationWarning(
-                    lineNum, LINE_WIDTH,
-                    String.format("Line truncated from %d to %d columns", displayWidth, LINE_WIDTH),
-                    NormalizationWarning.WarningType.TRUNCATION
-            ));
-            trimmed = truncateToWidth(trimmed, LINE_WIDTH);
-            displayWidth = LINE_WIDTH;
-        }
-
-        // Right-pad to exactly 80 chars
+        // Right-pad to at least 80 chars (don't truncate longer lines)
         if (displayWidth < LINE_WIDTH) {
             StringBuilder sb = new StringBuilder(trimmed);
             for (int i = displayWidth; i < LINE_WIDTH; i++) {
@@ -357,39 +348,5 @@ public class SourceNormalizer {
         // Bopomofo (U+3100–U+312F)
         if (c >= 0x3100 && c <= 0x312F) return true;
         return false;
-    }
-
-    /**
-     * Truncate a line to the specified display width, respecting DBCS characters.
-     */
-    private String truncateToWidth(String line, int maxWidth) {
-        StringBuilder sb = new StringBuilder();
-        int width = 0;
-        boolean inDbcs = false;
-
-        for (int i = 0; i < line.length(); i++) {
-            char c = line.charAt(i);
-            if (c == SO) {
-                inDbcs = true;
-                sb.append(c);
-            } else if (c == SI) {
-                inDbcs = false;
-                sb.append(c);
-            } else {
-                int charWidth = inDbcs ? 2 : (isFullWidthChar(c) ? 2 : 1);
-                if (width + charWidth > maxWidth) {
-                    break;
-                }
-                sb.append(c);
-                width += charWidth;
-            }
-        }
-
-        // If we were in DBCS mode, close with SI
-        if (inDbcs) {
-            sb.append(SI);
-        }
-
-        return sb.toString();
     }
 }

@@ -252,25 +252,27 @@ Each entry:
 
 ##### `headerSpecs` (H-spec)
 
-Controls compilation and runtime options for the program. Every column position is captured.
+Controls compilation and runtime options for the program. Every column position is captured per the RPG III Control Specification layout.
 
 | Field | Type | Description |
 |---|---|---|
 | `location` | `location` | Source position |
 | `rawSourceLine` | `string` | Original source text |
-| `inlineComment` | `string` | Inline comment if present |
-| `formType` | `string` | `H` |
-| `programName` | `string` | Program name (columns 75–80, if present) |
-| `debugOption` | `string` | Debug/1P indicator option (column 15) |
+| `parseQuality` | `string` | Parse quality: `full` |
+| `debugOption` | `string` | Debug option (column 15) |
 | `currencySymbol` | `string` | Currency symbol (column 18) |
-| `dateFormat` | `string` | Date format (column 19) |
-| `dateEdit` | `string` | Date edit code (column 20) |
-| `decimalNotation` | `string` | Decimal notation (column 21): `I` (comma), `J` (period) |
-| `alteringSequence` | `string` | Alternate collating sequence (column 26) |
-| `fileTranslation` | `string` | File translation / sign handling (column 43) |
-| `invertedPrint` | `string` | Inverted print (column 41) |
-| `sharedIO` | `string` | Shared I/O (column 42) |
-| `options` | `array<object>` | Additional parsed options: `{ name, value, column, location }` |
+| `dateFormat` | `string` | Date format (column 19): `Y` (YMD), `M` (MDY), `D` (DMY) |
+| `dateEdit` | `string` | Date edit separator (column 20): `/`, `-`, `.`, etc. |
+| `decimalNotation` | `string` | Decimal notation (column 21): blank (period), `I` (comma), `J` (period) |
+| `alternateCollatingSequence` | `string` | Alternate collating sequence (column 26) |
+| `signHandling` | `string` | Sign handling (column 40) |
+| `formsAlignment` | `string` | Forms alignment / inverted print (column 41) |
+| `fileTranslation` | `string` | File translation (column 43) |
+| `transparencyCheck` | `string` | DBCS transparency check (column 57) |
+| `inlineComment` | `string` | Comment (column 81+, beyond 80-char line) |
+| `programIdentification` | `string` | Program identification (columns 75–80) |
+
+> **Note:** H-spec comments start at column 81 (beyond the 80-character spec data area). Columns 75–80 are the program identification field, not comment.
 
 ##### `fileSpecs` (F-spec)
 
@@ -326,28 +328,45 @@ Continuation lines (F in col 6, blank cols 7–14) are parsed and merged into th
 
 Defines arrays, tables, and compile-time data. Every column position is captured.
 
+RPG III E-spec column layout:
+- Col 11-18: From file name
+- Col 19-26: To file name
+- Col 27-32: Array or table name
+- Col 33-35: Entries per record
+- Col 36-39: Entries per array or table
+- Col 40-42: Length of entry
+- Col 43: Data format
+- Col 44: Decimal positions
+- Col 45: Sequence
+- Col 46-51: Alternate array or table name
+- Col 52-54: Alternate entry length
+- Col 55: Alternate data format
+- Col 56: Alternate decimal positions
+- Col 57: Alternate sequence
+- Col 58+: Comment
+
 Each entry:
 
 | Field | Type | Description |
 |---|---|---|
 | `location` | `location` | Source position |
 | `rawSourceLine` | `string` | Original source text |
-| `inlineComment` | `string` | Inline comment if present |
-| `formType` | `string` | `E` |
+| `parseQuality` | `string` | Parse quality: `full` |
 | `fromFileName` | `string` | Input file for table/array data (columns 11–18) |
 | `toFileName` | `string` | Output file for table/array data (columns 19–26) |
-| `tableName` | `string` | Table or array name (columns 27–32) |
+| `arrayOrTableName` | `string` | Array or table name (columns 27–32) |
 | `entriesPerRecord` | `integer` | Number of entries per input record (columns 33–35) |
-| `entriesPerTable` | `integer` | Total number of entries in table/array (columns 36–39) |
-| `length` | `integer` | Length of each entry (columns 40–42) |
+| `entriesPerArray` | `integer` | Total number of entries in array/table (columns 36–39) |
+| `entryLength` | `integer` | Length of each entry (columns 40–42) |
 | `dataFormat` | `string` | Data format (column 43): `P` (Packed), `B` (Binary), `L` (Left-justified) |
 | `decimalPositions` | `integer` | Decimal positions (column 44) |
-| `sequence` | `string` | Sequence (column 45): `A` (Ascending), `D` (Descending) |
-| `alternateName` | `string` | Alternate table/array name (columns 46–51) |
-| `alternateLength` | `integer` | Alternate entry length (columns 52–54) |
+| `sequenceType` | `string` | Sequence (column 45): `A` (Ascending), `D` (Descending) |
+| `alternateArrayName` | `string` | Alternate array/table name (columns 46–51) |
+| `alternateEntryLength` | `integer` | Alternate entry length (columns 52–54) |
 | `alternateDataFormat` | `string` | Alternate data format (column 55) |
 | `alternateDecimalPositions` | `integer` | Alternate decimal positions (column 56) |
-| `alternateSequence` | `string` | Alternate sequence (column 57) |
+| `alternateSequenceType` | `string` | Alternate sequence (column 57) |
+| `inlineComment` | `string` | Comment (column 58+) |
 
 ##### `lineCounterSpecs` (L-spec)
 
@@ -381,6 +400,7 @@ Structure: array of input record definitions, each containing:
 |---|---|---|
 | `location` | `location` | Source position |
 | `rawSourceLine` | `string` | Original source text |
+| `parseQuality` | `string` | Parse quality: `full` |
 | `specLevel` | `string` | Entry type: `recordIdentification`, `fieldDefinition`, `compilerDirective` |
 | `fileName` | `string` | Associated file name (cols 7–14), or `/COPY` target (e.g., `QCPYSRC,STUDNTCPY`) |
 | `recordName` | `string` | Record format name (cols 7–14 on record identification lines for externally-described files) |
@@ -388,12 +408,21 @@ Structure: array of input record definitions, each containing:
 | `option` | `string` | Option (column 20): `O` (Optional), `/COPY`, `/INCLUDE`, `DS`, `SDS`, or blank |
 | `recordIdIndicator` | `string` | Record-identifying indicator (columns 21–22) |
 | `fieldName` | `string` | Field name (columns 53–58) |
+| `externalFieldName` | `string` | External field name for rename (cols 21–30, externally-described) |
 | `fromPosition` | `integer` | Starting position in record (columns 44–47) |
 | `toPosition` | `integer` | Ending position in record (columns 48–51) |
 | `decimalPositions` | `integer` | Decimal positions (column 52): integer value or `null` if character type |
 | `dataFormat` | `string` | Data format (column 43): `P` (Packed), `B` (Binary), `L` (Left-adjust), `R` (Right-adjust) |
-| `fieldIndicators` | `object` | Field indicators (see below) |
+| `controlLevel` | `string` | Control level (columns 59–60): `L1`–`L9` |
+| `matchingFields` | `string` | Matching field indicator (columns 61–62): `M1`–`M9` |
+| `fieldRecordRelation` | `string` | Field record relation indicator (columns 63–64) |
+| `plusIndicator` | `string` | Plus indicator (columns 65–66) — set when field value > 0 |
+| `minusIndicator` | `string` | Minus indicator (columns 67–68) — set when field value < 0 |
+| `zeroBlankIndicator` | `string` | Zero/blank indicator (columns 69–70) — set when field is zero or blank |
 | `initializationValue` | `string` | DS initialization constant (e.g., `FILE I/O ERROR` from `I   I    'FILE I/O ERROR'`) |
+| `inlineComment` | `string` | Comment (column 75+, including cols 75–80 from line + col 81+ if present) |
+
+> **Note:** I-spec comments start at column 75 (within the 80-character line), unlike H-spec where columns 75–80 contain program identification and comments start at column 81.
 
 **Compiler directive example (`/COPY`):**
 ```json
@@ -432,7 +461,6 @@ Structure: array of input record definitions, each containing:
 |---|---|---|
 | `location` | `location` | Source position |
 | `rawSourceLine` | `string` | Original source text |
-| `inlineComment` | `string` | Inline comment if present |
 | `dataAttributes` | `string` | Data attributes (column 43, externally-described only): `P` (Packed), `B` (Binary), `L` (Left-adjust), `R` (Right-adjust) |
 | `dateTimeFormat` | `string` | Date/time format (column 44, externally-described only) |
 | `dateSeparator` | `string` | Date separator (column 45, externally-described only) |
@@ -444,15 +472,10 @@ Structure: array of input record definitions, each containing:
 | `controlLevel` | `string` | Control level (columns 59–60): `L1`–`L9` |
 | `matchingFields` | `string` | Matching field indicator (columns 61–62): `M1`–`M9` |
 | `fieldRecordRelation` | `string` | Field record relation indicator (columns 63–64) |
-| `fieldIndicators` | `object` | Resulting indicators (see below) |
-
-**Field indicators:**
-
-| Field | Type | Description |
-|---|---|---|
-| `plus` | `string` | Plus indicator (columns 65–66) — set when field value > 0 |
-| `minus` | `string` | Minus indicator (columns 67–68) — set when field value < 0 |
-| `zeroOrBlank` | `string` | Zero/blank indicator (columns 69–70) — set when field is zero or blank |
+| `plusIndicator` | `string` | Plus indicator (columns 65–66) — set when field value > 0 |
+| `minusIndicator` | `string` | Minus indicator (columns 67–68) — set when field value < 0 |
+| `zeroBlankIndicator` | `string` | Zero/blank indicator (columns 69–70) — set when field is zero or blank |
+| `inlineComment` | `string` | Comment (column 75+) |
 
 **Data structure definition:**
 
@@ -489,22 +512,28 @@ Structure: array of input record definitions, each containing:
 
 Contains the program logic — the most critical section for code generation. Represented as a **full AST** with expression trees for factors and conditions.
 
-> **Scope:** `calculationSpecs` contains **ALL** calculation operations, including `subroutineBlock` nodes for BEGSR/ENDSR blocks. The top-level `subroutines` array is a **convenience index** derived from the same data for easier navigation.
-
-Structure: ordered array of calculation operation nodes. Every node has a `nodeType` field:
-- `"operation"` — a flat operation (CHAIN, READ, MOVEL, ADD, etc.)
-- Control flow types — `"doWhileBlock"`, `"conditionalBlock"`, `"subroutineBlock"`, etc.
+RPG III C-spec column layout:
+- Col 7-8: Control level
+- Col 9-17: Conditioning indicators (3 slots of 3 cols each)
+- Col 18-27: Factor 1
+- Col 28-32: Operation code
+- Col 33-42: Factor 2
+- Col 43-48: Result field
+- Col 49-51: Field length
+- Col 52: Decimal positions
+- Col 53: Operation extender (H = half-adjust)
+- Col 54-59: Resulting indicators (3 slots of 2 cols each)
+- Col 60+: Comment
 
 **Common fields on every C-spec node (both `operation` and control flow):**
 
 | Field | Type | Description |
 |---|---|---|
 | `nodeType` | `string` | Node type: `operation`, `doWhileBlock`, `doUntilBlock`, `doBlock`, `conditionalBlock`, `caseBlock`, `subroutineBlock`, `labelNode`, `gotoNode`, `callSubroutine`, `unparsedSpec` |
-| `parseQuality` | `string` | Parse quality: `"full"` (normal AST), `"columnOnly"` (raw column values, no AST), `"raw"` (raw text + column map). Default: `"full"`. See Error Handling in implementation doc |
+| `parseQuality` | `string` | Parse quality: `"full"` (normal AST), `"columnOnly"` (raw column values, no AST), `"raw"` (raw text + column map). Default: `"full"` |
 | `location` | `location` | Source position |
 | `rawSourceLine` | `string` | Original source text |
-| `inlineComment` | `string` | Inline comment (columns 60–74) |
-| `formType` | `string` | `C` |
+| `inlineComment` | `string` | Inline comment (column 60+) |
 | `controlLevel` | `string` | Control level indicator (columns 7–8): `L0`–`L9`, `LR`, `SR`, `AN`, `OR` |
 | `conditioningIndicators` | `object` | Conditioning indicators (see below) |
 | `resultingIndicators` | `object` | Resulting indicators (see below) |
