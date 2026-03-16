@@ -458,14 +458,14 @@ public class Rpg3IrBuilder {
                 return;
             }
 
-            if (trimmed.equalsIgnoreCase("DS") || trimmed.equalsIgnoreCase("SDS")) {
+            if (isDsKeyword(trimmed)) {
                 // Start a new DataStructure block
                 DataStructure ds = new DataStructure();
                 ds.setName(trimmed.toUpperCase());
                 ds.setRawSourceLine(line);
                 ds.setLocation(loc);
                 ds.setSourceSequence(seqNum);
-                ds.setType(trimmed.equalsIgnoreCase("SDS") ? "programStatusDS" : "dataStructure");
+                ds.setType(mapDsType(trimmed));
                 // Inline comment
                 if (line.length() > 74) {
                     String c = line.substring(74).trim();
@@ -623,6 +623,21 @@ public class Rpg3IrBuilder {
             if (!c.isEmpty()) spec.setInlineComment(c);
         }
         return spec;
+    }
+
+    /** Check if the identifier is a data structure keyword (DS, SDS, UDS). */
+    private boolean isDsKeyword(String trimmed) {
+        String upper = trimmed.toUpperCase();
+        return upper.equals("DS") || upper.equals("SDS") || upper.equals("UDS");
+    }
+
+    /** Map DS keyword to semantic type string. */
+    private String mapDsType(String keyword) {
+        return switch (keyword.toUpperCase()) {
+            case "SDS" -> "programStatusDS";
+            case "UDS" -> "userDataStructure";
+            default -> "dataStructure";
+        };
     }
 
     /** Detect I-spec DS initialization pattern: starts with I and contains a quoted constant. */
