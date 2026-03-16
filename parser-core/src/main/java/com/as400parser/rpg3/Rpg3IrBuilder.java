@@ -1040,8 +1040,21 @@ public class Rpg3IrBuilder {
         int nesting = 1;
         for (int i = start; i < end; i++) {
             String op = extractOpcode(lines.get(i).rawLine).toUpperCase();
-            if (isBlockStart(op)) nesting++;
-            else if (isBlockEnd(op)) {
+            if (isBlockStart(op)) {
+                nesting++;
+                // CASxx forms a group: skip remaining CASxx/CAS lines as they
+                // belong to the same block (only one ENDCS closes the group)
+                if (op.startsWith("CAS")) {
+                    while (i + 1 < end) {
+                        String next = extractOpcode(lines.get(i + 1).rawLine).toUpperCase();
+                        if (next.startsWith("CAS")) {
+                            i++;
+                        } else {
+                            break;
+                        }
+                    }
+                }
+            } else if (isBlockEnd(op)) {
                 nesting--;
                 if (nesting == 0) return i;
             }
