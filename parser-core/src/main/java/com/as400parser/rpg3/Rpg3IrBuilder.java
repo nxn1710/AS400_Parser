@@ -14,10 +14,8 @@ import java.util.function.Supplier;
  * Builds the RPG3 IR model from normalized source lines using
  * <b>raw-line column extraction</b> exclusively.
  * <p>
- * The ANTLR parse tree is NOT used because the grammar's catch-all rules
- * consume entire line content before positional tokens can fire.
- * Instead, this builder scans lines directly, identifying spec types from
- * column 6 and extracting fields by column position per the RPG III Reference.
+ * Scans lines directly, identifying spec types from column 6 and
+ * extracting fields by column position per the RPG III Reference.
  * <p>
  * C-spec control flow (IF/DO/DOW/DOU/CAS/BEGSR blocks) is detected by
  * opcode matching and a simple block-nesting state machine.
@@ -42,7 +40,7 @@ public class Rpg3IrBuilder {
     }
 
     // =========================================================================
-    // Public API — replaces ANTLR visitor pattern
+    // Public API
     // =========================================================================
 
     /**
@@ -52,20 +50,6 @@ public class Rpg3IrBuilder {
         scanAllLines();
         buildSourceLines();
         populateSubroutineCalledFrom();
-        return document;
-    }
-
-    /**
-     * Legacy compatibility — still called by Rpg3ParserFacade via visitor.visit(tree).
-     * Delegates to build() so the parse tree is effectively ignored.
-     */
-    public Void visit(Object tree) {
-        build();
-        return null;
-    }
-
-    /** Get the built IR document. Legacy accessor. */
-    public IrDocument getResult() {
         return document;
     }
 

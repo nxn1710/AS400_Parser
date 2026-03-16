@@ -18,12 +18,10 @@ import java.util.*;
 /**
  * Public API entry point for RPG3 parsing.
  * <p>
- * Orchestrates the 8-step pipeline:
+ * Orchestrates the pipeline:
  * <ol>
  *   <li>Normalize source (tabs, padding, sequence numbers)</li>
- *   <li>Lex (ANTLR Rpg3Lexer)</li>
- *   <li>Parse (ANTLR Rpg3Parser, SLL → LL fallback)</li>
- *   <li>Build IR (Rpg3IrBuilder visitor)</li>
+ *   <li>Build IR via raw-line column extraction (Rpg3IrBuilder)</li>
  *   <li>Resolve /COPY members (if enabled)</li>
  *   <li>Build symbol table</li>
  *   <li>Populate metadata</li>
@@ -134,7 +132,7 @@ public class Rpg3ParserFacade implements As400Parser {
             new Rpg3SymbolTableBuilder(rpg3Content).build();
         }
 
-        // Populate metadata (no grammar errors since we don't parse with ANTLR)
+        // Populate metadata
         Rpg3ErrorListener errorListener = new Rpg3ErrorListener(normalized.getOriginalLineNumbers());
         populateMetadata(document, normalized, errorListener);
 
