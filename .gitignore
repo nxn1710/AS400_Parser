@@ -16,6 +16,7 @@ target/
 # Gradle
 .gradle/
 gradle/wrapper/gradle-wrapper.jar
+gradle.properties
 
 # OS
 .DS_Store
