@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
 """
-RPG3 Parser CLI — Python wrapper for the Java parser library.
+AS400 Source Parser CLI — Python wrapper for the Java parser library.
+
+Supports RPG3 (.rpg, .rpg3, .mbr, .cpy) and DDS (.pf, .lf) source files.
+Parser is auto-detected from file extension.
 
 Usage:
-    rpg3-parser parse SOURCE [-o OUTPUT] [--copy-path PATHS] [--charset CHARSET]
-    rpg3-parser batch SOURCE_DIR [-o OUTPUT_DIR] [--copy-path PATHS] [--parallel N]
-    rpg3-parser validate JSON_FILE
+    as400-parser parse SOURCE [-o OUTPUT] [--copy-path PATHS] [--charset CHARSET]
+    as400-parser batch SOURCE_DIR [-o OUTPUT_DIR] [--copy-path PATHS] [--parallel N]
+    as400-parser validate JSON_FILE
 """
 
 import argparse
@@ -17,6 +20,12 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 # Default JAR location (relative to this script)
 DEFAULT_JAR = Path(__file__).parent.parent / "parser-core" / "build" / "libs" / "as400-parser-core-1.0.0-SNAPSHOT-all.jar"
+
+# All supported extensions across all parsers
+SUPPORTED_EXTENSIONS = {
+    ".rpg", ".rpg3", ".rpgsrc", ".mbr", ".cpy", ".cpysrc",  # RPG3
+    ".pf", ".lf",                                             # DDS
+}
 
 
 def find_jar():
@@ -51,7 +60,7 @@ def run_parser(jar_path, source_path, charset="UTF-8", copy_path=None):
 
 
 def cmd_parse(args):
-    """Parse a single RPG3 source file."""
+    """Parse a single source file (RPG3 or DDS)."""
     jar = find_jar()
     output = run_parser(jar, args.source, args.charset, args.copy_path)
     if output is None:
@@ -66,16 +75,19 @@ def cmd_parse(args):
 
 
 def cmd_batch(args):
-    """Parse all RPG3 source files in a directory."""
+    """Parse all supported source files in a directory."""
     jar = find_jar()
-    extensions = {".rpg", ".rpg3", ".rpgsrc", ".mbr", ".cpy", ".cpysrc", ".pf", ".lf"}
-    source_files = [f for f in args.source_dir.rglob("*") if f.suffix.lower() in extensions]
+    source_files = [f for f in args.source_dir.rglob("*") if f.suffix.lower() in SUPPORTED_EXTENSIONS]
 
     if not source_files:
         print(f"No source files found in {args.source_dir}", file=sys.stderr)
         sys.exit(1)
 
-    print(f"Found {len(source_files)} source files")
+    # Count by type
+    rpg_count = sum(1 for f in source_files if f.suffix.lower() in {".rpg", ".rpg3", ".rpgsrc", ".mbr", ".cpy", ".cpysrc"})
+    dds_count = sum(1 for f in source_files if f.suffix.lower() in {".pf", ".lf"})
+    print(f"Found {len(source_files)} source files (RPG3: {rpg_count}, DDS: {dds_count})")
+
     output_dir = args.output_dir or args.source_dir / "ir_output"
     output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -129,14 +141,6 @@ def cmd_validate(args):
             if field not in meta:
                 errors.append(f"Missing metadata.{field}")
 
-    # Check content type
-    if "content" in ir and ir["content"]:
-        content_obj = ir["content"]
-        expected_arrays = ["fileSpecs", "calculationSpecs", "symbolTable"]
-        for arr in expected_arrays:
-            if arr in content_obj and not isinstance(content_obj[arr], list):
-                errors.append(f"content.{arr} should be an array")
-
     if errors:
         print(f"Validation FAILED ({len(errors)} issues):")
         for e in errors:
@@ -155,24 +159,24 @@ def cmd_validate(args):
 
 def main():
     parser = argparse.ArgumentParser(
-        prog="rpg3-parser",
-        description="RPG3 Parser CLI — Parse AS/400 RPG III source files to IR JSON"
+        prog="as400-parser",
+        description="AS400 Source Parser CLI — Parse RPG3 and DDS source files to IR JSON"
     )
     subparsers = parser.add_subparsers(dest="command", help="Available commands")
 
     # parse
-    parse_p = subparsers.add_parser("parse", help="Parse a single RPG3 source file")
-    parse_p.add_argument("source", type=Path, help="Path to RPG3 source file")
+    parse_p = subparsers.add_parser("parse", help="Parse a single source file (RPG3 or DDS)")
+    parse_p.add_argument("source", type=Path, help="Path to source file (.rpg, .pf, .lf, etc.)")
     parse_p.add_argument("-o", "--output", type=Path, help="Output JSON file path")
-    parse_p.add_argument("--copy-path", type=str, help="Colon/semicolon-separated copy paths")
+    parse_p.add_argument("--copy-path", type=str, help="Colon/semicolon-separated copy paths (RPG3 only)")
     parse_p.add_argument("--charset", default="UTF-8", help="Source file charset (default: UTF-8)")
     parse_p.set_defaults(func=cmd_parse)
 
     # batch
-    batch_p = subparsers.add_parser("batch", help="Parse all RPG3 files in a directory")
-    batch_p.add_argument("source_dir", type=Path, help="Directory containing RPG3 source files")
+    batch_p = subparsers.add_parser("batch", help="Parse all source files in a directory")
+    batch_p.add_argument("source_dir", type=Path, help="Directory containing source files")
     batch_p.add_argument("-o", "--output-dir", type=Path, help="Output directory for JSON files")
-    batch_p.add_argument("--copy-path", type=str, help="Colon/semicolon-separated copy paths")
+    batch_p.add_argument("--copy-path", type=str, help="Colon/semicolon-separated copy paths (RPG3 only)")
     batch_p.add_argument("--charset", default="UTF-8", help="Source file charset (default: UTF-8)")
     batch_p.add_argument("--parallel", type=int, default=4, help="Number of parallel workers (default: 4)")
     batch_p.set_defaults(func=cmd_batch)

@@ -30,7 +30,7 @@ test {
 shadowJar {
     archiveBaseName.set("as400-parser-core")
     manifest {
-        attributes 'Main-Class': 'com.as400parser.rpg3.Rpg3ParserFacade'
+        attributes 'Main-Class': 'com.as400parser.common.cli.As400ParserCli'
     }
 }
 
