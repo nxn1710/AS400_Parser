@@ -36,7 +36,9 @@ public class DdsParserFacade implements As400Parser {
     public IrDocument parse(Path sourceFile, ParseOptions options) {
         try {
             SourceNormalizer normalizer = new SourceNormalizer();
-            NormalizedSource normalized = normalizer.normalize(sourceFile, options.getCharset());
+            NormalizedSource normalized = (options.getCharset() != null)
+                ? normalizer.normalize(sourceFile, options.getCharset())
+                : normalizer.normalize(sourceFile); // auto-detect encoding
             String sourceType = detectSourceType(sourceFile);
             IrDocument doc = runPipeline(normalized, sourceType);
             populateMetadataFromFile(doc, sourceFile, sourceType);

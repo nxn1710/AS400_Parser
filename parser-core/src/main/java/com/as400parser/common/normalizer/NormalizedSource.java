@@ -1,5 +1,6 @@
 package com.as400parser.common.normalizer;
 
+import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.List;
 
@@ -19,6 +20,7 @@ public class NormalizedSource {
     private final int[] originalLineNumbers;
     private final String[] sequenceNumbers;
     private final List<NormalizationWarning> warnings;
+    private Charset detectedCharset;
 
     public NormalizedSource(String[] lines, int[] originalLineNumbers,
                            String[] sequenceNumbers, List<NormalizationWarning> warnings) {
@@ -52,4 +54,14 @@ public class NormalizedSource {
     public int getLineCount() {
         return lines.length;
     }
+
+    /** The charset used to decode the source file (null if parsed from string). */
+    public Charset getDetectedCharset() {
+        return detectedCharset;
+    }
+
+    public void setDetectedCharset(Charset detectedCharset) {
+        this.detectedCharset = detectedCharset;
+    }
 }
+

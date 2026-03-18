@@ -41,7 +41,7 @@ public class ParseOptions {
         private List<String> copyPaths = List.of();
         private String sourceRoot = ".";
         private boolean resolveCopies = true;
-        private Charset charset = StandardCharsets.UTF_8;
+        private Charset charset = null; // null = auto-detect encoding
         private int[] tabStops = new int[0];
 
         public Builder copyPaths(List<String> copyPaths) { this.copyPaths = copyPaths; return this; }

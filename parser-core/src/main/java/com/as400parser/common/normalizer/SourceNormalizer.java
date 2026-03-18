@@ -2,7 +2,6 @@ package com.as400parser.common.normalizer;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -67,18 +66,22 @@ public class SourceNormalizer {
      */
     public NormalizedSource normalize(Path sourcePath, Charset charset) throws IOException {
         String content = Files.readString(sourcePath, charset);
-        return normalize(content);
+        NormalizedSource result = normalize(content);
+        result.setDetectedCharset(charset);
+        return result;
     }
 
     /**
-     * Normalize source from a file path using UTF-8 encoding.
+     * Normalize source from a file path with automatic encoding detection.
+     * Detects UTF-8, Shift-JIS, EUC-JP via BOM and byte-pattern heuristics.
      *
      * @param sourcePath path to the source file
      * @return normalized source
      * @throws IOException if the file cannot be read
      */
     public NormalizedSource normalize(Path sourcePath) throws IOException {
-        return normalize(sourcePath, StandardCharsets.UTF_8);
+        Charset detected = EncodingDetector.detect(sourcePath);
+        return normalize(sourcePath, detected);
     }
 
     /**

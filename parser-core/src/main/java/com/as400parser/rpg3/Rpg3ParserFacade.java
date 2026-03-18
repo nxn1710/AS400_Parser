@@ -41,7 +41,9 @@ public class Rpg3ParserFacade implements As400Parser {
             options = autoDetectCopyPaths(sourceFile, options);
 
             SourceNormalizer normalizer = createNormalizer(options);
-            NormalizedSource normalized = normalizer.normalize(sourceFile, options.getCharset());
+            NormalizedSource normalized = (options.getCharset() != null)
+                ? normalizer.normalize(sourceFile, options.getCharset())
+                : normalizer.normalize(sourceFile); // auto-detect encoding
             IrDocument doc = runPipeline(normalized, options);
             populateMetadataFromFile(doc, sourceFile);
             return doc;
