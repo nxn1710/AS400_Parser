@@ -12,6 +12,11 @@ java {
     targetCompatibility = JavaVersion.VERSION_17
 }
 
+// Force UTF-8 for all Java compilation (required on Japanese Windows / windows-31j)
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
 repositories {
     mavenCentral()
 }
