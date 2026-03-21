@@ -2,6 +2,7 @@ package com.as400parser.rpg3.model;
 
 import com.as400parser.common.model.Location;
 import com.as400parser.common.model.SourceLine;
+import com.as400parser.rpg3.model.CalcSpec.SubroutineBlock;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,7 @@ public class Rpg3Content {
     private List<OutputSpec> outputSpecs = new ArrayList<>();
     private List<DataStructure> dataStructures = new ArrayList<>();
     private List<SymbolEntry> symbolTable = new ArrayList<>();
-    private List<Subroutine> subroutines = new ArrayList<>();
+    private List<SubroutineBlock> subroutines = new ArrayList<>();
     private CompileTimeData compileTimeData;
     private List<Comment> comments = new ArrayList<>();
     private List<SourceLine> sourceLines = new ArrayList<>();
@@ -44,8 +45,8 @@ public class Rpg3Content {
     public void setDataStructures(List<DataStructure> dataStructures) { this.dataStructures = dataStructures; }
     public List<SymbolEntry> getSymbolTable() { return symbolTable; }
     public void setSymbolTable(List<SymbolEntry> symbolTable) { this.symbolTable = symbolTable; }
-    public List<Subroutine> getSubroutines() { return subroutines; }
-    public void setSubroutines(List<Subroutine> subroutines) { this.subroutines = subroutines; }
+    public List<SubroutineBlock> getSubroutines() { return subroutines; }
+    public void setSubroutines(List<SubroutineBlock> subroutines) { this.subroutines = subroutines; }
     public CompileTimeData getCompileTimeData() { return compileTimeData; }
     public void setCompileTimeData(CompileTimeData compileTimeData) { this.compileTimeData = compileTimeData; }
     public List<Comment> getComments() { return comments; }
@@ -691,19 +692,7 @@ public class Rpg3Content {
         public void setDataStructureName(String v) { this.dataStructureName = v; }
     }
 
-    /** Subroutine index entry (operations live only in calculationSpecs SubroutineBlock) */
-    public static class Subroutine {
-        private String name;
-        private int definedAtLine;
-        private List<Integer> calledFrom = new ArrayList<>();
 
-        public String getName() { return name; }
-        public void setName(String v) { this.name = v; }
-        public int getDefinedAtLine() { return definedAtLine; }
-        public void setDefinedAtLine(int v) { this.definedAtLine = v; }
-        public List<Integer> getCalledFrom() { return calledFrom; }
-        public void setCalledFrom(List<Integer> v) { this.calledFrom = v; }
-    }
 
     /** Compile-time data (** blocks) */
     public static class CompileTimeData {

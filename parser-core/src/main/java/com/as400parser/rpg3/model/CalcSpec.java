@@ -210,6 +210,7 @@ public class CalcSpec {
         private String subroutineName;
         private List<Object> operations = new ArrayList<>();
         private Operation endStatement;
+        private List<Integer> calledFrom = new ArrayList<>();
 
         public SubroutineBlock() { super("subroutineBlock"); }
 
@@ -219,6 +220,8 @@ public class CalcSpec {
         public void setOperations(List<Object> v) { this.operations = v; }
         public Operation getEndStatement() { return endStatement; }
         public void setEndStatement(Operation v) { this.endStatement = v; }
+        public List<Integer> getCalledFrom() { return calledFrom; }
+        public void setCalledFrom(List<Integer> v) { this.calledFrom = v; }
     }
 
     public static class LabelNode extends CalcNode {

@@ -1095,12 +1095,8 @@ public class Rpg3IrBuilder {
             block.setEndStatement(buildOperation(lines.get(endIdx)));
         }
 
-        target.add(block);
-
-        Subroutine sub = new Subroutine();
-        sub.setName(block.getSubroutineName());
-        sub.setDefinedAtLine(begsrLine.origLine);
-        content.getSubroutines().add(sub);
+        // Route to subroutines[] instead of calculationSpecs
+        content.getSubroutines().add(block);
 
         return endIdx + 1;
     }
@@ -1532,8 +1528,8 @@ public class Rpg3IrBuilder {
     }
 
     private void populateSubroutineCalledFrom() {
-        for (Subroutine sub : content.getSubroutines()) {
-            String name = sub.getName();
+        for (SubroutineBlock sub : content.getSubroutines()) {
+            String name = sub.getSubroutineName();
             if (name != null) {
                 List<Location> calls = exsrCalls.get(name.trim().toUpperCase());
                 if (calls != null) {

@@ -198,6 +198,10 @@ public class Rpg3SymbolTableBuilder {
         for (Object calcObj : content.getCalculationSpecs()) {
             scanCalcNode(calcObj);
         }
+        // Also scan subroutines (they are now separate from calculationSpecs)
+        for (SubroutineBlock sr : content.getSubroutines()) {
+            for (Object child : sr.getOperations()) scanCalcNode(child);
+        }
     }
 
     private void scanCalcNode(Object node) {
@@ -260,6 +264,10 @@ public class Rpg3SymbolTableBuilder {
     private void backPropagateTypes() {
         for (Object calcObj : content.getCalculationSpecs()) {
             backPropagateInNode(calcObj);
+        }
+        // Also back-propagate into subroutines
+        for (SubroutineBlock sr : content.getSubroutines()) {
+            for (Object child : sr.getOperations()) backPropagateInNode(child);
         }
     }
 

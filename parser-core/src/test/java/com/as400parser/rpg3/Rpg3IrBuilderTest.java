@@ -341,27 +341,13 @@ class Rpg3IrBuilderTest {
                 "     C                     ENDSR                                                ");
             IrDocument doc = parse(source);
             Rpg3Content c = content(doc);
-            // SubroutineBlock in calculationSpecs
-            Object block = c.getCalculationSpecs().get(0);
-            assertThat(block).isInstanceOf(SubroutineBlock.class);
-            SubroutineBlock sb = (SubroutineBlock) block;
+            // SubroutineBlock now in subroutines[], not calculationSpecs
+            assertThat(c.getCalculationSpecs()).isEmpty();
+            assertThat(c.getSubroutines()).hasSize(1);
+            SubroutineBlock sb = c.getSubroutines().get(0);
             assertThat(sb.getSubroutineName()).isEqualTo("SR01");
             assertThat(sb.getOperations()).isNotEmpty();
-        }
-
-        @Test
-        void subroutineConvenienceIndex() {
-            String source = String.join("\n",
-                "     C           SR01      BEGSR                                                ",
-                "     C                     SETON                     LR                         ",
-                "     C                     ENDSR                                                ");
-            IrDocument doc = parse(source);
-            Rpg3Content c = content(doc);
-            // Subroutine convenience entry
-            assertThat(c.getSubroutines()).hasSize(1);
-            Subroutine sub = c.getSubroutines().get(0);
-            assertThat(sub.getName()).isEqualTo("SR01");
-            assertThat(sub.getDefinedAtLine()).isGreaterThan(0);
+            assertThat(sb.getLocation()).isNotNull();
         }
 
         @Test
@@ -374,8 +360,8 @@ class Rpg3IrBuilderTest {
             IrDocument doc = parse(source);
             Rpg3Content c = content(doc);
             assertThat(c.getSubroutines()).isNotEmpty();
-            Subroutine sub = c.getSubroutines().get(0);
-            assertThat(sub.getCalledFrom()).isNotEmpty();
+            SubroutineBlock sb = c.getSubroutines().get(0);
+            assertThat(sb.getCalledFrom()).isNotEmpty();
         }
 
         @Test
@@ -487,10 +473,10 @@ class Rpg3IrBuilderTest {
                 "     C                     ENDSR                                                ");
             IrDocument doc = parse(source);
             Rpg3Content c = content(doc);
-            // Top level: SubroutineBlock
-            Object top = c.getCalculationSpecs().get(0);
-            assertThat(top).isInstanceOf(SubroutineBlock.class);
-            SubroutineBlock sr = (SubroutineBlock) top;
+            // Top level: SubroutineBlock is now in subroutines[], not calculationSpecs
+            assertThat(c.getCalculationSpecs()).isEmpty();
+            assertThat(c.getSubroutines()).hasSize(1);
+            SubroutineBlock sr = c.getSubroutines().get(0);
 
             // Level 2: DoWhileBlock inside SR
             assertThat(sr.getOperations()).isNotEmpty();

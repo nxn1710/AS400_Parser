@@ -6,6 +6,7 @@ import com.as400parser.common.parser.ParseOptions;
 import com.as400parser.common.serializer.IrJsonSerializer;
 import com.as400parser.rpg3.model.Rpg3Content;
 import com.as400parser.rpg3.model.Rpg3Content.*;
+import com.as400parser.rpg3.model.CalcSpec.SubroutineBlock;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -138,7 +139,7 @@ class Rpg3IntegrationTest {
         void subroutinesParsed() {
             assertThat(content.getSubroutines()).hasSizeGreaterThanOrEqualTo(2);
             var names = content.getSubroutines().stream()
-                    .map(Subroutine::getName)
+                    .map(SubroutineBlock::getSubroutineName)
                     .toList();
             assertThat(names).contains("DSPREC", "ERRMSG");
         }
@@ -223,7 +224,7 @@ class Rpg3IntegrationTest {
             IrDocument doc = FACADE.parse(source, ParseOptions.defaults());
             Rpg3Content content = (Rpg3Content) doc.getContent();
             assertThat(content.getSubroutines()).hasSize(1);
-            assertThat(content.getSubroutines().get(0).getName()).isEqualTo("MYSUB");
+            assertThat(content.getSubroutines().get(0).getSubroutineName()).isEqualTo("MYSUB");
         }
 
         @Test
@@ -432,9 +433,9 @@ class Rpg3IntegrationTest {
             IrDocument doc = FACADE.parse(source, ParseOptions.defaults());
             Rpg3Content c = (Rpg3Content) doc.getContent();
             assertThat(c.getSubroutines()).isNotEmpty();
-            Subroutine sub = c.getSubroutines().get(0);
-            assertThat(sub.getName()).isEqualTo("SR01");
-            assertThat(sub.getDefinedAtLine()).as("subroutine definedAtLine").isGreaterThan(0);
+            SubroutineBlock sb = c.getSubroutines().get(0);
+            assertThat(sb.getSubroutineName()).isEqualTo("SR01");
+            assertThat(sb.getLocation().getStartLine()).as("subroutine startLine").isGreaterThan(0);
         }
 
         @Test

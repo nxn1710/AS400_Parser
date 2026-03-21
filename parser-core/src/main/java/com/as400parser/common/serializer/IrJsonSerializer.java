@@ -159,6 +159,7 @@ public class IrJsonSerializer {
                 addResultingIndicators(obj, null, ctx);
                 obj.add("operations", serializeCalcList(sr.getOperations(), ctx));
                 addIfNotNull(obj, "endStatement", sr.getEndStatement(), CalcNode.class, ctx);
+                obj.add("calledFrom", ctx.serialize(sr.getCalledFrom()));
             } else if (src instanceof LabelNode lbl) {
                 obj.addProperty("name", lbl.getLabelName());
                 addResultingIndicators(obj, null, ctx);

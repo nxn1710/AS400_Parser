@@ -4,6 +4,7 @@ import com.as400parser.common.model.IrDocument;
 import com.as400parser.common.parser.ParseOptions;
 import com.as400parser.common.serializer.IrJsonSerializer;
 import com.as400parser.rpg3.model.Rpg3Content;
+import com.as400parser.rpg3.model.CalcSpec.SubroutineBlock;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -74,7 +75,7 @@ class StudentMgmtParserTest {
         // 5 subroutines: OPT01, OPT02, OPT03, OPT09, OPTER
         assertThat(content.getSubroutines()).hasSizeGreaterThanOrEqualTo(5);
         var srNames = content.getSubroutines().stream()
-            .map(Rpg3Content.Subroutine::getName).toList();
+            .map(SubroutineBlock::getSubroutineName).toList();
         assertThat(srNames).contains("OPT01", "OPT02", "OPT03", "OPT09", "OPTER");
 
         // CALL programs
@@ -116,7 +117,7 @@ class StudentMgmtParserTest {
                 out.println("Subroutines: " + content.getSubroutines().size());
                 if (!content.getSubroutines().isEmpty()) {
                     out.println("  Names: " + content.getSubroutines().stream()
-                        .map(Rpg3Content.Subroutine::getName).toList());
+                        .map(SubroutineBlock::getSubroutineName).toList());
                 }
                 out.println("Symbol table entries: " + content.getSymbolTable().size());
                 out.println("Called programs: " + doc.getDependencies().getCalledPrograms());
