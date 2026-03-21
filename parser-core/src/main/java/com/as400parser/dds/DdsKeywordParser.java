@@ -209,6 +209,12 @@ public class DdsKeywordParser {
             case "RANGE":
                 parseRangeParameters(kw, content);
                 return;
+            case "REFFLD":
+                parseReffldParameters(kw, content);
+                return;
+            case "REF":
+                parseRefParameters(kw, content);
+                return;
             default:
                 // Generic parameter parsing
                 break;
@@ -250,6 +256,59 @@ public class DdsKeywordParser {
             kw.setRangeTo(tokens.get(1));
         } else if (tokens.size() == 1) {
             kw.setRangeFrom(tokens.get(0));
+        }
+    }
+
+    /**
+     * Parse REFFLD keyword parameters:
+     *   REFFLD(field)             → referenceField only
+     *   REFFLD(field file)        → referenceField + referenceFile
+     *   REFFLD(field recfmt file) → referenceField + referenceRecordFormat + referenceFile
+     *
+     * Special: REFFLD(field *SRC) → referenceField + referenceFile="*SRC"
+     */
+    private void parseReffldParameters(DdsKeyword kw, String content) {
+        List<String> tokens = tokenizeParameters(content);
+        if (tokens.isEmpty()) return;
+
+        // Arg 1 is always the field name
+        kw.setReferenceField(tokens.get(0));
+
+        switch (tokens.size()) {
+            case 1:
+                // REFFLD(field)
+                kw.setValue(tokens.get(0));
+                break;
+            case 2:
+                // REFFLD(field file) — 2nd arg is the file
+                kw.setReferenceFile(tokens.get(1));
+                kw.setValue(null);
+                kw.setValues(tokens);
+                break;
+            default:
+                // REFFLD(field recfmt file) — 3-arg form
+                kw.setReferenceRecordFormat(tokens.get(1));
+                kw.setReferenceFile(tokens.get(2));
+                kw.setValue(null);
+                kw.setValues(tokens);
+                break;
+        }
+    }
+
+    /**
+     * Parse REF keyword parameters: REF(filename) or REF(filename recordformat)
+     * Supports qualified names: REF(LIB/FILENAME) or REF(*LIBL/FILENAME RECFMT)
+     * e.g., REF(FLDREFPF) → value="FLDREFPF"
+     *       REF(FLDREFPF REFREC) → value="FLDREFPF", referenceRecordFormat="REFREC"
+     *       REF(MYLIB/FLDREFPF) → value="MYLIB/FLDREFPF"
+     */
+    private void parseRefParameters(DdsKeyword kw, String content) {
+        List<String> tokens = tokenizeParameters(content);
+        if (tokens.size() >= 1) {
+            kw.setValue(tokens.get(0));
+        }
+        if (tokens.size() >= 2) {
+            kw.setReferenceRecordFormat(tokens.get(1));
         }
     }
 

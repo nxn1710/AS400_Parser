@@ -128,9 +128,96 @@ class DdsKeywordParserTest {
     void parseSingleValue_REFFLD() {
         List<DdsKeyword> kws = parser.parseKeywords("REFFLD(STUID STUDNTPF)");
         assertThat(kws).hasSize(1);
-        assertThat(kws.get(0).getName()).isEqualTo("REFFLD");
-        // Multi-token → should be in values
-        assertThat(kws.get(0).getValues()).containsExactly("STUID", "STUDNTPF");
+        DdsKeyword kw = kws.get(0);
+        assertThat(kw.getName()).isEqualTo("REFFLD");
+        // Structured fields
+        assertThat(kw.getReferenceField()).isEqualTo("STUID");
+        assertThat(kw.getReferenceFile()).isEqualTo("STUDNTPF");
+        // Backward compatibility: multi-token → values
+        assertThat(kw.getValues()).containsExactly("STUID", "STUDNTPF");
+        assertThat(kw.getValue()).isNull();
+    }
+
+    @Test
+    void parseReffld_singleArg() {
+        List<DdsKeyword> kws = parser.parseKeywords("REFFLD(RSTUID)");
+        assertThat(kws).hasSize(1);
+        DdsKeyword kw = kws.get(0);
+        assertThat(kw.getName()).isEqualTo("REFFLD");
+        assertThat(kw.getReferenceField()).isEqualTo("RSTUID");
+        assertThat(kw.getReferenceFile()).isNull();
+        assertThat(kw.getValue()).isEqualTo("RSTUID");
+    }
+
+    @Test
+    void parseRef_singleArg() {
+        List<DdsKeyword> kws = parser.parseKeywords("REF(FLDREFPF)");
+        assertThat(kws).hasSize(1);
+        DdsKeyword kw = kws.get(0);
+        assertThat(kw.getName()).isEqualTo("REF");
+        assertThat(kw.getValue()).isEqualTo("FLDREFPF");
+        assertThat(kw.getReferenceRecordFormat()).isNull();
+    }
+
+    @Test
+    void parseRef_twoArg() {
+        List<DdsKeyword> kws = parser.parseKeywords("REF(FLDREFPF REFREC)");
+        assertThat(kws).hasSize(1);
+        DdsKeyword kw = kws.get(0);
+        assertThat(kw.getName()).isEqualTo("REF");
+        assertThat(kw.getValue()).isEqualTo("FLDREFPF");
+        assertThat(kw.getReferenceRecordFormat()).isEqualTo("REFREC");
+    }
+
+    @Test
+    void parseRef_qualifiedName() {
+        List<DdsKeyword> kws = parser.parseKeywords("REF(MYLIB/FLDREFPF)");
+        assertThat(kws).hasSize(1);
+        DdsKeyword kw = kws.get(0);
+        assertThat(kw.getName()).isEqualTo("REF");
+        assertThat(kw.getValue()).isEqualTo("MYLIB/FLDREFPF");
+    }
+
+    @Test
+    void parseRef_qualifiedWithRecordFormat() {
+        List<DdsKeyword> kws = parser.parseKeywords("REF(*LIBL/FLDREFPF REFREC)");
+        assertThat(kws).hasSize(1);
+        DdsKeyword kw = kws.get(0);
+        assertThat(kw.getName()).isEqualTo("REF");
+        assertThat(kw.getValue()).isEqualTo("*LIBL/FLDREFPF");
+        assertThat(kw.getReferenceRecordFormat()).isEqualTo("REFREC");
+    }
+
+    @Test
+    void parseReffld_threeArg() {
+        List<DdsKeyword> kws = parser.parseKeywords("REFFLD(CLSID CLSREC CLASSPF)");
+        assertThat(kws).hasSize(1);
+        DdsKeyword kw = kws.get(0);
+        assertThat(kw.getName()).isEqualTo("REFFLD");
+        assertThat(kw.getReferenceField()).isEqualTo("CLSID");
+        assertThat(kw.getReferenceRecordFormat()).isEqualTo("CLSREC");
+        assertThat(kw.getReferenceFile()).isEqualTo("CLASSPF");
+        assertThat(kw.getValues()).containsExactly("CLSID", "CLSREC", "CLASSPF");
+    }
+
+    @Test
+    void parseReffld_threeArgQualified() {
+        List<DdsKeyword> kws = parser.parseKeywords("REFFLD(CLSSCL CLSREC MYLIB/CLASSPF)");
+        assertThat(kws).hasSize(1);
+        DdsKeyword kw = kws.get(0);
+        assertThat(kw.getReferenceField()).isEqualTo("CLSSCL");
+        assertThat(kw.getReferenceRecordFormat()).isEqualTo("CLSREC");
+        assertThat(kw.getReferenceFile()).isEqualTo("MYLIB/CLASSPF");
+    }
+
+    @Test
+    void parseReffld_srcReference() {
+        List<DdsKeyword> kws = parser.parseKeywords("REFFLD(RSCLCD *SRC)");
+        assertThat(kws).hasSize(1);
+        DdsKeyword kw = kws.get(0);
+        assertThat(kw.getReferenceField()).isEqualTo("RSCLCD");
+        assertThat(kw.getReferenceFile()).isEqualTo("*SRC");
+        assertThat(kw.getReferenceRecordFormat()).isNull();
     }
 
     // ============================================================

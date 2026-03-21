@@ -75,47 +75,50 @@ def cmd_parse(args):
 
 
 def cmd_batch(args):
-    """Parse all supported source files in a directory."""
+    """Parse all supported source files in a directory using Java batch mode.
+    
+    Uses Java --source-dir mode to enable REFFLD cross-file resolution.
+    """
     jar = find_jar()
+    
+    # Quick check for files before invoking Java
     source_files = [f for f in args.source_dir.rglob("*") if f.suffix.lower() in SUPPORTED_EXTENSIONS]
-
     if not source_files:
         print(f"No source files found in {args.source_dir}", file=sys.stderr)
         sys.exit(1)
 
-    # Count by type
     rpg_count = sum(1 for f in source_files if f.suffix.lower() in {".rpg", ".rpg3", ".rpgsrc", ".mbr", ".cpy", ".cpysrc"})
     dds_count = sum(1 for f in source_files if f.suffix.lower() in {".pf", ".lf"})
     print(f"Found {len(source_files)} source files (RPG3: {rpg_count}, DDS: {dds_count})")
 
     output_dir = args.output_dir or args.source_dir / "ir_output"
-    output_dir.mkdir(parents=True, exist_ok=True)
 
-    def parse_one(source_file):
-        output = run_parser(jar, source_file, args.charset, args.copy_path)
-        if output:
-            # Preserve directory structure relative to source_dir
-            rel_path = source_file.relative_to(args.source_dir)
-            out_file = output_dir / rel_path.parent / (source_file.name + ".json")
-            out_file.parent.mkdir(parents=True, exist_ok=True)
-            out_file.write_text(output, encoding="utf-8")
-            return source_file.name, True
-        return source_file.name, False
+    # Delegate to Java batch mode (enables REFFLD cross-file resolution)
+    cmd = [
+        "java",
+        "-Dstdout.encoding=UTF-8", "-Dstderr.encoding=UTF-8",
+        "-jar", str(jar),
+        "--source-dir", str(args.source_dir),
+        "--output-dir", str(output_dir),
+        "--charset", args.charset,
+    ]
+    if args.copy_path:
+        cmd.extend(["--copy-path", args.copy_path])
 
-    success = 0
-    failed = 0
-    with ThreadPoolExecutor(max_workers=args.parallel) as executor:
-        futures = {executor.submit(parse_one, f): f for f in source_files}
-        for future in as_completed(futures):
-            name, ok = future.result()
-            if ok:
-                success += 1
-                print(f"  ✓ {name}")
-            else:
-                failed += 1
-                print(f"  ✗ {name}")
-
-    print(f"\nDone: {success} succeeded, {failed} failed")
+    result = subprocess.run(cmd, capture_output=True, text=True, timeout=300, encoding="utf-8")
+    
+    # Print Java's output (progress messages go to stderr)
+    # Skip the "Found N source files" line since we already printed it
+    if result.stderr:
+        for line in result.stderr.strip().split("\n"):
+            if line.startswith("Found "):
+                continue
+            print(line)
+    if result.stdout:
+        print(result.stdout, end="")
+    
+    if result.returncode != 0:
+        sys.exit(1)
 
 
 def cmd_validate(args):

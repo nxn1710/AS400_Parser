@@ -169,11 +169,36 @@ public class As400ParserCli {
 
             System.err.println("Found " + files.size() + " source files");
 
-            int success = 0, failed = 0;
+            // Pass 1: Parse all files and collect IrDocuments
+            List<IrDocument> allDocuments = new ArrayList<>();
+            List<Path> parsedFiles = new ArrayList<>();
+            int failed = 0;
+
             for (Path file : files) {
                 try {
                     As400Parser parser = selectParser(file);
                     IrDocument doc = parser.parse(file, options);
+                    allDocuments.add(doc);
+                    parsedFiles.add(file);
+                } catch (Exception e) {
+                    System.err.println("  ✗ " + file.getFileName() + ": " + e.getMessage());
+                    failed++;
+                }
+            }
+
+            // Pass 2: Resolve REFFLD cross-references across all DDS documents
+            com.as400parser.dds.DdsRefResolver resolver = new com.as400parser.dds.DdsRefResolver();
+            int resolvedCount = resolver.resolveAll(allDocuments);
+            if (resolvedCount > 0) {
+                System.err.println("  Resolved " + resolvedCount + " REFFLD reference(s)");
+            }
+
+            // Pass 3: Serialize all documents to JSON
+            int success = 0;
+            for (int i = 0; i < allDocuments.size(); i++) {
+                Path file = parsedFiles.get(i);
+                IrDocument doc = allDocuments.get(i);
+                try {
                     String json = serializer.serialize(doc);
 
                     // Preserve directory structure

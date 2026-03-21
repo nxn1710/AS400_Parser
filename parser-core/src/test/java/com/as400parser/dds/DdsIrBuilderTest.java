@@ -90,6 +90,28 @@ class DdsIrBuilderTest {
         FieldDefinition field = content.getRecordFormats().get(0).getFields().get(0);
         assertThat(field.getReference()).isEqualTo("R");
         assertThat(field.getSource()).isEqualTo("reference");
+        // Convenience fields
+        assertThat(field.getReferenceField()).isEqualTo("SRCFLD");
+        assertThat(field.getReferenceFile()).isEqualTo("SRCPF");
+    }
+
+    @Test
+    void buildPfContent_referenceFieldSingleArg() {
+        String[] lines = {
+                pad("     A                                      REF(FLDREFPF)"),
+                pad("     A          R REC1"),
+                buildRefFieldLine("FLD1", "REFFLD(RSTUID)")
+        };
+        DdsPfContent content = (DdsPfContent) builder.buildContent(lines, "DDS_PF");
+        FieldDefinition field = content.getRecordFormats().get(0).getFields().get(0);
+        assertThat(field.getReference()).isEqualTo("R");
+        assertThat(field.getSource()).isEqualTo("reference");
+        // Convenience fields — single arg REFFLD
+        assertThat(field.getReferenceField()).isEqualTo("RSTUID");
+        assertThat(field.getReferenceFile()).isNull();
+        // File-level REF keyword
+        assertThat(content.getFileKeywords().get(0).getName()).isEqualTo("REF");
+        assertThat(content.getFileKeywords().get(0).getValue()).isEqualTo("FLDREFPF");
     }
 
     @Test

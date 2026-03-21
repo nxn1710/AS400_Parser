@@ -52,6 +52,15 @@ public class FieldDefinition {
      */
     private String source;
 
+    /** Convenience: referenced field name extracted from REFFLD keyword (1st arg). null if not a reference field. */
+    private String referenceField;
+
+    /** Convenience: referenced file name extracted from REFFLD keyword (2nd arg). null if using file-level REF. */
+    private String referenceFile;
+
+    /** Convenience: referenced record format extracted from REFFLD keyword (2nd arg in 3-arg form). null if not specified. */
+    private String referenceRecordFormat;
+
     /** Field-level keywords from cols 45-80 (parsed by DdsKeywordParser). */
     private List<DdsKeyword> keywords;
 
@@ -158,5 +167,29 @@ public class FieldDefinition {
 
     public void setKeywords(List<DdsKeyword> keywords) {
         this.keywords = keywords;
+    }
+
+    public String getReferenceField() {
+        return referenceField;
+    }
+
+    public void setReferenceField(String referenceField) {
+        this.referenceField = referenceField;
+    }
+
+    public String getReferenceFile() {
+        return referenceFile;
+    }
+
+    public void setReferenceFile(String referenceFile) {
+        this.referenceFile = referenceFile;
+    }
+
+    public String getReferenceRecordFormat() {
+        return referenceRecordFormat;
+    }
+
+    public void setReferenceRecordFormat(String referenceRecordFormat) {
+        this.referenceRecordFormat = referenceRecordFormat;
     }
 }

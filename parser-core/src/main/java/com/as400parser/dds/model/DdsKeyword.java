@@ -36,6 +36,15 @@ public class DdsKeyword {
     /** RANGE only: high value. null for non-RANGE keywords. */
     private String rangeTo;
 
+    /** REFFLD only: the referenced field name (1st arg). null for non-REFFLD keywords. */
+    private String referenceField;
+
+    /** REFFLD only: the referenced file name (2nd arg). null if using file-level REF. */
+    private String referenceFile;
+
+    /** REF only: the referenced record format name (2nd arg). null if not specified. */
+    private String referenceRecordFormat;
+
     public DdsKeyword() {
     }
 
@@ -103,5 +112,29 @@ public class DdsKeyword {
 
     public void setRangeTo(String rangeTo) {
         this.rangeTo = rangeTo;
+    }
+
+    public String getReferenceField() {
+        return referenceField;
+    }
+
+    public void setReferenceField(String referenceField) {
+        this.referenceField = referenceField;
+    }
+
+    public String getReferenceFile() {
+        return referenceFile;
+    }
+
+    public void setReferenceFile(String referenceFile) {
+        this.referenceFile = referenceFile;
+    }
+
+    public String getReferenceRecordFormat() {
+        return referenceRecordFormat;
+    }
+
+    public void setReferenceRecordFormat(String referenceRecordFormat) {
+        this.referenceRecordFormat = referenceRecordFormat;
     }
 }

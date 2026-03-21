@@ -291,7 +291,7 @@ public class DdsIrBuilder {
     private FieldDefinition buildFieldDefinition(String line, int lineNum) {
         FieldDefinition field = new FieldDefinition();
         field.setLocation(Location.ofLine(lineNum));
-        field.getRawSourceLines().add(line);
+        field.getRawSourceLines().add(line.stripTrailing());
 
         field.setConditioningIndicators(extractColumnNullable(line, 8, 16));
         field.setName(extractColumn(line, 19, 28));
@@ -309,6 +309,9 @@ public class DdsIrBuilder {
 
         // Compute source type
         field.setSource(computeFieldSource(field));
+
+        // Populate reference convenience fields
+        populateFieldReference(field);
 
         return field;
     }
@@ -458,6 +461,27 @@ public class DdsIrBuilder {
     }
 
     /**
+     * Populate convenience reference fields on FieldDefinition from REFFLD keyword.
+     * Also handles same-name references (R in col29, no REFFLD) — defaults to field's own name.
+     */
+    private void populateFieldReference(FieldDefinition field) {
+        if (field.getKeywords() != null) {
+            for (DdsKeyword kw : field.getKeywords()) {
+                if ("REFFLD".equals(kw.getName())) {
+                    field.setReferenceField(kw.getReferenceField());
+                    field.setReferenceFile(kw.getReferenceFile());
+                    field.setReferenceRecordFormat(kw.getReferenceRecordFormat());
+                    return;
+                }
+            }
+        }
+        // Same-name reference: R in col29, no REFFLD → reference own name from REF file
+        if ("R".equals(field.getReference()) && field.getReferenceField() == null) {
+            field.setReferenceField(field.getName());
+        }
+    }
+
+    /**
      * Detect LF subtype based on keywords and format count.
      */
     private String detectLfSubtype(LfRecordFormat lf, int totalFormats) {
@@ -484,7 +508,7 @@ public class DdsIrBuilder {
         if (element instanceof FieldDefinition) {
             FieldDefinition fd = (FieldDefinition) element;
             fd.getKeywords().addAll(kws);
-            fd.getRawSourceLines().add(line);
+            fd.getRawSourceLines().add(line.stripTrailing());
         } else if (element instanceof KeyDefinition) {
             ((KeyDefinition) element).getKeywords().addAll(kws);
         } else if (element instanceof SelectOmitSpec) {
@@ -544,7 +568,7 @@ public class DdsIrBuilder {
             case FIELD_DEFINITION: {
                 FieldDefinition field = new FieldDefinition();
                 field.setLocation(Location.ofLine(lineNum));
-                field.getRawSourceLines().add(line);
+                field.getRawSourceLines().add(line.stripTrailing());
                 field.setConditioningIndicators(extractColumnNullable(line, 8, 16));
                 field.setName(extractColumn(line, 19, 28));
                 field.setReference(charAtOrNull(line, 29));
@@ -657,9 +681,11 @@ public class DdsIrBuilder {
         if (element instanceof FieldDefinition fd) {
             fd.setKeywords(kws);
             fd.setSource(computeFieldSource(fd));
+            // Populate reference convenience fields
+            populateFieldReference(fd);
             // Add continuation lines to rawSourceLines
             for (int i = 1; i < continuationLines.size(); i++) {
-                fd.getRawSourceLines().add(continuationLines.get(i));
+                fd.getRawSourceLines().add(continuationLines.get(i).stripTrailing());
             }
         } else if (element instanceof RecordFormat rf) {
             rf.setKeywords(kws);
