@@ -1,0 +1,61 @@
+     A*================================================================
+     A* ファイル名: TEACHPF
+     A* 説明      : 教師マスター物理ファイル
+     A* 参照ファイル: FLDREFPF（フィールド参照ファイル）
+     A* 作成日    : 2026/03/21
+     A* 作成者    : システム開発部
+     A* 備考      : REF/REFFLD キーワードで FLDREFPF から
+     A*            : フィールド属性を参照して定義する
+     A*================================================================
+     A                                      REF(FLDREFPF)
+     A                                      UNIQUE
+     A          R TCHREC                     TEXT('教師マスターレコード')
+     A*
+     A*   --- 主キー ---
+     A            TCHID     R               REFFLD(RSTUID) +
+     A                                      TEXT('教師ID') +
+     A                                      COLHDG('教師' 'ID')
+     A*
+     A*   --- 基本情報 ---
+     A            TCHNAM    R               REFFLD(RNAME) +
+     A                                      TEXT('教師氏名') +
+     A                                      COLHDG('教師' '氏名')
+     A            TCHKNA    R               REFFLD(RKANA) +
+     A                                      TEXT('教師カナ名') +
+     A                                      COLHDG('カナ' '氏名')
+     A            TCHBDT    R               REFFLD(RDATE) +
+     A                                      TEXT('生年月日 YYYYMMDD') +
+     A                                      COLHDG('生年' '月日')
+     A            TCHGND    R               REFFLD(RGND)
+     A*
+     A*   --- 連絡先情報 ---
+     A            TCHADR    R               REFFLD(RADDR)
+     A            TCHTEL    R               REFFLD(RTEL)
+     A            TCHMAL    R               REFFLD(RMAIL)
+     A*
+     A*   --- 所属情報 ---
+     A            TCHSCL    R               REFFLD(RSCLCD) +
+     A                                      TEXT('所属学校コード') +
+     A                                      COLHDG('学校' 'コード')
+     A            TCHSBJ        20A         TEXT('担当教科') +
+     A                                      COLHDG('担当' '教科')
+     A*
+     A*   --- 状態管理 ---
+     A            TCHSTS    R               REFFLD(RSTS) +
+     A                                      TEXT('状態 A=有効 R=退職')
+     A*
+     A*   --- 監査情報 ---
+     A            TCHADD    R               REFFLD(RDATE) +
+     A                                      TEXT('登録日 YYYYMMDD') +
+     A                                      COLHDG('登録日')
+     A            TCHUPD    R               REFFLD(RDATE) +
+     A                                      TEXT('更新日 YYYYMMDD') +
+     A                                      COLHDG('更新日')
+     A            TCHADB    R               REFFLD(RUSER) +
+     A                                      TEXT('登録者')
+     A            TCHUPB    R               REFFLD(RUSER) +
+     A                                      TEXT('更新者')
+     A*
+     A*   --- 主キー定義 ---
+     A          K TCHSCL
+     A          K TCHID

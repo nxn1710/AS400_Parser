@@ -1,0 +1,55 @@
+     A*================================================================
+     A* ファイル名: FLDREFPF
+     A* 説明      : フィールド参照ファイル（共通項目定義）
+     A* 作成日    : 2026/03/21
+     A* 作成者    : システム開発部
+     A* 備考      : 各物理ファイルで共通使用するフィールドの
+     A*            : 属性・桁数・テキストを一元管理する
+     A*================================================================
+     A          R REFREC                     TEXT('参照フィールドレコード')
+     A*
+     A*   --- コード系フィールド ---
+     A            RSCLCD         4A         TEXT('学校コード') +
+     A                                      COLHDG('学校' 'コード')
+     A            RCLSID         6A         TEXT('クラスID') +
+     A                                      COLHDG('クラス' 'ID')
+     A            RSTUID         6A         TEXT('学生ID') +
+     A                                      COLHDG('学生' 'ID')
+     A*
+     A*   --- 名称系フィールド ---
+     A            RNAME         30A         TEXT('汎用名称') +
+     A                                      COLHDG('名称')
+     A            RKANA         30A         TEXT('汎用カナ名') +
+     A                                      COLHDG('カナ名')
+     A*
+     A*   --- 日付系フィールド ---
+     A            RDATE          8S 0       TEXT('汎用日付 YYYYMMDD') +
+     A                                      COLHDG('日付')
+     A            RYEAR          4S 0       TEXT('年度') +
+     A                                      COLHDG('年度')
+     A*
+     A*   --- 数値系フィールド ---
+     A            RQTY           3S 0       TEXT('汎用数量') +
+     A                                      COLHDG('数量')
+     A            RSCORE         5S 2       TEXT('汎用スコア') +
+     A                                      COLHDG('スコア')
+     A*
+     A*   --- 状態・フラグ系フィールド ---
+     A            RSTS           1A         TEXT('状態フラグ') +
+     A                                      COLHDG('状態') +
+     A                                      DFT('A')
+     A            RGND           1A         TEXT('性別 M/F') +
+     A                                      COLHDG('性別') +
+     A                                      VALUES('M' 'F')
+     A*
+     A*   --- 連絡先系フィールド ---
+     A            RADDR         50A         TEXT('住所') +
+     A                                      COLHDG('住所')
+     A            RTEL          15A         TEXT('電話番号') +
+     A                                      COLHDG('電話' '番号')
+     A            RMAIL         40A         TEXT('メールアドレス') +
+     A                                      COLHDG('メール' 'アドレス')
+     A*
+     A*   --- 監査系フィールド ---
+     A            RUSER         10A         TEXT('ユーザー名') +
+     A                                      COLHDG('ユーザー')

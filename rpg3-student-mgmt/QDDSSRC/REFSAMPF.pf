@@ -1,0 +1,75 @@
+     A*================================================================
+     A* ファイル名: REFSAMPF
+     A* 説明      : REF/REFFLD 全パターンサンプル物理ファイル
+     A* 作成日    : 2026/03/21
+     A* 作成者    : システム開発部
+     A* 備考      : DDS の REF/REFFLD キーワード全パターン網羅
+     A*================================================================
+     A*
+     A* ======================================================
+     A* ファイルレベル REF キーワードの構文バリエーション
+     A* ======================================================
+     A* 構文: REF([ライブラリ名/]ファイル名 [レコード様式名])
+     A*
+     A* REF(FLDREFPF)                  ← 基本形
+     A* REF(MYLIB/FLDREFPF)            ← ライブラリ修飾
+     A* REF(FLDREFPF REFREC)           ← レコード様式指定
+     A* REF(MYLIB/FLDREFPF REFREC)     ← 完全修飾
+     A* ======================================================
+     A*
+     A                                      REF(FLDREFPF)
+     A                                      UNIQUE
+     A          R SAMPREC                   TEXT('全REFパターンレコード')
+     A*
+     A* --- パターン1: R(col29) のみ — 同名参照 ---
+     A* REFファイルの同名フィールドから属性継承
+     A* REFFLD キーワード不要
+     A*
+     A            RSCLCD    R               TEXT('同名参照')
+     A*
+     A* --- パターン2: R + REFFLD(field) — 別名参照 ---
+     A* REFファイルの別名フィールドから属性継承
+     A*
+     A            SMPID     R               REFFLD(RSTUID) +
+     A                                      TEXT('別名参照')
+     A*
+     A* --- パターン3: R + REFFLD(field file) — 別ファイル参照 ---
+     A* REF指定以外のファイルのフィールドを参照
+     A*
+     A            SMPNAM    R               REFFLD(STUNAM STUDNTPF) +
+     A                                      TEXT('別ファイル参照')
+     A*
+     A* --- パターン4: R + REFFLD(field lib/file) — ライブラリ修飾 ---
+     A* ライブラリ名付きで別ファイルを参照
+     A*
+     A            SMPADR    R               REFFLD(STUADR MYLIB/STUDNTPF) +
+     A                                      TEXT('ライブラリ修飾参照')
+     A*
+     A* --- パターン5: R + REFFLD(field fmt file) — 様式指定 ---
+     A* 別ファイルの特定レコード様式を指定して参照
+     A*
+     A            SMPCLS    R               REFFLD(CLSID CLSREC CLASSPF) +
+     A                                      TEXT('様式指定参照')
+     A*
+     A* --- パターン6: R + REFFLD(field fmt lib/file) — 完全修飾 ---
+     A* ライブラリ修飾 + レコード様式指定の完全形
+     A*
+     A            SMPSCL    R               REFFLD(CLSSCL CLSREC MYLIB/CLASSPF) +
+     A                                      TEXT('完全修飾参照')
+     A*
+     A* --- パターン7: R + REFFLD(field *SRC) — ソース内参照 ---
+     A* 同一ソース内で先に定義されたフィールドを参照
+     A*
+     A            SMPCD2    R               REFFLD(RSCLCD *SRC) +
+     A                                      TEXT('ソース内参照')
+     A*
+     A* --- パターン8: 直接定義（参照なし） ---
+     A* 参照を使わずフィールド属性を直接指定
+     A* col29 に R なし、Length/Type を直接指定
+     A*
+     A            SMPFLG         1A         TEXT('直接定義フラグ')
+     A            SMPAMT         9P 2       TEXT('直接定義金額')
+     A*
+     A* --- 主キー定義 ---
+     A          K RSCLCD
+     A          K SMPID
