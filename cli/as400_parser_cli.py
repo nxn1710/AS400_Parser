@@ -169,7 +169,7 @@ def main():
     parse_p.add_argument("source", type=Path, help="Path to source file (.rpg, .pf, .lf, etc.)")
     parse_p.add_argument("-o", "--output", type=Path, help="Output JSON file path")
     parse_p.add_argument("--copy-path", type=str, help="Colon/semicolon-separated copy paths (RPG3 only)")
-    parse_p.add_argument("--charset", default="UTF-8", help="Source file charset (default: UTF-8)")
+    parse_p.add_argument("--charset", default="auto", help="Source file charset (default: auto-detect)")
     parse_p.set_defaults(func=cmd_parse)
 
     # batch
@@ -177,7 +177,7 @@ def main():
     batch_p.add_argument("source_dir", type=Path, help="Directory containing source files")
     batch_p.add_argument("-o", "--output-dir", type=Path, help="Output directory for JSON files")
     batch_p.add_argument("--copy-path", type=str, help="Colon/semicolon-separated copy paths (RPG3 only)")
-    batch_p.add_argument("--charset", default="UTF-8", help="Source file charset (default: UTF-8)")
+    batch_p.add_argument("--charset", default="auto", help="Source file charset (default: auto-detect)")
     batch_p.add_argument("--parallel", type=int, default=4, help="Number of parallel workers (default: 4)")
     batch_p.set_defaults(func=cmd_batch)
 

@@ -54,7 +54,7 @@ public class RecordFormat {
     }
 
     public void setRawSourceLine(String rawSourceLine) {
-        this.rawSourceLine = rawSourceLine;
+        this.rawSourceLine = rawSourceLine != null ? rawSourceLine.stripTrailing() : null;
     }
 
     public String getConditioningIndicators() {

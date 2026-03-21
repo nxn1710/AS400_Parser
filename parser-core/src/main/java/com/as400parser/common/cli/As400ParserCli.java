@@ -78,7 +78,7 @@ public class As400ParserCli {
         String sourceDirPath = null;
         String outputPath = null;
         String outputDirPath = null;
-        String charset = "UTF-8";
+        String charset = "auto";
         String copyPath = null;
 
         for (int i = 0; i < args.length; i++) {
@@ -99,7 +99,7 @@ public class As400ParserCli {
         }
 
         ParseOptions.Builder optBuilder = ParseOptions.builder()
-                .charset(Charset.forName(charset));
+                .charset("auto".equalsIgnoreCase(charset) ? null : Charset.forName(charset));
 
         if (copyPath != null) {
             optBuilder.copyPaths(List.of(copyPath.split("[;:]")));
@@ -213,7 +213,7 @@ public class As400ParserCli {
         System.out.println("  --source-dir DIR    Parse all source files in a directory (recursive)");
         System.out.println("  --output FILE       Write output to file (single mode, default: stdout)");
         System.out.println("  --output-dir DIR    Write output files to directory (batch mode)");
-        System.out.println("  --charset CHARSET   Source encoding (default: UTF-8)");
+        System.out.println("  --charset CHARSET   Source encoding (default: auto-detect)");
         System.out.println("  --copy-path PATHS   Semicolon-separated /COPY search paths (RPG3 only)");
         System.out.println("  --help, -h          Show this help message");
         System.out.println();

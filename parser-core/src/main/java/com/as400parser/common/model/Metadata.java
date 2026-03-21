@@ -44,6 +44,7 @@ public class Metadata {
         private String parsedAt;        // ISO 8601 timestamp
         private String parseStatus;     // "complete", "partial", "failed"
         private int totalLines;
+        private String detectedEncoding; // encoding used to read the file (e.g. "UTF-8", "Shift_JIS")
         private List<Map<String, Object>> errors = new ArrayList<>();
         private List<Map<String, Object>> warnings = new ArrayList<>();
 
@@ -55,6 +56,8 @@ public class Metadata {
         public void setParseStatus(String v) { this.parseStatus = v; }
         public int getTotalLines() { return totalLines; }
         public void setTotalLines(int v) { this.totalLines = v; }
+        public String getDetectedEncoding() { return detectedEncoding; }
+        public void setDetectedEncoding(String v) { this.detectedEncoding = v; }
         public List<Map<String, Object>> getErrors() { return errors; }
         public void setErrors(List<Map<String, Object>> v) { this.errors = v; }
         public List<Map<String, Object>> getWarnings() { return warnings; }

@@ -96,7 +96,7 @@ public class Rpg3Content {
         private String programIdentification;        // cols 75-80
 
         public String getRawSourceLine() { return rawSourceLine; }
-        public void setRawSourceLine(String s) { this.rawSourceLine = s; }
+        public void setRawSourceLine(String s) { this.rawSourceLine = s != null ? s.stripTrailing() : null; }
         public Location getLocation() { return location; }
         public void setLocation(Location l) { this.location = l; }
         public String getParseQuality() { return parseQuality; }
@@ -185,7 +185,7 @@ public class Rpg3Content {
         private List<FileKeyword> continuationLines;
 
         public String getRawSourceLine() { return rawSourceLine; }
-        public void setRawSourceLine(String s) { this.rawSourceLine = s; }
+        public void setRawSourceLine(String s) { this.rawSourceLine = s != null ? s.stripTrailing() : null; }
         public Location getLocation() { return location; }
         public void setLocation(Location l) { this.location = l; }
         public String getParseQuality() { return parseQuality; }
@@ -301,7 +301,7 @@ public class Rpg3Content {
         private String inlineComment;                // col 58+
 
         public String getRawSourceLine() { return rawSourceLine; }
-        public void setRawSourceLine(String s) { this.rawSourceLine = s; }
+        public void setRawSourceLine(String s) { this.rawSourceLine = s != null ? s.stripTrailing() : null; }
         public Location getLocation() { return location; }
         public void setLocation(Location l) { this.location = l; }
         public String getParseQuality() { return parseQuality; }
@@ -351,7 +351,7 @@ public class Rpg3Content {
         private Integer overflowLine;
 
         public String getRawSourceLine() { return rawSourceLine; }
-        public void setRawSourceLine(String s) { this.rawSourceLine = s; }
+        public void setRawSourceLine(String s) { this.rawSourceLine = s != null ? s.stripTrailing() : null; }
         public Location getLocation() { return location; }
         public void setLocation(Location l) { this.location = l; }
         public String getParseQuality() { return parseQuality; }
@@ -417,7 +417,7 @@ public class Rpg3Content {
         private String inlineComment;          // col 75+ (from normalizer lineComments)
 
         public String getRawSourceLine() { return rawSourceLine; }
-        public void setRawSourceLine(String s) { this.rawSourceLine = s; }
+        public void setRawSourceLine(String s) { this.rawSourceLine = s != null ? s.stripTrailing() : null; }
         public Location getLocation() { return location; }
         public void setLocation(Location l) { this.location = l; }
         public String getParseQuality() { return parseQuality; }
@@ -527,7 +527,7 @@ public class Rpg3Content {
         private String inlineComment;                // col 75+
 
         public String getRawSourceLine() { return rawSourceLine; }
-        public void setRawSourceLine(String s) { this.rawSourceLine = s; }
+        public void setRawSourceLine(String s) { this.rawSourceLine = s != null ? s.stripTrailing() : null; }
         public Location getLocation() { return location; }
         public void setLocation(Location l) { this.location = l; }
         public String getParseQuality() { return parseQuality; }
@@ -588,7 +588,7 @@ public class Rpg3Content {
         public String getName() { return name; }
         public void setName(String v) { this.name = v; }
         public String getRawSourceLine() { return rawSourceLine; }
-        public void setRawSourceLine(String v) { this.rawSourceLine = v; }
+        public void setRawSourceLine(String v) { this.rawSourceLine = v != null ? v.stripTrailing() : null; }
         public Location getLocation() { return location; }
         public void setLocation(Location l) { this.location = l; }
         public String getSourceSequence() { return sourceSequence; }
@@ -625,7 +625,7 @@ public class Rpg3Content {
         private String inlineComment;
 
         public String getRawSourceLine() { return rawSourceLine; }
-        public void setRawSourceLine(String v) { this.rawSourceLine = v; }
+        public void setRawSourceLine(String v) { this.rawSourceLine = v != null ? v.stripTrailing() : null; }
         public Location getLocation() { return location; }
         public void setLocation(Location l) { this.location = l; }
         public String getSourceSequence() { return sourceSequence; }
@@ -741,7 +741,7 @@ public class Rpg3Content {
         public String getSpecContext() { return specContext; }
         public void setSpecContext(String v) { this.specContext = v; }
         public String getRawSourceLine() { return rawSourceLine; }
-        public void setRawSourceLine(String v) { this.rawSourceLine = v; }
+        public void setRawSourceLine(String v) { this.rawSourceLine = v != null ? v.stripTrailing() : null; }
         public Location getLocation() { return location; }
         public void setLocation(Location v) { this.location = v; }
     }

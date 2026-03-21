@@ -46,6 +46,14 @@ public class Rpg3ParserFacade implements As400Parser {
                 : normalizer.normalize(sourceFile); // auto-detect encoding
             IrDocument doc = runPipeline(normalized, options);
             populateMetadataFromFile(doc, sourceFile);
+
+            // Record detected encoding in metadata
+            if (normalized.getDetectedCharset() != null && doc.getMetadata() != null
+                    && doc.getMetadata().getParseInfo() != null) {
+                doc.getMetadata().getParseInfo()
+                    .setDetectedEncoding(normalized.getDetectedCharset().name());
+            }
+
             return doc;
         } catch (IOException e) {
             return createFailedDocument(e.getMessage());

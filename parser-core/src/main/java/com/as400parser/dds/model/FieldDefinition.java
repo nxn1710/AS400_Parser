@@ -75,7 +75,9 @@ public class FieldDefinition {
     }
 
     public void setRawSourceLines(List<String> rawSourceLines) {
-        this.rawSourceLines = rawSourceLines;
+        this.rawSourceLines = rawSourceLines != null
+            ? rawSourceLines.stream().map(s -> s != null ? s.stripTrailing() : null).collect(java.util.stream.Collectors.toList())
+            : null;
     }
 
     public String getConditioningIndicators() {

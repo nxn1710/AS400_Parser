@@ -36,7 +36,7 @@ public class CalcSpec {
 
         public String getNodeType() { return nodeType; }
         public String getRawSourceLine() { return rawSourceLine; }
-        public void setRawSourceLine(String s) { this.rawSourceLine = s; }
+        public void setRawSourceLine(String s) { this.rawSourceLine = s != null ? s.stripTrailing() : null; }
         public Location getLocation() { return location; }
         public void setLocation(Location l) { this.location = l; }
         public String getParseQuality() { return parseQuality; }

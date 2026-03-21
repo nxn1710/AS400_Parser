@@ -42,6 +42,14 @@ public class DdsParserFacade implements As400Parser {
             String sourceType = detectSourceType(sourceFile);
             IrDocument doc = runPipeline(normalized, sourceType);
             populateMetadataFromFile(doc, sourceFile, sourceType);
+
+            // Record detected encoding in metadata
+            if (normalized.getDetectedCharset() != null && doc.getMetadata() != null
+                    && doc.getMetadata().getParseInfo() != null) {
+                doc.getMetadata().getParseInfo()
+                    .setDetectedEncoding(normalized.getDetectedCharset().name());
+            }
+
             return doc;
         } catch (IOException e) {
             return createFailedDocument(e.getMessage(),
