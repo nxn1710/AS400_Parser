@@ -4,8 +4,6 @@ import com.as400parser.dds.model.*;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.*;
 
 /**
@@ -23,10 +21,10 @@ class DdsIrBuilderTest {
     @Test
     void buildPfContent_minimalFile() {
         String[] lines = {
-            pad("     A                                      UNIQUE"),
-            pad("     A          R TESTREC                   TEXT('Test Record')"),
-            pad("     A            FIELD1        10A         TEXT('Field One')"),
-            pad("     A          K FIELD1")
+                pad("     A                                      UNIQUE"),
+                pad("     A          R TESTREC                   TEXT('Test Record')"),
+                pad("     A            FIELD1        10A         TEXT('Field One')"),
+                pad("     A          K FIELD1")
         };
         Object result = builder.buildContent(lines, "DDS_PF");
         assertThat(result).isInstanceOf(DdsPfContent.class);
@@ -56,10 +54,10 @@ class DdsIrBuilderTest {
     @Test
     void buildPfContent_commentsPreserved() {
         String[] lines = {
-            pad("     A*This is a comment"),
-            pad("     A          R REC1"),
-            pad("     A*Another comment"),
-            pad("     A            FLD1          5A")
+                pad("     A*This is a comment"),
+                pad("     A          R REC1"),
+                pad("     A*Another comment"),
+                pad("     A            FLD1          5A")
         };
         DdsPfContent content = (DdsPfContent) builder.buildContent(lines, "DDS_PF");
         assertThat(content.getComments()).hasSize(2);
@@ -70,8 +68,8 @@ class DdsIrBuilderTest {
     @Test
     void buildPfContent_numericField() {
         String[] lines = {
-            pad("     A          R REC1"),
-            buildFieldLine("AMOUNT", "7", "S", "2", null)
+                pad("     A          R REC1"),
+                buildFieldLine("AMOUNT", "7", "S", "2", null)
         };
         DdsPfContent content = (DdsPfContent) builder.buildContent(lines, "DDS_PF");
         FieldDefinition field = content.getRecordFormats().get(0).getFields().get(0);
@@ -85,8 +83,8 @@ class DdsIrBuilderTest {
     @Test
     void buildPfContent_referenceField() {
         String[] lines = {
-            pad("     A          R REC1"),
-            buildRefFieldLine("FLD1", "REFFLD(SRCFLD SRCPF)")
+                pad("     A          R REC1"),
+                buildRefFieldLine("FLD1", "REFFLD(SRCFLD SRCPF)")
         };
         DdsPfContent content = (DdsPfContent) builder.buildContent(lines, "DDS_PF");
         FieldDefinition field = content.getRecordFormats().get(0).getFields().get(0);
@@ -97,13 +95,13 @@ class DdsIrBuilderTest {
     @Test
     void buildPfContent_descendingKey() {
         String[] lines = {
-            pad("     A          R REC1"),
-            pad("     A            FLD1          5A"),
-            buildKeyLine("FLD1", "DESCEND")
+                pad("     A          R REC1"),
+                pad("     A            FLD1          5A"),
+                buildKeyLine("FLD1", "DESCEND")
         };
         DdsPfContent content = (DdsPfContent) builder.buildContent(lines, "DDS_PF");
         assertThat(content.getRecordFormats().get(0).getKeys().get(0).getSortOrder())
-            .isEqualTo("descending");
+                .isEqualTo("descending");
     }
 
     // ============================================================
@@ -113,8 +111,8 @@ class DdsIrBuilderTest {
     @Test
     void buildLfContent_simpleLf() {
         String[] lines = {
-            pad("     A          R STUREC                    PFILE(STUDNTPF)"),
-            pad("     A          K STUID")
+                pad("     A          R STUREC                    PFILE(STUDNTPF)"),
+                pad("     A          K STUID")
         };
         Object result = builder.buildContent(lines, "DDS_LF");
         assertThat(result).isInstanceOf(DdsLfContent.class);
@@ -132,9 +130,9 @@ class DdsIrBuilderTest {
     @Test
     void buildLfContent_selectOmit() {
         String[] lines = {
-            pad("     A          R STUREC                    PFILE(STUDNTPF)"),
-            buildSelectLine("STUSTS", "COMP(EQ 'A')"),
-            pad("     A          K STUID")
+                pad("     A          R STUREC                    PFILE(STUDNTPF)"),
+                buildSelectLine("STUSTS", "COMP(EQ 'A')"),
+                pad("     A          K STUID")
         };
         DdsLfContent content = (DdsLfContent) builder.buildContent(lines, "DDS_LF");
         LfRecordFormat lrf = content.getRecordFormats().get(0);
@@ -143,17 +141,17 @@ class DdsIrBuilderTest {
         SelectOmitSpec spec = lrf.getSelectOmit().get(0);
         assertThat(spec.getType()).isEqualTo("select");
         assertThat(spec.getFieldName()).isEqualTo("STUSTS");
-        assertThat(spec.getKeywords()).anyMatch(kw ->
-            "COMP".equals(kw.getName()) && "EQ".equals(kw.getComparisonOperator()));
+        assertThat(spec.getKeywords())
+                .anyMatch(kw -> "COMP".equals(kw.getName()) && "EQ".equals(kw.getComparisonOperator()));
     }
 
     @Test
     void buildLfContent_multipleFormat() {
         String[] lines = {
-            pad("     A          R REC1                      PFILE(PF1)"),
-            pad("     A          K FLD1"),
-            pad("     A          R REC2                      PFILE(PF2)"),
-            pad("     A          K FLD2")
+                pad("     A          R REC1                      PFILE(PF1)"),
+                pad("     A          K FLD1"),
+                pad("     A          R REC2                      PFILE(PF2)"),
+                pad("     A          K FLD2")
         };
         DdsLfContent content = (DdsLfContent) builder.buildContent(lines, "DDS_LF");
         assertThat(content.getRecordFormats()).hasSize(2);
@@ -164,10 +162,10 @@ class DdsIrBuilderTest {
     @Test
     void buildLfContent_joinLf() {
         String[] lines = {
-            pad("     A          R JOINREC                   JFILE(PF1 PF2)"),
-            buildJoinLine("JOIN(PF1 PF2)"),
-            buildJoinLine("JFLD(FLD1 FLD2)"),
-            pad("     A          K FLD1")
+                pad("     A          R JOINREC                   JFILE(PF1 PF2)"),
+                buildJoinLine("JOIN(PF1 PF2)"),
+                buildJoinLine("JFLD(FLD1 FLD2)"),
+                pad("     A          K FLD1")
         };
         DdsLfContent content = (DdsLfContent) builder.buildContent(lines, "DDS_LF");
         LfRecordFormat lrf = content.getRecordFormats().get(0);
@@ -184,10 +182,10 @@ class DdsIrBuilderTest {
     void buildContent_errorRecovery() {
         // Even with bad data, should not throw exception
         String[] lines = {
-            pad("     A          R REC1"),
-            pad("     A            FLD1          5A"),
-            "short line",  // bad line
-            pad("     A            FLD2         10A")
+                pad("     A          R REC1"),
+                pad("     A            FLD1          5A"),
+                "short line", // bad line
+                pad("     A            FLD2         10A")
         };
         DdsPfContent content = (DdsPfContent) builder.buildContent(lines, "DDS_PF");
         // Should still produce output
@@ -200,7 +198,8 @@ class DdsIrBuilderTest {
     // ============================================================
 
     private String pad(String s) {
-        if (s.length() >= 80) return s.substring(0, 80);
+        if (s.length() >= 80)
+            return s.substring(0, 80);
         return s + " ".repeat(80 - s.length());
     }
 
@@ -229,10 +228,12 @@ class DdsIrBuilderTest {
         sb.append("      ");
         // cols 45-80: keywords
         String kw = keywords == null ? "" : keywords;
-        if (kw.length() < 36) kw = kw + " ".repeat(36 - kw.length());
+        if (kw.length() < 36)
+            kw = kw + " ".repeat(36 - kw.length());
         sb.append(kw.substring(0, Math.min(36, kw.length())));
         // Pad to 80
-        while (sb.length() < 80) sb.append(' ');
+        while (sb.length() < 80)
+            sb.append(' ');
         return sb.toString().substring(0, 80);
     }
 
@@ -248,9 +249,11 @@ class DdsIrBuilderTest {
         sb.append(' '); // col 38: usage
         sb.append("      "); // cols 39-44: location
         String kw = keywords == null ? "" : keywords;
-        if (kw.length() < 36) kw = kw + " ".repeat(36 - kw.length());
+        if (kw.length() < 36)
+            kw = kw + " ".repeat(36 - kw.length());
         sb.append(kw.substring(0, Math.min(36, kw.length())));
-        while (sb.length() < 80) sb.append(' ');
+        while (sb.length() < 80)
+            sb.append(' ');
         return sb.toString().substring(0, 80);
     }
 
@@ -261,9 +264,11 @@ class DdsIrBuilderTest {
         sb.append(paddedName);
         sb.append("                "); // cols 29-44
         String kw = keywords == null ? "" : keywords;
-        if (kw.length() < 36) kw = kw + " ".repeat(36 - kw.length());
+        if (kw.length() < 36)
+            kw = kw + " ".repeat(36 - kw.length());
         sb.append(kw.substring(0, Math.min(36, kw.length())));
-        while (sb.length() < 80) sb.append(' ');
+        while (sb.length() < 80)
+            sb.append(' ');
         return sb.toString().substring(0, 80);
     }
 
@@ -274,9 +279,11 @@ class DdsIrBuilderTest {
         sb.append(paddedName);
         sb.append("                "); // cols 29-44
         String kw = keywords == null ? "" : keywords;
-        if (kw.length() < 36) kw = kw + " ".repeat(36 - kw.length());
+        if (kw.length() < 36)
+            kw = kw + " ".repeat(36 - kw.length());
         sb.append(kw.substring(0, Math.min(36, kw.length())));
-        while (sb.length() < 80) sb.append(' ');
+        while (sb.length() < 80)
+            sb.append(' ');
         return sb.toString().substring(0, 80);
     }
 
@@ -286,9 +293,11 @@ class DdsIrBuilderTest {
         sb.append("          "); // cols 19-28: no name
         sb.append("                "); // cols 29-44
         String kw = keywords == null ? "" : keywords;
-        if (kw.length() < 36) kw = kw + " ".repeat(36 - kw.length());
+        if (kw.length() < 36)
+            kw = kw + " ".repeat(36 - kw.length());
         sb.append(kw.substring(0, Math.min(36, kw.length())));
-        while (sb.length() < 80) sb.append(' ');
+        while (sb.length() < 80)
+            sb.append(' ');
         return sb.toString().substring(0, 80);
     }
 }
