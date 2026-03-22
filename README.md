@@ -1,6 +1,6 @@
 # AS400 Parser
 
-A production-grade parser for IBM AS/400 source code. Converts fixed-format RPG III and DDS (PF/LF) source into structured IR (Intermediate Representation) JSON for modernization, migration, and analysis tools.
+A production-grade parser for IBM AS/400 source code. Converts fixed-format RPG III and DDS (PF/LF/DSPF/PRTF) source into structured IR (Intermediate Representation) JSON for modernization, migration, and analysis tools.
 
 ## Supported Source Types
 
@@ -9,6 +9,8 @@ A production-grade parser for IBM AS/400 source code. Converts fixed-format RPG 
 | **RPG III** | Fixed-format RPG3 programs | `.rpg`, `.rpg3`, `.rpg38`, `.sqlrpg`, `.mbr`, `.cpy`, `.cpysrc` |
 | **DDS PF** | Physical File definitions | `.pf` |
 | **DDS LF** | Logical File definitions (simple, join, multi-format) | `.lf` |
+| **DDS DSPF** | Display File definitions (screens/panels) | `.dspf` |
+| **DDS PRTF** | Printer File definitions (reports) | `.prtf` |
 
 ## Features
 
@@ -28,10 +30,28 @@ A production-grade parser for IBM AS/400 source code. Converts fixed-format RPG 
 - **Continuation lines**: Multi-line keyword areas with `+` continuation handling
 - **Error recovery**: Partial parsing with per-line error collection
 
+### DSPF Parser
+- **Record formats**: Normal, subfile (SFL), and subfile control (SFLCTL) with auto-detection
+- **Fields**: Named fields with usage (I/O/B), screen coordinates, data type, conditioning indicators
+- **Constants**: Quoted text, system keywords (DATE, TIME, SYSNAME, USER, PAGNBR)
+- **Conditioned keywords**: Indicator-conditioned display attributes (DSPATR, COLOR, etc.)
+- **Keywords**: DSPSIZ, CA/CF function keys, SFL, SFLCTL, SFLPAG, SFLSIZ, SFLDSP, SFLDSPCTL, OVERLAY, REFFLD, and more
+- **Continuation lines**: `+` at col 80 with merged keyword parsing
+- **Reference fields**: REFFLD cross-file resolution in batch mode
+
+### PRTF Parser
+- **Record formats**: Print record definitions with spacing/skipping keywords
+- **Fields**: Named fields with print line/position coordinates, edit codes/words
+- **Constants**: Quoted text constants with print positioning
+- **Keywords**: SPACEA, SPACEB, SKIPA, SKIPB, EDTCDE, EDTWRD, UNDERLINE, DSPATR, and more
+- **Continuation lines**: `+` at col 80 with merged keyword parsing
+
 ### Common
 - **Japanese/CJK support**: DBCS-aware normalizer (EBCDIC CCSID 930/5035, Shift-JIS, EUC-JP, UTF-8)
+- **Auto-encoding detection**: Automatic charset detection or explicit `--charset` option
 - **Auto-detection**: Parser selection based on file extension
-- **Unified CLI**: Single JAR handles both RPG3 and DDS files
+- **Unified CLI**: Single JAR handles all source types
+- **REFFLD resolution**: Cross-file field reference resolution in batch mode
 
 ## Quick Start
 
@@ -60,11 +80,17 @@ A production-grade parser for IBM AS/400 source code. Converts fixed-format RPG 
 
 # RPG3 tests only
 ./gradlew test --tests "com.as400parser.rpg3.*"
+
+# DSPF tests only
+./gradlew test --tests "com.as400parser.dspf.*"
+
+# PRTF tests only
+./gradlew test --tests "com.as400parser.prtf.*"
 ```
 
 ## CLI Usage
 
-The CLI auto-detects the parser based on file extension (`.rpg`/`.cpy` → RPG3, `.pf`/`.lf` → DDS).
+The CLI auto-detects the parser based on file extension.
 
 ```bash
 # Show help
@@ -82,6 +108,12 @@ java -jar as400-parser-core-1.0.0-SNAPSHOT-all.jar --source STUDNTPF.pf -o STUDN
 
 # DDS Logical File
 java -jar as400-parser-core-1.0.0-SNAPSHOT-all.jar --source STUDNTL2.lf -o STUDNTL2_ir.json
+
+# DSPF Display File
+java -jar as400-parser-core-1.0.0-SNAPSHOT-all.jar --source STUDSPF.dspf -o STUDSPF_ir.json
+
+# PRTF Printer File
+java -jar as400-parser-core-1.0.0-SNAPSHOT-all.jar --source STURPTPF.prtf -o STURPTPF_ir.json
 ```
 
 ### Parse a Directory (Batch)
@@ -102,6 +134,8 @@ output/
   QDDSSRC/
     STUDNTPF.pf.json
     STUDNTL2.lf.json
+    STUDSPF.dspf.json
+    STURPTPF.prtf.json
 ```
 
 ### Options
@@ -112,11 +146,11 @@ output/
 | `--source-dir DIR` | Parse all source files in a directory |
 | `--output FILE` / `-o` | Write output to file (single mode, default: stdout) |
 | `--output-dir DIR` | Write output files to directory (batch mode) |
-| `--charset CHARSET` | Source encoding (default: `UTF-8`) |
+| `--charset CHARSET` | Source encoding (default: `auto` for auto-detect) |
 | `--copy-path PATHS` | Semicolon-separated `/COPY` search paths (RPG3 only) |
 | `--help` / `-h` | Show help |
 
-**Supported extensions:** `.rpg`, `.rpg3`, `.rpg38`, `.sqlrpg`, `.mbr`, `.cpy`, `.cpysrc`, `.pf`, `.lf`
+**Supported extensions:** `.rpg`, `.rpg3`, `.rpg38`, `.sqlrpg`, `.mbr`, `.cpy`, `.cpysrc`, `.pf`, `.lf`, `.dspf`, `.prtf`
 
 > **Auto-detection:** Parser is selected by file extension. For RPG3 files in a standard AS400 directory structure (e.g., `QRPGSRC/`), sibling `QCPYSRC` directories are automatically detected for `/COPY` member resolution.
 
@@ -125,8 +159,8 @@ output/
 The Python CLI wraps the Java JAR with extra features like parallel batch processing and IR JSON validation.
 
 ```bash
-# Parse a single file (RPG3 or DDS)
-python cli/as400_parser_cli.py parse STUDNTPF.pf -o output.json
+# Parse a single file
+python cli/as400_parser_cli.py parse STUDSPF.dspf -o output.json
 
 # Batch parse a project directory (recursive, preserves structure)
 python cli/as400_parser_cli.py batch ./as400-project -o ./output --parallel 4
@@ -169,23 +203,26 @@ DdsParserFacade parser = new DdsParserFacade();
 IrDocument doc = parser.parse(Path.of("STUDNTPF.pf"), ParseOptions.defaults());
 ```
 
-### Auto-detect Parser
+### DSPF
 
 ```java
-import com.as400parser.common.parser.As400Parser;
-import com.as400parser.common.cli.As400ParserCli;
+import com.as400parser.dspf.DspfParserFacade;
+import com.as400parser.common.model.IrDocument;
+import com.as400parser.common.parser.ParseOptions;
 
-// As400ParserCli internally selects the right parser by extension
-// For programmatic auto-detection:
-Path source = Path.of("STUDNTPF.pf");
-String ext = source.toString().toLowerCase();
-As400Parser parser;
-if (ext.endsWith(".pf") || ext.endsWith(".lf")) {
-    parser = new DdsParserFacade();
-} else {
-    parser = new Rpg3ParserFacade();
-}
-IrDocument doc = parser.parse(source, ParseOptions.defaults());
+DspfParserFacade parser = new DspfParserFacade();
+IrDocument doc = parser.parse(Path.of("STUDSPF.dspf"), ParseOptions.defaults());
+```
+
+### PRTF
+
+```java
+import com.as400parser.prtf.PrtfParserFacade;
+import com.as400parser.common.model.IrDocument;
+import com.as400parser.common.parser.ParseOptions;
+
+PrtfParserFacade parser = new PrtfParserFacade();
+IrDocument doc = parser.parse(Path.of("STURPTPF.prtf"), ParseOptions.defaults());
 ```
 
 ### Serialize to JSON
@@ -288,6 +325,67 @@ String json = serializer.serialize(doc);
 }
 ```
 
+### DSPF
+
+```json
+{
+  "metadata": {
+    "sourceType": "DSPF",
+    "sourceMember": "STUDSPF"
+  },
+  "content": {
+    "fileKeywords": [
+      { "name": "DSPSIZ", "values": ["24", "80", "*DS3"] },
+      { "name": "CA03", "value": "03 '終了'" }
+    ],
+    "recordFormats": [{
+      "name": "STUSRCH",
+      "recordType": "normal",
+      "fields": [{
+        "name": "SCSCL", "length": 4, "dataType": "A", "usage": "B",
+        "screenLine": 6, "screenPosition": 20,
+        "keywords": [{ "keyword": { "name": "DSPATR", "value": "UL" } }]
+      }],
+      "constants": [{
+        "screenLine": 1, "screenPosition": 25,
+        "text": "学 生 メ ン テ ナ ン ス",
+        "keywords": [{ "keyword": { "name": "DSPATR", "value": "HI" } }]
+      }]
+    }]
+  },
+  "dependencies": { "referencedFiles": [] }
+}
+```
+
+### PRTF
+
+```json
+{
+  "metadata": {
+    "sourceType": "PRTF",
+    "sourceMember": "STURPTPF"
+  },
+  "content": {
+    "fileKeywords": [],
+    "recordFormats": [{
+      "name": "TITLE",
+      "keywords": [{ "name": "SPACEB", "value": "3" }],
+      "fields": [{
+        "name": "RPDATE", "length": 8, "dataType": "S", "decimalPositions": 0,
+        "printLine": 1, "printPosition": 1,
+        "keywords": [{ "keyword": { "name": "EDTCDE", "value": "Y" } }]
+      }],
+      "constants": [{
+        "printLine": 1, "printPosition": 30,
+        "text": "学 生 名 簿 一 覧 表",
+        "keywords": [{ "keyword": { "name": "SPACEA", "value": "1" } }]
+      }]
+    }]
+  },
+  "dependencies": { "referencedFiles": [] }
+}
+```
+
 ## Project Structure
 
 ```
@@ -298,7 +396,7 @@ AS400_Parser/
 │       ├── main/java/com/as400parser/
 │       │   ├── common/            # Shared framework
 │       │   │   ├── cli/           # As400ParserCli (unified entry point)
-│       │   │   ├── normalizer/    # Source text normalization
+│       │   │   ├── normalizer/    # Source text normalization (DBCS-aware)
 │       │   │   ├── model/         # IR data model (IrDocument, SourceLine, etc.)
 │       │   │   ├── parser/        # Base parser interface (As400Parser)
 │       │   │   └── serializer/    # JSON serialization
@@ -309,34 +407,43 @@ AS400_Parser/
 │       │   │   ├── Rpg3CopyResolver.java
 │       │   │   ├── ExpressionBuilder.java
 │       │   │   └── model/         # RPG3 IR models
-│       │   └── dds/               # DDS PF/LF parser
-│       │       ├── DdsParserFacade.java
-│       │       ├── DdsIrBuilder.java
-│       │       ├── DdsLineClassifier.java
-│       │       ├── DdsKeywordParser.java
-│       │       └── model/         # DDS IR models (11 classes)
+│       │   ├── dds/               # DDS PF/LF parser
+│       │   │   ├── DdsParserFacade.java
+│       │   │   ├── DdsIrBuilder.java
+│       │   │   ├── DdsLineClassifier.java
+│       │   │   ├── DdsKeywordParser.java
+│       │   │   └── model/         # DDS IR models
+│       │   ├── dspf/              # DSPF parser
+│       │   │   ├── DspfParserFacade.java
+│       │   │   ├── DspfIrBuilder.java
+│       │   │   └── model/         # DSPF IR models (6 classes)
+│       │   └── prtf/              # PRTF parser
+│       │       ├── PrtfParserFacade.java
+│       │       ├── PrtfIrBuilder.java
+│       │       └── model/         # PRTF IR models (4 classes)
 │       └── test/java/             # Unit + integration tests
 ├── grammar/rpg3/                  # ANTLR grammar (reference)
 ├── cli/                           # Python CLI wrapper (as400_parser_cli.py)
 ├── rpg3-student-mgmt/             # Sample source files
 │   ├── QRPGSRC/                   # RPG3 programs
-│   ├── QDDSSRC/                   # DDS PF/LF definitions
+│   ├── QDDSSRC/                   # DDS PF/LF/DSPF/PRTF definitions
 │   └── QCPYSRC/                   # Copy members
-├── output/example-ir/             # Example IR JSON outputs
+├── output/                        # Parsed IR JSON outputs
 └── docs/ai/                       # AI-assisted development docs
 ```
 
 ## Documentation
 
-| Document | RPG3 | DDS PF/LF |
-|----------|------|-----------|
-| Requirements | `docs/ai/requirements/feature-rpg3-parser.md` | `docs/ai/requirements/feature-pf-lf-parser.md` |
-| Design | `docs/ai/design/feature-rpg3-parser.md` | `docs/ai/design/feature-pf-lf-parser.md` |
-| Planning | `docs/ai/planning/feature-rpg3-parser.md` | `docs/ai/planning/feature-pf-lf-parser.md` |
-| Implementation | `docs/ai/implementation/feature-rpg3-parser.md` | `docs/ai/implementation/feature-pf-lf-parser.md` |
-| Testing | `docs/ai/testing/feature-rpg3-parser.md` | `docs/ai/testing/feature-pf-lf-parser.md` |
-| IR JSON Template | `docs/ai/design/feature-ir-json-template.md` | — |
+| Document | RPG3 | DDS PF/LF | DSPF | PRTF |
+|----------|------|-----------|------|------|
+| Requirements | `feature-rpg3-parser.md` | `feature-pf-lf-parser.md` | `feature-dspf-parser.md` | `feature-prtf-parser.md` |
+| Design | `feature-rpg3-parser.md` | `feature-pf-lf-parser.md` | `feature-dspf-parser.md` | `feature-prtf-parser.md` |
+| Planning | `feature-rpg3-parser.md` | `feature-pf-lf-parser.md` | `feature-dspf-parser.md` | `feature-prtf-parser.md` |
+| Implementation | `feature-rpg3-parser.md` | `feature-pf-lf-parser.md` | `feature-dspf-parser.md` | `feature-prtf-parser.md` |
+| Testing | `feature-rpg3-parser.md` | `feature-pf-lf-parser.md` | `feature-dspf-parser.md` | `feature-prtf-parser.md` |
+
+All docs are in `docs/ai/{phase}/` directories.
 
 ## License
 
-TBD
+This project is licensed under the [MIT License](LICENSE).
