@@ -47,6 +47,17 @@ public class DspfIrBuilder {
      * @return populated DspfContent
      */
     public DspfContent buildContent(List<String> normalizedLines) {
+        return buildContent(normalizedLines, null);
+    }
+
+    /**
+     * Build DSPF content from normalized source lines with sequence numbers.
+     *
+     * @param normalizedLines  lines padded to 80 chars
+     * @param sequenceNumbers  original sequence numbers from cols 1-5 (may be null)
+     * @return populated DspfContent
+     */
+    public DspfContent buildContent(List<String> normalizedLines, String[] sequenceNumbers) {
         List<SourceLine> sourceLines = new ArrayList<>();
         List<DdsKeyword> fileKeywords = new ArrayList<>();
         List<DspfRecordFormat> recordFormats = new ArrayList<>();
@@ -64,7 +75,9 @@ public class DspfIrBuilder {
             int lineNum = i + 1;
 
             // Step 1: build SourceLine
-            SourceLine sl = buildSourceLine(line, lineNum);
+            String seqNum = (sequenceNumbers != null && i < sequenceNumbers.length)
+                    ? sequenceNumbers[i] : null;
+            SourceLine sl = buildSourceLine(line, lineNum, seqNum);
             sourceLines.add(sl);
 
             try {
@@ -197,7 +210,9 @@ public class DspfIrBuilder {
                                     sb.append(nextKwArea);
                                     i++;
                                     constantRawLines.add(nextLine.stripTrailing());
-                                    SourceLine contSl = buildSourceLine(nextLine, i + 1);
+                                    String contSeqNum = (sequenceNumbers != null && (i + 1) < sequenceNumbers.length)
+                                            ? sequenceNumbers[i + 1] : null;
+                                    SourceLine contSl = buildSourceLine(nextLine, i + 1, contSeqNum);
                                     contSl.setSpecType("CONTINUATION");
                                     sourceLines.add(contSl);
                                     if (!hasUnterminatedQuote(sb.toString())) {
@@ -647,11 +662,10 @@ public class DspfIrBuilder {
 
     // ========================= Utilities =========================
 
-    private SourceLine buildSourceLine(String line, int lineNum) {
-        String seqNum = extractColumn(line, 1, 5);
+    private SourceLine buildSourceLine(String line, int lineNum, String seqNum) {
         boolean isBlank = line.isBlank();
         boolean isComment = line.length() > 6 && line.charAt(5) == 'A' && line.charAt(6) == '*';
-        return new SourceLine(lineNum, line, null, seqNum, isComment, isBlank);
+        return new SourceLine(lineNum, line, null, seqNum != null ? seqNum : "", isComment, isBlank);
     }
 
     /**

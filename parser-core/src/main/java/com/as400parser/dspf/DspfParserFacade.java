@@ -81,7 +81,7 @@ public class DspfParserFacade implements As400Parser {
         // Build IR
         DspfIrBuilder irBuilder = new DspfIrBuilder();
         List<String> lines = Arrays.asList(normalized.getLines());
-        DspfContent content = irBuilder.buildContent(lines);
+        DspfContent content = irBuilder.buildContent(lines, normalized.getSequenceNumbers());
 
         // Create IrDocument
         IrDocument doc = new IrDocument();

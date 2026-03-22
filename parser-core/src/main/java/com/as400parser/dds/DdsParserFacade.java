@@ -82,7 +82,7 @@ public class DdsParserFacade implements As400Parser {
     private IrDocument runPipeline(NormalizedSource normalized, String sourceType) {
         // Build IR using DdsIrBuilder
         DdsIrBuilder irBuilder = new DdsIrBuilder();
-        Object content = irBuilder.buildContent(normalized.getLines(), sourceType);
+        Object content = irBuilder.buildContent(normalized.getLines(), sourceType, normalized.getSequenceNumbers());
 
         // Create IrDocument
         IrDocument doc = new IrDocument();

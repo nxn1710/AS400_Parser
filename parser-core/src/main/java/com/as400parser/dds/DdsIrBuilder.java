@@ -27,6 +27,18 @@ public class DdsIrBuilder {
      * @return DdsPfContent or DdsLfContent
      */
     public Object buildContent(String[] lines, String sourceType) {
+        return buildContent(lines, sourceType, null);
+    }
+
+    /**
+     * Build content model from normalized lines with sequence numbers.
+     *
+     * @param lines            normalized source lines (padded to 80 chars)
+     * @param sourceType       "DDS_PF" or "DDS_LF"
+     * @param sequenceNumbers  original sequence numbers extracted from cols 1-5 (may be null)
+     * @return DdsPfContent or DdsLfContent
+     */
+    public Object buildContent(String[] lines, String sourceType, String[] sequenceNumbers) {
         boolean isPf = "DDS_PF".equals(sourceType);
 
         // Shared accumulators
@@ -55,7 +67,9 @@ public class DdsIrBuilder {
             int lineNum = i + 1;
 
             // Build sourceLines for IR
-            SourceLine sl = buildSourceLine(line, lineNum);
+            String seqNum = (sequenceNumbers != null && i < sequenceNumbers.length)
+                    ? sequenceNumbers[i] : null;
+            SourceLine sl = buildSourceLine(line, lineNum, seqNum);
             sourceLines.add(sl);
 
             try {
@@ -393,11 +407,10 @@ public class DdsIrBuilder {
 
     // --- Utilities ---
 
-    private SourceLine buildSourceLine(String line, int lineNum) {
-        String seqNum = extractColumn(line, 1, 5);
+    private SourceLine buildSourceLine(String line, int lineNum, String seqNum) {
         boolean isBlank = line.isBlank();
         boolean isComment = line.length() > 6 && line.charAt(5) == 'A' && line.charAt(6) == '*';
-        return new SourceLine(lineNum, line, null, seqNum, isComment, isBlank);
+        return new SourceLine(lineNum, line, null, seqNum != null ? seqNum : "", isComment, isBlank);
     }
 
     /**
