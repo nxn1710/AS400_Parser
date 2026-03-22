@@ -24,7 +24,9 @@ DEFAULT_JAR = Path(__file__).parent.parent / "parser-core" / "build" / "libs" / 
 # All supported extensions across all parsers
 SUPPORTED_EXTENSIONS = {
     ".rpg", ".rpg3", ".rpgsrc", ".mbr", ".cpy", ".cpysrc",  # RPG3
-    ".pf", ".lf",                                             # DDS
+    ".pf", ".lf",                                             # DDS (PF/LF)
+    ".dspf",                                                  # DSPF
+    ".prtf",                                                  # PRTF
 }
 
 
@@ -89,7 +91,15 @@ def cmd_batch(args):
 
     rpg_count = sum(1 for f in source_files if f.suffix.lower() in {".rpg", ".rpg3", ".rpgsrc", ".mbr", ".cpy", ".cpysrc"})
     dds_count = sum(1 for f in source_files if f.suffix.lower() in {".pf", ".lf"})
-    print(f"Found {len(source_files)} source files (RPG3: {rpg_count}, DDS: {dds_count})")
+    dspf_count = sum(1 for f in source_files if f.suffix.lower() == ".dspf")
+    prtf_count = sum(1 for f in source_files if f.suffix.lower() == ".prtf")
+
+    parts = []
+    if rpg_count: parts.append(f"RPG3: {rpg_count}")
+    if dds_count: parts.append(f"DDS: {dds_count}")
+    if dspf_count: parts.append(f"DSPF: {dspf_count}")
+    if prtf_count: parts.append(f"PRTF: {prtf_count}")
+    print(f"Found {len(source_files)} source files ({', '.join(parts)})")
 
     output_dir = args.output_dir or args.source_dir / "ir_output"
 
