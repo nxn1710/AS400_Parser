@@ -5,6 +5,7 @@ import com.as400parser.common.parser.As400Parser;
 import com.as400parser.common.parser.ParseOptions;
 import com.as400parser.common.serializer.IrJsonSerializer;
 import com.as400parser.dds.DdsParserFacade;
+import com.as400parser.dspf.DspfParserFacade;
 import com.as400parser.rpg3.Rpg3ParserFacade;
 
 import java.io.PrintStream;
@@ -30,6 +31,7 @@ public class As400ParserCli {
     /** All known parsers, registered in order. */
     private static final List<As400Parser> PARSERS = List.of(
             new DdsParserFacade(),
+            new DspfParserFacade(),
             new Rpg3ParserFacade()
     );
 

@@ -3,6 +3,9 @@ package com.as400parser.dds;
 import com.as400parser.common.model.IrDocument;
 import com.as400parser.common.model.Metadata;
 import com.as400parser.dds.model.*;
+import com.as400parser.dspf.model.DspfContent;
+import com.as400parser.dspf.model.DspfFieldDefinition;
+import com.as400parser.dspf.model.DspfRecordFormat;
 
 import java.util.*;
 
@@ -13,6 +16,8 @@ import java.util.*;
  * (filename → fieldName → FieldDefinition) and resolves each reference field's
  * {@code dataType}, {@code length}, and {@code decimalPositions} from the
  * referenced source field.
+ * <p>
+ * Supports PF, LF, and DSPF content types.
  * <p>
  * Resolution order:
  * <ol>
@@ -72,6 +77,11 @@ public class DdsRefResolver {
             for (LfRecordFormat lrf : lfContent.getRecordFormats()) {
                 resolved += resolveFields(lrf.getFields(), fileRefName, fieldLookup);
             }
+        } else if (document.getContent() instanceof DspfContent dspfContent) {
+            String fileRefName = extractFileRefName(dspfContent.getFileKeywords());
+            for (DspfRecordFormat rf : dspfContent.getRecordFormats()) {
+                resolved += resolveDspfFields(rf.getFields(), fileRefName, fieldLookup);
+            }
         }
 
         return resolved;
@@ -87,8 +97,19 @@ public class DdsRefResolver {
     public int resolveAll(List<IrDocument> documents) {
         Map<String, Map<String, FieldDefinition>> lookup = buildFieldLookup(documents);
         int total = 0;
+
+        // Pass 1: Resolve PF documents first (they populate the lookup with resolved values)
         for (IrDocument doc : documents) {
-            total += resolve(doc, lookup);
+            if (doc.getContent() instanceof DdsPfContent) {
+                total += resolve(doc, lookup);
+            }
+        }
+
+        // Pass 2: Resolve LF and DSPF documents (they depend on resolved PF fields)
+        for (IrDocument doc : documents) {
+            if (!(doc.getContent() instanceof DdsPfContent)) {
+                total += resolve(doc, lookup);
+            }
         }
         return total;
     }
@@ -109,6 +130,45 @@ public class DdsRefResolver {
             if (targetFile == null) continue;
 
             // Strip library qualifier if present (e.g., "MYLIB/FLDREFPF" → "FLDREFPF")
+            String cleanFile = stripLibrary(targetFile).toUpperCase();
+
+            Map<String, FieldDefinition> fileFields = fieldLookup.get(cleanFile);
+            if (fileFields == null) continue;
+
+            FieldDefinition refField = fileFields.get(field.getReferenceField().toUpperCase());
+            if (refField == null) continue;
+
+            // Copy resolved attributes (only if not already explicitly set)
+            if (field.getDataType() == null && refField.getDataType() != null) {
+                field.setDataType(refField.getDataType());
+            }
+            if (field.getLength() == null && refField.getLength() != null) {
+                field.setLength(refField.getLength());
+            }
+            if (field.getDecimalPositions() == null && refField.getDecimalPositions() != null) {
+                field.setDecimalPositions(refField.getDecimalPositions());
+            }
+            resolved++;
+        }
+        return resolved;
+    }
+
+    /**
+     * Resolve REFFLD references for DSPF fields.
+     * Same logic as {@link #resolveFields} but works with {@link DspfFieldDefinition}.
+     */
+    private int resolveDspfFields(List<DspfFieldDefinition> fields, String fileRefName,
+                                   Map<String, Map<String, FieldDefinition>> fieldLookup) {
+        int resolved = 0;
+        for (DspfFieldDefinition field : fields) {
+            if (!"reference".equals(field.getSource())) continue;
+            if (field.getReferenceField() == null) continue;
+
+            String targetFile = field.getReferenceFile() != null
+                    ? field.getReferenceFile()
+                    : fileRefName;
+            if (targetFile == null) continue;
+
             String cleanFile = stripLibrary(targetFile).toUpperCase();
 
             Map<String, FieldDefinition> fileFields = fieldLookup.get(cleanFile);

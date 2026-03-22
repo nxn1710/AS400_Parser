@@ -5,7 +5,6 @@ import com.as400parser.common.model.Metadata;
 import com.as400parser.common.parser.ParseOptions;
 import com.as400parser.common.serializer.IrJsonSerializer;
 import com.as400parser.rpg3.model.Rpg3Content;
-import com.as400parser.rpg3.model.Rpg3Content.*;
 import com.as400parser.rpg3.model.CalcSpec.SubroutineBlock;
 
 import com.google.gson.JsonArray;
@@ -37,49 +36,48 @@ class Rpg3IntegrationTest {
         private static String json;
 
         private static final String CUSTINQ_SOURCE = String.join("\n",
-            "     H                                                                         ",
-            "     F* File declarations                                                      ",
-            "     FCUSTMAST IF  E           K        DISK                                    ",
-            "     FCUSTDSP  CF  E                    WORKSTN                                 ",
-            "     FQSYSPRT  O   F     132            PRINTER                            OA   ",
-            "     E                    ARR        10  5 0                                    ",
-            "     LQSYSPRT  066 056                                                          ",
-            "     ICUSTREC                                                                   ",
-            "     I                                        1   5 0CUSTNO                     ",
-            "     I                                        6  30  CUSTNM                     ",
-            "     I                                       31  40  CUSTCT                     ",
-            "     I            DS                                                            ",
-            "     I                                        1  80 DTEFLD                      ",
-            "     I                                        1   2 0DTEMON                     ",
-            "     I                                        3   4 0DTEDAY                     ",
-            "     I                                        5   8 0DTEYER                     ",
-            "     C* Main calculation logic                                                  ",
-            "     C           *IN03     DOWEQ*OFF                                            ",
-            "     C           CUSTNO    CHAINCUSTREC                50                       ",
-            "     C  N50                EXSR DSPREC           DISPLAY RECORD                  ",
-            "     C   50                EXSR ERRMSG           SHOW ERROR                      ",
-            "     C                     READ CUSTDSP                                         ",
-            "     C                     END                                                  ",
-            "     C* Subroutine - Display customer record                                    ",
-            "     C           DSPREC    BEGSR                                                ",
-            "     C                     MOVELCUSTNM    DSPNAM 25            MOVE NAME        ",
-            "     C                     Z-ADDCUSTNO    DSPNUM  5 0          MOVE NUMBER       ",
-            "     C           AMT1      ADD  AMT2      TOTAL   9 2          CALC TOTAL        ",
-            "     C           COUNT     IFGT 0                                                ",
-            "     C                     WRITEDTLREC                   90    WRITE DETAIL      ",
-            "     C  N90                EXCPTHDRREC                         PRINT HEADER      ",
-            "     C                     ELSE                                                  ",
-            "     C                     MOVEL*BLANKS  DSPNAM                CLEAR NAME        ",
-            "     C                     END                                                   ",
-            "     C                     ENDSR                                                 ",
-            "     C* Subroutine - Error message                                               ",
-            "     C           ERRMSG    BEGSR                                                 ",
-            "     C                     MOVEL'NOTFND' ERRCDE  6             SET ERROR CODE    ",
-            "     C                     SETON                     LR        SET LR ON         ",
-            "     C                     ENDSR                                                 ",
-            "     OQSYSPRT  H          1P                                                     ",
-            "     O                              CUSTNM    30                                  "
-        );
+                "     H                                                                         ",
+                "     F* File declarations                                                      ",
+                "     FCUSTMAST IF  E           K        DISK                                    ",
+                "     FCUSTDSP  CF  E                    WORKSTN                                 ",
+                "     FQSYSPRT  O   F     132            PRINTER                            OA   ",
+                "     E                    ARR        10  5 0                                    ",
+                "     LQSYSPRT  066 056                                                          ",
+                "     ICUSTREC                                                                   ",
+                "     I                                        1   5 0CUSTNO                     ",
+                "     I                                        6  30  CUSTNM                     ",
+                "     I                                       31  40  CUSTCT                     ",
+                "     I            DS                                                            ",
+                "     I                                        1  80 DTEFLD                      ",
+                "     I                                        1   2 0DTEMON                     ",
+                "     I                                        3   4 0DTEDAY                     ",
+                "     I                                        5   8 0DTEYER                     ",
+                "     C* Main calculation logic                                                  ",
+                "     C           *IN03     DOWEQ*OFF                                            ",
+                "     C           CUSTNO    CHAINCUSTREC                50                       ",
+                "     C  N50                EXSR DSPREC           DISPLAY RECORD                  ",
+                "     C   50                EXSR ERRMSG           SHOW ERROR                      ",
+                "     C                     READ CUSTDSP                                         ",
+                "     C                     END                                                  ",
+                "     C* Subroutine - Display customer record                                    ",
+                "     C           DSPREC    BEGSR                                                ",
+                "     C                     MOVELCUSTNM    DSPNAM 25            MOVE NAME        ",
+                "     C                     Z-ADDCUSTNO    DSPNUM  5 0          MOVE NUMBER       ",
+                "     C           AMT1      ADD  AMT2      TOTAL   9 2          CALC TOTAL        ",
+                "     C           COUNT     IFGT 0                                                ",
+                "     C                     WRITEDTLREC                   90    WRITE DETAIL      ",
+                "     C  N90                EXCPTHDRREC                         PRINT HEADER      ",
+                "     C                     ELSE                                                  ",
+                "     C                     MOVEL*BLANKS  DSPNAM                CLEAR NAME        ",
+                "     C                     END                                                   ",
+                "     C                     ENDSR                                                 ",
+                "     C* Subroutine - Error message                                               ",
+                "     C           ERRMSG    BEGSR                                                 ",
+                "     C                     MOVEL'NOTFND' ERRCDE  6             SET ERROR CODE    ",
+                "     C                     SETON                     LR        SET LR ON         ",
+                "     C                     ENDSR                                                 ",
+                "     OQSYSPRT  H          1P                                                     ",
+                "     O                              CUSTNM    30                                  ");
 
         @BeforeAll
         static void parseSource() {
@@ -213,14 +211,13 @@ class Rpg3IntegrationTest {
         void nestedControlFlow() {
             // BEGSR with IF inside DOW — 3-level nesting
             String source = String.join("\n",
-                "     C           MYSUB     BEGSR                                                ",
-                "     C           *IN03     DOWEQ*OFF                                            ",
-                "     C           COUNT     IFGT 0                                                ",
-                "     C                     ADD  1         COUNT                                  ",
-                "     C                     END                                                   ",
-                "     C                     END                                                   ",
-                "     C                     ENDSR                                                 "
-            );
+                    "     C           MYSUB     BEGSR                                                ",
+                    "     C           *IN03     DOWEQ*OFF                                            ",
+                    "     C           COUNT     IFGT 0                                                ",
+                    "     C                     ADD  1         COUNT                                  ",
+                    "     C                     END                                                   ",
+                    "     C                     END                                                   ",
+                    "     C                     ENDSR                                                 ");
             IrDocument doc = FACADE.parse(source, ParseOptions.defaults());
             Rpg3Content content = (Rpg3Content) doc.getContent();
             assertThat(content.getSubroutines()).hasSize(1);
@@ -230,10 +227,9 @@ class Rpg3IntegrationTest {
         @Test
         void blankAndCommentLines() {
             String source = String.join("\n",
-                "     H                                                                         ",
-                "     C* This is a comment                                                       ",
-                "     C                     SETON                     LR                         "
-            );
+                    "     H                                                                         ",
+                    "     C* This is a comment                                                       ",
+                    "     C                     SETON                     LR                         ");
             IrDocument doc = FACADE.parse(source, ParseOptions.defaults());
             Rpg3Content content = (Rpg3Content) doc.getContent();
             assertThat(content.getComments()).hasSizeGreaterThanOrEqualTo(1);
@@ -244,8 +240,7 @@ class Rpg3IntegrationTest {
         void resultFieldOnlyCalcSpec() {
             // C-spec with no factor1, no factor2, just opcode and result field
             String source = String.join("\n",
-                "     C                     SETON                     LR        SET LR ON         "
-            );
+                    "     C                     SETON                     LR        SET LR ON         ");
             IrDocument doc = FACADE.parse(source, ParseOptions.defaults());
             Rpg3Content content = (Rpg3Content) doc.getContent();
             assertThat(content.getCalculationSpecs()).isNotEmpty();
@@ -279,10 +274,9 @@ class Rpg3IntegrationTest {
         @Test
         void multipleFileSpecs() {
             String source = String.join("\n",
-                "     FCUSTMAST IF  E           K        DISK                                    ",
-                "     FCUSTDSP  CF  E                    WORKSTN                                 ",
-                "     FQSYSPRT  O   F     132            PRINTER                                 "
-            );
+                    "     FCUSTMAST IF  E           K        DISK                                    ",
+                    "     FCUSTDSP  CF  E                    WORKSTN                                 ",
+                    "     FQSYSPRT  O   F     132            PRINTER                                 ");
             IrDocument doc = FACADE.parse(source, ParseOptions.defaults());
             Rpg3Content content = (Rpg3Content) doc.getContent();
             assertThat(content.getFileSpecs()).hasSize(3);
@@ -303,7 +297,8 @@ class Rpg3IntegrationTest {
             sb.append("     FCUSTMAST IF  E           K        DISK                                    \n");
             for (int i = 0; i < 5000; i++) {
                 String lineNum = String.format("%04d", i);
-                sb.append("     C                     ADD  1         COUNT   5 0          LINE ").append(lineNum).append("         \n");
+                sb.append("     C                     ADD  1         COUNT   5 0          LINE ").append(lineNum)
+                        .append("         \n");
             }
 
             long start = System.nanoTime();
@@ -331,10 +326,9 @@ class Rpg3IntegrationTest {
         void allSourceLinesAppearInIr() {
             // Parse CUSTINQ and verify sourceLines count matches
             String source = String.join("\n",
-                "     H                                                                         ",
-                "     FCUSTMAST IF  E           K        DISK                                    ",
-                "     C                     SETON                     LR                         "
-            );
+                    "     H                                                                         ",
+                    "     FCUSTMAST IF  E           K        DISK                                    ",
+                    "     C                     SETON                     LR                         ");
             IrDocument doc = FACADE.parse(source, ParseOptions.defaults());
             Rpg3Content c = (Rpg3Content) doc.getContent();
             assertThat(c.getSourceLines()).hasSize(3);
@@ -343,10 +337,9 @@ class Rpg3IntegrationTest {
         @Test
         void sourceLineNumbersAreSequential() {
             String source = String.join("\n",
-                "     H                                                                         ",
-                "     C* comment                                                                 ",
-                "     C                     SETON                     LR                         "
-            );
+                    "     H                                                                         ",
+                    "     C* comment                                                                 ",
+                    "     C                     SETON                     LR                         ");
             IrDocument doc = FACADE.parse(source, ParseOptions.defaults());
             Rpg3Content c = (Rpg3Content) doc.getContent();
             for (int i = 0; i < c.getSourceLines().size(); i++) {
@@ -375,11 +368,10 @@ class Rpg3IntegrationTest {
         @Test
         void serializedJsonIsValidAndParseable() {
             String source = String.join("\n",
-                "     H                                                                         ",
-                "     FCUSTMAST IF  E           K        DISK                                    ",
-                "     C                     MOVELCUSTNM   DSPNAM 25                              ",
-                "     C                     SETON                     LR                         "
-            );
+                    "     H                                                                         ",
+                    "     FCUSTMAST IF  E           K        DISK                                    ",
+                    "     C                     MOVELCUSTNM   DSPNAM 25                              ",
+                    "     C                     SETON                     LR                         ");
             IrDocument doc = FACADE.parse(source, ParseOptions.defaults());
             String json = new IrJsonSerializer().serialize(doc);
 
@@ -405,13 +397,13 @@ class Rpg3IntegrationTest {
         @Test
         void fullProgramWithAllSpecTypes() {
             String source = String.join("\n",
-                "     H                                                                         ",
-                "     FCUSTMAST IF  E           K        DISK                                    ",
-                "     E                    NAMES  10  20  8                                      ",
-                "     ICUSTMAST                                                                  ",
-                "     I                                         1   5 CUSTNO                     ",
-                "     C                     SETON                     LR                         ",
-                "     OCUSTPRT H                                                                 ");
+                    "     H                                                                         ",
+                    "     FCUSTMAST IF  E           K        DISK                                    ",
+                    "     E                    NAMES  10  20  8                                      ",
+                    "     ICUSTMAST                                                                  ",
+                    "     I                                         1   5 CUSTNO                     ",
+                    "     C                     SETON                     LR                         ",
+                    "     OCUSTPRT H                                                                 ");
             IrDocument doc = FACADE.parse(source, ParseOptions.defaults());
             Rpg3Content c = (Rpg3Content) doc.getContent();
 
@@ -427,9 +419,9 @@ class Rpg3IntegrationTest {
         @Test
         void subroutineOperationsPopulated() {
             String source = String.join("\n",
-                "     C           SR01      BEGSR                                                ",
-                "     C                     SETON                     LR                         ",
-                "     C                     ENDSR                                                ");
+                    "     C           SR01      BEGSR                                                ",
+                    "     C                     SETON                     LR                         ",
+                    "     C                     ENDSR                                                ");
             IrDocument doc = FACADE.parse(source, ParseOptions.defaults());
             Rpg3Content c = (Rpg3Content) doc.getContent();
             assertThat(c.getSubroutines()).isNotEmpty();
@@ -441,8 +433,8 @@ class Rpg3IntegrationTest {
         @Test
         void dependenciesHaveRichMetadata() {
             String source = String.join("\n",
-                "     FCUSTMAST IF  E           K        DISK                                    ",
-                "     C                     CALL 'STUPRG'                                        ");
+                    "     FCUSTMAST IF  E           K        DISK                                    ",
+                    "     C                     CALL 'STUPRG'                                        ");
             IrDocument doc = FACADE.parse(source, ParseOptions.defaults());
             IrDocument.Dependencies deps = doc.getDependencies();
 
