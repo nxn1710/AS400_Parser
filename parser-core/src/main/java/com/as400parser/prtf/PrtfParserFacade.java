@@ -126,7 +126,7 @@ public class PrtfParserFacade implements As400Parser {
         PrtfContent content = (PrtfContent) document.getContent();
         if (content.getParseErrors() != null && !content.getParseErrors().isEmpty()) {
             boolean hasError = content.getParseErrors().stream()
-                .anyMatch(pe -> "ERROR".equals(pe.getSeverity()));
+                .anyMatch(pe -> ParseError.Severity.ERROR.equals(pe.getSeverity()));
             parseInfo.setParseStatus(hasError ? "partial" : "complete");
         } else {
             parseInfo.setParseStatus("complete");

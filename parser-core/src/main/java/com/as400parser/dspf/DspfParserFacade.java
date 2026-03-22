@@ -126,7 +126,7 @@ public class DspfParserFacade implements As400Parser {
         DspfContent content = (DspfContent) document.getContent();
         if (content.getParseErrors() != null && !content.getParseErrors().isEmpty()) {
             boolean hasError = content.getParseErrors().stream()
-                .anyMatch(pe -> "ERROR".equals(pe.getSeverity()));
+                .anyMatch(pe -> ParseError.Severity.ERROR.equals(pe.getSeverity()));
             parseInfo.setParseStatus(hasError ? "partial" : "complete");
         } else {
             parseInfo.setParseStatus("complete");
