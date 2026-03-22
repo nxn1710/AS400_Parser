@@ -6,6 +6,9 @@ import com.as400parser.dds.model.*;
 import com.as400parser.dspf.model.DspfContent;
 import com.as400parser.dspf.model.DspfFieldDefinition;
 import com.as400parser.dspf.model.DspfRecordFormat;
+import com.as400parser.prtf.model.PrtfContent;
+import com.as400parser.prtf.model.PrtfFieldDefinition;
+import com.as400parser.prtf.model.PrtfRecordFormat;
 
 import java.util.*;
 
@@ -17,7 +20,7 @@ import java.util.*;
  * {@code dataType}, {@code length}, and {@code decimalPositions} from the
  * referenced source field.
  * <p>
- * Supports PF, LF, and DSPF content types.
+ * Supports PF, LF, DSPF, and PRTF content types.
  * <p>
  * Resolution order:
  * <ol>
@@ -81,6 +84,11 @@ public class DdsRefResolver {
             String fileRefName = extractFileRefName(dspfContent.getFileKeywords());
             for (DspfRecordFormat rf : dspfContent.getRecordFormats()) {
                 resolved += resolveDspfFields(rf.getFields(), fileRefName, fieldLookup);
+            }
+        } else if (document.getContent() instanceof PrtfContent prtfContent) {
+            String fileRefName = extractFileRefName(prtfContent.getFileKeywords());
+            for (PrtfRecordFormat rf : prtfContent.getRecordFormats()) {
+                resolved += resolvePrtfFields(rf.getFields(), fileRefName, fieldLookup);
             }
         }
 
@@ -161,6 +169,45 @@ public class DdsRefResolver {
                                    Map<String, Map<String, FieldDefinition>> fieldLookup) {
         int resolved = 0;
         for (DspfFieldDefinition field : fields) {
+            if (!"reference".equals(field.getSource())) continue;
+            if (field.getReferenceField() == null) continue;
+
+            String targetFile = field.getReferenceFile() != null
+                    ? field.getReferenceFile()
+                    : fileRefName;
+            if (targetFile == null) continue;
+
+            String cleanFile = stripLibrary(targetFile).toUpperCase();
+
+            Map<String, FieldDefinition> fileFields = fieldLookup.get(cleanFile);
+            if (fileFields == null) continue;
+
+            FieldDefinition refField = fileFields.get(field.getReferenceField().toUpperCase());
+            if (refField == null) continue;
+
+            // Copy resolved attributes (only if not already explicitly set)
+            if (field.getDataType() == null && refField.getDataType() != null) {
+                field.setDataType(refField.getDataType());
+            }
+            if (field.getLength() == null && refField.getLength() != null) {
+                field.setLength(refField.getLength());
+            }
+            if (field.getDecimalPositions() == null && refField.getDecimalPositions() != null) {
+                field.setDecimalPositions(refField.getDecimalPositions());
+            }
+            resolved++;
+        }
+        return resolved;
+    }
+
+    /**
+     * Resolve REFFLD references for PRTF fields.
+     * Same logic as {@link #resolveDspfFields} but works with {@link PrtfFieldDefinition}.
+     */
+    private int resolvePrtfFields(List<PrtfFieldDefinition> fields, String fileRefName,
+                                   Map<String, Map<String, FieldDefinition>> fieldLookup) {
+        int resolved = 0;
+        for (PrtfFieldDefinition field : fields) {
             if (!"reference".equals(field.getSource())) continue;
             if (field.getReferenceField() == null) continue;
 

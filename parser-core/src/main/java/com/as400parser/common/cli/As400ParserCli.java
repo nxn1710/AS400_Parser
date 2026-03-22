@@ -6,6 +6,7 @@ import com.as400parser.common.parser.ParseOptions;
 import com.as400parser.common.serializer.IrJsonSerializer;
 import com.as400parser.dds.DdsParserFacade;
 import com.as400parser.dspf.DspfParserFacade;
+import com.as400parser.prtf.PrtfParserFacade;
 import com.as400parser.rpg3.Rpg3ParserFacade;
 
 import java.io.PrintStream;
@@ -18,7 +19,7 @@ import java.util.*;
 /**
  * Unified CLI entry point for all AS/400 source parsers.
  * <p>
- * Dispatches to the appropriate parser (RPG3, DDS) based on file extension.
+ * Dispatches to the appropriate parser (RPG3, DDS, DSPF, PRTF) based on file extension.
  * Supports both single-file and batch (directory) parsing modes.
  *
  * <pre>
@@ -32,6 +33,7 @@ public class As400ParserCli {
     private static final List<As400Parser> PARSERS = List.of(
             new DdsParserFacade(),
             new DspfParserFacade(),
+            new PrtfParserFacade(),
             new Rpg3ParserFacade()
     );
 
