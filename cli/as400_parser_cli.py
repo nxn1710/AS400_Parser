@@ -7,7 +7,7 @@ Parser is auto-detected from file extension.
 
 Usage:
     as400-parser parse SOURCE [-o OUTPUT] [--copy-path PATHS] [--charset CHARSET]
-    as400-parser batch SOURCE_DIR [-o OUTPUT_DIR] [--copy-path PATHS] [--parallel N]
+    as400-parser batch SOURCE_DIR [-o OUTPUT_DIR] [--copy-path PATHS]
     as400-parser validate JSON_FILE
 """
 
@@ -195,7 +195,6 @@ def main():
     batch_p.add_argument("-o", "--output-dir", type=Path, help="Output directory for JSON files")
     batch_p.add_argument("--copy-path", type=str, help="Colon/semicolon-separated copy paths (RPG3 only)")
     batch_p.add_argument("--charset", default="auto", help="Source file charset (default: auto-detect)")
-    batch_p.add_argument("--parallel", type=int, default=4, help="Number of parallel workers (default: 4)")
     batch_p.set_defaults(func=cmd_batch)
 
     # validate
