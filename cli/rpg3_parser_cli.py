@@ -35,7 +35,10 @@ def find_jar():
 def run_parser(jar_path, source_path, charset="UTF-8", copy_path=None):
     """Invoke the Java parser and return the JSON output."""
     cmd = [
-        "java", "-jar", str(jar_path),
+        "java",
+        "-Dfile.encoding=UTF-8",
+        "-Dstdout.encoding=UTF-8", "-Dstderr.encoding=UTF-8",
+        "-jar", str(jar_path),
         "--source", str(source_path),
         "--charset", charset,
     ]
