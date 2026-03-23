@@ -64,6 +64,8 @@ public class PrtfIrBuilder {
         boolean seenRecord = false;
         PrtfRecordFormat currentFormat = null;
         Object previousElement = null; // PrtfFieldDefinition or PrtfConstant
+        int lastEndColumn = 0; // track end column of last field/constant for +n resolution
+        int lastPrintLine = 0; // track print line of last field/constant for line inheritance
         List<String> continuationBuffer = new ArrayList<>();
 
         for (int i = 0; i < normalizedLines.size(); i++) {
@@ -137,6 +139,7 @@ public class PrtfIrBuilder {
                 boolean hasName = !nameArea.isEmpty();
                 Integer printLine = parsePrintLine(line);
                 Integer printPos = parsePrintPosition(line);
+                boolean hasPos = hasPositionArea(line);
                 String kwArea = keywordParser.extractKeywordArea(line);
                 List<ConditioningIndicator> indicators = parseConditioningIndicators(line);
                 boolean hasIndicators = !indicators.isEmpty();
@@ -148,6 +151,8 @@ public class PrtfIrBuilder {
                     recordFormats.add(rf);
                     currentFormat = rf;
                     previousElement = rf;
+                    lastEndColumn = 0; // reset on new record format
+                    lastPrintLine = 0;
                     sl.setSpecType("RECORD_FORMAT");
 
                     // No 'K' case — key fields are NOT valid for PRTF
@@ -157,6 +162,12 @@ public class PrtfIrBuilder {
                     if (hasName) {
                         // NAMED FIELD
                         PrtfFieldDefinition field = buildFieldDefinition(line, lineNum, nameArea, indicators, kwArea);
+                        // Inherit line from previous element if blank
+                        if (field.getPrintLine() == null && lastPrintLine > 0) {
+                            field.setPrintLine(lastPrintLine);
+                        }
+                        lastEndColumn = resolveFieldPlusPosition(field, lastEndColumn);
+                        if (field.getPrintLine() != null) lastPrintLine = field.getPrintLine();
                         if (currentFormat != null) {
                             currentFormat.getFields().add(field);
                         }
@@ -170,13 +181,13 @@ public class PrtfIrBuilder {
                         sl.setSpecType("FILE_KEYWORD");
 
                     } else if (seenRecord && hasIndicators && !kwArea.isEmpty()
-                               && printLine == null && printPos == null) {
+                               && printLine == null && !hasPos) {
                         // CONDITIONED KEYWORD-ONLY LINE
                         List<DdsKeyword> kws = keywordParser.parseKeywords(kwArea);
-                        mergeConditionedKeywords(previousElement, kws, indicators);
+                        mergeConditionedKeywords(previousElement, kws, indicators, line);
                         sl.setSpecType("CONDITIONED_KEYWORD");
 
-                    } else if (printLine != null || printPos != null) {
+                    } else if (printLine != null || hasPos) {
                         // CONSTANT (has print position, no name)
                         // Check for unterminated quoted text needing continuation
                         String mergedKwArea = kwArea;
@@ -215,11 +226,22 @@ public class PrtfIrBuilder {
 
                         PrtfConstant constant = buildConstant(line, lineNum, indicators,
                                 printLine, printPos, mergedKwArea);
+                        // Inherit line from previous element if blank
+                        if (constant.getPrintLine() == null && lastPrintLine > 0) {
+                            constant.setPrintLine(lastPrintLine);
+                        }
+                        // Resolve +n position to absolute
+                        int plusN = parsePlusN(constant.getPrintPositionRaw());
+                        if (plusN >= 0 && lastEndColumn > 0) {
+                            constant.setPrintPosition(lastEndColumn + plusN + 1);
+                        }
+                        if (constant.getPrintLine() != null) lastPrintLine = constant.getPrintLine();
                         constant.setRawSourceLines(constantRawLines);
                         if (currentFormat != null) {
                             currentFormat.getConstants().add(constant);
                         }
                         previousElement = constant;
+                        lastEndColumn = computeConstantEndColumn(constant, lastEndColumn);
                         sl.setSpecType("CONSTANT");
 
                     } else if (!kwArea.isEmpty()) {
@@ -262,18 +284,22 @@ public class PrtfIrBuilder {
                                                 List<ConditioningIndicator> indicators, String kwArea) {
         PrtfRecordFormat rf = new PrtfRecordFormat();
         rf.setLocation(Location.ofLine(lineNum));
-        rf.setRawSourceLine(line);
+        rf.getRawSourceLines().add(line.stripTrailing());
         rf.setConditioningIndicators(indicators);
         rf.setName(name);
 
-        // Parse keywords
+        // Parse keywords and wrap as ConditionedKeyword
         List<DdsKeyword> kws = keywordParser.parseKeywords(kwArea);
-        rf.setKeywords(kws);
+        List<ConditionedKeyword> condKws = new ArrayList<>();
+        for (DdsKeyword kw : kws) {
+            condKws.add(new ConditionedKeyword(kw, new ArrayList<>()));
+        }
+        rf.setKeywords(condKws);
 
         // No recordType detection — PRTF has no SFL/SFLCTL
 
         // Extract TEXT(...)
-        rf.setText(extractTextKeyword(kws));
+        rf.setText(extractTextKeyword(condKws));
 
         return rf;
     }
@@ -292,6 +318,7 @@ public class PrtfIrBuilder {
         field.setUsage(charAtOrNull(line, 38));
         field.setPrintLine(parsePrintLine(line));
         field.setPrintPosition(parsePrintPosition(line));
+        field.setPrintPositionRaw(extractPositionRaw(line));
 
         // Parse keywords → ConditionedKeyword
         List<DdsKeyword> kws = keywordParser.parseKeywords(kwArea);
@@ -321,6 +348,7 @@ public class PrtfIrBuilder {
         constant.setConditioningIndicators(indicators);
         constant.setPrintLine(printLine);
         constant.setPrintPosition(printPos);
+        constant.setPrintPositionRaw(extractPositionRaw(line));
 
         parseConstantKeywordArea(constant, kwArea);
         return constant;
@@ -417,18 +445,24 @@ public class PrtfIrBuilder {
      */
     private void mergeConditionedKeywords(Object previousElement,
                                            List<DdsKeyword> kws,
-                                           List<ConditioningIndicator> indicators) {
+                                           List<ConditioningIndicator> indicators,
+                                           String rawLine) {
         if (previousElement instanceof PrtfFieldDefinition field) {
             for (DdsKeyword kw : kws) {
                 field.getKeywords().add(new ConditionedKeyword(kw, new ArrayList<>(indicators)));
             }
+            field.getRawSourceLines().add(rawLine.stripTrailing());
         } else if (previousElement instanceof PrtfConstant constant) {
             for (DdsKeyword kw : kws) {
                 constant.getKeywords().add(new ConditionedKeyword(kw, new ArrayList<>(indicators)));
             }
+            constant.getRawSourceLines().add(rawLine.stripTrailing());
         } else if (previousElement instanceof PrtfRecordFormat rf) {
             // Record-level conditioned keywords
-            rf.getKeywords().addAll(kws);
+            for (DdsKeyword kw : kws) {
+                rf.getKeywords().add(new ConditionedKeyword(kw, new ArrayList<>(indicators)));
+            }
+            rf.getRawSourceLines().add(rawLine.stripTrailing());
         }
     }
 
@@ -446,8 +480,12 @@ public class PrtfIrBuilder {
             for (DdsKeyword kw : kws) {
                 constant.getKeywords().add(new ConditionedKeyword(kw, new ArrayList<>()));
             }
+            constant.getRawSourceLines().add(line.stripTrailing());
         } else if (element instanceof PrtfRecordFormat rf) {
-            rf.getKeywords().addAll(kws);
+            for (DdsKeyword kw : kws) {
+                rf.getKeywords().add(new ConditionedKeyword(kw, new ArrayList<>()));
+            }
+            rf.getRawSourceLines().add(line.stripTrailing());
         }
         // No KeyDefinition case — PRTF has no key fields
     }
@@ -469,9 +507,17 @@ public class PrtfIrBuilder {
                 field.getRawSourceLines().add(continuationLines.get(j).stripTrailing());
             }
         } else if (element instanceof PrtfRecordFormat rf) {
-            rf.setKeywords(kws);
-            rf.setText(extractTextKeyword(kws));
+            List<ConditionedKeyword> condKws = new ArrayList<>();
+            for (DdsKeyword kw : kws) {
+                condKws.add(new ConditionedKeyword(kw, new ArrayList<>()));
+            }
+            rf.setKeywords(condKws);
+            rf.setText(extractTextKeyword(condKws));
             // No SFL/SFLCTL detection for PRTF
+            // Add continuation lines to rawSourceLines
+            for (int j = 1; j < continuationLines.size(); j++) {
+                rf.getRawSourceLines().add(continuationLines.get(j).stripTrailing());
+            }
         } else if (element instanceof PrtfConstant constant) {
             // For text continuation, merge keyword areas and re-parse text + keywords
             String mergedArea = keywordParser.mergeKeywordAreas(continuationLines);
@@ -498,7 +544,7 @@ public class PrtfIrBuilder {
             // Record format — create with deferred keywords
             PrtfRecordFormat rf = new PrtfRecordFormat();
             rf.setLocation(Location.ofLine(lineNum));
-            rf.setRawSourceLine(line);
+            rf.getRawSourceLines().add(line.stripTrailing());
             rf.setConditioningIndicators(indicators);
             rf.setName(nameArea);
             rf.setKeywords(new ArrayList<>());
@@ -519,6 +565,7 @@ public class PrtfIrBuilder {
             field.setUsage(charAtOrNull(line, 38));
             field.setPrintLine(parsePrintLine(line));
             field.setPrintPosition(parsePrintPosition(line));
+            field.setPrintPositionRaw(extractPositionRaw(line));
             field.setSource("direct");
             if (currentFormat != null) {
                 currentFormat.getFields().add(field);
@@ -533,7 +580,7 @@ public class PrtfIrBuilder {
             // Could be a constant with print position or a keyword continuation
             Integer printLine = parsePrintLine(line);
             Integer printPos = parsePrintPosition(line);
-            if (printLine != null || printPos != null) {
+            if (printLine != null || hasPositionArea(line)) {
                 // CONSTANT with continuation — create and add to current format
                 PrtfConstant constant = new PrtfConstant();
                 constant.setLocation(Location.ofLine(lineNum));
@@ -541,6 +588,7 @@ public class PrtfIrBuilder {
                 constant.setConditioningIndicators(indicators);
                 constant.setPrintLine(printLine);
                 constant.setPrintPosition(printPos);
+                constant.setPrintPositionRaw(extractPositionRaw(line));
                 // Don't parse keywords yet — they span continuation lines
                 if (currentFormat != null) {
                     currentFormat.getConstants().add(constant);
@@ -604,7 +652,87 @@ public class PrtfIrBuilder {
     }
 
     private Integer parsePrintPosition(String line) {
-        return parseIntOrNull(extractColumnNullable(line, 42, 44));
+        String raw = extractColumnNullable(line, 42, 44);
+        if (raw != null && raw.contains("+")) return null;
+        return parseIntOrNull(raw);
+    }
+
+    /**
+     * Check if cols 42-44 have any non-blank position value (absolute or +n).
+     */
+    private boolean hasPositionArea(String line) {
+        String raw = extractColumnNullable(line, 42, 44);
+        return raw != null;
+    }
+
+    /**
+     * Extract raw position text from cols 42-44 (e.g., "25", "+1"). null if blank.
+     */
+    private String extractPositionRaw(String line) {
+        return extractColumnNullable(line, 42, 44);
+    }
+
+    /**
+     * Parse a +n value from raw position text. Returns the n value, or -1 if not +n.
+     */
+    private int parsePlusN(String raw) {
+        if (raw == null) return -1;
+        raw = raw.trim();
+        if (raw.startsWith("+")) {
+            try {
+                return Integer.parseInt(raw.substring(1).trim());
+            } catch (NumberFormatException e) {
+                return -1;
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * Resolve +n for a field using lastEndColumn. Returns new lastEndColumn.
+     */
+    private int resolveFieldPlusPosition(PrtfFieldDefinition field, int lastEndColumn) {
+        String raw = field.getPrintPositionRaw();
+        int n = parsePlusN(raw);
+        if (n >= 0 && lastEndColumn > 0) {
+            field.setPrintPosition(lastEndColumn + n + 1);
+        }
+        return computeFieldEndColumn(field, lastEndColumn);
+    }
+
+    /**
+     * Compute field end column: position + length - 1.
+     */
+    private int computeFieldEndColumn(PrtfFieldDefinition field, int fallback) {
+        if (field.getPrintPosition() != null && field.getLength() != null) {
+            return field.getPrintPosition() + field.getLength() - 1;
+        }
+        return fallback;
+    }
+
+    /**
+     * Compute constant end column: position + display_length - 1.
+     */
+    private int computeConstantEndColumn(PrtfConstant constant, int fallback) {
+        Integer pos = constant.getPrintPosition();
+        if (pos != null) {
+            int len = 0;
+            if (constant.getText() != null) {
+                len = constant.getText().length();
+            } else if (constant.getSystemKeyword() != null) {
+                len = switch (constant.getSystemKeyword()) {
+                    case "DATE" -> 8;
+                    case "TIME" -> 8;
+                    case "PAGNBR" -> 4;
+                    case "MSGCON" -> 8;
+                    default -> 0;
+                };
+            }
+            if (len > 0) {
+                return pos + len - 1;
+            }
+        }
+        return fallback;
     }
 
     // ========================= Utilities =========================
@@ -615,9 +743,9 @@ public class PrtfIrBuilder {
         return new SourceLine(lineNum, line, null, seqNum != null ? seqNum : "", isComment, isBlank);
     }
 
-    private String extractTextKeyword(List<DdsKeyword> keywords) {
-        for (DdsKeyword kw : keywords) {
-            if ("TEXT".equals(kw.getName())) return kw.getValue();
+    private String extractTextKeyword(List<ConditionedKeyword> keywords) {
+        for (ConditionedKeyword ck : keywords) {
+            if ("TEXT".equals(ck.getKeyword().getName())) return ck.getKeyword().getValue();
         }
         return null;
     }

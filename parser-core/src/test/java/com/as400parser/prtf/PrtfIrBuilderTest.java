@@ -152,8 +152,8 @@ class PrtfIrBuilderTest {
             PrtfContent c = build("     A          R DTLREC                    SPACEA(1)");
             PrtfRecordFormat rf = c.getRecordFormats().get(0);
             assertThat(rf.getKeywords()).hasSize(1);
-            assertThat(rf.getKeywords().get(0).getName()).isEqualTo("SPACEA");
-            assertThat(rf.getKeywords().get(0).getValue()).isEqualTo("1");
+            assertThat(rf.getKeywords().get(0).getKeyword().getName()).isEqualTo("SPACEA");
+            assertThat(rf.getKeywords().get(0).getKeyword().getValue()).isEqualTo("1");
         }
 
         @Test
@@ -457,6 +457,35 @@ class PrtfIrBuilderTest {
                 .toList();
             assertThat(spaceas).hasSize(2);
         }
+
+        @Test
+        void conditionedRecordKeyword_hasIndicators() {
+            PrtfContent c = build(
+                REC_HDRREC,
+                "     A  40                                    SPACEA(1)",
+                "     A N50                                    SPACEB(2)"
+            );
+            PrtfRecordFormat rf = c.getRecordFormats().get(0);
+            assertThat(rf.getKeywords()).hasSize(2);
+
+            // SPACEA should have indicator 40
+            ConditionedKeyword spacea = rf.getKeywords().stream()
+                .filter(ck -> "SPACEA".equals(ck.getKeyword().getName()))
+                .findFirst().orElse(null);
+            assertThat(spacea).isNotNull();
+            assertThat(spacea.getConditioningIndicators()).hasSize(1);
+            assertThat(spacea.getConditioningIndicators().get(0).getIndicator()).isEqualTo("40");
+            assertThat(spacea.getConditioningIndicators().get(0).isNot()).isFalse();
+
+            // SPACEB should have negated indicator 50
+            ConditionedKeyword spaceb = rf.getKeywords().stream()
+                .filter(ck -> "SPACEB".equals(ck.getKeyword().getName()))
+                .findFirst().orElse(null);
+            assertThat(spaceb).isNotNull();
+            assertThat(spaceb.getConditioningIndicators()).hasSize(1);
+            assertThat(spaceb.getConditioningIndicators().get(0).getIndicator()).isEqualTo("50");
+            assertThat(spaceb.getConditioningIndicators().get(0).isNot()).isTrue();
+        }
     }
 
     // =========================================================================
@@ -486,6 +515,21 @@ class PrtfIrBuilderTest {
             PrtfContent c = build(REC_HDRREC, line1, line2);
             PrtfFieldDefinition f = c.getRecordFormats().get(0).getFields().get(0);
             assertThat(f.getRawSourceLines()).hasSize(2);
+        }
+
+        @Test
+        void recordFormat_rawSourceLines_includesConditionedKeywords() {
+            PrtfContent c = build(
+                REC_HDRREC,
+                "     A  40                                    SPACEA(1)",
+                "     A N50                                    SPACEB(2)"
+            );
+            PrtfRecordFormat rf = c.getRecordFormats().get(0);
+            // R-line + 2 conditioned keyword lines = 3 rawSourceLines
+            assertThat(rf.getRawSourceLines()).hasSize(3);
+            assertThat(rf.getRawSourceLines().get(0)).contains("HDRREC");
+            assertThat(rf.getRawSourceLines().get(1)).contains("SPACEA");
+            assertThat(rf.getRawSourceLines().get(2)).contains("SPACEB");
         }
     }
 
@@ -589,6 +633,80 @@ class PrtfIrBuilderTest {
             PrtfContent c = builder.buildContent(lines, seqNums);
             assertThat(c.getSourceLines().get(0).getSequenceNumber()).isEqualTo("00100");
             assertThat(c.getSourceLines().get(1).getSequenceNumber()).isEqualTo("00200");
+        }
+
+        @Test
+        void fieldWithPlusPosition() {
+            // Field1: pos=1, length=10 -> end col 10
+            // Field2: +1 -> resolved to 10 + 1 + 1 = 12
+            PrtfContent c = build(
+                REC_HDRREC,
+                "     A            FIELD1        10A  O  5  1",
+                "     A            RPTFLD         5A  O  5 +1"
+            );
+            PrtfFieldDefinition f1 = c.getRecordFormats().get(0).getFields().get(0);
+            assertThat(f1.getPrintPosition()).isEqualTo(1);
+
+            PrtfFieldDefinition f2 = c.getRecordFormats().get(0).getFields().get(1);
+            assertThat(f2.getPrintLine()).isEqualTo(5);
+            assertThat(f2.getPrintPosition()).isEqualTo(12); // resolved: 10 + 1 + 1
+            assertThat(f2.getPrintPositionRaw()).isEqualTo("+1");
+        }
+
+        @Test
+        void fieldWithAbsolutePosition_hasRaw() {
+            PrtfContent c = build(
+                REC_HDRREC,
+                "     A            RPTFLD        10A  O  5 25"
+            );
+            PrtfFieldDefinition f = c.getRecordFormats().get(0).getFields().get(0);
+            assertThat(f.getPrintPosition()).isEqualTo(25);
+            assertThat(f.getPrintPositionRaw()).isEqualTo("25");
+        }
+
+        @Test
+        void constantWithPlusPosition_notMisclassified() {
+            // Field at pos 1, length 10 -> end col 10
+            // Constant +5 -> resolved to 10 + 5 + 1 = 16
+            PrtfContent c = build(
+                REC_HDRREC,
+                "     A            FIELD1        10A  O  3  1",
+                "     A                                  3 +5'Label'"
+            );
+            assertThat(c.getRecordFormats().get(0).getConstants()).hasSize(1);
+            PrtfConstant ct = c.getRecordFormats().get(0).getConstants().get(0);
+            assertThat(ct.getText()).isEqualTo("Label");
+            assertThat(ct.getPrintLine()).isEqualTo(3);
+            assertThat(ct.getPrintPosition()).isEqualTo(16); // resolved: 10 + 5 + 1
+            assertThat(ct.getPrintPositionRaw()).isEqualTo("+5");
+        }
+
+        @Test
+        void fieldInheritsLineFromPreviousField_plusPosition() {
+            // F1: line=5, pos=10, length=10 -> end=19
+            // F2: line=blank(inherit 5), pos=+5 -> resolved to 19+5+1=25
+            PrtfContent c = build(
+                REC_HDRREC,
+                "     A            FIELD1        10A  O  5 10",
+                "     A            FIELD2         3A  O    +5"
+            );
+            PrtfFieldDefinition f2 = c.getRecordFormats().get(0).getFields().get(1);
+            assertThat(f2.getPrintLine()).isEqualTo(5);  // inherited
+            assertThat(f2.getPrintPosition()).isEqualTo(25); // resolved
+        }
+
+        @Test
+        void fieldInheritsLineFromPreviousField_absolutePosition() {
+            // F1: line=5, pos=10
+            // F2: line=blank(inherit 5), pos=20
+            PrtfContent c = build(
+                REC_HDRREC,
+                "     A            FIELD1        10A  O  5 10",
+                "     A            FIELD2         3A  O    20"
+            );
+            PrtfFieldDefinition f2 = c.getRecordFormats().get(0).getFields().get(1);
+            assertThat(f2.getPrintLine()).isEqualTo(5);  // inherited
+            assertThat(f2.getPrintPosition()).isEqualTo(20);
         }
     }
 }

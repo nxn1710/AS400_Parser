@@ -74,8 +74,11 @@ public class PrtfFieldDefinition {
     /** Cols 39-41: print line number (max 255). null if not specified (e.g., P-fields). */
     private Integer printLine;
 
-    /** Cols 42-44: print column position (max 255). null if not specified. */
+    /** Cols 42-44: print column position (max 255). null if not specified or if +n relative. */
     private Integer printPosition;
+
+    /** Cols 42-44: raw position text (e.g., "25" or "+1"). null if blank. */
+    private String printPositionRaw;
 
     /**
      * Computed field source type:
@@ -205,6 +208,14 @@ public class PrtfFieldDefinition {
 
     public void setPrintPosition(Integer printPosition) {
         this.printPosition = printPosition;
+    }
+
+    public String getPrintPositionRaw() {
+        return printPositionRaw;
+    }
+
+    public void setPrintPositionRaw(String printPositionRaw) {
+        this.printPositionRaw = printPositionRaw;
     }
 
     public String getSource() {

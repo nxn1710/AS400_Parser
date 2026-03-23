@@ -1,7 +1,6 @@
 package com.as400parser.dspf.model;
 
 import com.as400parser.common.model.Location;
-import com.as400parser.dds.model.DdsKeyword;
 import com.as400parser.dds.model.KeyDefinition;
 
 import java.util.ArrayList;
@@ -26,8 +25,8 @@ public class DspfRecordFormat {
     /** Source position. */
     private Location location;
 
-    /** Original source text. */
-    private String rawSourceLine;
+    /** Original source lines (R-line + continuation keyword lines). */
+    private List<String> rawSourceLines;
 
     /** Conditioning indicators on the record format line (cols 8-16). */
     private List<ConditioningIndicator> conditioningIndicators;
@@ -47,8 +46,8 @@ public class DspfRecordFormat {
     /** Convenience: extracted from TEXT(...) keyword. null if absent. */
     private String text;
 
-    /** Record-level keywords (reuse DdsKeyword). */
-    private List<DdsKeyword> keywords;
+    /** Record-level keywords, each with optional conditioning indicators. */
+    private List<ConditionedKeyword> keywords;
 
     /** Named field definitions. */
     private List<DspfFieldDefinition> fields;
@@ -60,6 +59,7 @@ public class DspfRecordFormat {
     private List<KeyDefinition> keys;
 
     public DspfRecordFormat() {
+        this.rawSourceLines = new ArrayList<>();
         this.conditioningIndicators = new ArrayList<>();
         this.keywords = new ArrayList<>();
         this.fields = new ArrayList<>();
@@ -77,12 +77,12 @@ public class DspfRecordFormat {
         this.location = location;
     }
 
-    public String getRawSourceLine() {
-        return rawSourceLine;
+    public List<String> getRawSourceLines() {
+        return rawSourceLines;
     }
 
-    public void setRawSourceLine(String rawSourceLine) {
-        this.rawSourceLine = rawSourceLine != null ? rawSourceLine.stripTrailing() : null;
+    public void setRawSourceLines(List<String> rawSourceLines) {
+        this.rawSourceLines = rawSourceLines;
     }
 
     public List<ConditioningIndicator> getConditioningIndicators() {
@@ -125,11 +125,11 @@ public class DspfRecordFormat {
         this.text = text;
     }
 
-    public List<DdsKeyword> getKeywords() {
+    public List<ConditionedKeyword> getKeywords() {
         return keywords;
     }
 
-    public void setKeywords(List<DdsKeyword> keywords) {
+    public void setKeywords(List<ConditionedKeyword> keywords) {
         this.keywords = keywords;
     }
 

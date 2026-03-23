@@ -279,7 +279,7 @@ class DspfIntegrationTest {
 
         DspfRecordFormat sflctl = content.getRecordFormats().get(1);
         List<String> kwNames = sflctl.getKeywords().stream()
-                .map(DdsKeyword::getName).toList();
+                .map(ck -> ck.getKeyword().getName()).toList();
         assertThat(kwNames).contains("SFLCTL", "SFLSIZ", "SFLPAG");
     }
 
@@ -293,7 +293,7 @@ class DspfIntegrationTest {
         // These are conditioned keyword-only lines merged into the record format
         // After continuation merging, the SFLCTL format should have these keywords
         List<String> kwNames = sflctl.getKeywords().stream()
-                .map(DdsKeyword::getName).toList();
+                .map(ck -> ck.getKeyword().getName()).toList();
         // SFLDSP, SFLDSPCTL, SFLCLR, SFLEND should be present
         assertThat(kwNames).contains("SFLDSP", "SFLDSPCTL", "SFLCLR", "SFLEND");
     }

@@ -33,8 +33,11 @@ public class DspfConstant {
     /** Screen line number (cols 39-41). null if not specified. */
     private Integer screenLine;
 
-    /** Screen column position (cols 42-44). null if not specified. */
+    /** Screen column position (cols 42-44). null if not specified or if +n relative. */
     private Integer screenPosition;
+
+    /** Cols 42-44: raw position text (e.g., "25" or "+1"). null if blank. */
+    private String screenPositionRaw;
 
     /** Literal text content (stripped of quotes). null for system keyword constants. */
     private String text;
@@ -91,6 +94,14 @@ public class DspfConstant {
 
     public void setScreenPosition(Integer screenPosition) {
         this.screenPosition = screenPosition;
+    }
+
+    public String getScreenPositionRaw() {
+        return screenPositionRaw;
+    }
+
+    public void setScreenPositionRaw(String screenPositionRaw) {
+        this.screenPositionRaw = screenPositionRaw;
     }
 
     public String getText() {

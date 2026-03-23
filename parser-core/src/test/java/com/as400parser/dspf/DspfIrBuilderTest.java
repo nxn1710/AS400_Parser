@@ -473,6 +473,56 @@ class DspfIrBuilderTest {
             assertThat(ul.getConditioningIndicators().get(0).isNot()).isFalse();
             assertThat(ul.getConditioningIndicators().get(0).getIndicator()).isEqualTo("60");
         }
+
+        @Test
+        void conditionedRecordKeyword_hasIndicators() {
+            // Simulates STULSTD.dspf STUSFC record with conditioned SFL keywords
+            DspfContent c = build(
+                "     A          R STUSFC                     SFLCTL(STUSFL)",
+                "     A  40                                    SFLDSP",
+                "     A  41                                    SFLDSPCTL",
+                "     A  42                                    SFLCLR",
+                "     A  43                                    SFLEND(*MORE)"
+            );
+            DspfRecordFormat rf = c.getRecordFormats().get(0);
+
+            // SFLDSP should have indicator 40
+            ConditionedKeyword sfldsp = rf.getKeywords().stream()
+                .filter(ck -> "SFLDSP".equals(ck.getKeyword().getName()))
+                .findFirst().orElse(null);
+            assertThat(sfldsp).isNotNull();
+            assertThat(sfldsp.getConditioningIndicators()).hasSize(1);
+            assertThat(sfldsp.getConditioningIndicators().get(0).getIndicator()).isEqualTo("40");
+            assertThat(sfldsp.getConditioningIndicators().get(0).isNot()).isFalse();
+
+            // SFLCLR should have indicator 42
+            ConditionedKeyword sflclr = rf.getKeywords().stream()
+                .filter(ck -> "SFLCLR".equals(ck.getKeyword().getName()))
+                .findFirst().orElse(null);
+            assertThat(sflclr).isNotNull();
+            assertThat(sflclr.getConditioningIndicators()).hasSize(1);
+            assertThat(sflclr.getConditioningIndicators().get(0).getIndicator()).isEqualTo("42");
+
+            // SFLEND should have indicator 43
+            ConditionedKeyword sflend = rf.getKeywords().stream()
+                .filter(ck -> "SFLEND".equals(ck.getKeyword().getName()))
+                .findFirst().orElse(null);
+            assertThat(sflend).isNotNull();
+            assertThat(sflend.getConditioningIndicators().get(0).getIndicator()).isEqualTo("43");
+        }
+
+        @Test
+        void unconditionedRecordKeyword_hasEmptyIndicators() {
+            DspfContent c = build(
+                "     A          R MYREC                      SFLCTL(MYSFL)"
+            );
+            DspfRecordFormat rf = c.getRecordFormats().get(0);
+            ConditionedKeyword sflctl = rf.getKeywords().stream()
+                .filter(ck -> "SFLCTL".equals(ck.getKeyword().getName()))
+                .findFirst().orElse(null);
+            assertThat(sflctl).isNotNull();
+            assertThat(sflctl.getConditioningIndicators()).isEmpty();
+        }
     }
 
     // =========================================================================
@@ -504,6 +554,24 @@ class DspfIrBuilderTest {
             DspfContent c = build(REC_MYREC, line1, line2);
             DspfFieldDefinition f = c.getRecordFormats().get(0).getFields().get(0);
             assertThat(f.getRawSourceLines()).hasSize(2);
+        }
+
+        @Test
+        void recordFormat_rawSourceLines_includesContinuationKeywords() {
+            // Record format with continuation keyword lines
+            DspfContent c = build(
+                "     A          R STUSFC                     SFLCTL(STUSFL)",
+                "     A  40                                    SFLDSP",
+                "     A  41                                    SFLDSPCTL",
+                "     A  42                                    SFLCLR"
+            );
+            DspfRecordFormat rf = c.getRecordFormats().get(0);
+            // R-line + 3 conditioned keyword lines = 4 rawSourceLines
+            assertThat(rf.getRawSourceLines()).hasSize(4);
+            assertThat(rf.getRawSourceLines().get(0)).contains("STUSFC");
+            assertThat(rf.getRawSourceLines().get(1)).contains("SFLDSP");
+            assertThat(rf.getRawSourceLines().get(2)).contains("SFLDSPCTL");
+            assertThat(rf.getRawSourceLines().get(3)).contains("SFLCLR");
         }
     }
 
@@ -698,6 +766,80 @@ class DspfIrBuilderTest {
             DspfContent c = build("     a          R MYREC");
             assertThat(c.getRecordFormats()).hasSize(1);
             assertThat(c.getRecordFormats().get(0).getName()).isEqualTo("MYREC");
+        }
+
+        @Test
+        void fieldWithPlusPosition() {
+            // First field: pos=1, length=5 -> end column = 5
+            // Second field: +1 -> resolved to 5 + 1 + 1 = 7
+            DspfContent c = build(
+                REC_MYREC,
+                "     A            FIELD1         5A  B  5  1",
+                "     A            FIELD2         3A  B  5 +1"
+            );
+            DspfFieldDefinition f1 = c.getRecordFormats().get(0).getFields().get(0);
+            assertThat(f1.getScreenPosition()).isEqualTo(1);
+
+            DspfFieldDefinition f2 = c.getRecordFormats().get(0).getFields().get(1);
+            assertThat(f2.getScreenLine()).isEqualTo(5);
+            assertThat(f2.getScreenPosition()).isEqualTo(7); // resolved: 5 + 1 + 1
+            assertThat(f2.getScreenPositionRaw()).isEqualTo("+1");
+        }
+
+        @Test
+        void fieldWithAbsolutePosition_hasRaw() {
+            DspfContent c = build(
+                REC_MYREC,
+                "     A            MYFIELD        5A  B  5 25"
+            );
+            DspfFieldDefinition f = c.getRecordFormats().get(0).getFields().get(0);
+            assertThat(f.getScreenPosition()).isEqualTo(25);
+            assertThat(f.getScreenPositionRaw()).isEqualTo("25");
+        }
+
+        @Test
+        void constantWithPlusPosition_notMisclassified() {
+            // Field at pos 1, length 5 -> end col 5
+            // Constant +5 -> resolved to 5 + 5 + 1 = 11
+            DspfContent c = build(
+                REC_MYREC,
+                "     A            FIELD1         5A  B  3  1",
+                "     A                                  3 +5'Label'"
+            );
+            assertThat(c.getRecordFormats().get(0).getConstants()).hasSize(1);
+            DspfConstant ct = c.getRecordFormats().get(0).getConstants().get(0);
+            assertThat(ct.getText()).isEqualTo("Label");
+            assertThat(ct.getScreenLine()).isEqualTo(3);
+            assertThat(ct.getScreenPosition()).isEqualTo(11); // resolved: 5 + 5 + 1
+            assertThat(ct.getScreenPositionRaw()).isEqualTo("+5");
+        }
+
+        @Test
+        void fieldInheritsLineFromPreviousField_plusPosition() {
+            // F1: line=5, pos=10, length=5 -> end=14
+            // F2: line=blank(inherit 5), pos=+5 -> resolved to 14+5+1=20
+            DspfContent c = build(
+                REC_MYREC,
+                "     A            FIELD1         5A  B  5 10",
+                "     A            FIELD2         3A  B    +5"
+            );
+            DspfFieldDefinition f2 = c.getRecordFormats().get(0).getFields().get(1);
+            assertThat(f2.getScreenLine()).isEqualTo(5);  // inherited
+            assertThat(f2.getScreenPosition()).isEqualTo(20); // resolved
+        }
+
+        @Test
+        void fieldInheritsLineFromPreviousField_absolutePosition() {
+            // F1: line=5, pos=10
+            // F2: line=blank(inherit 5), pos=20
+            DspfContent c = build(
+                REC_MYREC,
+                "     A            FIELD1         5A  B  5 10",
+                "     A            FIELD2         3A  B    20"
+            );
+            DspfFieldDefinition f2 = c.getRecordFormats().get(0).getFields().get(1);
+            assertThat(f2.getScreenLine()).isEqualTo(5);  // inherited
+            assertThat(f2.getScreenPosition()).isEqualTo(20);
         }
     }
 }

@@ -50,7 +50,7 @@
      A*   --- 検索条件入力 ---
      A                                  4  3'学校コード:'
      A            FCSCL          4A  B  4 16
-     A                                      DSPATR(UL)
+     A  43                                  DSPATR(UL)
      A                                  4 23'氏名:'
      A            FCNAM         15A  B  4 30
      A                                      DSPATR(UL)

@@ -48,8 +48,11 @@ public class DspfFieldDefinition {
     /** Cols 39-41: screen line number. null if not specified. */
     private Integer screenLine;
 
-    /** Cols 42-44: screen column position. null if not specified. */
+    /** Cols 42-44: screen column position. null if not specified or if +n relative. */
     private Integer screenPosition;
+
+    /** Cols 42-44: raw position text (e.g., "25" or "+1"). null if blank. */
+    private String screenPositionRaw;
 
     /**
      * Computed field source type:
@@ -164,6 +167,14 @@ public class DspfFieldDefinition {
 
     public void setScreenPosition(Integer screenPosition) {
         this.screenPosition = screenPosition;
+    }
+
+    public String getScreenPositionRaw() {
+        return screenPositionRaw;
+    }
+
+    public void setScreenPositionRaw(String screenPositionRaw) {
+        this.screenPositionRaw = screenPositionRaw;
     }
 
     public String getSource() {

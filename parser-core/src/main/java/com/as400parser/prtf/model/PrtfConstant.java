@@ -36,8 +36,11 @@ public class PrtfConstant {
     /** Print line number (cols 39-41, max 255). null if not specified. */
     private Integer printLine;
 
-    /** Print column position (cols 42-44, max 255). null if not specified. */
+    /** Print column position (cols 42-44, max 255). null if not specified or if +n relative. */
     private Integer printPosition;
+
+    /** Cols 42-44: raw position text (e.g., "25" or "+1"). null if blank. */
+    private String printPositionRaw;
 
     /** Literal text content (stripped of quotes). null for system keyword constants. */
     private String text;
@@ -94,6 +97,14 @@ public class PrtfConstant {
 
     public void setPrintPosition(Integer printPosition) {
         this.printPosition = printPosition;
+    }
+
+    public String getPrintPositionRaw() {
+        return printPositionRaw;
+    }
+
+    public void setPrintPositionRaw(String printPositionRaw) {
+        this.printPositionRaw = printPositionRaw;
     }
 
     public String getText() {
