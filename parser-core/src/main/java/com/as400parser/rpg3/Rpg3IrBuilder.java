@@ -743,7 +743,7 @@ public class Rpg3IrBuilder {
         comment.setLineNumber(origLine);
         comment.setText(sub(line, 7, 80));  // skip col 7 '*' marker
         comment.setRawSourceLine(line);
-        comment.setLocation(new Location(origLine, origLine, 1, 80));
+        comment.setLocation(Location.ofLine(origLine));
 
         if (line.length() > 5) {
             char specC = Character.toUpperCase(line.charAt(5));

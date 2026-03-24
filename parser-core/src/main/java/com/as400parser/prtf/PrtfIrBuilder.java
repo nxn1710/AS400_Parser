@@ -177,6 +177,10 @@ public class PrtfIrBuilder {
                     } else if (!seenRecord && !kwArea.isEmpty()) {
                         // FILE-LEVEL KEYWORD (before any record format)
                         List<DdsKeyword> kws = keywordParser.parseKeywords(kwArea);
+                        for (DdsKeyword kw : kws) {
+                            kw.setLocation(Location.ofLine(lineNum));
+                            kw.setRawSourceLine(line.stripTrailing());
+                        }
                         fileKeywords.addAll(kws);
                         sl.setSpecType("FILE_KEYWORD");
 
@@ -265,6 +269,17 @@ public class PrtfIrBuilder {
             } catch (Exception e) {
                 errors.add(ParseError.error(lineNum, 1,
                         "Failed to parse line " + lineNum + ": " + e.getMessage()));
+            }
+        }
+
+        // Post-process: fix endLine based on actual rawSourceLines count
+        for (PrtfRecordFormat rf : recordFormats) {
+            fixEndLine(rf.getLocation(), rf.getRawSourceLines().size());
+            for (PrtfFieldDefinition f : rf.getFields()) {
+                fixEndLine(f.getLocation(), f.getRawSourceLines().size());
+            }
+            for (PrtfConstant c : rf.getConstants()) {
+                fixEndLine(c.getLocation(), c.getRawSourceLines().size());
             }
         }
 
@@ -733,6 +748,15 @@ public class PrtfIrBuilder {
             }
         }
         return fallback;
+    }
+
+    /**
+     * Fix endLine in Location based on raw source lines count.
+     */
+    private void fixEndLine(Location location, int lineCount) {
+        if (location != null && lineCount > 1) {
+            location.setEndLine(location.getStartLine() + lineCount - 1);
+        }
     }
 
     // ========================= Utilities =========================

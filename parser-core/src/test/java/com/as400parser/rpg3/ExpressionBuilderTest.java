@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class ExpressionBuilderTest {
 
-    private static final Location LOC = new Location(1, 1, 1, 80);
+    private static final Location LOC = new Location(1, 1);
 
     // =========================================================================
     // Step 1: blank/empty → null

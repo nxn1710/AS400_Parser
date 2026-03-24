@@ -188,6 +188,10 @@ public class DspfIrBuilder {
                     } else if (!seenRecord && !kwArea.isEmpty()) {
                         // FILE-LEVEL KEYWORD (before any record format)
                         List<DdsKeyword> kws = keywordParser.parseKeywords(kwArea);
+                        for (DdsKeyword kw : kws) {
+                            kw.setLocation(Location.ofLine(lineNum));
+                            kw.setRawSourceLine(line.stripTrailing());
+                        }
                         fileKeywords.addAll(kws);
                         sl.setSpecType("FILE_KEYWORD");
 
@@ -275,6 +279,17 @@ public class DspfIrBuilder {
             } catch (Exception e) {
                 errors.add(ParseError.error(lineNum, 1,
                         "Failed to parse line " + lineNum + ": " + e.getMessage()));
+            }
+        }
+
+        // Post-process: fix endLine based on actual rawSourceLines count
+        for (DspfRecordFormat rf : recordFormats) {
+            fixEndLine(rf.getLocation(), rf.getRawSourceLines().size());
+            for (DspfFieldDefinition f : rf.getFields()) {
+                fixEndLine(f.getLocation(), f.getRawSourceLines().size());
+            }
+            for (DspfConstant c : rf.getConstants()) {
+                fixEndLine(c.getLocation(), c.getRawSourceLines().size());
             }
         }
 
@@ -790,6 +805,16 @@ public class DspfIrBuilder {
             }
         }
         return fallback;
+    }
+
+    /**
+     * Fix endLine in Location based on raw source lines count.
+     * endLine = startLine + lineCount - 1.
+     */
+    private void fixEndLine(Location location, int lineCount) {
+        if (location != null && lineCount > 1) {
+            location.setEndLine(location.getStartLine() + lineCount - 1);
+        }
     }
 
     // ========================= Utilities =========================

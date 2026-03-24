@@ -14,7 +14,7 @@ import java.util.Map;
 
 class Rpg3SymbolTableBuilderTest {
 
-    private static final Location LOC = new Location(1, 1, 1, 80);
+    private static final Location LOC = new Location(1, 1);
 
     // =========================================================================
     // Source 1: I-spec field definitions

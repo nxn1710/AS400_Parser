@@ -1,6 +1,8 @@
 package com.as400parser.dds.model;
 
 
+import com.as400parser.common.model.Location;
+
 import java.util.List;
 
 /**
@@ -23,6 +25,12 @@ public class DdsKeyword {
 
     /** Full raw keyword text for round-tripping (e.g., "TEXT('学生ID')"). */
     private String rawText;
+
+    /** Source location in the original file (line number). */
+    private Location location;
+
+    /** The full raw source line from the DDS source. */
+    private String rawSourceLine;
 
     /** COMP only: comparison operator "EQ","NE","GT","GE","LT","LE". null for non-COMP keywords. */
     private String comparisonOperator;
@@ -80,6 +88,22 @@ public class DdsKeyword {
 
     public void setRawText(String rawText) {
         this.rawText = rawText;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
+    public String getRawSourceLine() {
+        return rawSourceLine;
+    }
+
+    public void setRawSourceLine(String rawSourceLine) {
+        this.rawSourceLine = rawSourceLine;
     }
 
     public String getComparisonOperator() {

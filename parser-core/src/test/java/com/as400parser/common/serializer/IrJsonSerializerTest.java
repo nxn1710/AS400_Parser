@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.*;
 class IrJsonSerializerTest {
 
     private final IrJsonSerializer serializer = new IrJsonSerializer();
-    private static final Location LOC = new Location(1, 1, 1, 80);
+    private static final Location LOC = new Location(1, 1);
 
     // =========================================================================
     // Basic document serialization
@@ -388,7 +388,7 @@ class IrJsonSerializerTest {
             entry.setDefinedIn("DS");
             entry.setDataStructure(true);
             entry.setDataStructureName("MYDS");
-            entry.setDefinitionLocation(new Location(5, 5, 1, 80));
+            entry.setDefinitionLocation(new Location(5, 5));
             content.getSymbolTable().add(entry);
 
             IrDocument doc = new IrDocument();
@@ -427,7 +427,7 @@ class IrJsonSerializerTest {
             entry.setLength(length);
             entry.setDecimalPositions(decPos);
             entry.setDefinedIn(definedIn);
-            entry.setDefinitionLocation(new Location(line, line, 1, 80));
+            entry.setDefinitionLocation(new Location(line, line));
             content.getSymbolTable().add(entry);
         }
     }
