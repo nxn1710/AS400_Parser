@@ -4,24 +4,40 @@ import com.as400parser.dds.model.DdsKeyword;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
- * Parses the keyword area (columns 45-80) of DDS A-spec lines into {@link DdsKeyword} objects.
+ * Parses the keyword area (columns 45-80) of DDS A-spec lines into
+ * {@link DdsKeyword} objects.
  * <p>
  * Handles 16 parsing patterns for 50 keywords including:
  * <ul>
- *   <li>No-arg keywords (UNIQUE, FIFO, etc.)</li>
- *   <li>Single-value keywords (PFILE, TEXT, DATFMT, etc.)</li>
- *   <li>Multi-value keywords (VALUES, CONCAT, JFILE, etc.)</li>
- *   <li>COMP/CMP with operator syntax</li>
- *   <li>RANGE with two values</li>
- *   <li>Hex literals X'...' and special values *NULL, *DESCEND</li>
- *   <li>Qualified names LIB/FILE</li>
- *   <li>Japanese text in quotes</li>
+ * <li>No-arg keywords (UNIQUE, FIFO, etc.)</li>
+ * <li>Single-value keywords (PFILE, TEXT, DATFMT, etc.)</li>
+ * <li>Multi-value keywords (VALUES, CONCAT, JFILE, etc.)</li>
+ * <li>COMP/CMP with operator syntax</li>
+ * <li>RANGE with two values</li>
+ * <li>Hex literals X'...' and special values *NULL, *DESCEND</li>
+ * <li>Qualified names LIB/FILE</li>
+ * <li>Japanese text in quotes</li>
  * </ul>
  * CMP is normalized to COMP during parsing.
  */
 public class DdsKeywordParser {
+
+    /**
+     * Keywords that require full tokenization of their parameters.
+     * All other keywords store raw parenthesized content as value
+     * to avoid expensive parsing on complex nested keywords
+     * (e.g., WDWBORDER, GRDBOX, graphical expressions).
+     */
+    private static final Set<String> TOKENIZABLE_KEYWORDS = Set.of(
+            "COMP", "RANGE", "REFFLD", "REF",
+            "TEXT", "COLHDG", "PFILE", "JFILE",
+            "VALUES", "CONCAT", "DATFMT", "TIMFMT",
+            "EDTCDE", "EDTWRD", "DFT", "DFTVAL",
+            "CHKMSGID", "SFLCSRRRN"
+    );
 
     /**
      * Extract the keyword area from a normalized DDS line.
@@ -33,18 +49,30 @@ public class DdsKeywordParser {
         }
         int end = Math.min(line.length(), 80);
         String area = line.substring(44, end);
-        // Strip continuation indicator '+' if at col 80
+        // Strip continuation indicator '+' at col 80 or at end of line
         if (area.length() >= 36 && area.charAt(35) == '+') {
             area = area.substring(0, 35);
+        } else if (!area.isEmpty() && area.charAt(area.length() - 1) == '+') {
+            area = area.substring(0, area.length() - 1);
         }
         return area.trim();
     }
 
     /**
-     * Check if a line has a continuation indicator ('+' at column 80).
+     * Check if a line has a continuation indicator ('+' at column 80 or at end of
+     * line).
      */
     public boolean hasContinuation(String line) {
-        return line != null && line.length() >= 80 && line.charAt(79) == '+';
+        if (line == null || line.length() < 45) {
+            return false;
+        }
+        // Check '+' at column 80 (index 79)
+        if (line.length() >= 80 && line.charAt(79) == '+') {
+            return true;
+        }
+        // Check '+' at end of line (trimmed)
+        String trimmed = line.stripTrailing();
+        return !trimmed.isEmpty() && trimmed.charAt(trimmed.length() - 1) == '+';
     }
 
     /**
@@ -78,7 +106,8 @@ public class DdsKeywordParser {
 
     /**
      * Parse a single keyword area string into a list of keywords.
-     * Input is the raw text from columns 45-80 (trimmed, continuations already merged).
+     * Input is the raw text from columns 45-80 (trimmed, continuations already
+     * merged).
      */
     public List<DdsKeyword> parseKeywords(String keywordArea) {
         List<DdsKeyword> keywords = new ArrayList<>();
@@ -94,7 +123,8 @@ public class DdsKeywordParser {
             while (pos < len && keywordArea.charAt(pos) == ' ') {
                 pos++;
             }
-            if (pos >= len) break;
+            if (pos >= len)
+                break;
 
             // Read keyword name (uppercase alpha characters)
             int nameStart = pos;
@@ -193,6 +223,9 @@ public class DdsKeywordParser {
 
     /**
      * Parse keyword parameters based on keyword name and content.
+     * Only keywords in {@link #TOKENIZABLE_KEYWORDS} are tokenized;
+     * all others store raw content as value to avoid CPU-intensive
+     * parsing on complex nested keywords (WDWBORDER, GRDBOX, etc.).
      */
     private void parseKeywordParameters(DdsKeyword kw, String name, String content) {
         content = content.trim();
@@ -201,7 +234,13 @@ public class DdsKeywordParser {
             return;
         }
 
-        // Special keyword handling
+        // Non-whitelisted keywords: store raw content as value
+        if (!TOKENIZABLE_KEYWORDS.contains(name)) {
+            kw.setValue(content);
+            return;
+        }
+
+        // Dedicated parsers for specific keywords
         switch (name) {
             case "COMP":
                 parseCompParameters(kw, content);
@@ -216,13 +255,11 @@ public class DdsKeywordParser {
                 parseRefParameters(kw, content);
                 return;
             default:
-                // Generic parameter parsing
                 break;
         }
 
-        // Tokenize content into a list of values
+        // Whitelisted generic keywords: tokenize normally
         List<String> tokens = tokenizeParameters(content);
-
         if (tokens.size() == 1) {
             kw.setValue(tokens.get(0));
         } else if (tokens.size() > 1) {
@@ -261,15 +298,17 @@ public class DdsKeywordParser {
 
     /**
      * Parse REFFLD keyword parameters:
-     *   REFFLD(field)             → referenceField only
-     *   REFFLD(field file)        → referenceField + referenceFile
-     *   REFFLD(field recfmt file) → referenceField + referenceRecordFormat + referenceFile
+     * REFFLD(field) → referenceField only
+     * REFFLD(field file) → referenceField + referenceFile
+     * REFFLD(field recfmt file) → referenceField + referenceRecordFormat +
+     * referenceFile
      *
      * Special: REFFLD(field *SRC) → referenceField + referenceFile="*SRC"
      */
     private void parseReffldParameters(DdsKeyword kw, String content) {
         List<String> tokens = tokenizeParameters(content);
-        if (tokens.isEmpty()) return;
+        if (tokens.isEmpty())
+            return;
 
         // Arg 1 is always the field name
         kw.setReferenceField(tokens.get(0));
@@ -299,8 +338,8 @@ public class DdsKeywordParser {
      * Parse REF keyword parameters: REF(filename) or REF(filename recordformat)
      * Supports qualified names: REF(LIB/FILENAME) or REF(*LIBL/FILENAME RECFMT)
      * e.g., REF(FLDREFPF) → value="FLDREFPF"
-     *       REF(FLDREFPF REFREC) → value="FLDREFPF", referenceRecordFormat="REFREC"
-     *       REF(MYLIB/FLDREFPF) → value="MYLIB/FLDREFPF"
+     * REF(FLDREFPF REFREC) → value="FLDREFPF", referenceRecordFormat="REFREC"
+     * REF(MYLIB/FLDREFPF) → value="MYLIB/FLDREFPF"
      */
     private void parseRefParameters(DdsKeyword kw, String content) {
         List<String> tokens = tokenizeParameters(content);
@@ -315,13 +354,13 @@ public class DdsKeywordParser {
     /**
      * Tokenize parameter content into individual values.
      * Handles:
-     *   - 'quoted strings' → strip quotes
-     *   - X'hex values' → keep as-is including X prefix
-     *   - *SPECIAL_VALUES → starts with *, keep as-is
-     *   - LIB/FILE → qualified names with /, keep as-is
-     *   - FIELD1 → unquoted identifiers
-     *   - 123 → unquoted numbers
-     *   Spaces are delimiters between parameters.
+     * - 'quoted strings' → strip quotes
+     * - X'hex values' → keep as-is including X prefix
+     * - *SPECIAL_VALUES → starts with *, keep as-is
+     * - LIB/FILE → qualified names with /, keep as-is
+     * - FIELD1 → unquoted identifiers
+     * - 123 → unquoted numbers
+     * Spaces are delimiters between parameters.
      */
     private List<String> tokenizeParameters(String content) {
         List<String> tokens = new ArrayList<>();
@@ -333,7 +372,8 @@ public class DdsKeywordParser {
             while (pos < len && content.charAt(pos) == ' ') {
                 pos++;
             }
-            if (pos >= len) break;
+            if (pos >= len)
+                break;
 
             char c = content.charAt(pos);
 
