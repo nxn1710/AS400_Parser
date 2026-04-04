@@ -1,5 +1,6 @@
 plugins {
     id 'java-library'
+    id 'antlr'
     id 'com.github.johnrengelman.shadow' version '8.+'
     id 'jacoco'
 }
@@ -17,11 +18,27 @@ tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
 }
 
+// ANTLR4: generate parser from existing grammars in grammar/rpgle/
+sourceSets {
+    main {
+        antlr {
+            srcDirs = ["${rootProject.projectDir}/grammar/rpgle"]
+        }
+    }
+}
+
+generateGrammarSource {
+    arguments += ['-visitor', '-listener', '-package', 'com.as400parser.rpgle.antlr']
+    outputDirectory = file("${buildDir}/generated-src/antlr/main/com/as400parser/rpgle/antlr")
+}
+
 repositories {
     mavenCentral()
 }
 
 dependencies {
+    antlr "org.antlr:antlr4:4.13.1"
+    implementation "org.antlr:antlr4-runtime:4.13.1"
     implementation "com.google.code.gson:gson:2.11.0"
 
     testImplementation "org.junit.jupiter:junit-jupiter:5.11.0"

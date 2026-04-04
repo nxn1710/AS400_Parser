@@ -2054,12 +2054,12 @@ CS_FactorContentStringLiteral : [']
     }?
     -> type(StringLiteralStart), pushMode(InFactorStringMode);
                 
-CS_FactorContent : (~[\r\n'\'' :]
+CS_FactorContent : (~[\r\n' :]
     {(getCharPositionInLine()>=12 && getCharPositionInLine()<=25)
             || (getCharPositionInLine()>=36 && getCharPositionInLine()<=49)
     }? )+;
 
-CS_ResultContent : (~[\r\n'\'' :]
+CS_ResultContent : (~[\r\n' :]
     { (getCharPositionInLine()>=50 && getCharPositionInLine()<=63)
     }? )+
     -> type(CS_FactorContent);
@@ -2419,7 +2419,7 @@ CS_OperationExtenderClose : CLOSE_PAREN { getCharPositionInLine()>=26 && getChar
     }? )* { setText(getText().trim()); }
     -> type(CLOSE_PAREN);
   
-CS_FieldLength : [+\\- 0-9] [+\\- 0-9] [+\\- 0-9] [+\\- 0-9] [+\\- 0-9]  { getCharPositionInLine()==68 }? ;
+CS_FieldLength : [+ \-0-9] [+ \-0-9] [+ \-0-9] [+ \-0-9] [+ \-0-9]  { getCharPositionInLine()==68 }? ;
 
 CS_DecimalPositions : [ 0-9] [ 0-9] { getCharPositionInLine()==70 }?
     -> pushMode(IndicatorMode), pushMode(IndicatorMode), pushMode(IndicatorMode); 
@@ -2663,4 +2663,3 @@ HS_CONTINUATION : NEWLINE
     WORD5 [hH] ~[*] -> skip;
 
 HS_EOL : NEWLINE -> type(EOL), popMode;
-
