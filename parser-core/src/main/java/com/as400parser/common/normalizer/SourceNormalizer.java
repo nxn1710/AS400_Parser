@@ -38,22 +38,34 @@ public class SourceNormalizer {
     public static final int[] SEU_TAB_STOPS = {6, 7, 17, 27, 32, 42, 48, 51, 53, 59, 74};
 
     private final int[] tabStops;
+    private final boolean stripSequenceNumbers;
 
     /**
-     * Creates a normalizer with default 8-column tab stops.
+     * Creates a normalizer with default 8-column tab stops and sequence number stripping enabled.
      */
     public SourceNormalizer() {
-        this(DEFAULT_TAB_STOPS);
+        this(DEFAULT_TAB_STOPS, true);
     }
 
     /**
-     * Creates a normalizer with custom tab stops.
+     * Creates a normalizer with custom tab stops and sequence number stripping enabled.
      *
      * @param tabStops array of 1-based column positions for tab stops.
      *                 Empty array means standard 8-column tab stops.
      */
     public SourceNormalizer(int[] tabStops) {
+        this(tabStops, true);
+    }
+
+    /**
+     * Creates a normalizer with custom tab stops and sequence number stripping flag.
+     *
+     * @param tabStops array of 1-based column positions for tab stops.
+     * @param stripSequenceNumbers if true, columns 1-5 are extracted as sequence numbers and replaced with spaces.
+     */
+    public SourceNormalizer(int[] tabStops, boolean stripSequenceNumbers) {
         this.tabStops = tabStops;
+        this.stripSequenceNumbers = stripSequenceNumbers;
     }
 
     /**
@@ -115,9 +127,13 @@ public class SourceNormalizer {
             line = trimAndPad(line, lineNum, warnings);
 
             // Step 5: Extract sequence numbers (cols 1-5)
-            sequenceNumbers[i] = line.substring(0, 5).trim();
-            // Replace cols 1-5 with spaces
-            line = "     " + line.substring(5);
+            if (stripSequenceNumbers) {
+                sequenceNumbers[i] = line.substring(0, 5).trim();
+                // Replace cols 1-5 with spaces
+                line = "     " + line.substring(5);
+            } else {
+                sequenceNumbers[i] = "";
+            }
 
             // Step 6: Track original line number mapping
             originalLineNumbers[i] = lineNum;

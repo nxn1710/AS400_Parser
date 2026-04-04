@@ -42,7 +42,7 @@
      A            SCMSG         50A  O 20  2
      A                                      DSPATR(RI)
      A*
-     A                                 23  2'F3=終了  F5=更新  F6=追加'
+     A                                 23 +1'F3=終了  F5=更新  F6=追加'
      A                                      DSPATR(CS)
      A                                 24  2'F10=削除  F12=戻る'
      A                                      DSPATR(CS)

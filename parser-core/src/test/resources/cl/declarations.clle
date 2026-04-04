@@ -1,0 +1,10 @@
+/* CLLE declarations fixture */
+             PGM        PARM(&MODE)
+             DCL        VAR(&MODE) TYPE(*CHAR) LEN(1)
+             DCL        VAR(&STATUS) TYPE(*DEC) LEN(3 0)
+             DCL        VAR(&FLAG) TYPE(*LGL)
+             DCL        VAR(&COUNTER) TYPE(*INT) LEN(4)
+             DCL        VAR(&MSG) TYPE(*CHAR) LEN(100) VALUE('INITIAL')
+             DCLF       FILE(STUDNTPF)
+             DCLF       FILE(QTEMP/WORKFILE) OPNID(WORK)
+             ENDPGM

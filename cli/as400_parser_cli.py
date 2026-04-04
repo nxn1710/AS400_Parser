@@ -2,7 +2,7 @@
 """
 AS400 Source Parser CLI — Python wrapper for the Java parser library.
 
-Supports RPG3 (.rpg, .rpg3, .mbr, .cpy) and DDS (.pf, .lf) source files.
+Supports RPG3 (.rpg, .rpg3, .mbr, .cpy), DDS (.pf, .lf, .dspf, .prtf), and CL (.cl, .clp, .clle).
 Parser is auto-detected from file extension.
 
 Usage:
@@ -27,6 +27,7 @@ SUPPORTED_EXTENSIONS = {
     ".pf", ".lf",                                             # DDS (PF/LF)
     ".dspf",                                                  # DSPF
     ".prtf",                                                  # PRTF
+    ".cl", ".clp", ".clle",                                   # CL
 }
 
 
@@ -96,12 +97,14 @@ def cmd_batch(args):
     dds_count = sum(1 for f in source_files if f.suffix.lower() in {".pf", ".lf"})
     dspf_count = sum(1 for f in source_files if f.suffix.lower() == ".dspf")
     prtf_count = sum(1 for f in source_files if f.suffix.lower() == ".prtf")
+    cl_count = sum(1 for f in source_files if f.suffix.lower() in {".cl", ".clp", ".clle"})
 
     parts = []
     if rpg_count: parts.append(f"RPG3: {rpg_count}")
     if dds_count: parts.append(f"DDS: {dds_count}")
     if dspf_count: parts.append(f"DSPF: {dspf_count}")
     if prtf_count: parts.append(f"PRTF: {prtf_count}")
+    if cl_count: parts.append(f"CL: {cl_count}")
     print(f"Found {len(source_files)} source files ({', '.join(parts)})")
 
     output_dir = args.output_dir or args.source_dir / "ir_output"
@@ -177,13 +180,13 @@ def cmd_validate(args):
 def main():
     parser = argparse.ArgumentParser(
         prog="as400-parser",
-        description="AS400 Source Parser CLI — Parse RPG3 and DDS source files to IR JSON"
+        description="AS400 Source Parser CLI — Parse RPG3, DDS, and CL source files to IR JSON"
     )
     subparsers = parser.add_subparsers(dest="command", help="Available commands")
 
     # parse
-    parse_p = subparsers.add_parser("parse", help="Parse a single source file (RPG3 or DDS)")
-    parse_p.add_argument("source", type=Path, help="Path to source file (.rpg, .pf, .lf, etc.)")
+    parse_p = subparsers.add_parser("parse", help="Parse a single source file")
+    parse_p.add_argument("source", type=Path, help="Path to source file (.rpg, .pf, .cl, etc.)")
     parse_p.add_argument("-o", "--output", type=Path, help="Output JSON file path")
     parse_p.add_argument("--copy-path", type=str, help="Colon/semicolon-separated copy paths (RPG3 only)")
     parse_p.add_argument("--charset", default="auto", help="Source file charset (default: auto-detect)")

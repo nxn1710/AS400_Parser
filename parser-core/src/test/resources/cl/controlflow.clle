@@ -1,0 +1,20 @@
+/* Control flow fixture: IF, DO, SELECT */
+             PGM
+             DCL        VAR(&OPT) TYPE(*CHAR) LEN(1)
+             DCL        VAR(&CNT) TYPE(*DEC) LEN(5 0)
+             IF         COND(&OPT *EQ '1') THEN(DO)
+             CALL       PGM(PGM1)
+             ENDDO
+             ELSE       CMD(DO)
+             CALL       PGM(PGM2)
+             ENDDO
+             DOWHILE    COND(&CNT *LT 10)
+             CHGVAR     VAR(&CNT) VALUE(&CNT + 1)
+             ENDDO
+             SELECT
+             WHEN       COND(&OPT *EQ '1') CMD(CALL PGM(OPTN1))
+             WHEN       COND(&OPT *EQ '2') CMD(CALL PGM(OPTN2))
+             OTHERWISE  CMD(GOTO CMDLBL(ENDPGM))
+             ENDSELECT
+ ENDPGM:
+             ENDPGM

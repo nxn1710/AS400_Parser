@@ -1,0 +1,11 @@
+/* Line continuation fixture */
+             PGM
+             SNDPGMMSG  MSGID(CPF9898) MSGF(QCPFMSG) +
+                          MSGDTA('Error occurred') +
+                          MSGTYPE(*ESCAPE)
+             OVRDBF     FILE(STUDNTPF) +
+                          TOFILE(STULIB/STUDNTPF) +
+                          SHARE(*YES)
+             CALL       PGM(STULIB/MYPGM) +
+                          PARM('VALUE1' 'VALUE2')
+             ENDPGM

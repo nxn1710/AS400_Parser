@@ -4,6 +4,7 @@ import com.as400parser.common.model.IrDocument;
 import com.as400parser.common.parser.As400Parser;
 import com.as400parser.common.parser.ParseOptions;
 import com.as400parser.common.serializer.IrJsonSerializer;
+import com.as400parser.cl.ClParserFacade;
 import com.as400parser.dds.DdsParserFacade;
 import com.as400parser.dspf.DspfParserFacade;
 import com.as400parser.prtf.PrtfParserFacade;
@@ -34,7 +35,8 @@ public class As400ParserCli {
             new DdsParserFacade(),
             new DspfParserFacade(),
             new PrtfParserFacade(),
-            new Rpg3ParserFacade()
+            new Rpg3ParserFacade(),
+            new ClParserFacade()
     );
 
     /** All supported extensions across all parsers. */
@@ -249,6 +251,9 @@ public class As400ParserCli {
         System.out.println("Supported source types:");
         System.out.println("  RPG3: .rpg, .rpg3, .rpgsrc, .mbr, .cpy, .cpysrc");
         System.out.println("  DDS:  .pf, .lf");
+        System.out.println("  DSPF: .dspf");
+        System.out.println("  PRTF: .prtf");
+        System.out.println("  CL:   .cl, .clp, .clle");
         System.out.println();
         System.out.println("Parser is auto-detected from file extension.");
         System.out.println();

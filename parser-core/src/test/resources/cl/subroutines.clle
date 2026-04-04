@@ -1,0 +1,15 @@
+/* CLLE subroutines fixture */
+             PGM
+             DCL        VAR(&RC) TYPE(*CHAR) LEN(1)
+             CALLSUBR   SUBR(PROCESS)
+             CALLSUBR   SUBR(CLEANUP)
+             GOTO       CMDLBL(ENDPGM)
+ PROCESS:   SUBR
+             CALL       PGM(PROCPGM)
+             CHGVAR     VAR(&RC) VALUE('1')
+             ENDSUBR
+ CLEANUP:   SUBR
+             DLTOVR     FILE(*ALL)
+             ENDSUBR
+ ENDPGM:
+             ENDPGM
