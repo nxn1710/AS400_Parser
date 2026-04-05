@@ -6,6 +6,8 @@ import com.as400parser.common.model.Location;
  * Calculation Specification (C-spec).
  * Supports both traditional and extended factor 2 syntax.
  * Positions per ILE RPG Reference.
+ * <p>
+ * Field names aligned with RPG3 CalcSpec for consistent JSON output.
  */
 public class CalcSpec {
     private Location location;
@@ -15,7 +17,9 @@ public class CalcSpec {
     private String controlLevel;        // 7-8
     private String conditioningIndicators; // 9-11
     private String factor1;             // 12-25
-    private String operation;           // 26-35 (operation + extender)
+    private String opcode;              // 26-35 operation code only (without extender)
+    private String operationExtender;   // operation extender (e.g., H, N, P, E)
+    private String operationAndExtender; // 26-35 full raw operation + extender
     private String factor2;             // 36-49 (traditional) or 36-80 (extended)
     private String resultField;         // 50-63
     private String fieldLength;         // 64-68
@@ -37,8 +41,30 @@ public class CalcSpec {
     public void setConditioningIndicators(String v) { this.conditioningIndicators = v; }
     public String getFactor1() { return factor1; }
     public void setFactor1(String v) { this.factor1 = v; }
-    public String getOperation() { return operation; }
-    public void setOperation(String v) { this.operation = v; }
+
+    /** Operation code without extender (e.g., "EVAL", "CALL"). Aligned with RPG3's opcode field. */
+    public String getOpcode() { return opcode; }
+    public void setOpcode(String v) { this.opcode = v; }
+
+    /** Operation extender only (e.g., "H", "N", "E"). */
+    public String getOperationExtender() { return operationExtender; }
+    public void setOperationExtender(String v) { this.operationExtender = v; }
+
+    /** Full raw operation + extender string (e.g., "EVAL(H)"). For backward compatibility. */
+    public String getOperationAndExtender() { return operationAndExtender; }
+    public void setOperationAndExtender(String v) { this.operationAndExtender = v; }
+
+    /**
+     * @deprecated Use {@link #getOpcode()} instead. Kept for backward compatibility.
+     */
+    @Deprecated
+    public String getOperation() { return operationAndExtender; }
+    /**
+     * @deprecated Use {@link #setOpcode(String)} instead. Kept for backward compatibility.
+     */
+    @Deprecated
+    public void setOperation(String v) { this.operationAndExtender = v; }
+
     public String getFactor2() { return factor2; }
     public void setFactor2(String v) { this.factor2 = v; }
     public String getResultField() { return resultField; }

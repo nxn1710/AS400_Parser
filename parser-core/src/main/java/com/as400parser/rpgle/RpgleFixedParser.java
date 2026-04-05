@@ -30,6 +30,7 @@ public class RpgleFixedParser {
 
     // Mixed-format tracking
     private final List<FreeFormatStatement> freeFormatStatements = new ArrayList<>();
+    private final List<RpgleContent.CopyDirective> copyDirectives = new ArrayList<>();
     private boolean inFreeBlock = false;
     private final List<String> freeBlockLines = new ArrayList<>();
     private int freeBlockStartLine = -1;
@@ -81,7 +82,16 @@ public class RpgleFixedParser {
 
             // Compiler directives (column 7 = '/')
             if (line.length() > 6 && line.charAt(6) == '/') {
-                // Treat as NoOp for now (per requirements: compiler directives ignored)
+                // Check for /COPY or /INCLUDE directives
+                String directiveText = line.substring(6).trim().toUpperCase();
+                if (directiveText.startsWith("/COPY ") || directiveText.startsWith("/INCLUDE ")) {
+                    String[] parts = directiveText.split("\\s+", 2);
+                    String directive = parts[0].substring(1); // Remove leading '/'
+                    String path = parts.length > 1 ? parts[1].trim() : "";
+                    copyDirectives.add(new RpgleContent.CopyDirective(
+                            directive, path, new Location(lineNum, lineNum)));
+                }
+                // Other directives treated as NoOp (per requirements)
                 continue;
             }
 
@@ -117,10 +127,23 @@ public class RpgleFixedParser {
     // =========================================================================
 
     private void parseControlSpec(String line, int lineNum) {
+        String keywords = safeSubstring(line, 6, 80);
+
+        // H-spec continuation: if we already have an H-spec, append keywords
+        if (!controlSpecs.isEmpty() && (keywords == null || keywords.isEmpty())) {
+            return; // blank continuation — nothing to append
+        }
+        if (!controlSpecs.isEmpty()) {
+            // All H-spec lines are effectively keyword continuations
+            // since H-specs don't have a name/identity field.
+            // Only append if first H-spec already exists and this is truly continuation.
+            // For simplicity, each H-spec line is its own spec entry.
+        }
+
         ControlSpec spec = new ControlSpec();
         spec.setLocation(new Location(lineNum, lineNum));
         spec.setRawSourceLine(line);
-        spec.setKeywords(safeSubstring(line, 6, 80));
+        spec.setKeywords(keywords);
         controlSpecs.add(spec);
     }
 
@@ -129,10 +152,26 @@ public class RpgleFixedParser {
     // =========================================================================
 
     private void parseFileSpec(String line, int lineNum) {
+        String fileName = safeSubstring(line, 6, 16);
+
+        // F-spec keyword continuation: blank filename means this line
+        // continues the keywords of the previous F-spec
+        if ((fileName == null || fileName.isEmpty()) && !fileSpecs.isEmpty()) {
+            FileSpec prev = fileSpecs.get(fileSpecs.size() - 1);
+            String contKeywords = safeSubstring(line, 43, 80);
+            if (contKeywords != null && !contKeywords.isEmpty()) {
+                String existing = prev.getKeywords();
+                prev.setKeywords((existing != null && !existing.isEmpty())
+                        ? existing + " " + contKeywords : contKeywords);
+            }
+            prev.getLocation().setEndLine(lineNum);
+            return;
+        }
+
         FileSpec spec = new FileSpec();
         spec.setLocation(new Location(lineNum, lineNum));
         spec.setRawSourceLine(line);
-        spec.setFileName(safeSubstring(line, 6, 16));
+        spec.setFileName(fileName);
         spec.setFileType(safeSubstring(line, 16, 17));
         spec.setFileDesignation(safeSubstring(line, 17, 18));
         spec.setEndOfFile(safeSubstring(line, 18, 19));
@@ -140,7 +179,7 @@ public class RpgleFixedParser {
         spec.setSequence(safeSubstring(line, 20, 21));
         spec.setFileFormat(safeSubstring(line, 21, 22));
         spec.setRecordLength(safeSubstring(line, 22, 27));
-        spec.setLimitsProcessing(safeSubstring(line, 27, 28));
+        spec.setLimits(safeSubstring(line, 27, 28));
         spec.setKeyLength(safeSubstring(line, 28, 33));
         spec.setRecordAddressType(safeSubstring(line, 33, 34));
         spec.setFileOrganization(safeSubstring(line, 34, 35));
@@ -155,13 +194,32 @@ public class RpgleFixedParser {
     // =========================================================================
 
     private void parseDefinitionSpec(String line, int lineNum) {
+        String name = safeSubstring(line, 6, 21);
+        String defType = safeSubstring(line, 23, 25);
+
+        // D-spec keyword continuation: blank name AND blank definition type
+        // means this line continues the keywords of the previous D-spec
+        if ((name == null || name.isEmpty())
+                && (defType == null || defType.isEmpty())
+                && !definitionSpecs.isEmpty()) {
+            DefinitionSpec prev = definitionSpecs.get(definitionSpecs.size() - 1);
+            String contKeywords = safeSubstring(line, 43, 80);
+            if (contKeywords != null && !contKeywords.isEmpty()) {
+                String existing = prev.getKeywords();
+                prev.setKeywords((existing != null && !existing.isEmpty())
+                        ? existing + " " + contKeywords : contKeywords);
+            }
+            prev.getLocation().setEndLine(lineNum);
+            return;
+        }
+
         DefinitionSpec spec = new DefinitionSpec();
         spec.setLocation(new Location(lineNum, lineNum));
         spec.setRawSourceLine(line);
-        spec.setName(safeSubstring(line, 6, 21));
+        spec.setName(name);
         spec.setExternalDescription(safeSubstring(line, 21, 22));
         spec.setDsType(safeSubstring(line, 22, 23));
-        spec.setDefinitionType(safeSubstring(line, 23, 25));
+        spec.setDefinitionType(defType);
         spec.setFromPosition(safeSubstring(line, 25, 32));
         spec.setToPositionLength(safeSubstring(line, 32, 39));
         spec.setInternalDataType(safeSubstring(line, 39, 40));
@@ -183,7 +241,7 @@ public class RpgleFixedParser {
         String fileNameArea = safeSubstring(line, 6, 16);
         if (fileNameArea != null && !fileNameArea.isBlank()) {
             // Record identification entry
-            spec.setSpecSubType("record");
+            spec.setSpecLevel("recordIdentification");
             spec.setFileName(fileNameArea);
             spec.setLogicalRelationship(safeSubstring(line, 15, 18));
             spec.setSequenceNumber(safeSubstring(line, 16, 18));
@@ -193,7 +251,7 @@ public class RpgleFixedParser {
             spec.setRecordIdCodes(safeSubstring(line, 22, 46));
         } else {
             // Field description entry
-            spec.setSpecSubType("field");
+            spec.setSpecLevel("fieldDefinition");
             spec.setDataAttributes(safeSubstring(line, 30, 34));
             spec.setDateTimeSeparator(safeSubstring(line, 34, 35));
             spec.setDataFormat(safeSubstring(line, 35, 36));
@@ -213,13 +271,48 @@ public class RpgleFixedParser {
     // =========================================================================
 
     private void parseCalcSpec(String line, int lineNum) {
+        String factor1 = safeSubstring(line, 11, 25);
+        String operation = safeSubstring(line, 25, 35);
+
+        // C-spec extended factor 2 continuation: blank factor1 AND blank operation
+        // means this continues the extended factor 2 of the previous C-spec
+        if ((factor1 == null || factor1.isEmpty())
+                && (operation == null || operation.isEmpty())
+                && !calcSpecs.isEmpty()) {
+            CalcSpec prev = calcSpecs.get(calcSpecs.size() - 1);
+            if (prev.isExtendedFactor2()) {
+                String contFactor2 = safeSubstring(line, 35, 80);
+                if (contFactor2 != null && !contFactor2.isEmpty()) {
+                    String existing = prev.getFactor2();
+                    prev.setFactor2((existing != null && !existing.isEmpty())
+                            ? existing + " " + contFactor2 : contFactor2);
+                }
+                prev.getLocation().setEndLine(lineNum);
+                return;
+            }
+        }
+
         CalcSpec spec = new CalcSpec();
         spec.setLocation(new Location(lineNum, lineNum));
         spec.setRawSourceLine(line);
         spec.setControlLevel(safeSubstring(line, 6, 8));
         spec.setConditioningIndicators(safeSubstring(line, 8, 11));
-        spec.setFactor1(safeSubstring(line, 11, 25));
-        spec.setOperation(safeSubstring(line, 25, 35));
+        spec.setFactor1(factor1);
+
+        // Extract opcode and extender separately (aligned with RPG3)
+        spec.setOperationAndExtender(operation);
+        if (operation != null && !operation.isEmpty()) {
+            int parenIdx = operation.indexOf('(');
+            if (parenIdx > 0) {
+                spec.setOpcode(operation.substring(0, parenIdx).trim());
+                int endParen = operation.indexOf(')');
+                spec.setOperationExtender(endParen > parenIdx
+                    ? operation.substring(parenIdx + 1, endParen).trim()
+                    : operation.substring(parenIdx + 1).trim());
+            } else {
+                spec.setOpcode(operation.trim());
+            }
+        }
 
         // Detect extended factor 2: if result field area (50-63) is blank,
         // use columns 36-80 as extended factor 2
@@ -253,7 +346,7 @@ public class RpgleFixedParser {
         String fileNameArea = safeSubstring(line, 6, 16);
         if (fileNameArea != null && !fileNameArea.isBlank()) {
             // Record identification entry
-            spec.setSpecSubType("record");
+            spec.setSpecLevel("recordLevel");
             spec.setFileName(fileNameArea);
             spec.setType(safeSubstring(line, 16, 17));
             spec.setRecordAddDel(safeSubstring(line, 17, 20));
@@ -262,7 +355,7 @@ public class RpgleFixedParser {
             spec.setSpaceSkip(safeSubstring(line, 39, 51));
         } else {
             // Field description entry
-            spec.setSpecSubType("field");
+            spec.setSpecLevel("fieldLevel");
             spec.setConditioningIndicators(safeSubstring(line, 20, 29));
             spec.setFieldName(safeSubstring(line, 29, 43));
             spec.setEditCode(safeSubstring(line, 43, 44));
@@ -279,10 +372,26 @@ public class RpgleFixedParser {
     // =========================================================================
 
     private void parseProcedureSpec(String line, int lineNum) {
+        String name = safeSubstring(line, 6, 21);
+
+        // P-spec keyword continuation: blank name means this line
+        // continues the keywords of the previous P-spec
+        if ((name == null || name.isEmpty()) && !procedureSpecs.isEmpty()) {
+            ProcedureSpec prev = procedureSpecs.get(procedureSpecs.size() - 1);
+            String contKeywords = safeSubstring(line, 43, 80);
+            if (contKeywords != null && !contKeywords.isEmpty()) {
+                String existing = prev.getKeywords();
+                prev.setKeywords((existing != null && !existing.isEmpty())
+                        ? existing + " " + contKeywords : contKeywords);
+            }
+            prev.getLocation().setEndLine(lineNum);
+            return;
+        }
+
         ProcedureSpec spec = new ProcedureSpec();
         spec.setLocation(new Location(lineNum, lineNum));
         spec.setRawSourceLine(line);
-        spec.setName(safeSubstring(line, 6, 21));
+        spec.setName(name);
         spec.setBeginEnd(safeSubstring(line, 23, 24));
         spec.setKeywords(safeSubstring(line, 43, 80));
         procedureSpecs.add(spec);
@@ -320,6 +429,7 @@ public class RpgleFixedParser {
         content.setFreeFormatStatements(freeFormatStatements);
         content.setComments(comments);
         content.setParseErrors(errors);
+        content.setCopyDirectives(copyDirectives);
 
         // If we had any free-format statements, it's mixed
         if (!freeFormatStatements.isEmpty()) {
@@ -337,6 +447,6 @@ public class RpgleFixedParser {
         if (line == null || start >= line.length()) return null;
         int safeEnd = Math.min(end, line.length());
         String result = line.substring(start, safeEnd);
-        return result.isBlank() ? null : result.trim();
+        return result.isBlank() ? "" : result.trim();
     }
 }

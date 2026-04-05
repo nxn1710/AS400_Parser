@@ -1,5 +1,6 @@
 package com.as400parser.rpgle.model;
 
+import com.as400parser.common.model.Location;
 import com.as400parser.common.model.ParseError;
 import com.as400parser.common.model.SourceLine;
 
@@ -141,4 +142,22 @@ public class RpgleContent {
     public void setParseErrors(List<ParseError> v) {
         this.parseErrors = v;
     }
+
+    // =========================================================================
+    // Copy directives (/COPY and /INCLUDE)
+    // =========================================================================
+    private List<CopyDirective> copyDirectives = new ArrayList<>();
+
+    public List<CopyDirective> getCopyDirectives() {
+        return copyDirectives;
+    }
+
+    public void setCopyDirectives(List<CopyDirective> v) {
+        this.copyDirectives = v;
+    }
+
+    /**
+     * Represents a /COPY or /INCLUDE directive found in source.
+     */
+    public record CopyDirective(String directive, String path, Location location) {}
 }

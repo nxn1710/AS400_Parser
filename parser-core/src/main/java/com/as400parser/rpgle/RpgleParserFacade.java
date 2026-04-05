@@ -106,28 +106,9 @@ public class RpgleParserFacade implements As400Parser {
             content = parseFixedOrMixed(lines, normalized.getSequenceNumbers());
         }
 
-        // Build IrDocument
-        IrDocument doc = new IrDocument();
-        doc.setContent(content);
-
-        // Extract dependencies
-        IrDocument.Dependencies deps = new IrDocument.Dependencies();
-        deps.setReferencedFiles(extractReferencedFiles(content));
-        deps.setCalledPrograms(new ArrayList<>());
-        deps.setCopyMembers(new ArrayList<>());
-        doc.setDependencies(deps);
-
-        // Propagate parse errors
-        if (content.getParseErrors() != null && !content.getParseErrors().isEmpty()) {
-            doc.setErrors(new ArrayList<>(content.getParseErrors()));
-        } else {
-            doc.setErrors(new ArrayList<>());
-        }
-
-        // Populate metadata
-        populateMetadata(doc, normalized, sourceType);
-
-        return doc;
+        // Delegate to RpgleIrBuilder for IrDocument assembly
+        RpgleIrBuilder builder = new RpgleIrBuilder();
+        return builder.build(content, normalized, sourceType);
     }
 
     // =========================================================================
@@ -163,65 +144,8 @@ public class RpgleParserFacade implements As400Parser {
     }
 
     // =========================================================================
-    // Dependency extraction
+    // File-level metadata (member name, source file, library path)
     // =========================================================================
-
-    private List<IrDocument.DependencyRef> extractReferencedFiles(RpgleContent content) {
-        List<IrDocument.DependencyRef> refs = new ArrayList<>();
-        if (content.getFileSpecs() != null) {
-            for (FileSpec fs : content.getFileSpecs()) {
-                if (fs.getFileName() != null && !fs.getFileName().isBlank()) {
-                    IrDocument.DependencyRef ref = new IrDocument.DependencyRef(
-                            fs.getFileName().trim(), mapFileType(fs.getFileType()));
-                    if (fs.getLocation() != null) {
-                        ref.getLocations().add(fs.getLocation());
-                    }
-                    refs.add(ref);
-                }
-            }
-        }
-        return refs;
-    }
-
-    private String mapFileType(String fileType) {
-        if (fileType == null) return "read";
-        return switch (fileType.trim().toUpperCase()) {
-            case "I" -> "read";
-            case "O" -> "write";
-            case "U" -> "update";
-            case "C" -> "combined";
-            default -> "read";
-        };
-    }
-
-    // =========================================================================
-    // Metadata
-    // =========================================================================
-
-    private void populateMetadata(IrDocument doc, NormalizedSource normalized, String sourceType) {
-        Metadata metadata = new Metadata();
-        metadata.setIrVersion(IR_VERSION);
-        metadata.setSourceType(sourceType);
-
-        Metadata.ParseInfo parseInfo = new Metadata.ParseInfo();
-        parseInfo.setParsedAt(Instant.now().toString());
-        parseInfo.setTotalLines(normalized.getLineCount());
-        parseInfo.setParserVersion(IR_VERSION);
-
-        RpgleContent content = (RpgleContent) doc.getContent();
-        if (content.getParseErrors() != null && !content.getParseErrors().isEmpty()) {
-            boolean hasError = content.getParseErrors().stream()
-                    .anyMatch(pe -> ParseError.Severity.ERROR.equals(pe.getSeverity()));
-            parseInfo.setParseStatus(hasError ? "partial" : "complete");
-        } else {
-            parseInfo.setParseStatus("complete");
-        }
-
-        parseInfo.setErrors(List.of());
-        parseInfo.setWarnings(List.of());
-        metadata.setParseInfo(parseInfo);
-        doc.setMetadata(metadata);
-    }
 
     private void populateMetadataFromFile(IrDocument doc, Path sourceFile, String sourceType) {
         Metadata metadata = doc.getMetadata();

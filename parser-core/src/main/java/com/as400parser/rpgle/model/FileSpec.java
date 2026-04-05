@@ -18,7 +18,7 @@ public class FileSpec {
     private String sequence;         // 21
     private String fileFormat;       // 22
     private String recordLength;     // 23-27
-    private String limitsProcessing; // 28
+    private String limits;           // 28
     private String keyLength;        // 29-33
     private String recordAddressType;// 34
     private String fileOrganization; // 35
@@ -47,8 +47,8 @@ public class FileSpec {
     public void setFileFormat(String v) { this.fileFormat = v; }
     public String getRecordLength() { return recordLength; }
     public void setRecordLength(String v) { this.recordLength = v; }
-    public String getLimitsProcessing() { return limitsProcessing; }
-    public void setLimitsProcessing(String v) { this.limitsProcessing = v; }
+    public String getLimits() { return limits; }
+    public void setLimits(String v) { this.limits = v; }
     public String getKeyLength() { return keyLength; }
     public void setKeyLength(String v) { this.keyLength = v; }
     public String getRecordAddressType() { return recordAddressType; }

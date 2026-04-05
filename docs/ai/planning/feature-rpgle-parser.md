@@ -8,37 +8,37 @@ description: Break down work into actionable tasks and estimate timeline
 
 ## Milestones
 **What are the major checkpoints?**
-- [ ] Milestone 1: Python CLI securely routes `.rpgle`/`.sqlrpgle` payloads to the Java `RpgleParser` interface.
-- [ ] Milestone 2: Fixed-Format (`RpgleFixedParser`) logic completely established via `substring()` offsets for all 7 spec types.
-- [ ] Milestone 3: Fully Free and Mixed Free-Format logic correctly invokes existing ANTLR grammar (`RpgParser.g4`).
+- [x] Milestone 1: Python CLI securely routes `.rpgle`/`.sqlrpgle` payloads to the Java `RpgleParser` interface.
+- [x] Milestone 2: Fixed-Format (`RpgleFixedParser`) logic completely established via `substring()` offsets for all 7 spec types.
+- [x] Milestone 3: Fully Free and Mixed Free-Format logic correctly invokes existing ANTLR grammar (`RpgParser.g4`).
 - [ ] Milestone 4: IR Builder constructs output JSON matching null/empty protocols with 100% test coverage.
 
 ## Task Breakdown
 **What specific work needs to be done?**
 
 ### Phase 1: Foundation & CLI Integration
-- [ ] Task 1.1: Update Python CLI `as400_parser_cli.py`:
+- [x] Task 1.1: Update Python CLI `as400_parser_cli.py`:
   - Add `.rpgle` and `.sqlrpgle` to `SUPPORTED_EXTENSIONS`.
   - Add RPGLE count in `cmd_batch` summary output.
   - Update CLI description/help text to mention RPGLE.
-- [ ] Task 1.2: Establish module architecture `com.as400parser.rpgle` inside `parser-core`:
+- [x] Task 1.2: Establish module architecture `com.as400parser.rpgle` inside `parser-core`:
   - Create package directory structure under `parser-core/src/main/java/com/as400parser/rpgle/`.
   - Create `model/` sub-package for RPGLE-specific content models.
   - Add ANTLR4 dependency to `build.gradle` and configure grammar source set for `grammar/rpgle/`.
   - Wire existing `RpgLexer.g4` and `RpgParser.g4` into the Gradle ANTLR generation task.
-- [ ] Task 1.3: Create `RpgleParserFacade.java` implementing `As400Parser` (from `com.as400parser.common.parser`):
+- [x] Task 1.3: Create `RpgleParserFacade.java` implementing `As400Parser` (from `com.as400parser.common.parser`):
   - Implement `parse(Path sourceFile, ParseOptions options)` — use `SourceNormalizer` for encoding detection/normalization (same pattern as `ClParserFacade`).
   - Implement `parse(String sourceText, ParseOptions options)` — normalize via `SourceNormalizer.normalize(String)`.
   - Implement `getSourceType()` → return `"RPGLE"`.
   - Implement `getSupportedExtensions()` → return `[".rpgle", ".sqlrpgle"]`.
   - Implement format detection: check first non-blank line for `**FREE` header.
   - Route to `RpgleFreeParser` for fully free, or `RpgleFixedParser` for fixed/mixed.
-- [ ] Task 1.4: Register `RpgleParserFacade` in `As400ParserCli.java`:
+- [x] Task 1.4: Register `RpgleParserFacade` in `As400ParserCli.java`:
   - Add `new RpgleParserFacade()` to the `PARSERS` list.
   - Update `printUsage()` help text to include `RPGLE: .rpgle, .sqlrpgle`.
 
 ### Phase 2: Core Parsing Engine
-- [ ] Task 2.1: Implement `RpgleFixedParser.java` — positional parsing (NO ANTLR):
+- [x] Task 2.1: Implement `RpgleFixedParser.java` — positional parsing (NO ANTLR):
   - Detect form type at column 6 (`H`, `F`, `D`, `I`, `C`, `O`, `P`).
   - Detect comments at column 7 (`*`).
   - Parse **H-Specs (Control):** columns 7-80 (keywords).
@@ -50,17 +50,17 @@ description: Break down work into actionable tasks and estimate timeline
   - Parse **P-Specs (Procedure):** columns 7-21 (name), 24 (begin/end), 44-80 (keywords).
   - Handle index-out-of-bounds safely by defaulting to `null`.
   - Use `SourceLine` and `Location` from `com.as400parser.common.model` for line tracking.
-- [ ] Task 2.2: Implement `RpgleFreeParser.java` using existing ANTLR grammar:
+- [x] Task 2.2: Implement `RpgleFreeParser.java` using existing ANTLR grammar:
   - Wire `grammar/rpgle/RpgLexer.g4` and `RpgParser.g4` into the Lexer/Parser pipeline.
   - Handle ANTLR `RecognitionException` gracefully — emit `ParseError` objects (from `com.as400parser.common.model`) instead of crashing.
   - Support operations (e.g. `CHAIN`, `READ`, `EVAL`) and Built-In Functions (e.g. `%LEN`, `%SUBST`).
-- [ ] Task 2.3: Implement Mixed-format logic in `RpgleFixedParser`:
+- [x] Task 2.3: Implement Mixed-format logic in `RpgleFixedParser`:
   - Track `/FREE` and `/END-FREE` block boundaries line-by-line.
   - Collect lines inside `/FREE` blocks and batch-delegate them to `RpgleFreeParser`.
   - Merge ANTLR results back into the fixed-format result sequence.
 
 ### Phase 3: IR Builder & Assembly
-- [ ] Task 3.1: Create RPGLE content model in `com.as400parser.rpgle.model`:
+- [x] Task 3.1: Create RPGLE content model in `com.as400parser.rpgle.model`:
   - `RpgleContent.java` — top-level content object (set on `IrDocument.setContent()`).
   - Spec-specific model classes for each spec type's parsed data.
 - [ ] Task 3.2: Build `RpgleIrBuilder` to produce `IrDocument` (from `com.as400parser.common.model`):
@@ -75,9 +75,11 @@ description: Break down work into actionable tasks and estimate timeline
   - Map C-specs → `calculations`.
   - Map O-specs → `outputs`.
   - Map P-specs → `procedures`.
-- [ ] Task 3.3: Extend `IrJsonSerializer` for RPGLE content:
+  - Note: IR document assembly is implemented directly in `RpgleParserFacade` rather than a dedicated `RpgleIrBuilder` class.
+- [x] Task 3.3: Extend `IrJsonSerializer` for RPGLE content:
   - Register custom Gson type adapters for RPGLE model classes if needed.
   - Ensure `null` for missing values, `""` for intentionally blank strings.
+  - Result: default Gson serialization already produces working RPGLE JSON output for parsed models.
 
 ### Phase 4: Verification & Testing
 - [ ] Task 4.1: Write fixed-format boundary tests covering all 7 spec types (`.substring()` edge cases).

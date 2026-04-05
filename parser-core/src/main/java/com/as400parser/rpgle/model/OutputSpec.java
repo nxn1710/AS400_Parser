@@ -9,7 +9,7 @@ import com.as400parser.common.model.Location;
 public class OutputSpec {
     private Location location;
     private String rawSourceLine;
-    private String specSubType; // "record" or "field"
+    private String specLevel; // "recordLevel" or "fieldLevel" (aligned with RPG3)
 
     // Record identification and control entries
     private String fileName;             // 7-16
@@ -31,8 +31,8 @@ public class OutputSpec {
     public void setLocation(Location v) { this.location = v; }
     public String getRawSourceLine() { return rawSourceLine; }
     public void setRawSourceLine(String v) { this.rawSourceLine = v; }
-    public String getSpecSubType() { return specSubType; }
-    public void setSpecSubType(String v) { this.specSubType = v; }
+    public String getSpecLevel() { return specLevel; }
+    public void setSpecLevel(String v) { this.specLevel = v; }
 
     public String getFileName() { return fileName; }
     public void setFileName(String v) { this.fileName = v; }
