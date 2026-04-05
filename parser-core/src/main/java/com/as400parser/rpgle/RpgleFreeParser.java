@@ -277,7 +277,8 @@ public class RpgleFreeParser {
             case "END-PROC" -> "end-proc";
             case "CTL-OPT" -> "ctl-opt";
             case "IF" -> "if";
-            case "ELSE", "ELSEIF" -> "else";
+            case "ELSE" -> "else";
+            case "ELSEIF" -> "elseif";
             case "ENDIF" -> "endif";
             case "DOW" -> "dow";
             case "DOU" -> "dou";

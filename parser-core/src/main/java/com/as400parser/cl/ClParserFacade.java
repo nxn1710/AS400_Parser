@@ -93,8 +93,10 @@ public class ClParserFacade implements As400Parser {
     }
 
     /**
-     * Returns the base source type for this parser.
-     * Individual documents may carry "CL", "CLP", or "CLLE" per their extension.
+     * Returns the base source type for this parser; used for CLI registration.
+     * Individual parsed documents carry "CL", "CLP", or "CLLE" based on the source
+     * file extension. String-based {@link #parse(String, ParseOptions)} defaults to
+     * {@code "CLLE"} (no extension available to detect from).
      */
     @Override
     public String getSourceType() {
@@ -206,7 +208,7 @@ public class ClParserFacade implements As400Parser {
             collectReferencedFiles(cmd, result);
         }
 
-        // Add file declarations (DCLF is no longer in the commands list)
+        // DCLF is dispatched to fileDeclarations by ClIrBuilder (not to commands); process them explicitly here
         for (com.as400parser.cl.model.ClFileDeclaration fd : content.getFileDeclarations()) {
             if (fd.getFileName() != null) {
                 IrDocument.DependencyRef ref = new IrDocument.DependencyRef(fd.getFileName(), "file-declaration");
@@ -226,29 +228,11 @@ public class ClParserFacade implements As400Parser {
 
         switch (name.toUpperCase()) {
 
-            // ── File override commands ─────────────────────────────────────────
-            // TOFILE parameter is the actual dependency target when overriding
-            case "OVRDBF" -> {
+            // ── File override commands (all share identical TOFILE/FILE logic) ─────
+            // TOFILE takes priority as the actual dependency; FILE is the source name.
+            case "OVRDBF", "OVRDSPF", "OVRPRTF", "OVRICFF", "OVRTAPF", "OVRSAVF" -> {
                 String toFile = getParamValue(cmd.getParameters(), "TOFILE", -1);
-                String file = getParamValue(cmd.getParameters(), "FILE", 0);
-                if (toFile != null) addRef(result, toFile, "file-override", cmd);
-                else if (file != null) addRef(result, file, "file-override", cmd);
-            }
-            case "OVRDSPF" -> {
-                String toFile = getParamValue(cmd.getParameters(), "TOFILE", -1);
-                String file = getParamValue(cmd.getParameters(), "FILE", 0);
-                if (toFile != null) addRef(result, toFile, "file-override", cmd);
-                else if (file != null) addRef(result, file, "file-override", cmd);
-            }
-            case "OVRPRTF" -> {
-                String toFile = getParamValue(cmd.getParameters(), "TOFILE", -1);
-                String file = getParamValue(cmd.getParameters(), "FILE", 0);
-                if (toFile != null) addRef(result, toFile, "file-override", cmd);
-                else if (file != null) addRef(result, file, "file-override", cmd);
-            }
-            case "OVRICFF", "OVRTAPF", "OVRSAVF" -> {
-                String toFile = getParamValue(cmd.getParameters(), "TOFILE", -1);
-                String file = getParamValue(cmd.getParameters(), "FILE", 0);
+                String file   = getParamValue(cmd.getParameters(), "FILE", 0);
                 if (toFile != null) addRef(result, toFile, "file-override", cmd);
                 else if (file != null) addRef(result, file, "file-override", cmd);
             }
@@ -503,8 +487,26 @@ public class ClParserFacade implements As400Parser {
             parseInfo.setParseStatus("complete");
         }
 
-        parseInfo.setErrors(List.of());
-        parseInfo.setWarnings(List.of());
+        // Propagate parse errors/warnings into ParseInfo using the standard map format
+        List<java.util.Map<String, Object>> errorMaps = new ArrayList<>();
+        List<java.util.Map<String, Object>> warningMaps = new ArrayList<>();
+        if (content.getParseErrors() != null) {
+            for (ParseError pe : content.getParseErrors()) {
+                java.util.Map<String, Object> entry = java.util.Map.of(
+                        "line",     pe.getLine(),
+                        "column",   pe.getColumn(),
+                        "message",  pe.getMessage() != null ? pe.getMessage() : "",
+                        "severity", pe.getSeverity() != null ? pe.getSeverity().name() : "WARNING"
+                );
+                if (ParseError.Severity.ERROR.equals(pe.getSeverity())) {
+                    errorMaps.add(entry);
+                } else {
+                    warningMaps.add(entry);
+                }
+            }
+        }
+        parseInfo.setErrors(errorMaps.isEmpty() ? List.of() : errorMaps);
+        parseInfo.setWarnings(warningMaps.isEmpty() ? List.of() : warningMaps);
         metadata.setParseInfo(parseInfo);
         doc.setMetadata(metadata);
     }

@@ -284,6 +284,27 @@ public class RpgleIrBuilder {
 
         parseInfo.setErrors(List.of());
         parseInfo.setWarnings(List.of());
+
+        // Propagate parse errors/warnings into ParseInfo using the standard map format
+        if (content.getParseErrors() != null && !content.getParseErrors().isEmpty()) {
+            List<java.util.Map<String, Object>> errorMaps = new ArrayList<>();
+            List<java.util.Map<String, Object>> warningMaps = new ArrayList<>();
+            for (ParseError pe : content.getParseErrors()) {
+                java.util.Map<String, Object> entry = java.util.Map.of(
+                        "line",     pe.getLine(),
+                        "column",   pe.getColumn(),
+                        "message",  pe.getMessage() != null ? pe.getMessage() : "",
+                        "severity", pe.getSeverity() != null ? pe.getSeverity().name() : "WARNING"
+                );
+                if (ParseError.Severity.ERROR.equals(pe.getSeverity())) {
+                    errorMaps.add(entry);
+                } else {
+                    warningMaps.add(entry);
+                }
+            }
+            if (!errorMaps.isEmpty())   parseInfo.setErrors(errorMaps);
+            if (!warningMaps.isEmpty()) parseInfo.setWarnings(warningMaps);
+        }
         metadata.setParseInfo(parseInfo);
         doc.setMetadata(metadata);
     }

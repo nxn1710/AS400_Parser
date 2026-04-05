@@ -647,5 +647,53 @@ class RpgleIrBuilderTest {
             IrDocument doc = builder.build(content, fakeNormalized(5), "RPGLE");
             assertThat(doc.getErrors()).hasSize(2);
         }
+
+        @Test
+        void errorSeverity_propagatesToParseInfoErrors() {
+            // ERROR-severity items must appear in parseInfo.errors (not just doc.errors)
+            RpgleContent content = emptyContent();
+            content.setParseErrors(List.of(
+                    new ParseError(10, 5, "Syntax error on line 10", ParseError.Severity.ERROR)
+            ));
+
+            IrDocument doc = builder.build(content, fakeNormalized(10), "RPGLE");
+            assertThat(doc.getMetadata().getParseInfo().getErrors()).isNotEmpty();
+            assertThat(doc.getMetadata().getParseInfo().getWarnings()).isEmpty();
+        }
+
+        @Test
+        void warningSeverity_propagatesToParseInfoWarnings() {
+            // WARNING-severity items must appear in parseInfo.warnings (not errors)
+            RpgleContent content = emptyContent();
+            content.setParseErrors(List.of(
+                    new ParseError(3, 0, "Unknown opcode", ParseError.Severity.WARNING)
+            ));
+
+            IrDocument doc = builder.build(content, fakeNormalized(5), "RPGLE");
+            assertThat(doc.getMetadata().getParseInfo().getWarnings()).isNotEmpty();
+            assertThat(doc.getMetadata().getParseInfo().getErrors()).isEmpty();
+        }
+
+        @Test
+        void mixedSeverity_separatedCorrectly() {
+            // ERROR → parseInfo.errors, WARNING → parseInfo.warnings, both in same run
+            RpgleContent content = emptyContent();
+            content.setParseErrors(List.of(
+                    new ParseError(1, 0, "Fatal error", ParseError.Severity.ERROR),
+                    new ParseError(2, 0, "Minor warning", ParseError.Severity.WARNING),
+                    new ParseError(3, 0, "Another error", ParseError.Severity.ERROR)
+            ));
+
+            IrDocument doc = builder.build(content, fakeNormalized(5), "RPGLE");
+            assertThat(doc.getMetadata().getParseInfo().getErrors()).hasSize(2);
+            assertThat(doc.getMetadata().getParseInfo().getWarnings()).hasSize(1);
+        }
+
+        @Test
+        void noErrors_parseInfoErrorsAndWarningsEmpty() {
+            IrDocument doc = builder.build(emptyContent(), fakeNormalized(1), "RPGLE");
+            assertThat(doc.getMetadata().getParseInfo().getErrors()).isEmpty();
+            assertThat(doc.getMetadata().getParseInfo().getWarnings()).isEmpty();
+        }
     }
 }

@@ -7,6 +7,8 @@ A production-grade parser for IBM AS/400 source code. Converts fixed-format RPG 
 | Source Type | Description | Extensions |
 |-------------|-------------|------------|
 | **RPG III** | Fixed-format RPG3 programs | `.rpg`, `.rpg3`, `.rpg38`, `.sqlrpg`, `.mbr`, `.cpy`, `.cpysrc` |
+| **RPGLE / RPG IV** | ILE RPG programs (Fixed, Mixed, Fully-Free) | `.rpgle`, `.sqlrpgle` |
+| **CL** | Control Language programs / procedures | `.cl`, `.clp`, `.clle` |
 | **DDS PF** | Physical File definitions | `.pf` |
 | **DDS LF** | Logical File definitions (simple, join, multi-format) | `.lf` |
 | **DDS DSPF** | Display File definitions (screens/panels) | `.dspf` |
@@ -21,6 +23,18 @@ A production-grade parser for IBM AS/400 source code. Converts fixed-format RPG 
 - **Symbol table**: Cross-referenced from I-spec, E-spec, C-spec result fields, and data structures
 - **Copy member resolution**: `/COPY` directive handling with configurable search paths
 - **Compile-time data**: `**` separator and raw data block parsing
+
+### RPGLE / RPG IV Parser
+- **Format Support**: Fixed-format (positional), Mixed-format (with `/FREE` and `/END-FREE`), and Fully-Free (`**FREE`) support.
+- **Dual Parsing Engine**: Fallback ANTLR4 tree mapping for free-format and fast positional substring parsing for fixed-format.
+- **Mixed-formatting**: Seamlessly switches parsing scopes based on format type within the same source file.
+- **Dependencies**: Extracts and resolves dependencies for programs (`CALL`, `CALLP`), files, and `/COPY` & `/INCLUDE` directives.
+
+### CL Parser
+- **Command parsing**: `PGM`/`ENDPGM` blocks, `DCL` variables, `MONMSG` error handling natively mapped.
+- **Flow control**: `IF`/`DO`/`ELSE`/`ENDDO` blocks correctly structured.
+- **Program & File resolution**: Resolves `CALL`, `CALLPRC`, `DCLF`, `RCVF`, `SNDRCVF` program & file dependencies.
+- **Labels & GOTO**: Automatically maps control flow jumps within procedures.
 
 ### DDS PF/LF Parser
 - **Physical Files**: Record formats, field definitions (name, type, length, decimal), key definitions
@@ -150,7 +164,7 @@ output/
 | `--copy-path PATHS` | Semicolon-separated `/COPY` search paths (RPG3 only) |
 | `--help` / `-h` | Show help |
 
-**Supported extensions:** `.rpg`, `.rpg3`, `.rpg38`, `.sqlrpg`, `.mbr`, `.cpy`, `.cpysrc`, `.pf`, `.lf`, `.dspf`, `.prtf`
+**Supported extensions:** `.rpg`, `.rpg3`, `.rpg38`, `.sqlrpg`, `.mbr`, `.cpy`, `.cpysrc`, `.rpgle`, `.sqlrpgle`, `.cl`, `.clp`, `.clle`, `.pf`, `.lf`, `.dspf`, `.prtf`
 
 > **Auto-detection:** Parser is selected by file extension. For RPG3 files in a standard AS400 directory structure (e.g., `QRPGSRC/`), sibling `QCPYSRC` directories are automatically detected for `/COPY` member resolution.
 
@@ -190,6 +204,28 @@ import com.as400parser.common.parser.ParseOptions;
 
 Rpg3ParserFacade parser = new Rpg3ParserFacade();
 IrDocument doc = parser.parse(Path.of("CUSTINQ.rpg"), ParseOptions.defaults());
+```
+
+### RPGLE / RPG IV
+
+```java
+import com.as400parser.rpgle.RpgleParserFacade;
+import com.as400parser.common.model.IrDocument;
+import com.as400parser.common.parser.ParseOptions;
+
+RpgleParserFacade parser = new RpgleParserFacade();
+IrDocument doc = parser.parse(Path.of("MYPGM.rpgle"), ParseOptions.defaults());
+```
+
+### CL
+
+```java
+import com.as400parser.cl.ClParserFacade;
+import com.as400parser.common.model.IrDocument;
+import com.as400parser.common.parser.ParseOptions;
+
+ClParserFacade parser = new ClParserFacade();
+IrDocument doc = parser.parse(Path.of("MYCL.clp"), ParseOptions.defaults());
 ```
 
 ### DDS (PF/LF)
@@ -417,10 +453,20 @@ AS400_Parser/
 │       │   │   ├── DspfParserFacade.java
 │       │   │   ├── DspfIrBuilder.java
 │       │   │   └── model/         # DSPF IR models (6 classes)
-│       │   └── prtf/              # PRTF parser
-│       │       ├── PrtfParserFacade.java
-│       │       ├── PrtfIrBuilder.java
-│       │       └── model/         # PRTF IR models (4 classes)
+│       │   ├── prtf/              # PRTF parser
+│       │   │   ├── PrtfParserFacade.java
+│       │   │   ├── PrtfIrBuilder.java
+│       │   │   └── model/         # PRTF IR models (4 classes)
+│       │   ├── rpgle/             # RPGLE / RPG IV parser
+│       │   │   ├── RpgleParserFacade.java
+│       │   │   ├── RpgleFixedParser.java
+│       │   │   ├── RpgleFreeParser.java
+│       │   │   ├── RpgleIrBuilder.java
+│       │   │   └── model/         # RPGLE IR models (9 classes)
+│       │   └── cl/                # CL parser
+│       │       ├── ClParserFacade.java
+│       │       ├── ClIrBuilder.java
+│       │       └── model/         # CL IR models (3 classes)
 │       └── test/java/             # Unit + integration tests
 ├── grammar/rpg3/                  # ANTLR grammar (reference)
 ├── cli/                           # Python CLI wrapper (as400_parser_cli.py)
@@ -434,13 +480,13 @@ AS400_Parser/
 
 ## Documentation
 
-| Document | RPG3 | DDS PF/LF | DSPF | PRTF |
-|----------|------|-----------|------|------|
-| Requirements | `feature-rpg3-parser.md` | `feature-pf-lf-parser.md` | `feature-dspf-parser.md` | `feature-prtf-parser.md` |
-| Design | `feature-rpg3-parser.md` | `feature-pf-lf-parser.md` | `feature-dspf-parser.md` | `feature-prtf-parser.md` |
-| Planning | `feature-rpg3-parser.md` | `feature-pf-lf-parser.md` | `feature-dspf-parser.md` | `feature-prtf-parser.md` |
-| Implementation | `feature-rpg3-parser.md` | `feature-pf-lf-parser.md` | `feature-dspf-parser.md` | `feature-prtf-parser.md` |
-| Testing | `feature-rpg3-parser.md` | `feature-pf-lf-parser.md` | `feature-dspf-parser.md` | `feature-prtf-parser.md` |
+| Document | RPG3 | RPGLE | CL | DDS PF/LF | DSPF | PRTF |
+|----------|------|-------|----|-----------|------|------|
+| Requirements | `feature-rpg3-parser.md` | `feature-rpgle-parser.md` | `feature-cl-parser.md` | `feature-pf-lf-parser.md` | `feature-dspf-parser.md` | `feature-prtf-parser.md` |
+| Design | `feature-rpg3-parser.md` | `feature-rpgle-parser.md` | `feature-cl-parser.md` | `feature-pf-lf-parser.md` | `feature-dspf-parser.md` | `feature-prtf-parser.md` |
+| Planning | `feature-rpg3-parser.md` | `feature-rpgle-parser.md` | `feature-cl-parser.md` | `feature-pf-lf-parser.md` | `feature-dspf-parser.md` | `feature-prtf-parser.md` |
+| Implementation | `feature-rpg3-parser.md` | `feature-rpgle-parser.md` | `feature-cl-parser.md` | `feature-pf-lf-parser.md` | `feature-dspf-parser.md` | `feature-prtf-parser.md` |
+| Testing | `feature-rpg3-parser.md` | `feature-rpgle-parser.md` | `feature-cl-parser.md` | `feature-pf-lf-parser.md` | `feature-dspf-parser.md` | `feature-prtf-parser.md` |
 
 All docs are in `docs/ai/{phase}/` directories.
 

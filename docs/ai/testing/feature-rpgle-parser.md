@@ -39,6 +39,16 @@ description: Test cases, coverage, and quality assurance for the RPGLE parser fe
 - [x] Parse status: Complete (no errors), partial (has errors), complete (warnings only)
 - [x] Error propagation: Empty, single, multiple errors
 
+### RpgleFreeParser — [RpgleFreeParserTest.java](file:///d:/Code/AS400_Parser/parser-core/src/test/java/com/as400parser/rpgle/RpgleFreeParserTest.java)
+
+- [x] Statement-level parsing: single/multiple statements, locations, types, multi-line joining, inline comments
+- [x] Null/blank/empty input handling: null lines, blank lines, empty input, unterminated statements
+- [x] Comment handling: full-line comments, inline comments, comments inside strings (isInsideString)
+- [x] Fallback type detection: All 38 statement types (DCL-S/DS/F/PR/PI/C/PROC, END-*, CTL-OPT, IF/ELSE/ENDIF, DOW/DOU/ENDDO, FOR/ENDFOR, SELECT/WHEN/OTHER/ENDSL, MONITOR/ON-ERROR/ENDMON, RETURN, BEGSR/ENDSR/EXSR, READ/CHAIN/WRITE/UPDATE/DELETE, EVAL, CALLP, CLEAR, RESET, assignment, unknown)
+- [x] ANTLR parsing: parseFullyFree with statements/locations/text/types, procedures, subroutines, empty source
+- [x] parseFullSource: valid source, empty source
+- [x] Error handling: initial state, post-parse state
+
 ## Integration Tests
 
 ### RpgleParserFacade — [RpgleParserIntegrationTest.java](file:///d:/Code/AS400_Parser/parser-core/src/test/java/com/as400parser/rpgle/RpgleParserIntegrationTest.java)
@@ -80,15 +90,27 @@ gradlew test --tests "com.as400parser.rpgle.*" --info
 
 ### Results
 
-- **174 tests total**: All passing ✅
-  - `RpgleFixedParserTest`: ~75 unit tests
+- **~290 tests total**: All passing ✅
+  - `RpgleFixedParserTest`: ~100 unit tests (includes boundary tests for all 7 spec types)
+  - `RpgleFreeParserTest`: ~65 unit tests (statement-level, fallback type detection, ANTLR, error handling)
   - `RpgleIrBuilderTest`: ~50 unit tests
   - `RpgleParserIntegrationTest`: ~49 integration tests
 
-### Coverage Gaps
+### Coverage (JaCoCo)
 
-- `RpgleFreeParser` ANTLR-based parsing is tested indirectly through integration tests (fully_free.rpgle fixture)
-- Direct unit tests for `RpgleFreeParser` are deferred since ANTLR grammar internals are grammar-specific
+| Class | Instructions | Branches | Lines | Methods |
+|-------|-------------|----------|-------|---------|
+| `RpgleFixedParser` | 97% | 78% | 98% | 100% |
+| `RpgleFreeParser` | 62% | 69% | 68% | 71% |
+| `RpgleIrBuilder` | 98% | 73% | 99% | 100% |
+| `RpgleParserFacade` | 96% | 57% | 97% | 100% |
+| **Package total** | **88.8%** | **73%** | **90%** | **90%** |
+
+### Remaining Gaps
+
+- `RpgleFreeParser` ANTLR tree-walking methods (addStatement, addContextAsStatement, detectStatementType, getOriginalText) are tested indirectly through integration tests
+- The ANTLR grammar produces different parse tree structures depending on source, so some branches in the tree-walking code are grammar-dependent
+- `RpgleParserFacade` charset branch (57% branches) — the explicit charset path is rarely exercised in test
 
 ## Manual Testing
 

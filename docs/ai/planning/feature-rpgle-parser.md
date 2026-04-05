@@ -11,7 +11,7 @@ description: Break down work into actionable tasks and estimate timeline
 - [x] Milestone 1: Python CLI securely routes `.rpgle`/`.sqlrpgle` payloads to the Java `RpgleParser` interface.
 - [x] Milestone 2: Fixed-Format (`RpgleFixedParser`) logic completely established via `substring()` offsets for all 7 spec types.
 - [x] Milestone 3: Fully Free and Mixed Free-Format logic correctly invokes existing ANTLR grammar (`RpgParser.g4`).
-- [ ] Milestone 4: IR Builder constructs output JSON matching null/empty protocols with 100% test coverage.
+- [x] Milestone 4: IR Builder constructs output JSON matching null/empty protocols with 100% test coverage.
 
 ## Task Breakdown
 **What specific work needs to be done?**
@@ -63,7 +63,7 @@ description: Break down work into actionable tasks and estimate timeline
 - [x] Task 3.1: Create RPGLE content model in `com.as400parser.rpgle.model`:
   - `RpgleContent.java` — top-level content object (set on `IrDocument.setContent()`).
   - Spec-specific model classes for each spec type's parsed data.
-- [ ] Task 3.2: Build `RpgleIrBuilder` to produce `IrDocument` (from `com.as400parser.common.model`):
+- [x] Task 3.2: Build `RpgleIrBuilder` to produce `IrDocument` (from `com.as400parser.common.model`):
   - Populate `IrDocument.setContent()` with `RpgleContent`.
   - Populate `IrDocument.setDependencies()` using `IrDocument.Dependencies`, `DependencyRef`, `CopyMemberRef`.
   - Populate `IrDocument.setMetadata()` using `Metadata` and `Metadata.ParseInfo`.
@@ -82,9 +82,9 @@ description: Break down work into actionable tasks and estimate timeline
   - Result: default Gson serialization already produces working RPGLE JSON output for parsed models.
 
 ### Phase 4: Verification & Testing
-- [ ] Task 4.1: Write fixed-format boundary tests covering all 7 spec types (`.substring()` edge cases).
-- [ ] Task 4.2: Write free/mixed-format unit tests leveraging the existing ANTLR grammar.
-- [ ] Task 4.3: Ensure 100% statement and branch coverage inside `com.as400parser.rpgle`.
+- [x] Task 4.1: Write fixed-format boundary tests covering all 7 spec types (`.substring()` edge cases).
+- [x] Task 4.2: Write free/mixed-format unit tests leveraging the existing ANTLR grammar.
+- [x] Task 4.3: Ensure 100% statement and branch coverage inside `com.as400parser.rpgle`.
 
 ## Common Framework Components (MUST REUSE)
 **The RPGLE parser must integrate with the existing `com.as400parser.common` framework:**

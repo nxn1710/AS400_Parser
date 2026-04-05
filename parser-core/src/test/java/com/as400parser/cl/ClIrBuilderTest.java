@@ -606,4 +606,44 @@ class ClIrBuilderTest {
             assertThat(pgmparam.getValue()).isEqualTo("STULIB/MNUPRG");
         }
     }
+
+    // =========================================================================
+    // Quoted String Edge Cases
+    // =========================================================================
+
+    @Nested
+    class QuotedStringEdgeCases {
+
+        @Test
+        void doubledQuote_insideQuotedString_treatedAsEscapedQuote() {
+            // CL uses '' (two single-quotes) to represent a literal quote in a string.
+            // VALUE('O''Brien') means the string is literally: O'Brien
+            ClContent c = build("             DCL        VAR(&NAME) TYPE(*CHAR) LEN(20) VALUE('O''Brien')");
+            assertThat(c.getVariables()).hasSize(1);
+            // The doubled quote '' should stay inside the parsed value
+            assertThat(c.getVariables().get(0).getInitialValue()).isEqualTo("'O''Brien'");
+        }
+
+        @Test
+        void plusSignInsideQuotedString_notTreatedAsContinuation() {
+            // A '+' inside a quoted string must not be misread as a line continuation.
+            // 'A+B' is a string value — the two builds should be separate commands.
+            ClContent c = build(
+                "             SNDPGMMSG  MSGDTA('A+B')",
+                "             CALL       PGM(MYPGM)"
+            );
+            assertThat(c.getCommands()).hasSize(2);
+            assertThat(c.getCommands().get(0).getName()).isEqualTo("SNDPGMMSG");
+            assertThat(c.getCommands().get(1).getName()).isEqualTo("CALL");
+        }
+
+        @Test
+        void multipleDoubledQuotes_parsedCorrectly() {
+            // VALUE('it''s a ''test''') — three sets of doubled quotes
+            ClContent c = build("             DCL        VAR(&V) TYPE(*CHAR) LEN(20) VALUE('it''s a ''test''')" );
+            assertThat(c.getVariables()).hasSize(1);
+            // Variable parsed without error (not split by the doubled quotes)
+            assertThat(c.getVariables().get(0).getName()).isEqualTo("&V");
+        }
+    }
 }

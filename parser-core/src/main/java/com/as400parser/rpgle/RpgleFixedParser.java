@@ -11,10 +11,34 @@ import java.util.List;
  * Fixed-format RPGLE parser using strict positional column extraction.
  * <p>
  * <b>DOES NOT USE ANTLR.</b> Parses all 7 specification types (H, F, D, I, C, O, P)
- * by extracting character subsets using {@code String.substring()}.
+ * by extracting character subsets using {@link #safeSubstring(String, int, int)}.
  * <p>
  * Mixed-format support: tracks {@code /FREE} and {@code /END-FREE} block
  * boundaries and collects free-format lines for delegation to {@link RpgleFreeParser}.
+ *
+ * <h2>Column Indexing Convention</h2>
+ * <p>
+ * The IBM ILE RPG Reference documents column positions using <b>1-based</b> numbering
+ * (e.g., "File Name: columns 7–16"). All {@code safeSubstring} calls in this class
+ * use <b>0-based</b> Java {@code String.substring(start, end)} indices — i.e., one
+ * less than the RPG Reference column number:
+ * <pre>
+ *   RPG Reference column N  →  safeSubstring index N-1
+ *   File Name: cols 7–16    →  safeSubstring(line, 6, 16)
+ * </pre>
+ * When reading or modifying column offsets, always subtract 1 from the IBM reference
+ * column number to obtain the correct Java index.
+ *
+ * <h2>Null vs Empty Return Convention</h2>
+ * <p>
+ * {@code safeSubstring} returns {@code null} for:
+ * <ul>
+ *   <li>Input is {@code null}</li>
+ *   <li>Start index is beyond the line length (field physically absent)</li>
+ *   <li>The extracted substring is entirely whitespace (field is blank)</li>
+ * </ul>
+ * It returns a non-null trimmed string only when the field contains meaningful content.
+ * This matches the IR contract: {@code null} = absent/not set; {@code ""} = never returned.
  */
 public class RpgleFixedParser {
 
@@ -447,6 +471,6 @@ public class RpgleFixedParser {
         if (line == null || start >= line.length()) return null;
         int safeEnd = Math.min(end, line.length());
         String result = line.substring(start, safeEnd);
-        return result.isBlank() ? "" : result.trim();
+        return result.isBlank() ? null : result.trim();
     }
 }

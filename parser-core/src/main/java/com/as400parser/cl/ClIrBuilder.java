@@ -174,7 +174,17 @@ public class ClIrBuilder {
 
                 // --- Inside a quoted string literal — ignore syntax chars ---
                 if (inQuote) {
-                    if (c == '\'') inQuote = false;
+                    if (c == '\'') {
+                        // CL uses '' (doubled single-quote) to represent a literal quote.
+                        // Two consecutive quotes stay inside the string; a lone quote ends it.
+                        if (j + 1 < len && rawLine.charAt(j + 1) == '\'') {
+                            currentLineText.append(c);
+                            currentLineText.append(c); // both quotes preserved
+                            j += 2;
+                            continue;
+                        }
+                        inQuote = false;
+                    }
                     currentLineText.append(c);
                     j++;
                     continue;
@@ -294,10 +304,11 @@ public class ClIrBuilder {
         // 4. Handle CLLE subroutine boundaries
         if ("SUBR".equals(cmdName)) {
             ClSubroutine sub = new ClSubroutine();
-            String subName = getParamValue(params, "SUBR", 0);
-            if ((subName == null || subName.isBlank()) && !content.getLabels().isEmpty()) {
-                subName = content.getLabels().get(content.getLabels().size() - 1).getName();
-            }
+            // In CL, subroutine names come exclusively from their label prefix (e.g., "PROCESS: SUBR").
+            // The SUBR command itself takes no named parameter for its name.
+            String subName = !content.getLabels().isEmpty()
+                    ? content.getLabels().get(content.getLabels().size() - 1).getName()
+                    : null;
             sub.setName(subName);
             sub.setLocation(new Location(ll.startLineNum, ll.endLineNum));
             content.getSubroutines().add(sub);

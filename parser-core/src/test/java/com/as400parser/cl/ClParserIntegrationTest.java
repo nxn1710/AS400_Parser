@@ -304,6 +304,25 @@ class ClParserIntegrationTest {
             IrDocument doc = parser.parse("             PGM\n             ENDPGM\n", opts);
             assertThat(doc.getDependencies().getCopyMembers()).isEmpty();
         }
+
+        @Test
+        void dltovr_withStarAll_filteredFromDependencies() {
+            // *ALL is a special value (not a real file name) and must not create a dependency ref
+            String source = "             PGM\n             DLTOVR     FILE(*ALL)\n             ENDPGM\n";
+            IrDocument doc = parser.parse(source, opts);
+            long starAllRefs = doc.getDependencies().getReferencedFiles().stream()
+                    .filter(r -> "*ALL".equals(r.getName()))
+                    .count();
+            assertThat(starAllRefs).isEqualTo(0);
+        }
+
+        @Test
+        void unterminatedComment_warningInParseInfo() {
+            // An unterminated /* block comment must generate a WARNING in parseInfo.warnings
+            String source = "             PGM\n/* This comment has no closing\n             ENDPGM\n";
+            IrDocument doc = parser.parse(source, opts);
+            assertThat(doc.getMetadata().getParseInfo().getWarnings()).isNotEmpty();
+        }
     }
 
     // =========================================================================
