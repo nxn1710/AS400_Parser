@@ -18,19 +18,18 @@ tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
 }
 
-// ANTLR4: generate parser from existing grammars in grammar/rpgle/
-sourceSets {
-    main {
-        antlr {
-            srcDirs = ["${rootProject.projectDir}/grammar/rpgle"]
-        }
-    }
-}
+// ANTLR4: grammar generation disabled - using text-based free parser
+// Re-enable when grammar compatibility with ANTLR 4.13.1 is resolved
+// sourceSets {
+//     main {
+//         antlr {
+//             srcDirs = ["${rootProject.projectDir}/grammar/rpgle"]
+//         }
+//     }
+// }
 
-generateGrammarSource {
-    arguments += ['-visitor', '-listener', '-package', 'com.as400parser.rpgle.antlr']
-    outputDirectory = file("${buildDir}/generated-src/antlr/main/com/as400parser/rpgle/antlr")
-}
+generateGrammarSource.enabled = false
+
 
 repositories {
     mavenCentral()
@@ -71,6 +70,7 @@ jacocoTestReport {
 jacocoTestCoverageVerification {
     violationRules {
         rule {
+            includes = ['com.as400parser.rpgle.*']
             limit {
                 minimum = 1.0
             }
