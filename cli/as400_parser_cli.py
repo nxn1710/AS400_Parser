@@ -2,7 +2,8 @@
 """
 AS400 Source Parser CLI — Python wrapper for the Java parser library.
 
-Supports RPG3 (.rpg, .rpg3, .mbr, .cpy),
+Supports RPGLE (.rpgle, .rpgleinc),
+RPG3 (.rpg, .rpg3, .mbr, .cpy),
 DDS (.pf, .lf, .dspf, .prtf), and CL (.cl, .clp, .clle).
 Parser is auto-detected from file extension.
 
@@ -24,6 +25,7 @@ DEFAULT_JAR = Path(__file__).parent.parent / "parser-core" / "build" / "libs" / 
 
 # All supported extensions across all parsers
 SUPPORTED_EXTENSIONS = {
+    ".rpgle", ".rpgleinc",                                  # RPGLE
     ".rpg", ".rpg3", ".rpgsrc", ".mbr", ".cpy", ".cpysrc",  # RPG3
     ".pf", ".lf",                                             # DDS (PF/LF)
     ".dspf",                                                  # DSPF
@@ -67,7 +69,7 @@ def run_parser(jar_path, source_path, charset="UTF-8", copy_path=None):
 
 
 def cmd_parse(args):
-    """Parse a single source file (RPG3 or DDS)."""
+    """Parse a single supported source file."""
     jar = find_jar()
     output = run_parser(jar, args.source, args.charset, args.copy_path)
     if output is None:
@@ -94,6 +96,7 @@ def cmd_batch(args):
         print(f"No source files found in {args.source_dir}", file=sys.stderr)
         sys.exit(1)
 
+    rpgle_count = sum(1 for f in source_files if f.suffix.lower() in {".rpgle", ".rpgleinc"})
     rpg_count = sum(1 for f in source_files if f.suffix.lower() in {".rpg", ".rpg3", ".rpgsrc", ".mbr", ".cpy", ".cpysrc"})
     dds_count = sum(1 for f in source_files if f.suffix.lower() in {".pf", ".lf"})
     dspf_count = sum(1 for f in source_files if f.suffix.lower() == ".dspf")
@@ -101,6 +104,7 @@ def cmd_batch(args):
     cl_count = sum(1 for f in source_files if f.suffix.lower() in {".cl", ".clp", ".clle"})
 
     parts = []
+    if rpgle_count: parts.append(f"RPGLE: {rpgle_count}")
     if rpg_count: parts.append(f"RPG3: {rpg_count}")
     if dds_count: parts.append(f"DDS: {dds_count}")
     if dspf_count: parts.append(f"DSPF: {dspf_count}")
@@ -181,7 +185,7 @@ def cmd_validate(args):
 def main():
     parser = argparse.ArgumentParser(
         prog="as400-parser",
-        description="AS400 Source Parser CLI — Parse RPG3, DDS, and CL source files to IR JSON"
+        description="AS400 Source Parser CLI — Parse RPGLE, RPG3, DDS, and CL source files to IR JSON"
     )
     subparsers = parser.add_subparsers(dest="command", help="Available commands")
 

@@ -1,0 +1,38 @@
+**FREE
+CTL-OPT DATFMT(*ISO) TIMFMT(*ISO) DEBUG;
+
+DCL-F STUDNTPF DISK(*UPDATE) KEYED;
+DCL-F STUDSPF WORKSTN;
+
+DCL-S StudentName CHAR(30) INZ('John Doe');
+DCL-S Counter PACKED(5:0) INZ(0);
+DCL-C MAX_ITEMS CONST(100);
+
+DCL-DS StudentDS;
+  StdName CHAR(30);
+  StdAge PACKED(3:0);
+END-DS;
+
+DCL-PROC ProcessStudents EXPORT;
+  DCL-PI *N;
+    pAction CHAR(10) CONST;
+  END-PI;
+
+  IF pAction = 'LOAD';
+    EXSR LoadSR;
+  ENDIF;
+
+  DOW NOT %EOF(STUDNTPF);
+    READ STUDNTPF;
+    IF %EOF(STUDNTPF);
+      LEAVE;
+    ENDIF;
+    Counter += 1;
+  ENDDO;
+
+  RETURN;
+
+  BEGSR LoadSR;
+    CHAIN StudentName STUDNTPF;
+  ENDSR;
+END-PROC;
