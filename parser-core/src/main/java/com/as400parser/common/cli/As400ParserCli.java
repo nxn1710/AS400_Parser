@@ -9,7 +9,6 @@ import com.as400parser.dds.DdsParserFacade;
 import com.as400parser.dspf.DspfParserFacade;
 import com.as400parser.prtf.PrtfParserFacade;
 import com.as400parser.rpg3.Rpg3ParserFacade;
-import com.as400parser.rpgle.RpgleParserFacade;
 
 import java.io.PrintStream;
 import java.nio.charset.Charset;
@@ -37,7 +36,6 @@ public class As400ParserCli {
             new DspfParserFacade(),
             new PrtfParserFacade(),
             new Rpg3ParserFacade(),
-            new RpgleParserFacade(),
             new ClParserFacade()
     );
 
@@ -252,7 +250,6 @@ public class As400ParserCli {
         System.out.println();
         System.out.println("Supported source types:");
         System.out.println("  RPG3:  .rpg, .rpg3, .rpgsrc, .mbr, .cpy, .cpysrc");
-        System.out.println("  RPGLE: .rpgle, .sqlrpgle");
         System.out.println("  DDS:   .pf, .lf");
         System.out.println("  DSPF:  .dspf");
         System.out.println("  PRTF:  .prtf");

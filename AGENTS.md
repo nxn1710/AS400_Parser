@@ -3,6 +3,260 @@
 ## Project Context
 This project uses ai-devkit for structured AI-assisted development. Phase documentation is located in `docs/ai/`.
 
+## Project Structure
+```
+AS400_Parser/
+├── AGENTS.md                          # AI agent rules & project conventions
+├── README.md                          # Project overview & usage guide
+├── LICENSE
+├── settings.gradle                    # Gradle multi-project settings
+├── gradle.properties                  # Gradle build properties
+├── gradlew.bat                        # Gradle wrapper (Windows)
+├── .ai-devkit.json                    # AI DevKit configuration
+├── .gitignore
+│
+├── parser-core/                       # ★ Main Java parser module (Gradle subproject)
+│   ├── build.gradle                   # Dependencies: ANTLR, Gson, JUnit 5
+│   ├── src/main/java/com/as400parser/
+│   │   ├── common/                    # Shared framework & IR model
+│   │   │   ├── cli/
+│   │   │   │   └── As400ParserCli.java        # Unified CLI entry point
+│   │   │   ├── model/
+│   │   │   │   ├── IrDocument.java            # Root IR document model
+│   │   │   │   ├── Metadata.java              # File/parse metadata
+│   │   │   │   ├── Location.java              # Source location tracking
+│   │   │   │   ├── ParseError.java            # Parse error representation
+│   │   │   │   ├── ResolvedCopy.java          # /COPY resolution info
+│   │   │   │   └── SourceLine.java            # Normalized source line
+│   │   │   ├── normalizer/
+│   │   │   │   ├── SourceNormalizer.java       # Encoding & line normalization
+│   │   │   │   ├── NormalizedSource.java       # Normalized source container
+│   │   │   │   ├── NormalizationWarning.java   # Normalization warnings
+│   │   │   │   └── EncodingDetector.java       # EBCDIC/UTF-8 detection
+│   │   │   ├── parser/
+│   │   │   │   ├── As400Parser.java           # Parser interface (SPI)
+│   │   │   │   └── ParseOptions.java          # Parse configuration options
+│   │   │   ├── serializer/
+│   │   │   │   └── IrJsonSerializer.java      # IR → JSON serialization
+│   │   │   └── analyzer/
+│   │   │       └── model/                     # Analyzer models (future)
+│   │   │
+│   │   ├── rpgle/                     # RPGLE parser (fixed + free format)
+│   │   │   ├── RpgleParserFacade.java         # RPGLE parser facade
+│   │   │   ├── RpgleFixedParser.java          # Fixed-format spec parser
+│   │   │   ├── RpgleFreeParser.java           # Free-format statement parser
+│   │   │   ├── RpgleIrBuilder.java            # IR assembly from parsed specs
+│   │   │   └── model/
+│   │   │       ├── RpgleContent.java          # RPGLE IR content
+│   │   │       ├── CalcSpec.java              # C-spec (calc) model
+│   │   │       ├── ControlSpec.java           # H-spec (control) model
+│   │   │       ├── DefinitionSpec.java        # D-spec (definition) model
+│   │   │       ├── FileSpec.java              # F-spec (file) model
+│   │   │       ├── InputSpec.java             # I-spec (input) model
+│   │   │       ├── OutputSpec.java            # O-spec (output) model
+│   │   │       ├── ProcedureSpec.java         # P-spec (procedure) model
+│   │   │       └── FreeFormatStatement.java   # Free-format statement model
+│   │   │
+│   │   ├── rpg3/                      # RPG III parser (columnar format)
+│   │   │   ├── Rpg3ParserFacade.java          # RPG3 parser facade
+│   │   │   ├── Rpg3IrBuilder.java             # RPG3 IR builder
+│   │   │   ├── Rpg3CopyResolver.java          # /COPY member resolver
+│   │   │   ├── Rpg3ErrorListener.java         # ANTLR error listener
+│   │   │   ├── Rpg3SymbolTableBuilder.java    # Symbol table construction
+│   │   │   ├── ExpressionBuilder.java         # Expression AST builder
+│   │   │   └── model/
+│   │   │       ├── Rpg3Content.java           # RPG3 IR content
+│   │   │       ├── CalcSpec.java              # C-spec model
+│   │   │       ├── UnparsedSpec.java          # H/F/I/O/E/L spec model
+│   │   │       ├── ExpressionNode.java        # Expression AST base
+│   │   │       ├── BinaryOpNode.java          # Binary operation node
+│   │   │       ├── UnaryOpNode.java           # Unary operation node
+│   │   │       ├── IdentifierNode.java        # Variable reference node
+│   │   │       ├── LiteralNode.java           # Literal value node
+│   │   │       ├── ArrayElementNode.java      # Array access node
+│   │   │       ├── IndicatorNode.java         # Indicator reference node
+│   │   │       ├── FigurativeConstantNode.java # *BLANKS, *ZEROS, etc.
+│   │   │       └── SpecialValueNode.java      # *IN, *INLR, etc.
+│   │   │
+│   │   ├── dds/                       # DDS parser (PF, LF)
+│   │   │   ├── DdsParserFacade.java           # DDS parser facade
+│   │   │   ├── DdsIrBuilder.java              # DDS IR builder
+│   │   │   ├── DdsLineClassifier.java         # Line type classification
+│   │   │   ├── DdsKeywordParser.java          # Keyword extraction
+│   │   │   ├── DdsRefResolver.java            # REF/REFFLD resolver
+│   │   │   ├── DdsLineType.java               # Line type enum
+│   │   │   └── model/
+│   │   │       ├── DdsPfContent.java          # Physical file IR content
+│   │   │       ├── DdsLfContent.java          # Logical file IR content
+│   │   │       ├── RecordFormat.java          # Record format (PF)
+│   │   │       ├── LfRecordFormat.java        # Record format (LF)
+│   │   │       ├── FieldDefinition.java       # Field definition
+│   │   │       ├── KeyDefinition.java         # Key field definition
+│   │   │       ├── DdsKeyword.java            # DDS keyword model
+│   │   │       ├── DdsComment.java            # Comment model
+│   │   │       ├── SelectOmitSpec.java        # Select/Omit specification
+│   │   │       ├── JoinSpec.java              # Join specification
+│   │   │       └── JoinFieldPair.java         # Join field pair
+│   │   │
+│   │   ├── dspf/                      # DSPF parser (Display files)
+│   │   │   ├── DspfParserFacade.java          # DSPF parser facade
+│   │   │   ├── DspfIrBuilder.java             # DSPF IR builder
+│   │   │   └── model/
+│   │   │       ├── DspfContent.java           # DSPF IR content
+│   │   │       ├── DspfRecordFormat.java      # Display record format
+│   │   │       ├── DspfFieldDefinition.java   # Display field definition
+│   │   │       ├── DspfConstant.java          # Display constant
+│   │   │       ├── ConditionedKeyword.java    # Conditioned keyword
+│   │   │       └── ConditioningIndicator.java # Conditioning indicator
+│   │   │
+│   │   ├── prtf/                      # PRTF parser (Printer files)
+│   │   │   ├── PrtfParserFacade.java          # PRTF parser facade
+│   │   │   ├── PrtfIrBuilder.java             # PRTF IR builder
+│   │   │   └── model/
+│   │   │       ├── PrtfContent.java           # PRTF IR content
+│   │   │       ├── PrtfRecordFormat.java      # Printer record format
+│   │   │       ├── PrtfFieldDefinition.java   # Printer field definition
+│   │   │       └── PrtfConstant.java          # Printer constant
+│   │   │
+│   │   └── cl/                        # CL/CLLE parser (Control Language)
+│   │       ├── ClParserFacade.java            # CL parser facade
+│   │       ├── ClIrBuilder.java               # CL IR builder
+│   │       └── model/
+│   │           ├── ClContent.java             # CL IR content
+│   │           ├── ClCommand.java             # CL command model
+│   │           ├── ClVariable.java            # CL variable declaration
+│   │           ├── ClParameter.java           # Command parameter model
+│   │           ├── ClLabel.java               # Label model
+│   │           ├── ClSubroutine.java          # Subroutine model
+│   │           ├── ClMonitorMessage.java      # MONMSG model
+│   │           ├── ClComment.java             # Comment model
+│   │           └── ClFileDeclaration.java     # File declaration model
+│   │
+│   └── src/test/
+│       ├── java/com/as400parser/
+│       │   ├── common/
+│       │   │   ├── normalizer/SourceNormalizerTest.java
+│       │   │   └── serializer/IrJsonSerializerTest.java
+│       │   ├── rpgle/
+│       │   │   ├── RpgleFixedParserTest.java
+│       │   │   ├── RpgleFreeParserTest.java
+│       │   │   ├── RpgleIrBuilderTest.java
+│       │   │   └── RpgleParserIntegrationTest.java
+│       │   ├── rpg3/
+│       │   │   ├── Rpg3ParserFacadeTest.java
+│       │   │   ├── Rpg3IrBuilderTest.java
+│       │   │   ├── Rpg3CopyResolverTest.java
+│       │   │   ├── Rpg3SymbolTableBuilderTest.java
+│       │   │   ├── ExpressionBuilderTest.java
+│       │   │   ├── Rpg3IntegrationTest.java
+│       │   │   └── StudentMgmtParserTest.java
+│       │   ├── dds/
+│       │   │   ├── DdsIrBuilderTest.java
+│       │   │   ├── DdsLineClassifierTest.java
+│       │   │   ├── DdsKeywordParserTest.java
+│       │   │   ├── DdsRefResolverTest.java
+│       │   │   └── DdsIntegrationTest.java
+│       │   ├── dspf/
+│       │   │   ├── DspfIrBuilderTest.java
+│       │   │   └── DspfIntegrationTest.java
+│       │   ├── prtf/
+│       │   │   └── PrtfIrBuilderTest.java
+│       │   └── cl/
+│       │       ├── ClIrBuilderTest.java
+│       │       └── ClParserIntegrationTest.java
+│       └── resources/
+│           ├── rpgle/                         # RPGLE test fixtures
+│           │   ├── simple_fixed.rpgle
+│           │   ├── fully_free.rpgle
+│           │   ├── mixed_format.rpgle
+│           │   ├── all_specs.rpgle
+│           │   ├── copy_directives.rpgle
+│           │   └── simple.sqlrpgle
+│           └── cl/                            # CL test fixtures
+│               ├── simple.cl
+│               ├── declarations.clle
+│               ├── controlflow.clle
+│               ├── continuation.clle
+│               ├── subroutines.clle
+│               └── monmsg.clp
+│
+├── grammar/                           # ANTLR 4 grammar definitions
+│   ├── rpg3/
+│   │   ├── Rpg3Lexer.g4                      # RPG III lexer grammar
+│   │   └── Rpg3Parser.g4                     # RPG III parser grammar
+│   └── rpgle/
+│       ├── RpgLexer.g4                       # RPGLE lexer grammar
+│       └── RpgParser.g4                      # RPGLE parser grammar
+│
+├── cli/                               # Python CLI wrappers
+│   ├── as400_parser_cli.py                   # Unified CLI (all source types)
+│   └── rpg3_parser_cli.py                    # RPG3-specific CLI
+│
+├── rpg3-student-mgmt/                 # ★ Sample AS400 application source
+│   ├── QCLSRC/                                # CL source members
+│   │   └── MNUCL.clle
+│   ├── QCPYSRC/                               # Copy source members
+│   │   ├── SCHOOLCPY.cpy
+│   │   └── STUDNTCPY.cpy
+│   ├── QDDSSRC/                               # DDS source members (PF, LF, DSPF, PRTF)
+│   │   ├── CLASSPF.pf, CLASSL1.lf
+│   │   ├── SCHOOLPF.pf, SCHOOLL1.lf
+│   │   ├── STUDNTPF.pf, STUDNTL1.lf, STUDNTL2.lf
+│   │   ├── STUCLSPF.pf, STUCLSL1.lf
+│   │   ├── TEACHPF.pf, FLDREFPF.pf, REFSAMPF.pf
+│   │   ├── MNUDSPF.dspf, STUDSPF.dspf, STULSTD.dspf
+│   │   └── STURPTPF.prtf
+│   └── QRPGSRC/                               # RPG III source members
+│       ├── MNUPRG.RPG
+│       ├── STUPRG.rpg
+│       ├── STULST.rpg
+│       └── STURPT.rpg
+│
+├── output/                            # Parsed IR JSON output
+│   ├── QCLSRC/                                # CL IR output
+│   ├── QCPYSRC/                               # Copy member IR output
+│   ├── QDDSSRC/                               # DDS/DSPF/PRTF IR output
+│   ├── QRPGSRC/                               # RPG3 IR output
+│   └── example-ir/                            # Example IR samples
+│
+├── example/                           # Example files & IR samples
+│   ├── ir/                                    # Example IR JSON
+│   ├── rpg3/                                  # Example RPG3 source
+│   ├── test_fixed.rpgle                       # Example RPGLE (fixed)
+│   └── test_free.rpgle                        # Example RPGLE (free)
+│
+├── docs/ai/                           # AI-assisted development docs
+│   ├── requirements/                          # Feature requirements
+│   ├── design/                                # Architecture & design
+│   ├── planning/                              # Task breakdown & planning
+│   ├── implementation/                        # Implementation guides
+│   ├── testing/                               # Testing strategy & results
+│   ├── knowledge/                             # Domain knowledge docs
+│   ├── deployment/                            # Deployment docs
+│   └── monitoring/                            # Monitoring docs
+│
+├── .agent/                            # AI agent configuration
+│   ├── skills/                                # AI agent skills
+│   │   ├── capture-knowledge/                 # Knowledge capture skill
+│   │   └── dev-lifecycle/                     # Development lifecycle skill
+│   └── workflows/                             # Slash-command workflows
+│       ├── capture-knowledge.md
+│       ├── check-implementation.md
+│       ├── code-review.md
+│       ├── debug.md
+│       ├── execute-plan.md
+│       ├── new-requirement.md
+│       ├── remember.md
+│       ├── review-design.md
+│       ├── review-requirements.md
+│       ├── simplify-implementation.md
+│       ├── update-planning.md
+│       └── writing-test.md
+│
+├── gradle/                            # Gradle wrapper files
+└── java-output/                       # Java code generation output (empty)
+```
+
 ## Documentation Structure
 - `docs/ai/requirements/` - Problem understanding and requirements
 - `docs/ai/design/` - System architecture and design decisions (include mermaid diagrams)
