@@ -66,6 +66,8 @@ A production-grade parser for IBM AS/400 source code. Converts fixed-format RPG 
 - **Auto-detection**: Parser selection based on file extension
 - **Unified CLI**: Single JAR handles all source types
 - **REFFLD resolution**: Cross-file field reference resolution in batch mode
+- **System Analysis**: Extraction of call graphs, file usage maps, and indicator flows
+- **Schema Extraction**: Automatic mapping of DDS to relational SQL schemas (tables, keys, indexes)
 
 ## Quick Start
 
@@ -134,7 +136,17 @@ java -jar as400-parser-core-1.0.0-SNAPSHOT-all.jar --source STURPTPF.prtf -o STU
 
 ```bash
 # Parse all source files recursively, preserving directory structure
-java -jar as400-parser-core-1.0.0-SNAPSHOT-all.jar --source-dir ./as400-project --output-dir ./output
+java -jar as400-parser-core-all.jar --source-dir ./as400-project --output-dir ./output
+
+# Batch parse AND execute relational analysis
+java -jar as400-parser-core-all.jar --source-dir ./as400-project --output-dir ./output --analyze
+```
+
+### Standalone Analysis
+
+```bash
+# Run analysis on existing IR JSON files (no parsing required)
+java -jar as400-parser-core-all.jar --ir-dir ./output --output-dir ./analysis
 ```
 
 Output structure mirrors the source:
@@ -158,6 +170,8 @@ output/
 |--------|-------------|
 | `--source FILE` | Parse a single source file |
 | `--source-dir DIR` | Parse all source files in a directory |
+| `--analyze` | Execute relational/cross-reference analysis after batch |
+| `--ir-dir DIR` | Run analysis on existing IR JSON files in directory |
 | `--output FILE` / `-o` | Write output to file (single mode, default: stdout) |
 | `--output-dir DIR` | Write output files to directory (batch mode) |
 | `--charset CHARSET` | Source encoding (default: `auto` for auto-detect) |
@@ -177,7 +191,10 @@ The Python CLI wraps the Java JAR with extra features like parallel batch proces
 python cli/as400_parser_cli.py parse STUDSPF.dspf -o output.json
 
 # Batch parse a project directory (recursive, preserves structure)
-python cli/as400_parser_cli.py batch ./as400-project -o ./output --parallel 4
+python cli/as400_parser_cli.py batch ./as400-project -o ./output --parallel 4 --analyze
+
+# Run analysis on existing IR files
+python cli/as400_parser_cli.py analyze ./output -o ./analysis
 
 # Validate an IR JSON file
 python cli/as400_parser_cli.py validate output.json
@@ -189,6 +206,7 @@ python cli/as400_parser_cli.py validate output.json
 |---------|-------------|
 | `parse SOURCE [-o OUTPUT]` | Parse a single file |
 | `batch SOURCE_DIR [-o DIR] [--parallel N]` | Batch parse with parallelism |
+| `analyze IR_DIR [-o DIR]` | Run relational analysis on IR files |
 | `validate JSON_FILE` | Validate IR JSON structure |
 
 > **Note:** Requires Python 3.8+ and `java` on PATH. Build the JAR first with `./gradlew :parser-core:shadowJar`.

@@ -38,3 +38,7 @@ output/
 
 # Logs
 *.log
+
+# Analyzer output
+output-analysis/
+output-final/
