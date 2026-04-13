@@ -1,0 +1,1556 @@
+{
+  "metadata": {
+    "irVersion": "1.0.0",
+    "sourceType": "DSPF",
+    "sourceMember": "STULSTD",
+    "sourceFile": "QDDSSRC",
+    "sourceLibrary": "rpg3-student-mgmt",
+    "parseInfo": {
+      "parserVersion": "1.0.0",
+      "parsedAt": "2026-04-13T16:01:46.674511400Z",
+      "parseStatus": "complete",
+      "totalLines": 81,
+      "detectedEncoding": "UTF-8",
+      "errors": [],
+      "warnings": []
+    }
+  },
+  "content": {
+    "sourceLines": [
+      {
+        "lineNumber": 1,
+        "rawText": "     A*================================================================",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 2,
+        "rawText": "     A* ファイル名: STULSTD",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 3,
+        "rawText": "     A* 説明      : 学生一覧画面ファイル（サブファイル使用）",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 4,
+        "rawText": "     A* 作成日    : 2026/03/14",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 5,
+        "rawText": "     A* 作成者    : システム開発部",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 6,
+        "rawText": "     A*================================================================",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 7,
+        "rawText": "     A                                      DSPSIZ(24 80 *DS3)",
+        "specType": "FILE_KEYWORD",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 8,
+        "rawText": "     A                                      CA03(03 '終了')",
+        "specType": "FILE_KEYWORD",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 9,
+        "rawText": "     A                                      CA12(12 '戻る')",
+        "specType": "FILE_KEYWORD",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 10,
+        "rawText": "     A                                      PRINT",
+        "specType": "FILE_KEYWORD",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 11,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 12,
+        "rawText": "     A*================================================================",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 13,
+        "rawText": "     A* サブファイルレコード（一覧明細行）",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 14,
+        "rawText": "     A*================================================================",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 15,
+        "rawText": "     A          R STUSFL                     SFL",
+        "specType": "RECORD_FORMAT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 16,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 17,
+        "rawText": "     A*   --- 選択フィールド ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 18,
+        "rawText": "     A            SFOPT          1A  B  8  3",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 19,
+        "rawText": "     A                                      DSPATR(UL)",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 20,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 21,
+        "rawText": "     A*   --- 一覧表示フィールド ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 22,
+        "rawText": "     A            SFSTID         6A  O  8  6",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 23,
+        "rawText": "     A            SFNAM         20A  O  8 14",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 24,
+        "rawText": "     A            SFSCL          4A  O  8 36",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 25,
+        "rawText": "     A            SFGND          1A  O  8 42",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 26,
+        "rawText": "     A            SFBDT          8S 0O  8 45",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 27,
+        "rawText": "     A                                      EDTCDE(Y)",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 28,
+        "rawText": "     A            SFSTS          1A  O  8 56",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 29,
+        "rawText": "     A            SFTEL         12A  O  8 59",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 30,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 31,
+        "rawText": "     A*================================================================",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 32,
+        "rawText": "     A* サブファイル制御レコード",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 33,
+        "rawText": "     A*================================================================",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 34,
+        "rawText": "     A          R STUSFC                     SFLCTL(STUSFL)",
+        "specType": "RECORD_FORMAT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 35,
+        "rawText": "     A                                      SFLSIZ(0100)",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 36,
+        "rawText": "     A                                      SFLPAG(0012)",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 37,
+        "rawText": "     A  40                                  SFLDSP",
+        "specType": "CONDITIONED_KEYWORD",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 38,
+        "rawText": "     A  41                                  SFLDSPCTL",
+        "specType": "CONDITIONED_KEYWORD",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 39,
+        "rawText": "     A  42                                  SFLCLR",
+        "specType": "CONDITIONED_KEYWORD",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 40,
+        "rawText": "     A  43                                  SFLEND(*MORE)",
+        "specType": "CONDITIONED_KEYWORD",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 41,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 42,
+        "rawText": "     A*   --- 画面タイトル ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 43,
+        "rawText": "     A                                  1 25'学 生 一 覧 表 示'",
+        "specType": "CONSTANT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 44,
+        "rawText": "     A                                      DSPATR(HI)",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 45,
+        "rawText": "     A                                  2  2'STULST'",
+        "specType": "CONSTANT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 46,
+        "rawText": "     A                                  2 70DATE",
+        "specType": "CONSTANT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 47,
+        "rawText": "     A                                      EDTCDE(Y)",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 48,
+        "rawText": "     A                                  3  1'──────────────────────────'",
+        "specType": "CONSTANT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 49,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 50,
+        "rawText": "     A*   --- 検索条件入力 ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 51,
+        "rawText": "     A                                  4  3'学校コード:'",
+        "specType": "CONSTANT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 52,
+        "rawText": "     A            FCSCL          4A  B  4 16",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 53,
+        "rawText": "     A  43                                  DSPATR(UL)",
+        "specType": "CONDITIONED_KEYWORD",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 54,
+        "rawText": "     A                                  4 23'氏名:'",
+        "specType": "CONSTANT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 55,
+        "rawText": "     A            FCNAM         15A  B  4 30",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 56,
+        "rawText": "     A                                      DSPATR(UL)",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 57,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 58,
+        "rawText": "     A*   --- 件数表示 ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 59,
+        "rawText": "     A                                  5  3'表示件数:'",
+        "specType": "CONSTANT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 60,
+        "rawText": "     A            FCCNT          5S 0O  5 14",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 61,
+        "rawText": "     A                                      EDTCDE(Z)",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 62,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 63,
+        "rawText": "     A*   --- 一覧ヘッダー ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 64,
+        "rawText": "     A                                  7  3'OP'",
+        "specType": "CONSTANT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 65,
+        "rawText": "     A                                  7  6'学生ID'",
+        "specType": "CONSTANT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 66,
+        "rawText": "     A                                  7 14'学生氏名'",
+        "specType": "CONSTANT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 67,
+        "rawText": "     A                                  7 36'学校'",
+        "specType": "CONSTANT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 68,
+        "rawText": "     A                                  7 42'性'",
+        "specType": "CONSTANT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 69,
+        "rawText": "     A                                  7 45'生年月日'",
+        "specType": "CONSTANT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 70,
+        "rawText": "     A                                  7 56'状'",
+        "specType": "CONSTANT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 71,
+        "rawText": "     A                                  7 59'電話番号'",
+        "specType": "CONSTANT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 72,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 73,
+        "rawText": "     A*   --- メッセージ ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 74,
+        "rawText": "     A            FCMSG         50A  O 21  2",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 75,
+        "rawText": "     A                                      DSPATR(RI)",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 76,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 77,
+        "rawText": "     A*   --- ファンクションキー案内 ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 78,
+        "rawText": "     A                                 23  2'F3=終了  F12=戻る  '",
+        "specType": "CONSTANT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 79,
+        "rawText": "     A                                      DSPATR(CS)",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 80,
+        "rawText": "     A                                 24  2'OP: 2=変更 4=削除 5=照会'",
+        "specType": "CONSTANT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 81,
+        "rawText": "     A                                      DSPATR(CS)",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      }
+    ],
+    "fileKeywords": [
+      {
+        "name": "DSPSIZ",
+        "value": "24 80 *DS3",
+        "rawText": "DSPSIZ(24 80 *DS3)",
+        "location": {
+          "startLine": 7,
+          "endLine": 7
+        },
+        "rawSourceLine": "     A                                      DSPSIZ(24 80 *DS3)"
+      },
+      {
+        "name": "CA03",
+        "value": "03 '終了'",
+        "rawText": "CA03(03 '終了')",
+        "location": {
+          "startLine": 8,
+          "endLine": 8
+        },
+        "rawSourceLine": "     A                                      CA03(03 '終了')"
+      },
+      {
+        "name": "CA12",
+        "value": "12 '戻る'",
+        "rawText": "CA12(12 '戻る')",
+        "location": {
+          "startLine": 9,
+          "endLine": 9
+        },
+        "rawSourceLine": "     A                                      CA12(12 '戻る')"
+      },
+      {
+        "name": "PRINT",
+        "rawText": "PRINT",
+        "location": {
+          "startLine": 10,
+          "endLine": 10
+        },
+        "rawSourceLine": "     A                                      PRINT"
+      }
+    ],
+    "recordFormats": [
+      {
+        "location": {
+          "startLine": 15,
+          "endLine": 15
+        },
+        "rawSourceLines": [
+          "     A          R STUSFL                     SFL"
+        ],
+        "conditioningIndicators": [],
+        "name": "STUSFL",
+        "recordType": "sfl",
+        "keywords": [
+          {
+            "keyword": {
+              "name": "SFL",
+              "rawText": "SFL"
+            },
+            "conditioningIndicators": []
+          }
+        ],
+        "fields": [
+          {
+            "location": {
+              "startLine": 18,
+              "endLine": 19
+            },
+            "rawSourceLines": [
+              "     A            SFOPT          1A  B  8  3",
+              "     A                                      DSPATR(UL)"
+            ],
+            "conditioningIndicators": [],
+            "name": "SFOPT",
+            "length": 1,
+            "dataType": "A",
+            "usage": "B",
+            "screenLine": 8,
+            "screenPosition": 3,
+            "screenPositionRaw": "3",
+            "source": "direct",
+            "keywords": [
+              {
+                "keyword": {
+                  "name": "DSPATR",
+                  "value": "UL",
+                  "rawText": "DSPATR(UL)"
+                },
+                "conditioningIndicators": []
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 22,
+              "endLine": 22
+            },
+            "rawSourceLines": [
+              "     A            SFSTID         6A  O  8  6"
+            ],
+            "conditioningIndicators": [],
+            "name": "SFSTID",
+            "length": 6,
+            "dataType": "A",
+            "usage": "O",
+            "screenLine": 8,
+            "screenPosition": 6,
+            "screenPositionRaw": "6",
+            "source": "direct",
+            "keywords": []
+          },
+          {
+            "location": {
+              "startLine": 23,
+              "endLine": 23
+            },
+            "rawSourceLines": [
+              "     A            SFNAM         20A  O  8 14"
+            ],
+            "conditioningIndicators": [],
+            "name": "SFNAM",
+            "length": 20,
+            "dataType": "A",
+            "usage": "O",
+            "screenLine": 8,
+            "screenPosition": 14,
+            "screenPositionRaw": "14",
+            "source": "direct",
+            "keywords": []
+          },
+          {
+            "location": {
+              "startLine": 24,
+              "endLine": 24
+            },
+            "rawSourceLines": [
+              "     A            SFSCL          4A  O  8 36"
+            ],
+            "conditioningIndicators": [],
+            "name": "SFSCL",
+            "length": 4,
+            "dataType": "A",
+            "usage": "O",
+            "screenLine": 8,
+            "screenPosition": 36,
+            "screenPositionRaw": "36",
+            "source": "direct",
+            "keywords": []
+          },
+          {
+            "location": {
+              "startLine": 25,
+              "endLine": 25
+            },
+            "rawSourceLines": [
+              "     A            SFGND          1A  O  8 42"
+            ],
+            "conditioningIndicators": [],
+            "name": "SFGND",
+            "length": 1,
+            "dataType": "A",
+            "usage": "O",
+            "screenLine": 8,
+            "screenPosition": 42,
+            "screenPositionRaw": "42",
+            "source": "direct",
+            "keywords": []
+          },
+          {
+            "location": {
+              "startLine": 26,
+              "endLine": 27
+            },
+            "rawSourceLines": [
+              "     A            SFBDT          8S 0O  8 45",
+              "     A                                      EDTCDE(Y)"
+            ],
+            "conditioningIndicators": [],
+            "name": "SFBDT",
+            "length": 8,
+            "dataType": "S",
+            "decimalPositions": 0,
+            "usage": "O",
+            "screenLine": 8,
+            "screenPosition": 45,
+            "screenPositionRaw": "45",
+            "source": "direct",
+            "keywords": [
+              {
+                "keyword": {
+                  "name": "EDTCDE",
+                  "value": "Y",
+                  "rawText": "EDTCDE(Y)"
+                },
+                "conditioningIndicators": []
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 28,
+              "endLine": 28
+            },
+            "rawSourceLines": [
+              "     A            SFSTS          1A  O  8 56"
+            ],
+            "conditioningIndicators": [],
+            "name": "SFSTS",
+            "length": 1,
+            "dataType": "A",
+            "usage": "O",
+            "screenLine": 8,
+            "screenPosition": 56,
+            "screenPositionRaw": "56",
+            "source": "direct",
+            "keywords": []
+          },
+          {
+            "location": {
+              "startLine": 29,
+              "endLine": 29
+            },
+            "rawSourceLines": [
+              "     A            SFTEL         12A  O  8 59"
+            ],
+            "conditioningIndicators": [],
+            "name": "SFTEL",
+            "length": 12,
+            "dataType": "A",
+            "usage": "O",
+            "screenLine": 8,
+            "screenPosition": 59,
+            "screenPositionRaw": "59",
+            "source": "direct",
+            "keywords": []
+          }
+        ],
+        "constants": [],
+        "keys": []
+      },
+      {
+        "location": {
+          "startLine": 34,
+          "endLine": 40
+        },
+        "rawSourceLines": [
+          "     A          R STUSFC                     SFLCTL(STUSFL)",
+          "     A                                      SFLSIZ(0100)",
+          "     A                                      SFLPAG(0012)",
+          "     A  40                                  SFLDSP",
+          "     A  41                                  SFLDSPCTL",
+          "     A  42                                  SFLCLR",
+          "     A  43                                  SFLEND(*MORE)"
+        ],
+        "conditioningIndicators": [],
+        "name": "STUSFC",
+        "recordType": "sflctl",
+        "sflControlFor": "STUSFL",
+        "keywords": [
+          {
+            "keyword": {
+              "name": "SFLCTL",
+              "value": "STUSFL",
+              "rawText": "SFLCTL(STUSFL)"
+            },
+            "conditioningIndicators": []
+          },
+          {
+            "keyword": {
+              "name": "SFLSIZ",
+              "value": "0100",
+              "rawText": "SFLSIZ(0100)"
+            },
+            "conditioningIndicators": []
+          },
+          {
+            "keyword": {
+              "name": "SFLPAG",
+              "value": "0012",
+              "rawText": "SFLPAG(0012)"
+            },
+            "conditioningIndicators": []
+          },
+          {
+            "keyword": {
+              "name": "SFLDSP",
+              "rawText": "SFLDSP"
+            },
+            "conditioningIndicators": [
+              {
+                "not": false,
+                "indicator": "40"
+              }
+            ]
+          },
+          {
+            "keyword": {
+              "name": "SFLDSPCTL",
+              "rawText": "SFLDSPCTL"
+            },
+            "conditioningIndicators": [
+              {
+                "not": false,
+                "indicator": "41"
+              }
+            ]
+          },
+          {
+            "keyword": {
+              "name": "SFLCLR",
+              "rawText": "SFLCLR"
+            },
+            "conditioningIndicators": [
+              {
+                "not": false,
+                "indicator": "42"
+              }
+            ]
+          },
+          {
+            "keyword": {
+              "name": "SFLEND",
+              "value": "*MORE",
+              "rawText": "SFLEND(*MORE)"
+            },
+            "conditioningIndicators": [
+              {
+                "not": false,
+                "indicator": "43"
+              }
+            ]
+          }
+        ],
+        "fields": [
+          {
+            "location": {
+              "startLine": 52,
+              "endLine": 53
+            },
+            "rawSourceLines": [
+              "     A            FCSCL          4A  B  4 16",
+              "     A  43                                  DSPATR(UL)"
+            ],
+            "conditioningIndicators": [],
+            "name": "FCSCL",
+            "length": 4,
+            "dataType": "A",
+            "usage": "B",
+            "screenLine": 4,
+            "screenPosition": 16,
+            "screenPositionRaw": "16",
+            "source": "direct",
+            "keywords": [
+              {
+                "keyword": {
+                  "name": "DSPATR",
+                  "value": "UL",
+                  "rawText": "DSPATR(UL)"
+                },
+                "conditioningIndicators": [
+                  {
+                    "not": false,
+                    "indicator": "43"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 55,
+              "endLine": 56
+            },
+            "rawSourceLines": [
+              "     A            FCNAM         15A  B  4 30",
+              "     A                                      DSPATR(UL)"
+            ],
+            "conditioningIndicators": [],
+            "name": "FCNAM",
+            "length": 15,
+            "dataType": "A",
+            "usage": "B",
+            "screenLine": 4,
+            "screenPosition": 30,
+            "screenPositionRaw": "30",
+            "source": "direct",
+            "keywords": [
+              {
+                "keyword": {
+                  "name": "DSPATR",
+                  "value": "UL",
+                  "rawText": "DSPATR(UL)"
+                },
+                "conditioningIndicators": []
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 60,
+              "endLine": 61
+            },
+            "rawSourceLines": [
+              "     A            FCCNT          5S 0O  5 14",
+              "     A                                      EDTCDE(Z)"
+            ],
+            "conditioningIndicators": [],
+            "name": "FCCNT",
+            "length": 5,
+            "dataType": "S",
+            "decimalPositions": 0,
+            "usage": "O",
+            "screenLine": 5,
+            "screenPosition": 14,
+            "screenPositionRaw": "14",
+            "source": "direct",
+            "keywords": [
+              {
+                "keyword": {
+                  "name": "EDTCDE",
+                  "value": "Z",
+                  "rawText": "EDTCDE(Z)"
+                },
+                "conditioningIndicators": []
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 74,
+              "endLine": 75
+            },
+            "rawSourceLines": [
+              "     A            FCMSG         50A  O 21  2",
+              "     A                                      DSPATR(RI)"
+            ],
+            "conditioningIndicators": [],
+            "name": "FCMSG",
+            "length": 50,
+            "dataType": "A",
+            "usage": "O",
+            "screenLine": 21,
+            "screenPosition": 2,
+            "screenPositionRaw": "2",
+            "source": "direct",
+            "keywords": [
+              {
+                "keyword": {
+                  "name": "DSPATR",
+                  "value": "RI",
+                  "rawText": "DSPATR(RI)"
+                },
+                "conditioningIndicators": []
+              }
+            ]
+          }
+        ],
+        "constants": [
+          {
+            "location": {
+              "startLine": 43,
+              "endLine": 44
+            },
+            "rawSourceLines": [
+              "     A                                  1 25'学 生 一 覧 表 示'",
+              "     A                                      DSPATR(HI)"
+            ],
+            "conditioningIndicators": [],
+            "screenLine": 1,
+            "screenPosition": 25,
+            "screenPositionRaw": "25",
+            "text": "学 生 一 覧 表 示",
+            "keywords": [
+              {
+                "keyword": {
+                  "name": "DSPATR",
+                  "value": "HI",
+                  "rawText": "DSPATR(HI)"
+                },
+                "conditioningIndicators": []
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 45,
+              "endLine": 45
+            },
+            "rawSourceLines": [
+              "     A                                  2  2'STULST'"
+            ],
+            "conditioningIndicators": [],
+            "screenLine": 2,
+            "screenPosition": 2,
+            "screenPositionRaw": "2",
+            "text": "STULST",
+            "keywords": []
+          },
+          {
+            "location": {
+              "startLine": 46,
+              "endLine": 47
+            },
+            "rawSourceLines": [
+              "     A                                  2 70DATE",
+              "     A                                      EDTCDE(Y)"
+            ],
+            "conditioningIndicators": [],
+            "screenLine": 2,
+            "screenPosition": 70,
+            "screenPositionRaw": "70",
+            "systemKeyword": "DATE",
+            "keywords": [
+              {
+                "keyword": {
+                  "name": "EDTCDE",
+                  "value": "Y",
+                  "rawText": "EDTCDE(Y)"
+                },
+                "conditioningIndicators": []
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 48,
+              "endLine": 48
+            },
+            "rawSourceLines": [
+              "     A                                  3  1'──────────────────────────'"
+            ],
+            "conditioningIndicators": [],
+            "screenLine": 3,
+            "screenPosition": 1,
+            "screenPositionRaw": "1",
+            "text": "──────────────────────────",
+            "keywords": []
+          },
+          {
+            "location": {
+              "startLine": 51,
+              "endLine": 51
+            },
+            "rawSourceLines": [
+              "     A                                  4  3'学校コード:'"
+            ],
+            "conditioningIndicators": [],
+            "screenLine": 4,
+            "screenPosition": 3,
+            "screenPositionRaw": "3",
+            "text": "学校コード:",
+            "keywords": []
+          },
+          {
+            "location": {
+              "startLine": 54,
+              "endLine": 54
+            },
+            "rawSourceLines": [
+              "     A                                  4 23'氏名:'"
+            ],
+            "conditioningIndicators": [],
+            "screenLine": 4,
+            "screenPosition": 23,
+            "screenPositionRaw": "23",
+            "text": "氏名:",
+            "keywords": []
+          },
+          {
+            "location": {
+              "startLine": 59,
+              "endLine": 59
+            },
+            "rawSourceLines": [
+              "     A                                  5  3'表示件数:'"
+            ],
+            "conditioningIndicators": [],
+            "screenLine": 5,
+            "screenPosition": 3,
+            "screenPositionRaw": "3",
+            "text": "表示件数:",
+            "keywords": []
+          },
+          {
+            "location": {
+              "startLine": 64,
+              "endLine": 64
+            },
+            "rawSourceLines": [
+              "     A                                  7  3'OP'"
+            ],
+            "conditioningIndicators": [],
+            "screenLine": 7,
+            "screenPosition": 3,
+            "screenPositionRaw": "3",
+            "text": "OP",
+            "keywords": []
+          },
+          {
+            "location": {
+              "startLine": 65,
+              "endLine": 65
+            },
+            "rawSourceLines": [
+              "     A                                  7  6'学生ID'"
+            ],
+            "conditioningIndicators": [],
+            "screenLine": 7,
+            "screenPosition": 6,
+            "screenPositionRaw": "6",
+            "text": "学生ID",
+            "keywords": []
+          },
+          {
+            "location": {
+              "startLine": 66,
+              "endLine": 66
+            },
+            "rawSourceLines": [
+              "     A                                  7 14'学生氏名'"
+            ],
+            "conditioningIndicators": [],
+            "screenLine": 7,
+            "screenPosition": 14,
+            "screenPositionRaw": "14",
+            "text": "学生氏名",
+            "keywords": []
+          },
+          {
+            "location": {
+              "startLine": 67,
+              "endLine": 67
+            },
+            "rawSourceLines": [
+              "     A                                  7 36'学校'"
+            ],
+            "conditioningIndicators": [],
+            "screenLine": 7,
+            "screenPosition": 36,
+            "screenPositionRaw": "36",
+            "text": "学校",
+            "keywords": []
+          },
+          {
+            "location": {
+              "startLine": 68,
+              "endLine": 68
+            },
+            "rawSourceLines": [
+              "     A                                  7 42'性'"
+            ],
+            "conditioningIndicators": [],
+            "screenLine": 7,
+            "screenPosition": 42,
+            "screenPositionRaw": "42",
+            "text": "性",
+            "keywords": []
+          },
+          {
+            "location": {
+              "startLine": 69,
+              "endLine": 69
+            },
+            "rawSourceLines": [
+              "     A                                  7 45'生年月日'"
+            ],
+            "conditioningIndicators": [],
+            "screenLine": 7,
+            "screenPosition": 45,
+            "screenPositionRaw": "45",
+            "text": "生年月日",
+            "keywords": []
+          },
+          {
+            "location": {
+              "startLine": 70,
+              "endLine": 70
+            },
+            "rawSourceLines": [
+              "     A                                  7 56'状'"
+            ],
+            "conditioningIndicators": [],
+            "screenLine": 7,
+            "screenPosition": 56,
+            "screenPositionRaw": "56",
+            "text": "状",
+            "keywords": []
+          },
+          {
+            "location": {
+              "startLine": 71,
+              "endLine": 71
+            },
+            "rawSourceLines": [
+              "     A                                  7 59'電話番号'"
+            ],
+            "conditioningIndicators": [],
+            "screenLine": 7,
+            "screenPosition": 59,
+            "screenPositionRaw": "59",
+            "text": "電話番号",
+            "keywords": []
+          },
+          {
+            "location": {
+              "startLine": 78,
+              "endLine": 79
+            },
+            "rawSourceLines": [
+              "     A                                 23  2'F3=終了  F12=戻る  '",
+              "     A                                      DSPATR(CS)"
+            ],
+            "conditioningIndicators": [],
+            "screenLine": 23,
+            "screenPosition": 2,
+            "screenPositionRaw": "2",
+            "text": "F3=終了  F12=戻る  ",
+            "keywords": [
+              {
+                "keyword": {
+                  "name": "DSPATR",
+                  "value": "CS",
+                  "rawText": "DSPATR(CS)"
+                },
+                "conditioningIndicators": []
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 80,
+              "endLine": 81
+            },
+            "rawSourceLines": [
+              "     A                                 24  2'OP: 2=変更 4=削除 5=照会'",
+              "     A                                      DSPATR(CS)"
+            ],
+            "conditioningIndicators": [],
+            "screenLine": 24,
+            "screenPosition": 2,
+            "screenPositionRaw": "2",
+            "text": "OP: 2=変更 4=削除 5=照会",
+            "keywords": [
+              {
+                "keyword": {
+                  "name": "DSPATR",
+                  "value": "CS",
+                  "rawText": "DSPATR(CS)"
+                },
+                "conditioningIndicators": []
+              }
+            ]
+          }
+        ],
+        "keys": []
+      }
+    ],
+    "comments": [
+      {
+        "lineNumber": 1,
+        "text": "================================================================"
+      },
+      {
+        "lineNumber": 2,
+        "text": "ファイル名: STULSTD"
+      },
+      {
+        "lineNumber": 3,
+        "text": "説明      : 学生一覧画面ファイル（サブファイル使用）"
+      },
+      {
+        "lineNumber": 4,
+        "text": "作成日    : 2026/03/14"
+      },
+      {
+        "lineNumber": 5,
+        "text": "作成者    : システム開発部"
+      },
+      {
+        "lineNumber": 6,
+        "text": "================================================================"
+      },
+      {
+        "lineNumber": 11,
+        "text": ""
+      },
+      {
+        "lineNumber": 12,
+        "text": "================================================================"
+      },
+      {
+        "lineNumber": 13,
+        "text": "サブファイルレコード（一覧明細行）"
+      },
+      {
+        "lineNumber": 14,
+        "text": "================================================================"
+      },
+      {
+        "lineNumber": 16,
+        "text": ""
+      },
+      {
+        "lineNumber": 17,
+        "text": "--- 選択フィールド ---"
+      },
+      {
+        "lineNumber": 20,
+        "text": ""
+      },
+      {
+        "lineNumber": 21,
+        "text": "--- 一覧表示フィールド ---"
+      },
+      {
+        "lineNumber": 30,
+        "text": ""
+      },
+      {
+        "lineNumber": 31,
+        "text": "================================================================"
+      },
+      {
+        "lineNumber": 32,
+        "text": "サブファイル制御レコード"
+      },
+      {
+        "lineNumber": 33,
+        "text": "================================================================"
+      },
+      {
+        "lineNumber": 41,
+        "text": ""
+      },
+      {
+        "lineNumber": 42,
+        "text": "--- 画面タイトル ---"
+      },
+      {
+        "lineNumber": 49,
+        "text": ""
+      },
+      {
+        "lineNumber": 50,
+        "text": "--- 検索条件入力 ---"
+      },
+      {
+        "lineNumber": 57,
+        "text": ""
+      },
+      {
+        "lineNumber": 58,
+        "text": "--- 件数表示 ---"
+      },
+      {
+        "lineNumber": 62,
+        "text": ""
+      },
+      {
+        "lineNumber": 63,
+        "text": "--- 一覧ヘッダー ---"
+      },
+      {
+        "lineNumber": 72,
+        "text": ""
+      },
+      {
+        "lineNumber": 73,
+        "text": "--- メッセージ ---"
+      },
+      {
+        "lineNumber": 76,
+        "text": ""
+      },
+      {
+        "lineNumber": 77,
+        "text": "--- ファンクションキー案内 ---"
+      }
+    ],
+    "parseErrors": []
+  },
+  "dependencies": {
+    "referencedFiles": [],
+    "calledPrograms": [],
+    "copyMembers": []
+  },
+  "errors": []
+}

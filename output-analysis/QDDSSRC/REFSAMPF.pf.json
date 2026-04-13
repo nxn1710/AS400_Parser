@@ -1,0 +1,1176 @@
+{
+  "metadata": {
+    "irVersion": "1.0.0",
+    "sourceType": "DDS_PF",
+    "sourceMember": "REFSAMPF",
+    "sourceFile": "QDDSSRC",
+    "sourceLibrary": "rpg3-student-mgmt",
+    "parseInfo": {
+      "parserVersion": "1.0.0",
+      "parsedAt": "2026-04-13T16:01:46.653090800Z",
+      "parseStatus": "complete",
+      "totalLines": 75,
+      "detectedEncoding": "UTF-8",
+      "errors": [],
+      "warnings": []
+    }
+  },
+  "content": {
+    "sourceLines": [
+      {
+        "lineNumber": 1,
+        "rawText": "     A*================================================================",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 2,
+        "rawText": "     A* ファイル名: REFSAMPF",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 3,
+        "rawText": "     A* 説明      : REF/REFFLD 全パターンサンプル物理ファイル",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 4,
+        "rawText": "     A* 作成日    : 2026/03/21",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 5,
+        "rawText": "     A* 作成者    : システム開発部",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 6,
+        "rawText": "     A* 備考      : DDS の REF/REFFLD キーワード全パターン網羅",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 7,
+        "rawText": "     A*================================================================",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 8,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 9,
+        "rawText": "     A* ======================================================",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 10,
+        "rawText": "     A* ファイルレベル REF キーワードの構文バリエーション",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 11,
+        "rawText": "     A* ======================================================",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 12,
+        "rawText": "     A* 構文: REF([ライブラリ名/]ファイル名 [レコード様式名])",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 13,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 14,
+        "rawText": "     A* REF(FLDREFPF)                  ← 基本形",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 15,
+        "rawText": "     A* REF(MYLIB/FLDREFPF)            ← ライブラリ修飾",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 16,
+        "rawText": "     A* REF(FLDREFPF REFREC)           ← レコード様式指定",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 17,
+        "rawText": "     A* REF(MYLIB/FLDREFPF REFREC)     ← 完全修飾",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 18,
+        "rawText": "     A* ======================================================",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 19,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 20,
+        "rawText": "     A                                      REF(FLDREFPF)",
+        "specType": "FILE_KEYWORD",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 21,
+        "rawText": "     A                                      UNIQUE",
+        "specType": "FILE_KEYWORD",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 22,
+        "rawText": "     A          R SAMPREC                   TEXT('全REFパターンレコード')",
+        "specType": "RECORD_FORMAT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 23,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 24,
+        "rawText": "     A* --- パターン1: R(col29) のみ — 同名参照 ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 25,
+        "rawText": "     A* REFファイルの同名フィールドから属性継承",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 26,
+        "rawText": "     A* REFFLD キーワード不要",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 27,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 28,
+        "rawText": "     A            RSCLCD    R               TEXT('同名参照')",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 29,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 30,
+        "rawText": "     A* --- パターン2: R + REFFLD(field) — 別名参照 ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 31,
+        "rawText": "     A* REFファイルの別名フィールドから属性継承",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 32,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 33,
+        "rawText": "     A            SMPID     R               REFFLD(RSTUID) +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 34,
+        "rawText": "     A                                      TEXT('別名参照')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 35,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 36,
+        "rawText": "     A* --- パターン3: R + REFFLD(field file) — 別ファイル参照 ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 37,
+        "rawText": "     A* REF指定以外のファイルのフィールドを参照",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 38,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 39,
+        "rawText": "     A            SMPNAM    R               REFFLD(STUNAM STUDNTPF) +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 40,
+        "rawText": "     A                                      TEXT('別ファイル参照')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 41,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 42,
+        "rawText": "     A* --- パターン4: R + REFFLD(field lib/file) — ライブラリ修飾 ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 43,
+        "rawText": "     A* ライブラリ名付きで別ファイルを参照",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 44,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 45,
+        "rawText": "     A            SMPADR    R               REFFLD(STUADR MYLIB/STUDNTPF) +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 46,
+        "rawText": "     A                                      TEXT('ライブラリ修飾参照')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 47,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 48,
+        "rawText": "     A* --- パターン5: R + REFFLD(field fmt file) — 様式指定 ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 49,
+        "rawText": "     A* 別ファイルの特定レコード様式を指定して参照",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 50,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 51,
+        "rawText": "     A            SMPCLS    R               REFFLD(CLSID CLSREC CLASSPF) +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 52,
+        "rawText": "     A                                      TEXT('様式指定参照')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 53,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 54,
+        "rawText": "     A* --- パターン6: R + REFFLD(field fmt lib/file) — 完全修飾 ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 55,
+        "rawText": "     A* ライブラリ修飾 + レコード様式指定の完全形",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 56,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 57,
+        "rawText": "     A            SMPSCL    R               REFFLD(CLSSCL CLSREC MYLIB/CLASSPF) +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 58,
+        "rawText": "     A                                      TEXT('完全修飾参照')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 59,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 60,
+        "rawText": "     A* --- パターン7: R + REFFLD(field *SRC) — ソース内参照 ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 61,
+        "rawText": "     A* 同一ソース内で先に定義されたフィールドを参照",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 62,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 63,
+        "rawText": "     A            SMPCD2    R               REFFLD(RSCLCD *SRC) +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 64,
+        "rawText": "     A                                      TEXT('ソース内参照')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 65,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 66,
+        "rawText": "     A* --- パターン8: 直接定義（参照なし） ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 67,
+        "rawText": "     A* 参照を使わずフィールド属性を直接指定",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 68,
+        "rawText": "     A* col29 に R なし、Length/Type を直接指定",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 69,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 70,
+        "rawText": "     A            SMPFLG         1A         TEXT('直接定義フラグ')",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 71,
+        "rawText": "     A            SMPAMT         9P 2       TEXT('直接定義金額')",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 72,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 73,
+        "rawText": "     A* --- 主キー定義 ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 74,
+        "rawText": "     A          K RSCLCD",
+        "specType": "KEY_FIELD",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 75,
+        "rawText": "     A          K SMPID",
+        "specType": "KEY_FIELD",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      }
+    ],
+    "fileKeywords": [
+      {
+        "name": "REF",
+        "value": "FLDREFPF",
+        "rawText": "REF(FLDREFPF)"
+      },
+      {
+        "name": "UNIQUE",
+        "rawText": "UNIQUE"
+      }
+    ],
+    "recordFormats": [
+      {
+        "location": {
+          "startLine": 22,
+          "endLine": 22
+        },
+        "rawSourceLine": "     A          R SAMPREC                   TEXT('全REFパターンレコード')",
+        "name": "SAMPREC",
+        "text": "全REFパターンレコード",
+        "keywords": [
+          {
+            "name": "TEXT",
+            "value": "全REFパターンレコード",
+            "rawText": "TEXT('全REFパターンレコード')"
+          }
+        ],
+        "fields": [
+          {
+            "location": {
+              "startLine": 28,
+              "endLine": 28
+            },
+            "rawSourceLines": [
+              "     A            RSCLCD    R               TEXT('同名参照')"
+            ],
+            "name": "RSCLCD",
+            "reference": "R",
+            "length": 4,
+            "dataType": "A",
+            "source": "reference",
+            "referenceField": "RSCLCD",
+            "keywords": [
+              {
+                "name": "TEXT",
+                "value": "同名参照",
+                "rawText": "TEXT('同名参照')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 33,
+              "endLine": 33
+            },
+            "rawSourceLines": [
+              "     A            SMPID     R               REFFLD(RSTUID) +",
+              "     A                                      TEXT('別名参照')"
+            ],
+            "name": "SMPID",
+            "reference": "R",
+            "length": 6,
+            "dataType": "A",
+            "source": "reference",
+            "referenceField": "RSTUID",
+            "keywords": [
+              {
+                "name": "REFFLD",
+                "value": "RSTUID",
+                "rawText": "REFFLD(RSTUID)",
+                "referenceField": "RSTUID"
+              },
+              {
+                "name": "TEXT",
+                "value": "別名参照",
+                "rawText": "TEXT('別名参照')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 39,
+              "endLine": 39
+            },
+            "rawSourceLines": [
+              "     A            SMPNAM    R               REFFLD(STUNAM STUDNTPF) +",
+              "     A                                      TEXT('別ファイル参照')"
+            ],
+            "name": "SMPNAM",
+            "reference": "R",
+            "length": 30,
+            "dataType": "A",
+            "source": "reference",
+            "referenceField": "STUNAM",
+            "referenceFile": "STUDNTPF",
+            "keywords": [
+              {
+                "name": "REFFLD",
+                "values": [
+                  "STUNAM",
+                  "STUDNTPF"
+                ],
+                "rawText": "REFFLD(STUNAM STUDNTPF)",
+                "referenceField": "STUNAM",
+                "referenceFile": "STUDNTPF"
+              },
+              {
+                "name": "TEXT",
+                "value": "別ファイル参照",
+                "rawText": "TEXT('別ファイル参照')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 45,
+              "endLine": 45
+            },
+            "rawSourceLines": [
+              "     A            SMPADR    R               REFFLD(STUADR MYLIB/STUDNTPF) +",
+              "     A                                      TEXT('ライブラリ修飾参照')"
+            ],
+            "name": "SMPADR",
+            "reference": "R",
+            "length": 50,
+            "dataType": "A",
+            "source": "reference",
+            "referenceField": "STUADR",
+            "referenceFile": "MYLIB/STUDNTPF",
+            "keywords": [
+              {
+                "name": "REFFLD",
+                "values": [
+                  "STUADR",
+                  "MYLIB/STUDNTPF"
+                ],
+                "rawText": "REFFLD(STUADR MYLIB/STUDNTPF)",
+                "referenceField": "STUADR",
+                "referenceFile": "MYLIB/STUDNTPF"
+              },
+              {
+                "name": "TEXT",
+                "value": "ライブラリ修飾参照",
+                "rawText": "TEXT('ライブラリ修飾参照')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 51,
+              "endLine": 51
+            },
+            "rawSourceLines": [
+              "     A            SMPCLS    R               REFFLD(CLSID CLSREC CLASSPF) +",
+              "     A                                      TEXT('様式指定参照')"
+            ],
+            "name": "SMPCLS",
+            "reference": "R",
+            "length": 6,
+            "dataType": "A",
+            "source": "reference",
+            "referenceField": "CLSID",
+            "referenceFile": "CLASSPF",
+            "referenceRecordFormat": "CLSREC",
+            "keywords": [
+              {
+                "name": "REFFLD",
+                "values": [
+                  "CLSID",
+                  "CLSREC",
+                  "CLASSPF"
+                ],
+                "rawText": "REFFLD(CLSID CLSREC CLASSPF)",
+                "referenceField": "CLSID",
+                "referenceFile": "CLASSPF",
+                "referenceRecordFormat": "CLSREC"
+              },
+              {
+                "name": "TEXT",
+                "value": "様式指定参照",
+                "rawText": "TEXT('様式指定参照')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 57,
+              "endLine": 57
+            },
+            "rawSourceLines": [
+              "     A            SMPSCL    R               REFFLD(CLSSCL CLSREC MYLIB/CLASSPF) +",
+              "     A                                      TEXT('完全修飾参照')"
+            ],
+            "name": "SMPSCL",
+            "reference": "R",
+            "length": 4,
+            "dataType": "A",
+            "source": "reference",
+            "referenceField": "CLSSCL",
+            "referenceFile": "MYLIB/CLASSPF",
+            "referenceRecordFormat": "CLSREC",
+            "keywords": [
+              {
+                "name": "REFFLD",
+                "values": [
+                  "CLSSCL",
+                  "CLSREC",
+                  "MYLIB/CLASSPF"
+                ],
+                "rawText": "REFFLD(CLSSCL CLSREC MYLIB/CLASSPF)",
+                "referenceField": "CLSSCL",
+                "referenceFile": "MYLIB/CLASSPF",
+                "referenceRecordFormat": "CLSREC"
+              },
+              {
+                "name": "TEXT",
+                "value": "完全修飾参照",
+                "rawText": "TEXT('完全修飾参照')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 63,
+              "endLine": 63
+            },
+            "rawSourceLines": [
+              "     A            SMPCD2    R               REFFLD(RSCLCD *SRC) +",
+              "     A                                      TEXT('ソース内参照')"
+            ],
+            "name": "SMPCD2",
+            "reference": "R",
+            "source": "reference",
+            "referenceField": "RSCLCD",
+            "referenceFile": "*SRC",
+            "keywords": [
+              {
+                "name": "REFFLD",
+                "values": [
+                  "RSCLCD",
+                  "*SRC"
+                ],
+                "rawText": "REFFLD(RSCLCD *SRC)",
+                "referenceField": "RSCLCD",
+                "referenceFile": "*SRC"
+              },
+              {
+                "name": "TEXT",
+                "value": "ソース内参照",
+                "rawText": "TEXT('ソース内参照')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 70,
+              "endLine": 70
+            },
+            "rawSourceLines": [
+              "     A            SMPFLG         1A         TEXT('直接定義フラグ')"
+            ],
+            "name": "SMPFLG",
+            "length": 1,
+            "dataType": "A",
+            "source": "direct",
+            "keywords": [
+              {
+                "name": "TEXT",
+                "value": "直接定義フラグ",
+                "rawText": "TEXT('直接定義フラグ')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 71,
+              "endLine": 71
+            },
+            "rawSourceLines": [
+              "     A            SMPAMT         9P 2       TEXT('直接定義金額')"
+            ],
+            "name": "SMPAMT",
+            "length": 9,
+            "dataType": "P",
+            "decimalPositions": 2,
+            "source": "direct",
+            "keywords": [
+              {
+                "name": "TEXT",
+                "value": "直接定義金額",
+                "rawText": "TEXT('直接定義金額')"
+              }
+            ]
+          }
+        ],
+        "keys": [
+          {
+            "location": {
+              "startLine": 74,
+              "endLine": 74
+            },
+            "rawSourceLine": "     A          K RSCLCD",
+            "fieldName": "RSCLCD",
+            "sortOrder": "ascending",
+            "keywords": []
+          },
+          {
+            "location": {
+              "startLine": 75,
+              "endLine": 75
+            },
+            "rawSourceLine": "     A          K SMPID",
+            "fieldName": "SMPID",
+            "sortOrder": "ascending",
+            "keywords": []
+          }
+        ]
+      }
+    ],
+    "comments": [
+      {
+        "lineNumber": 1,
+        "text": "================================================================"
+      },
+      {
+        "lineNumber": 2,
+        "text": "ファイル名: REFSAMPF"
+      },
+      {
+        "lineNumber": 3,
+        "text": "説明      : REF/REFFLD 全パターンサンプル物理ファイル"
+      },
+      {
+        "lineNumber": 4,
+        "text": "作成日    : 2026/03/21"
+      },
+      {
+        "lineNumber": 5,
+        "text": "作成者    : システム開発部"
+      },
+      {
+        "lineNumber": 6,
+        "text": "備考      : DDS の REF/REFFLD キーワード全パターン網羅"
+      },
+      {
+        "lineNumber": 7,
+        "text": "================================================================"
+      },
+      {
+        "lineNumber": 8,
+        "text": ""
+      },
+      {
+        "lineNumber": 9,
+        "text": "======================================================"
+      },
+      {
+        "lineNumber": 10,
+        "text": "ファイルレベル REF キーワードの構文バリエーション"
+      },
+      {
+        "lineNumber": 11,
+        "text": "======================================================"
+      },
+      {
+        "lineNumber": 12,
+        "text": "構文: REF([ライブラリ名/]ファイル名 [レコード様式名])"
+      },
+      {
+        "lineNumber": 13,
+        "text": ""
+      },
+      {
+        "lineNumber": 14,
+        "text": "REF(FLDREFPF)                  ← 基本形"
+      },
+      {
+        "lineNumber": 15,
+        "text": "REF(MYLIB/FLDREFPF)            ← ライブラリ修飾"
+      },
+      {
+        "lineNumber": 16,
+        "text": "REF(FLDREFPF REFREC)           ← レコード様式指定"
+      },
+      {
+        "lineNumber": 17,
+        "text": "REF(MYLIB/FLDREFPF REFREC)     ← 完全修飾"
+      },
+      {
+        "lineNumber": 18,
+        "text": "======================================================"
+      },
+      {
+        "lineNumber": 19,
+        "text": ""
+      },
+      {
+        "lineNumber": 23,
+        "text": ""
+      },
+      {
+        "lineNumber": 24,
+        "text": "--- パターン1: R(col29) のみ — 同名参照 ---"
+      },
+      {
+        "lineNumber": 25,
+        "text": "REFファイルの同名フィールドから属性継承"
+      },
+      {
+        "lineNumber": 26,
+        "text": "REFFLD キーワード不要"
+      },
+      {
+        "lineNumber": 27,
+        "text": ""
+      },
+      {
+        "lineNumber": 29,
+        "text": ""
+      },
+      {
+        "lineNumber": 30,
+        "text": "--- パターン2: R + REFFLD(field) — 別名参照 ---"
+      },
+      {
+        "lineNumber": 31,
+        "text": "REFファイルの別名フィールドから属性継承"
+      },
+      {
+        "lineNumber": 32,
+        "text": ""
+      },
+      {
+        "lineNumber": 35,
+        "text": ""
+      },
+      {
+        "lineNumber": 36,
+        "text": "--- パターン3: R + REFFLD(field file) — 別ファイル参照 ---"
+      },
+      {
+        "lineNumber": 37,
+        "text": "REF指定以外のファイルのフィールドを参照"
+      },
+      {
+        "lineNumber": 38,
+        "text": ""
+      },
+      {
+        "lineNumber": 41,
+        "text": ""
+      },
+      {
+        "lineNumber": 42,
+        "text": "--- パターン4: R + REFFLD(field lib/file) — ライブラリ修飾 ---"
+      },
+      {
+        "lineNumber": 43,
+        "text": "ライブラリ名付きで別ファイルを参照"
+      },
+      {
+        "lineNumber": 44,
+        "text": ""
+      },
+      {
+        "lineNumber": 47,
+        "text": ""
+      },
+      {
+        "lineNumber": 48,
+        "text": "--- パターン5: R + REFFLD(field fmt file) — 様式指定 ---"
+      },
+      {
+        "lineNumber": 49,
+        "text": "別ファイルの特定レコード様式を指定して参照"
+      },
+      {
+        "lineNumber": 50,
+        "text": ""
+      },
+      {
+        "lineNumber": 53,
+        "text": ""
+      },
+      {
+        "lineNumber": 54,
+        "text": "--- パターン6: R + REFFLD(field fmt lib/file) — 完全修飾 ---"
+      },
+      {
+        "lineNumber": 55,
+        "text": "ライブラリ修飾 + レコード様式指定の完全形"
+      },
+      {
+        "lineNumber": 56,
+        "text": ""
+      },
+      {
+        "lineNumber": 59,
+        "text": ""
+      },
+      {
+        "lineNumber": 60,
+        "text": "--- パターン7: R + REFFLD(field *SRC) — ソース内参照 ---"
+      },
+      {
+        "lineNumber": 61,
+        "text": "同一ソース内で先に定義されたフィールドを参照"
+      },
+      {
+        "lineNumber": 62,
+        "text": ""
+      },
+      {
+        "lineNumber": 65,
+        "text": ""
+      },
+      {
+        "lineNumber": 66,
+        "text": "--- パターン8: 直接定義（参照なし） ---"
+      },
+      {
+        "lineNumber": 67,
+        "text": "参照を使わずフィールド属性を直接指定"
+      },
+      {
+        "lineNumber": 68,
+        "text": "col29 に R なし、Length/Type を直接指定"
+      },
+      {
+        "lineNumber": 69,
+        "text": ""
+      },
+      {
+        "lineNumber": 72,
+        "text": ""
+      },
+      {
+        "lineNumber": 73,
+        "text": "--- 主キー定義 ---"
+      }
+    ],
+    "parseErrors": []
+  },
+  "dependencies": {
+    "referencedFiles": [
+      {
+        "name": "FLDREFPF",
+        "referenceType": "physical-file",
+        "locations": []
+      }
+    ],
+    "calledPrograms": [],
+    "copyMembers": []
+  },
+  "errors": []
+}

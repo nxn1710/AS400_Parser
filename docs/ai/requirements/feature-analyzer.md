@@ -73,7 +73,7 @@ As a migration engineer, I want to know what I/O operations each program perform
 2. **Cross-Reference**: Correctly identifies all CALL/EXSR targets in the 4 RPG programs + 1 CL program
 3. **File Usage**: Correctly maps all file I/O operations for each program
 4. **Test Coverage**: ≥90% unit test coverage on new analyzer code
-5. **Output Format**: All analysis outputs are JSON-serializable for downstream consumption
+5. **Output Format**: Export a *single* `AnalysisResult` JSON file per analysis run that encompasses the entire application context, so the dependency graph is unified and ready for downstream tools.
 
 ## Constraints & Assumptions
 
@@ -87,8 +87,9 @@ As a migration engineer, I want to know what I/O operations each program perform
 - DDS REF/REFFLD cross-references are already resolved by DdsRefResolver
 - All IR JSON files for a given application are available at analysis time
 - PF files define the canonical field definitions; LF files reference PF via PFILE keyword
+- **Error Handling**: Missing dependencies (like unparsed CALL targets) or unknown DDS type mappings will be gracefully bypassed via console warnings, without throwing exceptions or halting the analysis process.
 
 ## Questions & Open Items
 
 - ~~Should the analyzer output be a new JSON format or extend IrDocument?~~ → New standalone JSON format (AnalysisResult)
-- Should we support JOIN logical files in the initial version? → Yes, basic support
+- ~~Should we support JOIN logical files in the initial version?~~ → Yes, basic support (Inner Joins via `JFILE` keyword, without complex conditions/outer joins initially).

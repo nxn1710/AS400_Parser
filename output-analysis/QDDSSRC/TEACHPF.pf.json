@@ -1,0 +1,1141 @@
+{
+  "metadata": {
+    "irVersion": "1.0.0",
+    "sourceType": "DDS_PF",
+    "sourceMember": "TEACHPF",
+    "sourceFile": "QDDSSRC",
+    "sourceLibrary": "rpg3-student-mgmt",
+    "parseInfo": {
+      "parserVersion": "1.0.0",
+      "parsedAt": "2026-04-13T16:01:46.690937600Z",
+      "parseStatus": "complete",
+      "totalLines": 61,
+      "detectedEncoding": "UTF-8",
+      "errors": [],
+      "warnings": []
+    }
+  },
+  "content": {
+    "sourceLines": [
+      {
+        "lineNumber": 1,
+        "rawText": "     A*================================================================",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 2,
+        "rawText": "     A* ファイル名: TEACHPF",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 3,
+        "rawText": "     A* 説明      : 教師マスター物理ファイル",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 4,
+        "rawText": "     A* 参照ファイル: FLDREFPF（フィールド参照ファイル）",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 5,
+        "rawText": "     A* 作成日    : 2026/03/21",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 6,
+        "rawText": "     A* 作成者    : システム開発部",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 7,
+        "rawText": "     A* 備考      : REF/REFFLD キーワードで FLDREFPF から",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 8,
+        "rawText": "     A*            : フィールド属性を参照して定義する",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 9,
+        "rawText": "     A*================================================================",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 10,
+        "rawText": "     A                                      REF(FLDREFPF)",
+        "specType": "FILE_KEYWORD",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 11,
+        "rawText": "     A                                      UNIQUE",
+        "specType": "FILE_KEYWORD",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 12,
+        "rawText": "     A          R TCHREC                     TEXT('教師マスターレコード')",
+        "specType": "RECORD_FORMAT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 13,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 14,
+        "rawText": "     A*   --- 主キー ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 15,
+        "rawText": "     A            TCHID     R               REFFLD(RSTUID) +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 16,
+        "rawText": "     A                                      TEXT('教師ID') +",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 17,
+        "rawText": "     A                                      COLHDG('教師' 'ID')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 18,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 19,
+        "rawText": "     A*   --- 基本情報 ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 20,
+        "rawText": "     A            TCHNAM    R               REFFLD(RNAME) +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 21,
+        "rawText": "     A                                      TEXT('教師氏名') +",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 22,
+        "rawText": "     A                                      COLHDG('教師' '氏名')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 23,
+        "rawText": "     A            TCHKNA    R               REFFLD(RKANA) +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 24,
+        "rawText": "     A                                      TEXT('教師カナ名') +",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 25,
+        "rawText": "     A                                      COLHDG('カナ' '氏名')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 26,
+        "rawText": "     A            TCHBDT    R               REFFLD(RDATE) +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 27,
+        "rawText": "     A                                      TEXT('生年月日 YYYYMMDD') +",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 28,
+        "rawText": "     A                                      COLHDG('生年' '月日')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 29,
+        "rawText": "     A            TCHGND    R               REFFLD(RGND)",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 30,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 31,
+        "rawText": "     A*   --- 連絡先情報 ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 32,
+        "rawText": "     A            TCHADR    R               REFFLD(RADDR)",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 33,
+        "rawText": "     A            TCHTEL    R               REFFLD(RTEL)",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 34,
+        "rawText": "     A            TCHMAL    R               REFFLD(RMAIL)",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 35,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 36,
+        "rawText": "     A*   --- 所属情報 ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 37,
+        "rawText": "     A            TCHSCL    R               REFFLD(RSCLCD) +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 38,
+        "rawText": "     A                                      TEXT('所属学校コード') +",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 39,
+        "rawText": "     A                                      COLHDG('学校' 'コード')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 40,
+        "rawText": "     A            TCHSBJ        20A         TEXT('担当教科') +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 41,
+        "rawText": "     A                                      COLHDG('担当' '教科')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 42,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 43,
+        "rawText": "     A*   --- 状態管理 ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 44,
+        "rawText": "     A            TCHSTS    R               REFFLD(RSTS) +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 45,
+        "rawText": "     A                                      TEXT('状態 A=有効 R=退職')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 46,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 47,
+        "rawText": "     A*   --- 監査情報 ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 48,
+        "rawText": "     A            TCHADD    R               REFFLD(RDATE) +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 49,
+        "rawText": "     A                                      TEXT('登録日 YYYYMMDD') +",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 50,
+        "rawText": "     A                                      COLHDG('登録日')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 51,
+        "rawText": "     A            TCHUPD    R               REFFLD(RDATE) +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 52,
+        "rawText": "     A                                      TEXT('更新日 YYYYMMDD') +",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 53,
+        "rawText": "     A                                      COLHDG('更新日')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 54,
+        "rawText": "     A            TCHADB    R               REFFLD(RUSER) +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 55,
+        "rawText": "     A                                      TEXT('登録者')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 56,
+        "rawText": "     A            TCHUPB    R               REFFLD(RUSER) +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 57,
+        "rawText": "     A                                      TEXT('更新者')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 58,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 59,
+        "rawText": "     A*   --- 主キー定義 ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 60,
+        "rawText": "     A          K TCHSCL",
+        "specType": "KEY_FIELD",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 61,
+        "rawText": "     A          K TCHID",
+        "specType": "KEY_FIELD",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      }
+    ],
+    "fileKeywords": [
+      {
+        "name": "REF",
+        "value": "FLDREFPF",
+        "rawText": "REF(FLDREFPF)"
+      },
+      {
+        "name": "UNIQUE",
+        "rawText": "UNIQUE"
+      }
+    ],
+    "recordFormats": [
+      {
+        "location": {
+          "startLine": 12,
+          "endLine": 12
+        },
+        "rawSourceLine": "     A          R TCHREC                     TEXT('教師マスターレコード')",
+        "name": "TCHREC",
+        "text": "教師マスターレコード",
+        "keywords": [
+          {
+            "name": "TEXT",
+            "value": "教師マスターレコード",
+            "rawText": "TEXT('教師マスターレコード')"
+          }
+        ],
+        "fields": [
+          {
+            "location": {
+              "startLine": 15,
+              "endLine": 15
+            },
+            "rawSourceLines": [
+              "     A            TCHID     R               REFFLD(RSTUID) +",
+              "     A                                      TEXT('教師ID') +",
+              "     A                                      COLHDG('教師' 'ID')"
+            ],
+            "name": "TCHID",
+            "reference": "R",
+            "length": 6,
+            "dataType": "A",
+            "source": "reference",
+            "referenceField": "RSTUID",
+            "keywords": [
+              {
+                "name": "REFFLD",
+                "value": "RSTUID",
+                "rawText": "REFFLD(RSTUID)",
+                "referenceField": "RSTUID"
+              },
+              {
+                "name": "TEXT",
+                "value": "教師ID",
+                "rawText": "TEXT('教師ID')"
+              },
+              {
+                "name": "COLHDG",
+                "values": [
+                  "教師",
+                  "ID"
+                ],
+                "rawText": "COLHDG('教師' 'ID')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 20,
+              "endLine": 20
+            },
+            "rawSourceLines": [
+              "     A            TCHNAM    R               REFFLD(RNAME) +",
+              "     A                                      TEXT('教師氏名') +",
+              "     A                                      COLHDG('教師' '氏名')"
+            ],
+            "name": "TCHNAM",
+            "reference": "R",
+            "length": 30,
+            "dataType": "A",
+            "source": "reference",
+            "referenceField": "RNAME",
+            "keywords": [
+              {
+                "name": "REFFLD",
+                "value": "RNAME",
+                "rawText": "REFFLD(RNAME)",
+                "referenceField": "RNAME"
+              },
+              {
+                "name": "TEXT",
+                "value": "教師氏名",
+                "rawText": "TEXT('教師氏名')"
+              },
+              {
+                "name": "COLHDG",
+                "values": [
+                  "教師",
+                  "氏名"
+                ],
+                "rawText": "COLHDG('教師' '氏名')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 23,
+              "endLine": 23
+            },
+            "rawSourceLines": [
+              "     A            TCHKNA    R               REFFLD(RKANA) +",
+              "     A                                      TEXT('教師カナ名') +",
+              "     A                                      COLHDG('カナ' '氏名')"
+            ],
+            "name": "TCHKNA",
+            "reference": "R",
+            "length": 30,
+            "dataType": "A",
+            "source": "reference",
+            "referenceField": "RKANA",
+            "keywords": [
+              {
+                "name": "REFFLD",
+                "value": "RKANA",
+                "rawText": "REFFLD(RKANA)",
+                "referenceField": "RKANA"
+              },
+              {
+                "name": "TEXT",
+                "value": "教師カナ名",
+                "rawText": "TEXT('教師カナ名')"
+              },
+              {
+                "name": "COLHDG",
+                "values": [
+                  "カナ",
+                  "氏名"
+                ],
+                "rawText": "COLHDG('カナ' '氏名')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 26,
+              "endLine": 26
+            },
+            "rawSourceLines": [
+              "     A            TCHBDT    R               REFFLD(RDATE) +",
+              "     A                                      TEXT('生年月日 YYYYMMDD') +",
+              "     A                                      COLHDG('生年' '月日')"
+            ],
+            "name": "TCHBDT",
+            "reference": "R",
+            "length": 8,
+            "dataType": "S",
+            "decimalPositions": 0,
+            "source": "reference",
+            "referenceField": "RDATE",
+            "keywords": [
+              {
+                "name": "REFFLD",
+                "value": "RDATE",
+                "rawText": "REFFLD(RDATE)",
+                "referenceField": "RDATE"
+              },
+              {
+                "name": "TEXT",
+                "value": "生年月日 YYYYMMDD",
+                "rawText": "TEXT('生年月日 YYYYMMDD')"
+              },
+              {
+                "name": "COLHDG",
+                "values": [
+                  "生年",
+                  "月日"
+                ],
+                "rawText": "COLHDG('生年' '月日')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 29,
+              "endLine": 29
+            },
+            "rawSourceLines": [
+              "     A            TCHGND    R               REFFLD(RGND)"
+            ],
+            "name": "TCHGND",
+            "reference": "R",
+            "length": 1,
+            "dataType": "A",
+            "source": "reference",
+            "referenceField": "RGND",
+            "keywords": [
+              {
+                "name": "REFFLD",
+                "value": "RGND",
+                "rawText": "REFFLD(RGND)",
+                "referenceField": "RGND"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 32,
+              "endLine": 32
+            },
+            "rawSourceLines": [
+              "     A            TCHADR    R               REFFLD(RADDR)"
+            ],
+            "name": "TCHADR",
+            "reference": "R",
+            "length": 50,
+            "dataType": "A",
+            "source": "reference",
+            "referenceField": "RADDR",
+            "keywords": [
+              {
+                "name": "REFFLD",
+                "value": "RADDR",
+                "rawText": "REFFLD(RADDR)",
+                "referenceField": "RADDR"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 33,
+              "endLine": 33
+            },
+            "rawSourceLines": [
+              "     A            TCHTEL    R               REFFLD(RTEL)"
+            ],
+            "name": "TCHTEL",
+            "reference": "R",
+            "length": 15,
+            "dataType": "A",
+            "source": "reference",
+            "referenceField": "RTEL",
+            "keywords": [
+              {
+                "name": "REFFLD",
+                "value": "RTEL",
+                "rawText": "REFFLD(RTEL)",
+                "referenceField": "RTEL"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 34,
+              "endLine": 34
+            },
+            "rawSourceLines": [
+              "     A            TCHMAL    R               REFFLD(RMAIL)"
+            ],
+            "name": "TCHMAL",
+            "reference": "R",
+            "length": 40,
+            "dataType": "A",
+            "source": "reference",
+            "referenceField": "RMAIL",
+            "keywords": [
+              {
+                "name": "REFFLD",
+                "value": "RMAIL",
+                "rawText": "REFFLD(RMAIL)",
+                "referenceField": "RMAIL"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 37,
+              "endLine": 37
+            },
+            "rawSourceLines": [
+              "     A            TCHSCL    R               REFFLD(RSCLCD) +",
+              "     A                                      TEXT('所属学校コード') +",
+              "     A                                      COLHDG('学校' 'コード')"
+            ],
+            "name": "TCHSCL",
+            "reference": "R",
+            "length": 4,
+            "dataType": "A",
+            "source": "reference",
+            "referenceField": "RSCLCD",
+            "keywords": [
+              {
+                "name": "REFFLD",
+                "value": "RSCLCD",
+                "rawText": "REFFLD(RSCLCD)",
+                "referenceField": "RSCLCD"
+              },
+              {
+                "name": "TEXT",
+                "value": "所属学校コード",
+                "rawText": "TEXT('所属学校コード')"
+              },
+              {
+                "name": "COLHDG",
+                "values": [
+                  "学校",
+                  "コード"
+                ],
+                "rawText": "COLHDG('学校' 'コード')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 40,
+              "endLine": 40
+            },
+            "rawSourceLines": [
+              "     A            TCHSBJ        20A         TEXT('担当教科') +",
+              "     A                                      COLHDG('担当' '教科')"
+            ],
+            "name": "TCHSBJ",
+            "length": 20,
+            "dataType": "A",
+            "source": "direct",
+            "keywords": [
+              {
+                "name": "TEXT",
+                "value": "担当教科",
+                "rawText": "TEXT('担当教科')"
+              },
+              {
+                "name": "COLHDG",
+                "values": [
+                  "担当",
+                  "教科"
+                ],
+                "rawText": "COLHDG('担当' '教科')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 44,
+              "endLine": 44
+            },
+            "rawSourceLines": [
+              "     A            TCHSTS    R               REFFLD(RSTS) +",
+              "     A                                      TEXT('状態 A=有効 R=退職')"
+            ],
+            "name": "TCHSTS",
+            "reference": "R",
+            "length": 1,
+            "dataType": "A",
+            "source": "reference",
+            "referenceField": "RSTS",
+            "keywords": [
+              {
+                "name": "REFFLD",
+                "value": "RSTS",
+                "rawText": "REFFLD(RSTS)",
+                "referenceField": "RSTS"
+              },
+              {
+                "name": "TEXT",
+                "value": "状態 A=有効 R=退職",
+                "rawText": "TEXT('状態 A=有効 R=退職')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 48,
+              "endLine": 48
+            },
+            "rawSourceLines": [
+              "     A            TCHADD    R               REFFLD(RDATE) +",
+              "     A                                      TEXT('登録日 YYYYMMDD') +",
+              "     A                                      COLHDG('登録日')"
+            ],
+            "name": "TCHADD",
+            "reference": "R",
+            "length": 8,
+            "dataType": "S",
+            "decimalPositions": 0,
+            "source": "reference",
+            "referenceField": "RDATE",
+            "keywords": [
+              {
+                "name": "REFFLD",
+                "value": "RDATE",
+                "rawText": "REFFLD(RDATE)",
+                "referenceField": "RDATE"
+              },
+              {
+                "name": "TEXT",
+                "value": "登録日 YYYYMMDD",
+                "rawText": "TEXT('登録日 YYYYMMDD')"
+              },
+              {
+                "name": "COLHDG",
+                "value": "登録日",
+                "rawText": "COLHDG('登録日')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 51,
+              "endLine": 51
+            },
+            "rawSourceLines": [
+              "     A            TCHUPD    R               REFFLD(RDATE) +",
+              "     A                                      TEXT('更新日 YYYYMMDD') +",
+              "     A                                      COLHDG('更新日')"
+            ],
+            "name": "TCHUPD",
+            "reference": "R",
+            "length": 8,
+            "dataType": "S",
+            "decimalPositions": 0,
+            "source": "reference",
+            "referenceField": "RDATE",
+            "keywords": [
+              {
+                "name": "REFFLD",
+                "value": "RDATE",
+                "rawText": "REFFLD(RDATE)",
+                "referenceField": "RDATE"
+              },
+              {
+                "name": "TEXT",
+                "value": "更新日 YYYYMMDD",
+                "rawText": "TEXT('更新日 YYYYMMDD')"
+              },
+              {
+                "name": "COLHDG",
+                "value": "更新日",
+                "rawText": "COLHDG('更新日')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 54,
+              "endLine": 54
+            },
+            "rawSourceLines": [
+              "     A            TCHADB    R               REFFLD(RUSER) +",
+              "     A                                      TEXT('登録者')"
+            ],
+            "name": "TCHADB",
+            "reference": "R",
+            "length": 10,
+            "dataType": "A",
+            "source": "reference",
+            "referenceField": "RUSER",
+            "keywords": [
+              {
+                "name": "REFFLD",
+                "value": "RUSER",
+                "rawText": "REFFLD(RUSER)",
+                "referenceField": "RUSER"
+              },
+              {
+                "name": "TEXT",
+                "value": "登録者",
+                "rawText": "TEXT('登録者')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 56,
+              "endLine": 56
+            },
+            "rawSourceLines": [
+              "     A            TCHUPB    R               REFFLD(RUSER) +",
+              "     A                                      TEXT('更新者')"
+            ],
+            "name": "TCHUPB",
+            "reference": "R",
+            "length": 10,
+            "dataType": "A",
+            "source": "reference",
+            "referenceField": "RUSER",
+            "keywords": [
+              {
+                "name": "REFFLD",
+                "value": "RUSER",
+                "rawText": "REFFLD(RUSER)",
+                "referenceField": "RUSER"
+              },
+              {
+                "name": "TEXT",
+                "value": "更新者",
+                "rawText": "TEXT('更新者')"
+              }
+            ]
+          }
+        ],
+        "keys": [
+          {
+            "location": {
+              "startLine": 60,
+              "endLine": 60
+            },
+            "rawSourceLine": "     A          K TCHSCL",
+            "fieldName": "TCHSCL",
+            "sortOrder": "ascending",
+            "keywords": []
+          },
+          {
+            "location": {
+              "startLine": 61,
+              "endLine": 61
+            },
+            "rawSourceLine": "     A          K TCHID",
+            "fieldName": "TCHID",
+            "sortOrder": "ascending",
+            "keywords": []
+          }
+        ]
+      }
+    ],
+    "comments": [
+      {
+        "lineNumber": 1,
+        "text": "================================================================"
+      },
+      {
+        "lineNumber": 2,
+        "text": "ファイル名: TEACHPF"
+      },
+      {
+        "lineNumber": 3,
+        "text": "説明      : 教師マスター物理ファイル"
+      },
+      {
+        "lineNumber": 4,
+        "text": "参照ファイル: FLDREFPF（フィールド参照ファイル）"
+      },
+      {
+        "lineNumber": 5,
+        "text": "作成日    : 2026/03/21"
+      },
+      {
+        "lineNumber": 6,
+        "text": "作成者    : システム開発部"
+      },
+      {
+        "lineNumber": 7,
+        "text": "備考      : REF/REFFLD キーワードで FLDREFPF から"
+      },
+      {
+        "lineNumber": 8,
+        "text": ": フィールド属性を参照して定義する"
+      },
+      {
+        "lineNumber": 9,
+        "text": "================================================================"
+      },
+      {
+        "lineNumber": 13,
+        "text": ""
+      },
+      {
+        "lineNumber": 14,
+        "text": "--- 主キー ---"
+      },
+      {
+        "lineNumber": 18,
+        "text": ""
+      },
+      {
+        "lineNumber": 19,
+        "text": "--- 基本情報 ---"
+      },
+      {
+        "lineNumber": 30,
+        "text": ""
+      },
+      {
+        "lineNumber": 31,
+        "text": "--- 連絡先情報 ---"
+      },
+      {
+        "lineNumber": 35,
+        "text": ""
+      },
+      {
+        "lineNumber": 36,
+        "text": "--- 所属情報 ---"
+      },
+      {
+        "lineNumber": 42,
+        "text": ""
+      },
+      {
+        "lineNumber": 43,
+        "text": "--- 状態管理 ---"
+      },
+      {
+        "lineNumber": 46,
+        "text": ""
+      },
+      {
+        "lineNumber": 47,
+        "text": "--- 監査情報 ---"
+      },
+      {
+        "lineNumber": 58,
+        "text": ""
+      },
+      {
+        "lineNumber": 59,
+        "text": "--- 主キー定義 ---"
+      }
+    ],
+    "parseErrors": []
+  },
+  "dependencies": {
+    "referencedFiles": [
+      {
+        "name": "FLDREFPF",
+        "referenceType": "physical-file",
+        "locations": []
+      }
+    ],
+    "calledPrograms": [],
+    "copyMembers": []
+  },
+  "errors": []
+}

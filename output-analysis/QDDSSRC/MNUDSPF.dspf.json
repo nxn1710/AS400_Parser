@@ -1,0 +1,993 @@
+{
+  "metadata": {
+    "irVersion": "1.0.0",
+    "sourceType": "DSPF",
+    "sourceMember": "MNUDSPF",
+    "sourceFile": "QDDSSRC",
+    "sourceLibrary": "rpg3-student-mgmt",
+    "parseInfo": {
+      "parserVersion": "1.0.0",
+      "parsedAt": "2026-04-13T16:01:46.651570300Z",
+      "parseStatus": "complete",
+      "totalLines": 56,
+      "detectedEncoding": "UTF-8",
+      "errors": [],
+      "warnings": []
+    }
+  },
+  "content": {
+    "sourceLines": [
+      {
+        "lineNumber": 1,
+        "rawText": "     A*================================================================",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 2,
+        "rawText": "     A* ファイル名: MNUDSPF",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 3,
+        "rawText": "     A* 説明      : メインメニュー画面ファイル",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 4,
+        "rawText": "     A* 作成日    : 2026/03/14",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 5,
+        "rawText": "     A* 作成者    : システム開発部",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 6,
+        "rawText": "     A*================================================================",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 7,
+        "rawText": "     A                                      REF(REFSAMPF)",
+        "specType": "FILE_KEYWORD",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 8,
+        "rawText": "     A                                      DSPSIZ(24 80 *DS3)",
+        "specType": "FILE_KEYWORD",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 9,
+        "rawText": "     A                                      CA03(03 '終了')",
+        "specType": "FILE_KEYWORD",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 10,
+        "rawText": "     A                                      CA12(12 '戻る')",
+        "specType": "FILE_KEYWORD",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 11,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 12,
+        "rawText": "     A*================================================================",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 13,
+        "rawText": "     A* メインメニューレコード",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 14,
+        "rawText": "     A*================================================================",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 15,
+        "rawText": "     A          R MNUREC",
+        "specType": "RECORD_FORMAT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 16,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 17,
+        "rawText": "     A*   --- 画面タイトル ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 18,
+        "rawText": "     A                                  1 25'学 生 管 理 シ ス テ ム'",
+        "specType": "CONSTANT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 19,
+        "rawText": "     A                                      DSPATR(HI)",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 20,
+        "rawText": "     A                                  2  2'STUMGT'",
+        "specType": "CONSTANT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 21,
+        "rawText": "     A                                  2 70DATE",
+        "specType": "CONSTANT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 22,
+        "rawText": "     A                                      EDTCDE(Y)",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 23,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 24,
+        "rawText": "     A*   --- 区切り線 ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 25,
+        "rawText": "     A                                  3  1'──────────────────────────'",
+        "specType": "CONSTANT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 26,
+        "rawText": "     A                                      DSPATR(UL)",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 27,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 28,
+        "rawText": "     A*   --- 説明テキスト（2行連結） ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 29,
+        "rawText": "     A                                  4  2'このシステムは学生の登録・照+",
+        "specType": "CONSTANT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 30,
+        "rawText": "     A                                      会・更新・削除を行います'",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 31,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 32,
+        "rawText": "     A*   --- REF参照フィールド ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 33,
+        "rawText": "     A            REFCLCD   R        B  5  2REFFLD(RSCLCD) +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 34,
+        "rawText": "     A                                      DSPATR(UL)",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 35,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 36,
+        "rawText": "     A*   --- メニュー選択肢 ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 37,
+        "rawText": "     A                                  6 20'処理を選択してください:'",
+        "specType": "CONSTANT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 38,
+        "rawText": "     A                                      DSPATR(HI)",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 39,
+        "rawText": "     A                                  8 25'1. 学生メンテナンス'",
+        "specType": "CONSTANT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 40,
+        "rawText": "     A                                  9 25'2. 学生一覧表示'",
+        "specType": "CONSTANT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 41,
+        "rawText": "     A                                 10 25'3. 学生レポート印刷'",
+        "specType": "CONSTANT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 42,
+        "rawText": "     A                                 12 25'9. プログラム終了'",
+        "specType": "CONSTANT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 43,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 44,
+        "rawText": "     A*   --- 選択入力フィールド ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 45,
+        "rawText": "     A                                 15 20'選択番号 ==>'",
+        "specType": "CONSTANT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 46,
+        "rawText": "     A            MNUOPT         1A  B 15 34",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 47,
+        "rawText": "     A                                      DSPATR(UL)",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 48,
+        "rawText": "     A                                      VALUES('1' '2' '3' '9')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 49,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 50,
+        "rawText": "     A*   --- エラーメッセージ領域 ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 51,
+        "rawText": "     A            MNUERR        40A  O 18  2",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 52,
+        "rawText": "     A                                      DSPATR(RI)",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 53,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 54,
+        "rawText": "     A*   --- ファンクションキー案内 ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 55,
+        "rawText": "     A                                 23  2'F3=終了   F12=戻る'",
+        "specType": "CONSTANT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 56,
+        "rawText": "     A                                      DSPATR(CS)",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      }
+    ],
+    "fileKeywords": [
+      {
+        "name": "REF",
+        "value": "REFSAMPF",
+        "rawText": "REF(REFSAMPF)",
+        "location": {
+          "startLine": 7,
+          "endLine": 7
+        },
+        "rawSourceLine": "     A                                      REF(REFSAMPF)"
+      },
+      {
+        "name": "DSPSIZ",
+        "value": "24 80 *DS3",
+        "rawText": "DSPSIZ(24 80 *DS3)",
+        "location": {
+          "startLine": 8,
+          "endLine": 8
+        },
+        "rawSourceLine": "     A                                      DSPSIZ(24 80 *DS3)"
+      },
+      {
+        "name": "CA03",
+        "value": "03 '終了'",
+        "rawText": "CA03(03 '終了')",
+        "location": {
+          "startLine": 9,
+          "endLine": 9
+        },
+        "rawSourceLine": "     A                                      CA03(03 '終了')"
+      },
+      {
+        "name": "CA12",
+        "value": "12 '戻る'",
+        "rawText": "CA12(12 '戻る')",
+        "location": {
+          "startLine": 10,
+          "endLine": 10
+        },
+        "rawSourceLine": "     A                                      CA12(12 '戻る')"
+      }
+    ],
+    "recordFormats": [
+      {
+        "location": {
+          "startLine": 15,
+          "endLine": 15
+        },
+        "rawSourceLines": [
+          "     A          R MNUREC"
+        ],
+        "conditioningIndicators": [],
+        "name": "MNUREC",
+        "recordType": "normal",
+        "keywords": [],
+        "fields": [
+          {
+            "location": {
+              "startLine": 33,
+              "endLine": 34
+            },
+            "rawSourceLines": [
+              "     A            REFCLCD   R        B  5  2REFFLD(RSCLCD) +",
+              "     A                                      DSPATR(UL)"
+            ],
+            "conditioningIndicators": [],
+            "name": "REFCLCD",
+            "reference": "R",
+            "length": 4,
+            "dataType": "A",
+            "usage": "B",
+            "screenLine": 5,
+            "screenPosition": 2,
+            "screenPositionRaw": "2",
+            "source": "reference",
+            "referenceField": "RSCLCD",
+            "keywords": [
+              {
+                "keyword": {
+                  "name": "REFFLD",
+                  "value": "RSCLCD",
+                  "rawText": "REFFLD(RSCLCD)",
+                  "referenceField": "RSCLCD"
+                },
+                "conditioningIndicators": []
+              },
+              {
+                "keyword": {
+                  "name": "DSPATR",
+                  "value": "UL",
+                  "rawText": "DSPATR(UL)"
+                },
+                "conditioningIndicators": []
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 46,
+              "endLine": 48
+            },
+            "rawSourceLines": [
+              "     A            MNUOPT         1A  B 15 34",
+              "     A                                      DSPATR(UL)",
+              "     A                                      VALUES('1' '2' '3' '9')"
+            ],
+            "conditioningIndicators": [],
+            "name": "MNUOPT",
+            "length": 1,
+            "dataType": "A",
+            "usage": "B",
+            "screenLine": 15,
+            "screenPosition": 34,
+            "screenPositionRaw": "34",
+            "source": "direct",
+            "keywords": [
+              {
+                "keyword": {
+                  "name": "DSPATR",
+                  "value": "UL",
+                  "rawText": "DSPATR(UL)"
+                },
+                "conditioningIndicators": []
+              },
+              {
+                "keyword": {
+                  "name": "VALUES",
+                  "values": [
+                    "1",
+                    "2",
+                    "3",
+                    "9"
+                  ],
+                  "rawText": "VALUES('1' '2' '3' '9')"
+                },
+                "conditioningIndicators": []
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 51,
+              "endLine": 52
+            },
+            "rawSourceLines": [
+              "     A            MNUERR        40A  O 18  2",
+              "     A                                      DSPATR(RI)"
+            ],
+            "conditioningIndicators": [],
+            "name": "MNUERR",
+            "length": 40,
+            "dataType": "A",
+            "usage": "O",
+            "screenLine": 18,
+            "screenPosition": 2,
+            "screenPositionRaw": "2",
+            "source": "direct",
+            "keywords": [
+              {
+                "keyword": {
+                  "name": "DSPATR",
+                  "value": "RI",
+                  "rawText": "DSPATR(RI)"
+                },
+                "conditioningIndicators": []
+              }
+            ]
+          }
+        ],
+        "constants": [
+          {
+            "location": {
+              "startLine": 18,
+              "endLine": 19
+            },
+            "rawSourceLines": [
+              "     A                                  1 25'学 生 管 理 シ ス テ ム'",
+              "     A                                      DSPATR(HI)"
+            ],
+            "conditioningIndicators": [],
+            "screenLine": 1,
+            "screenPosition": 25,
+            "screenPositionRaw": "25",
+            "text": "学 生 管 理 シ ス テ ム",
+            "keywords": [
+              {
+                "keyword": {
+                  "name": "DSPATR",
+                  "value": "HI",
+                  "rawText": "DSPATR(HI)"
+                },
+                "conditioningIndicators": []
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 20,
+              "endLine": 20
+            },
+            "rawSourceLines": [
+              "     A                                  2  2'STUMGT'"
+            ],
+            "conditioningIndicators": [],
+            "screenLine": 2,
+            "screenPosition": 2,
+            "screenPositionRaw": "2",
+            "text": "STUMGT",
+            "keywords": []
+          },
+          {
+            "location": {
+              "startLine": 21,
+              "endLine": 22
+            },
+            "rawSourceLines": [
+              "     A                                  2 70DATE",
+              "     A                                      EDTCDE(Y)"
+            ],
+            "conditioningIndicators": [],
+            "screenLine": 2,
+            "screenPosition": 70,
+            "screenPositionRaw": "70",
+            "systemKeyword": "DATE",
+            "keywords": [
+              {
+                "keyword": {
+                  "name": "EDTCDE",
+                  "value": "Y",
+                  "rawText": "EDTCDE(Y)"
+                },
+                "conditioningIndicators": []
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 25,
+              "endLine": 26
+            },
+            "rawSourceLines": [
+              "     A                                  3  1'──────────────────────────'",
+              "     A                                      DSPATR(UL)"
+            ],
+            "conditioningIndicators": [],
+            "screenLine": 3,
+            "screenPosition": 1,
+            "screenPositionRaw": "1",
+            "text": "──────────────────────────",
+            "keywords": [
+              {
+                "keyword": {
+                  "name": "DSPATR",
+                  "value": "UL",
+                  "rawText": "DSPATR(UL)"
+                },
+                "conditioningIndicators": []
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 29,
+              "endLine": 29
+            },
+            "rawSourceLines": [
+              "     A                                  4  2'このシステムは学生の登録・照+"
+            ],
+            "conditioningIndicators": [],
+            "screenLine": 4,
+            "screenPosition": 2,
+            "screenPositionRaw": "2",
+            "text": "このシステムは学生の登録・照+ 会・更新・削除を行います",
+            "keywords": []
+          },
+          {
+            "location": {
+              "startLine": 37,
+              "endLine": 38
+            },
+            "rawSourceLines": [
+              "     A                                  6 20'処理を選択してください:'",
+              "     A                                      DSPATR(HI)"
+            ],
+            "conditioningIndicators": [],
+            "screenLine": 6,
+            "screenPosition": 20,
+            "screenPositionRaw": "20",
+            "text": "処理を選択してください:",
+            "keywords": [
+              {
+                "keyword": {
+                  "name": "DSPATR",
+                  "value": "HI",
+                  "rawText": "DSPATR(HI)"
+                },
+                "conditioningIndicators": []
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 39,
+              "endLine": 39
+            },
+            "rawSourceLines": [
+              "     A                                  8 25'1. 学生メンテナンス'"
+            ],
+            "conditioningIndicators": [],
+            "screenLine": 8,
+            "screenPosition": 25,
+            "screenPositionRaw": "25",
+            "text": "1. 学生メンテナンス",
+            "keywords": []
+          },
+          {
+            "location": {
+              "startLine": 40,
+              "endLine": 40
+            },
+            "rawSourceLines": [
+              "     A                                  9 25'2. 学生一覧表示'"
+            ],
+            "conditioningIndicators": [],
+            "screenLine": 9,
+            "screenPosition": 25,
+            "screenPositionRaw": "25",
+            "text": "2. 学生一覧表示",
+            "keywords": []
+          },
+          {
+            "location": {
+              "startLine": 41,
+              "endLine": 41
+            },
+            "rawSourceLines": [
+              "     A                                 10 25'3. 学生レポート印刷'"
+            ],
+            "conditioningIndicators": [],
+            "screenLine": 10,
+            "screenPosition": 25,
+            "screenPositionRaw": "25",
+            "text": "3. 学生レポート印刷",
+            "keywords": []
+          },
+          {
+            "location": {
+              "startLine": 42,
+              "endLine": 42
+            },
+            "rawSourceLines": [
+              "     A                                 12 25'9. プログラム終了'"
+            ],
+            "conditioningIndicators": [],
+            "screenLine": 12,
+            "screenPosition": 25,
+            "screenPositionRaw": "25",
+            "text": "9. プログラム終了",
+            "keywords": []
+          },
+          {
+            "location": {
+              "startLine": 45,
+              "endLine": 45
+            },
+            "rawSourceLines": [
+              "     A                                 15 20'選択番号 ==>'"
+            ],
+            "conditioningIndicators": [],
+            "screenLine": 15,
+            "screenPosition": 20,
+            "screenPositionRaw": "20",
+            "text": "選択番号 ==>",
+            "keywords": []
+          },
+          {
+            "location": {
+              "startLine": 55,
+              "endLine": 56
+            },
+            "rawSourceLines": [
+              "     A                                 23  2'F3=終了   F12=戻る'",
+              "     A                                      DSPATR(CS)"
+            ],
+            "conditioningIndicators": [],
+            "screenLine": 23,
+            "screenPosition": 2,
+            "screenPositionRaw": "2",
+            "text": "F3=終了   F12=戻る",
+            "keywords": [
+              {
+                "keyword": {
+                  "name": "DSPATR",
+                  "value": "CS",
+                  "rawText": "DSPATR(CS)"
+                },
+                "conditioningIndicators": []
+              }
+            ]
+          }
+        ],
+        "keys": []
+      }
+    ],
+    "comments": [
+      {
+        "lineNumber": 1,
+        "text": "================================================================"
+      },
+      {
+        "lineNumber": 2,
+        "text": "ファイル名: MNUDSPF"
+      },
+      {
+        "lineNumber": 3,
+        "text": "説明      : メインメニュー画面ファイル"
+      },
+      {
+        "lineNumber": 4,
+        "text": "作成日    : 2026/03/14"
+      },
+      {
+        "lineNumber": 5,
+        "text": "作成者    : システム開発部"
+      },
+      {
+        "lineNumber": 6,
+        "text": "================================================================"
+      },
+      {
+        "lineNumber": 11,
+        "text": ""
+      },
+      {
+        "lineNumber": 12,
+        "text": "================================================================"
+      },
+      {
+        "lineNumber": 13,
+        "text": "メインメニューレコード"
+      },
+      {
+        "lineNumber": 14,
+        "text": "================================================================"
+      },
+      {
+        "lineNumber": 16,
+        "text": ""
+      },
+      {
+        "lineNumber": 17,
+        "text": "--- 画面タイトル ---"
+      },
+      {
+        "lineNumber": 23,
+        "text": ""
+      },
+      {
+        "lineNumber": 24,
+        "text": "--- 区切り線 ---"
+      },
+      {
+        "lineNumber": 27,
+        "text": ""
+      },
+      {
+        "lineNumber": 28,
+        "text": "--- 説明テキスト（2行連結） ---"
+      },
+      {
+        "lineNumber": 31,
+        "text": ""
+      },
+      {
+        "lineNumber": 32,
+        "text": "--- REF参照フィールド ---"
+      },
+      {
+        "lineNumber": 35,
+        "text": ""
+      },
+      {
+        "lineNumber": 36,
+        "text": "--- メニュー選択肢 ---"
+      },
+      {
+        "lineNumber": 43,
+        "text": ""
+      },
+      {
+        "lineNumber": 44,
+        "text": "--- 選択入力フィールド ---"
+      },
+      {
+        "lineNumber": 49,
+        "text": ""
+      },
+      {
+        "lineNumber": 50,
+        "text": "--- エラーメッセージ領域 ---"
+      },
+      {
+        "lineNumber": 53,
+        "text": ""
+      },
+      {
+        "lineNumber": 54,
+        "text": "--- ファンクションキー案内 ---"
+      }
+    ],
+    "parseErrors": []
+  },
+  "dependencies": {
+    "referencedFiles": [
+      {
+        "name": "REFSAMPF",
+        "referenceType": "physical-file",
+        "locations": []
+      }
+    ],
+    "calledPrograms": [],
+    "copyMembers": []
+  },
+  "errors": []
+}

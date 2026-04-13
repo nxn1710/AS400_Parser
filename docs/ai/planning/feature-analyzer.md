@@ -18,26 +18,26 @@ description: "Task breakdown and implementation order"
 
 ### Phase 1: Foundation — Models & Loader
 
-- [ ] Task 1.1: Create analyzer model classes in `com.as400parser.common.analyzer.model`
+- [x] Task 1.1: Create analyzer model classes in `com.as400parser.common.analyzer.model`
   - `DatabaseSchema`, `TableDefinition`, `ColumnDefinition`
   - `IndexDefinition`, `KeyFieldDef`, `SelectOmitRule`
   - `CrossReference`, `CallTarget`, `FileUsage`, `IOOperation` enum
   - `AnalysisResult` (root container)
   - **Effort**: 1-2 hours
 
-- [ ] Task 1.2: Create `IrDocumentLoader` — batch-load IR JSON from directory
+- [x] Task 1.2: Create `IrDocumentLoader` — batch-load IR JSON from directory
   - Use existing `Gson` + `IrDocument` model
   - Group documents by sourceType
   - **Effort**: 30 min
 
 ### Phase 2: Schema Extraction (DDS → DB)
 
-- [ ] Task 2.1: Implement `DdsToSqlTypeMapper`
+- [x] Task 2.1: Implement `DdsToSqlTypeMapper`
   - Static mapping: A→VARCHAR, P→NUMERIC, S→NUMERIC, B→INTEGER, L→DATE, etc.
   - Handle edge cases: null decimal positions, zero-length fields
   - **Effort**: 30 min
 
-- [ ] Task 2.2: Implement `SchemaAnalyzer` — PF processing
+- [x] Task 2.2: Implement `SchemaAnalyzer` — PF processing
   - Extract table name from metadata.sourceMember
   - Extract columns from recordFormats[0].fields
   - Extract primary key from recordFormats[0].keys or key definitions
@@ -45,14 +45,14 @@ description: "Task breakdown and implementation order"
   - Extract TEXT, COLHDG, DFT, VALUES keywords for column metadata
   - **Effort**: 1-2 hours
 
-- [ ] Task 2.3: Implement `SchemaAnalyzer` — LF processing
+- [x] Task 2.3: Implement `SchemaAnalyzer` — LF processing
   - Detect LF type: simple / select-omit / join
   - Extract PFILE reference → parent table name
   - Extract key fields with sort order
   - Extract select/omit conditions
   - **Effort**: 1 hour
 
-- [ ] Task 2.4: Write tests for SchemaAnalyzer
+- [x] Task 2.4: Write tests for SchemaAnalyzer
   - Test with STUDNTPF (14 fields, composite key, UNIQUE)
   - Test with STUCLSPF (4 fields, composite key)
   - Test with STUDNTL1 (simple LF, 2 key fields)

@@ -53,6 +53,8 @@ graph TD
     INDEX --> RESULT
     CALLG --> RESULT
     FUSEMAP --> RESULT
+    
+    %% Note: AnalysisResult is serialized as a single, unified JSON file.
 ```
 
 ## Data Models
@@ -134,7 +136,7 @@ CrossReference
 - **LF Processing**:
   - Extract PFILE reference → link to parent table
   - Extract key fields → IndexDefinition
-  - Detect type: simple (keys only), select-omit, or join
+  - Detect type: simple (keys only), select-omit, or join (Basic inner joins ONLY, via `JFILE` keyword)
 
 ### 3. DdsToSqlTypeMapper
 Deterministic mapping:
@@ -166,10 +168,11 @@ Deterministic mapping:
 
 | Decision | Choice | Rationale |
 |----------|--------|-----------|
-| Output format | Standalone AnalysisResult JSON | Keeps parser IR immutable; analysis is a separate concern |
+| Output format | Single `AnalysisResult` JSON file | Provides the full, unified dependency graph needed for downstream generation |
 | Module location | `com.as400parser.common.analyzer` | Shared across all source types |
 | DDS type mapping | Static rule-based | Deterministic, no AI needed. 100% coverage of DDS types |
 | Call graph structure | Adjacency list + reverse map | Efficient for both "who do I call" and "who calls me" queries |
+| Error Handling | Graceful degradation (log warnings) | Missing unparsed CALL targets or unrecognized DDS mappings must not halt analysis |
 
 ## Non-Functional Requirements
 

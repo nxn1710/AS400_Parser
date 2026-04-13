@@ -84,24 +84,28 @@ public class As400ParserCli {
 
         String sourcePath = null;
         String sourceDirPath = null;
+        String irDirPath = null;
         String outputPath = null;
         String outputDirPath = null;
         String charset = "auto";
         String copyPath = null;
+        boolean analyzeMode = false;
 
         for (int i = 0; i < args.length; i++) {
             switch (args[i]) {
                 case "--source" -> { if (i + 1 < args.length) sourcePath = args[++i]; }
                 case "--source-dir" -> { if (i + 1 < args.length) sourceDirPath = args[++i]; }
+                case "--ir-dir" -> { if (i + 1 < args.length) irDirPath = args[++i]; }
                 case "--output", "-o" -> { if (i + 1 < args.length) outputPath = args[++i]; }
                 case "--output-dir" -> { if (i + 1 < args.length) outputDirPath = args[++i]; }
                 case "--charset" -> { if (i + 1 < args.length) charset = args[++i]; }
                 case "--copy-path" -> { if (i + 1 < args.length) copyPath = args[++i]; }
+                case "--analyze" -> analyzeMode = true;
             }
         }
 
-        if (sourcePath == null && sourceDirPath == null) {
-            System.err.println("Error: --source FILE or --source-dir DIR is required.");
+        if (sourcePath == null && sourceDirPath == null && irDirPath == null) {
+            System.err.println("Error: --source FILE, --source-dir DIR, or --ir-dir DIR is required.");
             printUsage();
             System.exit(1);
         }
@@ -116,12 +120,50 @@ public class As400ParserCli {
 
         IrJsonSerializer serializer = new IrJsonSerializer();
 
-        if (sourceDirPath != null) {
-            parseBatch(serializer, Path.of(sourceDirPath), outputDirPath, optBuilder.build());
+        if (irDirPath != null) {
+            runStandaloneAnalysis(Path.of(irDirPath), outputDirPath);
+        } else if (sourceDirPath != null) {
+            parseBatch(serializer, Path.of(sourceDirPath), outputDirPath, optBuilder.build(), analyzeMode);
         } else {
             Path sourceFilePath = Path.of(sourcePath);
             As400Parser parser = selectParser(sourceFilePath);
             parseSingleFile(parser, serializer, sourceFilePath, outputPath, optBuilder.build());
+        }
+    }
+
+    // =========================================================================
+    // Standalone Analysis
+    // =========================================================================
+
+    private static void runStandaloneAnalysis(Path irDir, String outputDirPath) {
+        try {
+            System.err.println("Loading IR documents from: " + irDir);
+            com.as400parser.common.analyzer.IrDocumentLoader loader = new com.as400parser.common.analyzer.IrDocumentLoader();
+            Map<String, List<IrDocument>> groupedDocs = loader.loadFromDirectory(irDir);
+            
+            List<IrDocument> docs = new ArrayList<>();
+            groupedDocs.values().forEach(docs::addAll);
+            
+            if (docs.isEmpty()) {
+                System.err.println("No IR JSON files found in: " + irDir);
+                return;
+            }
+            
+            System.err.println("Loaded " + docs.size() + " documents. Starting analysis...");
+            com.as400parser.common.analyzer.AnalyzerFacade facade = new com.as400parser.common.analyzer.AnalyzerFacade();
+            com.as400parser.common.analyzer.model.AnalysisResult analysis = facade.analyzeAll(docs);
+            
+            Path outDir = outputDirPath != null ? Path.of(outputDirPath) : irDir;
+            Files.createDirectories(outDir);
+            
+            String analysisJson = facade.toJson(analysis);
+            Path analysisFile = outDir.resolve("analysis-result.json");
+            Files.writeString(analysisFile, analysisJson, StandardCharsets.UTF_8);
+            System.err.println("  V Analysis complete -> " + outDir.relativize(analysisFile));
+        } catch (Exception e) {
+            System.err.println("Error during analysis: " + e.getMessage());
+            e.printStackTrace();
+            System.exit(1);
         }
     }
 
@@ -153,7 +195,7 @@ public class As400ParserCli {
     // =========================================================================
 
     private static void parseBatch(IrJsonSerializer serializer,
-                                    Path sourceDir, String outputDirPath, ParseOptions options) {
+                                    Path sourceDir, String outputDirPath, ParseOptions options, boolean analyzeMode) {
         try {
             Path outDir = outputDirPath != null ? Path.of(outputDirPath) : sourceDir.resolve("output");
             Files.createDirectories(outDir);
@@ -224,6 +266,18 @@ public class As400ParserCli {
                 }
             }
             System.err.println("\nBatch complete: " + success + " succeeded, " + failed + " failed");
+
+            // Pass 4: Global Analysis (Phase 2 & 3)
+            if (analyzeMode && !allDocuments.isEmpty()) {
+                System.err.println("\nStarting global analysis...");
+                com.as400parser.common.analyzer.AnalyzerFacade facade = new com.as400parser.common.analyzer.AnalyzerFacade();
+                com.as400parser.common.analyzer.model.AnalysisResult analysis = facade.analyzeAll(allDocuments);
+                
+                String analysisJson = facade.toJson(analysis);
+                Path analysisFile = outDir.resolve("analysis-result.json");
+                Files.writeString(analysisFile, analysisJson, StandardCharsets.UTF_8);
+                System.err.println("  ✓ Analysis complete -> " + outDir.relativize(analysisFile));
+            }
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
             System.exit(1);
@@ -244,10 +298,12 @@ public class As400ParserCli {
         System.out.println("Options:");
         System.out.println("  --source FILE       Parse a single source file");
         System.out.println("  --source-dir DIR    Parse all source files in a directory (recursive)");
+        System.out.println("  --ir-dir DIR        Run analysis on existing IR JSON files in directory");
         System.out.println("  --output FILE       Write output to file (single mode, default: stdout)");
         System.out.println("  --output-dir DIR    Write output files to directory (batch mode)");
         System.out.println("  --charset CHARSET   Source encoding (default: auto-detect)");
         System.out.println("  --copy-path PATHS   Semicolon-separated /COPY search paths (RPG3 only)");
+        System.out.println("  --analyze           Execute relocation and cross-reference analysis after batch");
         System.out.println("  --help, -h          Show this help message");
         System.out.println();
         System.out.println("Supported source types:");

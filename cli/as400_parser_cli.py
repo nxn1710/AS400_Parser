@@ -17,8 +17,14 @@ import argparse
 import json
 import subprocess
 import sys
+import io
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor, as_completed
+
+# Force UTF-8 encoding for stdout/stderr on Windows to support symbols
+if sys.platform == "win32":
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8")
 
 # Default JAR location (relative to this script)
 DEFAULT_JAR = Path(__file__).parent.parent / "parser-core" / "build" / "libs" / "as400-parser-core-1.0.0-SNAPSHOT-all.jar"
@@ -124,6 +130,8 @@ def cmd_batch(args):
         "--output-dir", str(output_dir),
         "--charset", args.charset,
     ]
+    if args.analyze:
+        cmd.append("--analyze")
     if args.copy_path:
         cmd.extend(["--copy-path", args.copy_path])
 
@@ -139,6 +147,33 @@ def cmd_batch(args):
     if result.stdout:
         print(result.stdout, end="")
     
+    if result.returncode != 0:
+        sys.exit(1)
+
+
+def cmd_analyze(args):
+    """Run analysis on existing IR JSON files."""
+    jar = find_jar()
+
+    print(f"Analyzing IR files in {args.ir_dir}...")
+    output_dir = args.output_dir or args.ir_dir
+
+    cmd = [
+        "java",
+        "-Dfile.encoding=UTF-8",
+        "-Dstdout.encoding=UTF-8", "-Dstderr.encoding=UTF-8",
+        "-jar", str(jar),
+        "--ir-dir", str(args.ir_dir),
+        "--output-dir", str(output_dir),
+    ]
+
+    result = subprocess.run(cmd, capture_output=True, text=True, timeout=300, encoding="utf-8")
+
+    if result.stderr:
+        print(result.stderr)
+    if result.stdout:
+        print(result.stdout, end="")
+
     if result.returncode != 0:
         sys.exit(1)
 
@@ -201,6 +236,7 @@ def main():
     batch_p = subparsers.add_parser("batch", help="Parse all source files in a directory")
     batch_p.add_argument("source_dir", type=Path, help="Directory containing source files")
     batch_p.add_argument("-o", "--output-dir", type=Path, help="Output directory for JSON files")
+    batch_p.add_argument("--analyze", action="store_true", help="Execute relational and cross-reference analysis after batch")
     batch_p.add_argument("--copy-path", type=str, help="Colon/semicolon-separated copy paths (RPG3 only)")
     batch_p.add_argument("--charset", default="auto", help="Source file charset (default: auto-detect)")
     batch_p.set_defaults(func=cmd_batch)
@@ -209,6 +245,12 @@ def main():
     validate_p = subparsers.add_parser("validate", help="Validate an IR JSON file")
     validate_p.add_argument("json_file", type=Path, help="Path to IR JSON file")
     validate_p.set_defaults(func=cmd_validate)
+
+    # analyze
+    analyze_p = subparsers.add_parser("analyze", help="Run analysis on existing IR JSON files")
+    analyze_p.add_argument("ir_dir", type=Path, help="Directory containing IR JSON files")
+    analyze_p.add_argument("-o", "--output-dir", type=Path, help="Output directory for analysis result")
+    analyze_p.set_defaults(func=cmd_analyze)
 
     args = parser.parse_args()
     if not args.command:

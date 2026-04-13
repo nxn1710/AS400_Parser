@@ -1,0 +1,1093 @@
+{
+  "schema": {
+    "tables": [
+      {
+        "name": "CLASSPF",
+        "recordFormat": "CLSREC",
+        "description": "クラスマスターレコード",
+        "columns": [
+          {
+            "name": "CLSID",
+            "ddsType": "A",
+            "sqlType": "VARCHAR(6)",
+            "length": 6,
+            "nullable": false,
+            "description": "クラスID",
+            "columnHeading": "クラス ID",
+            "constraints": []
+          },
+          {
+            "name": "CLSNAM",
+            "ddsType": "A",
+            "sqlType": "VARCHAR(30)",
+            "length": 30,
+            "nullable": false,
+            "description": "クラス名",
+            "columnHeading": "クラス 名称",
+            "constraints": []
+          },
+          {
+            "name": "CLSYR",
+            "ddsType": "S",
+            "sqlType": "NUMERIC(4)",
+            "length": 4,
+            "decimalPositions": 0,
+            "nullable": false,
+            "description": "年度",
+            "columnHeading": "年度",
+            "constraints": []
+          },
+          {
+            "name": "CLSGRD",
+            "ddsType": "S",
+            "sqlType": "NUMERIC(2)",
+            "length": 2,
+            "decimalPositions": 0,
+            "nullable": false,
+            "description": "学年",
+            "columnHeading": "学年",
+            "constraints": []
+          },
+          {
+            "name": "CLSSEC",
+            "ddsType": "A",
+            "sqlType": "VARCHAR(1)",
+            "length": 1,
+            "nullable": false,
+            "description": "組 A-Z",
+            "columnHeading": "組",
+            "constraints": []
+          },
+          {
+            "name": "CLSTCH",
+            "ddsType": "A",
+            "sqlType": "VARCHAR(20)",
+            "length": 20,
+            "nullable": false,
+            "description": "担任教師名",
+            "columnHeading": "担任 教師名",
+            "constraints": []
+          },
+          {
+            "name": "CLSSCL",
+            "ddsType": "A",
+            "sqlType": "VARCHAR(4)",
+            "length": 4,
+            "nullable": false,
+            "description": "学校コード",
+            "columnHeading": "学校 コード",
+            "constraints": []
+          },
+          {
+            "name": "CLSCAP",
+            "ddsType": "S",
+            "sqlType": "NUMERIC(3)",
+            "length": 3,
+            "decimalPositions": 0,
+            "nullable": false,
+            "description": "定員",
+            "columnHeading": "定員",
+            "constraints": []
+          },
+          {
+            "name": "CLSCUR",
+            "ddsType": "S",
+            "sqlType": "NUMERIC(3)",
+            "length": 3,
+            "decimalPositions": 0,
+            "nullable": false,
+            "description": "現在人数",
+            "columnHeading": "現在 人数",
+            "constraints": []
+          },
+          {
+            "name": "CLSADD",
+            "ddsType": "S",
+            "sqlType": "NUMERIC(8)",
+            "length": 8,
+            "decimalPositions": 0,
+            "nullable": false,
+            "description": "登録日 YYYYMMDD",
+            "columnHeading": "登録日",
+            "constraints": []
+          },
+          {
+            "name": "CLSUPD",
+            "ddsType": "S",
+            "sqlType": "NUMERIC(8)",
+            "length": 8,
+            "decimalPositions": 0,
+            "nullable": false,
+            "description": "更新日 YYYYMMDD",
+            "columnHeading": "更新日",
+            "constraints": []
+          }
+        ],
+        "primaryKey": [
+          "CLSID"
+        ],
+        "unique": true,
+        "fileKeywords": {
+          "UNIQUE": "UNIQUE"
+        }
+      },
+      {
+        "name": "FLDREFPF",
+        "recordFormat": "REFREC",
+        "description": "参照フィールドレコード",
+        "columns": [
+          {
+            "name": "RSCLCD",
+            "ddsType": "A",
+            "sqlType": "VARCHAR(4)",
+            "length": 4,
+            "nullable": false,
+            "description": "学校コード",
+            "columnHeading": "学校 コード",
+            "constraints": []
+          },
+          {
+            "name": "RCLSID",
+            "ddsType": "A",
+            "sqlType": "VARCHAR(6)",
+            "length": 6,
+            "nullable": false,
+            "description": "クラスID",
+            "columnHeading": "クラス ID",
+            "constraints": []
+          },
+          {
+            "name": "RSTUID",
+            "ddsType": "A",
+            "sqlType": "VARCHAR(6)",
+            "length": 6,
+            "nullable": false,
+            "description": "学生ID",
+            "columnHeading": "学生 ID",
+            "constraints": []
+          },
+          {
+            "name": "RNAME",
+            "ddsType": "A",
+            "sqlType": "VARCHAR(30)",
+            "length": 30,
+            "nullable": false,
+            "description": "汎用名称",
+            "columnHeading": "名称",
+            "constraints": []
+          },
+          {
+            "name": "RKANA",
+            "ddsType": "A",
+            "sqlType": "VARCHAR(30)",
+            "length": 30,
+            "nullable": false,
+            "description": "汎用カナ名",
+            "columnHeading": "カナ名",
+            "constraints": []
+          },
+          {
+            "name": "RDATE",
+            "ddsType": "S",
+            "sqlType": "NUMERIC(8)",
+            "length": 8,
+            "decimalPositions": 0,
+            "nullable": false,
+            "description": "汎用日付 YYYYMMDD",
+            "columnHeading": "日付",
+            "constraints": []
+          },
+          {
+            "name": "RYEAR",
+            "ddsType": "S",
+            "sqlType": "NUMERIC(4)",
+            "length": 4,
+            "decimalPositions": 0,
+            "nullable": false,
+            "description": "年度",
+            "columnHeading": "年度",
+            "constraints": []
+          },
+          {
+            "name": "RQTY",
+            "ddsType": "S",
+            "sqlType": "NUMERIC(3)",
+            "length": 3,
+            "decimalPositions": 0,
+            "nullable": false,
+            "description": "汎用数量",
+            "columnHeading": "数量",
+            "constraints": []
+          },
+          {
+            "name": "RSCORE",
+            "ddsType": "S",
+            "sqlType": "NUMERIC(5, 2)",
+            "length": 5,
+            "decimalPositions": 2,
+            "nullable": false,
+            "description": "汎用スコア",
+            "columnHeading": "スコア",
+            "constraints": []
+          },
+          {
+            "name": "RSTS",
+            "ddsType": "A",
+            "sqlType": "VARCHAR(1)",
+            "length": 1,
+            "nullable": false,
+            "defaultValue": "A",
+            "description": "状態フラグ",
+            "columnHeading": "状態",
+            "constraints": []
+          },
+          {
+            "name": "RGND",
+            "ddsType": "A",
+            "sqlType": "VARCHAR(1)",
+            "length": 1,
+            "nullable": false,
+            "description": "性別 M/F",
+            "columnHeading": "性別",
+            "constraints": [
+              "VALUES(M, F)"
+            ]
+          },
+          {
+            "name": "RADDR",
+            "ddsType": "A",
+            "sqlType": "VARCHAR(50)",
+            "length": 50,
+            "nullable": false,
+            "description": "住所",
+            "columnHeading": "住所",
+            "constraints": []
+          },
+          {
+            "name": "RTEL",
+            "ddsType": "A",
+            "sqlType": "VARCHAR(15)",
+            "length": 15,
+            "nullable": false,
+            "description": "電話番号",
+            "columnHeading": "電話 番号",
+            "constraints": []
+          },
+          {
+            "name": "RMAIL",
+            "ddsType": "A",
+            "sqlType": "VARCHAR(40)",
+            "length": 40,
+            "nullable": false,
+            "description": "メールアドレス",
+            "columnHeading": "メール アドレス",
+            "constraints": []
+          },
+          {
+            "name": "RUSER",
+            "ddsType": "A",
+            "sqlType": "VARCHAR(10)",
+            "length": 10,
+            "nullable": false,
+            "description": "ユーザー名",
+            "columnHeading": "ユーザー",
+            "constraints": []
+          }
+        ],
+        "primaryKey": [],
+        "unique": false,
+        "fileKeywords": {}
+      },
+      {
+        "name": "REFSAMPF",
+        "recordFormat": "SAMPREC",
+        "description": "全REFパターンレコード",
+        "columns": [
+          {
+            "name": "RSCLCD",
+            "ddsType": "A",
+            "sqlType": "VARCHAR(4)",
+            "length": 4,
+            "nullable": false,
+            "description": "同名参照",
+            "constraints": []
+          },
+          {
+            "name": "SMPID",
+            "ddsType": "A",
+            "sqlType": "VARCHAR(6)",
+            "length": 6,
+            "nullable": false,
+            "description": "別名参照",
+            "constraints": []
+          },
+          {
+            "name": "SMPNAM",
+            "ddsType": "A",
+            "sqlType": "VARCHAR(30)",
+            "length": 30,
+            "nullable": false,
+            "description": "別ファイル参照",
+            "constraints": []
+          },
+          {
+            "name": "SMPADR",
+            "ddsType": "A",
+            "sqlType": "VARCHAR(50)",
+            "length": 50,
+            "nullable": false,
+            "description": "ライブラリ修飾参照",
+            "constraints": []
+          },
+          {
+            "name": "SMPCLS",
+            "ddsType": "A",
+            "sqlType": "VARCHAR(6)",
+            "length": 6,
+            "nullable": false,
+            "description": "様式指定参照",
+            "constraints": []
+          },
+          {
+            "name": "SMPSCL",
+            "ddsType": "A",
+            "sqlType": "VARCHAR(4)",
+            "length": 4,
+            "nullable": false,
+            "description": "完全修飾参照",
+            "constraints": []
+          },
+          {
+            "name": "SMPCD2",
+            "sqlType": "VARCHAR(1)",
+            "length": 0,
+            "nullable": false,
+            "description": "ソース内参照",
+            "constraints": []
+          },
+          {
+            "name": "SMPFLG",
+            "ddsType": "A",
+            "sqlType": "VARCHAR(1)",
+            "length": 1,
+            "nullable": false,
+            "description": "直接定義フラグ",
+            "constraints": []
+          },
+          {
+            "name": "SMPAMT",
+            "ddsType": "P",
+            "sqlType": "NUMERIC(9, 2)",
+            "length": 9,
+            "decimalPositions": 2,
+            "nullable": false,
+            "description": "直接定義金額",
+            "constraints": []
+          }
+        ],
+        "primaryKey": [
+          "RSCLCD",
+          "SMPID"
+        ],
+        "unique": true,
+        "fileKeywords": {
+          "REF": "REF(FLDREFPF)",
+          "UNIQUE": "UNIQUE"
+        }
+      },
+      {
+        "name": "SCHOOLPF",
+        "recordFormat": "SCLREC",
+        "description": "学校マスターレコード",
+        "columns": [
+          {
+            "name": "SCLID",
+            "ddsType": "A",
+            "sqlType": "VARCHAR(4)",
+            "length": 4,
+            "nullable": false,
+            "description": "学校コード",
+            "columnHeading": "学校 コード",
+            "constraints": []
+          },
+          {
+            "name": "SCLNAM",
+            "ddsType": "A",
+            "sqlType": "VARCHAR(40)",
+            "length": 40,
+            "nullable": false,
+            "description": "学校名",
+            "columnHeading": "学校名",
+            "constraints": []
+          },
+          {
+            "name": "SCLTYP",
+            "ddsType": "A",
+            "sqlType": "VARCHAR(1)",
+            "length": 1,
+            "nullable": false,
+            "description": "種別 E\u003d小 M\u003d中 H\u003d高 U\u003d大",
+            "columnHeading": "種別",
+            "constraints": [
+              "VALUES(E, M, H, U)"
+            ]
+          },
+          {
+            "name": "SCLADR",
+            "ddsType": "A",
+            "sqlType": "VARCHAR(50)",
+            "length": 50,
+            "nullable": false,
+            "description": "住所",
+            "columnHeading": "住所",
+            "constraints": []
+          },
+          {
+            "name": "SCLTEL",
+            "ddsType": "A",
+            "sqlType": "VARCHAR(15)",
+            "length": 15,
+            "nullable": false,
+            "description": "電話番号",
+            "columnHeading": "電話 番号",
+            "constraints": []
+          },
+          {
+            "name": "SCLFAX",
+            "ddsType": "A",
+            "sqlType": "VARCHAR(15)",
+            "length": 15,
+            "nullable": false,
+            "description": "FAX番号",
+            "columnHeading": "FAX 番号",
+            "constraints": []
+          },
+          {
+            "name": "SCLPRI",
+            "ddsType": "A",
+            "sqlType": "VARCHAR(20)",
+            "length": 20,
+            "nullable": false,
+            "description": "校長名",
+            "columnHeading": "校長名",
+            "constraints": []
+          },
+          {
+            "name": "SCLCNT",
+            "ddsType": "S",
+            "sqlType": "NUMERIC(5)",
+            "length": 5,
+            "decimalPositions": 0,
+            "nullable": false,
+            "description": "在籍生徒数",
+            "columnHeading": "在籍 生徒数",
+            "constraints": []
+          },
+          {
+            "name": "SCLADD",
+            "ddsType": "S",
+            "sqlType": "NUMERIC(8)",
+            "length": 8,
+            "decimalPositions": 0,
+            "nullable": false,
+            "description": "登録日 YYYYMMDD",
+            "columnHeading": "登録日",
+            "constraints": []
+          },
+          {
+            "name": "SCLUPD",
+            "ddsType": "S",
+            "sqlType": "NUMERIC(8)",
+            "length": 8,
+            "decimalPositions": 0,
+            "nullable": false,
+            "description": "更新日 YYYYMMDD",
+            "columnHeading": "更新日",
+            "constraints": []
+          }
+        ],
+        "primaryKey": [
+          "SCLID"
+        ],
+        "unique": true,
+        "fileKeywords": {
+          "UNIQUE": "UNIQUE"
+        }
+      },
+      {
+        "name": "STUCLSPF",
+        "recordFormat": "SCRREC",
+        "description": "学生・クラス関連レコード",
+        "columns": [
+          {
+            "name": "SCSTID",
+            "ddsType": "A",
+            "sqlType": "VARCHAR(6)",
+            "length": 6,
+            "nullable": false,
+            "description": "学生ID",
+            "columnHeading": "学生 ID",
+            "constraints": []
+          },
+          {
+            "name": "SCCLID",
+            "ddsType": "A",
+            "sqlType": "VARCHAR(6)",
+            "length": 6,
+            "nullable": false,
+            "description": "クラスID",
+            "columnHeading": "クラス ID",
+            "constraints": []
+          },
+          {
+            "name": "SCENDT",
+            "ddsType": "S",
+            "sqlType": "NUMERIC(8)",
+            "length": 8,
+            "decimalPositions": 0,
+            "nullable": false,
+            "description": "入級日 YYYYMMDD",
+            "columnHeading": "入級日",
+            "constraints": []
+          },
+          {
+            "name": "SCLVDT",
+            "ddsType": "S",
+            "sqlType": "NUMERIC(8)",
+            "length": 8,
+            "decimalPositions": 0,
+            "nullable": false,
+            "description": "退級日 YYYYMMDD",
+            "columnHeading": "退級日",
+            "constraints": []
+          },
+          {
+            "name": "SCGRAD",
+            "ddsType": "S",
+            "sqlType": "NUMERIC(3)",
+            "length": 3,
+            "decimalPositions": 0,
+            "nullable": false,
+            "description": "成績点 0-100",
+            "columnHeading": "成績点",
+            "constraints": []
+          },
+          {
+            "name": "SCRANK",
+            "ddsType": "A",
+            "sqlType": "VARCHAR(1)",
+            "length": 1,
+            "nullable": false,
+            "description": "評価 A/B/C/D/F",
+            "columnHeading": "評価",
+            "constraints": [
+              "VALUES(A, B, C, D, F)"
+            ]
+          },
+          {
+            "name": "SCSTS",
+            "ddsType": "A",
+            "sqlType": "VARCHAR(1)",
+            "length": 1,
+            "nullable": false,
+            "defaultValue": "A",
+            "description": "状態 A\u003d有効 D\u003d退級",
+            "columnHeading": "状態",
+            "constraints": []
+          },
+          {
+            "name": "SCADD",
+            "ddsType": "S",
+            "sqlType": "NUMERIC(8)",
+            "length": 8,
+            "decimalPositions": 0,
+            "nullable": false,
+            "description": "登録日 YYYYMMDD",
+            "columnHeading": "登録日",
+            "constraints": []
+          },
+          {
+            "name": "SCUPD",
+            "ddsType": "S",
+            "sqlType": "NUMERIC(8)",
+            "length": 8,
+            "decimalPositions": 0,
+            "nullable": false,
+            "description": "更新日 YYYYMMDD",
+            "columnHeading": "更新日",
+            "constraints": []
+          }
+        ],
+        "primaryKey": [
+          "SCSTID",
+          "SCCLID"
+        ],
+        "unique": true,
+        "fileKeywords": {
+          "UNIQUE": "UNIQUE"
+        }
+      },
+      {
+        "name": "STUDNTPF",
+        "recordFormat": "STUREC",
+        "description": "学生マスターレコード",
+        "columns": [
+          {
+            "name": "STUID",
+            "ddsType": "A",
+            "sqlType": "VARCHAR(6)",
+            "length": 6,
+            "nullable": false,
+            "description": "学生ID",
+            "columnHeading": "学生 ID",
+            "constraints": []
+          },
+          {
+            "name": "STUNAM",
+            "ddsType": "A",
+            "sqlType": "VARCHAR(30)",
+            "length": 30,
+            "nullable": false,
+            "description": "学生氏名",
+            "columnHeading": "学生 氏名",
+            "constraints": []
+          },
+          {
+            "name": "STUKNA",
+            "ddsType": "A",
+            "sqlType": "VARCHAR(30)",
+            "length": 30,
+            "nullable": false,
+            "description": "学生カナ名",
+            "columnHeading": "カナ 氏名",
+            "constraints": []
+          },
+          {
+            "name": "STUBDT",
+            "ddsType": "S",
+            "sqlType": "NUMERIC(8)",
+            "length": 8,
+            "decimalPositions": 0,
+            "nullable": false,
+            "description": "生年月日 YYYYMMDD",
+            "columnHeading": "生年 月日",
+            "constraints": []
+          },
+          {
+            "name": "STUGND",
+            "ddsType": "A",
+            "sqlType": "VARCHAR(1)",
+            "length": 1,
+            "nullable": false,
+            "description": "性別 M/F",
+            "columnHeading": "性別",
+            "constraints": [
+              "VALUES(M, F)"
+            ]
+          },
+          {
+            "name": "STUADR",
+            "ddsType": "A",
+            "sqlType": "VARCHAR(50)",
+            "length": 50,
+            "nullable": false,
+            "description": "住所",
+            "columnHeading": "住所",
+            "constraints": []
+          },
+          {
+            "name": "STUTEL",
+            "ddsType": "A",
+            "sqlType": "VARCHAR(15)",
+            "length": 15,
+            "nullable": false,
+            "description": "電話番号",
+            "columnHeading": "電話 番号",
+            "constraints": []
+          },
+          {
+            "name": "STUMAL",
+            "ddsType": "A",
+            "sqlType": "VARCHAR(40)",
+            "length": 40,
+            "nullable": false,
+            "description": "メールアドレス",
+            "columnHeading": "メール アドレス",
+            "constraints": []
+          },
+          {
+            "name": "STUSCL",
+            "ddsType": "A",
+            "sqlType": "VARCHAR(4)",
+            "length": 4,
+            "nullable": false,
+            "description": "学校コード",
+            "columnHeading": "学校 コード",
+            "constraints": []
+          },
+          {
+            "name": "STUYR",
+            "ddsType": "S",
+            "sqlType": "NUMERIC(4)",
+            "length": 4,
+            "decimalPositions": 0,
+            "nullable": false,
+            "description": "入学年度",
+            "columnHeading": "入学 年度",
+            "constraints": []
+          },
+          {
+            "name": "STUSTS",
+            "ddsType": "A",
+            "sqlType": "VARCHAR(1)",
+            "length": 1,
+            "nullable": false,
+            "defaultValue": "A",
+            "description": "状態 A\u003d有効 D\u003d削除 G\u003d卒業",
+            "columnHeading": "状態",
+            "constraints": []
+          },
+          {
+            "name": "STUADD",
+            "ddsType": "S",
+            "sqlType": "NUMERIC(8)",
+            "length": 8,
+            "decimalPositions": 0,
+            "nullable": false,
+            "description": "登録日 YYYYMMDD",
+            "columnHeading": "登録日",
+            "constraints": []
+          },
+          {
+            "name": "STUUPD",
+            "ddsType": "S",
+            "sqlType": "NUMERIC(8)",
+            "length": 8,
+            "decimalPositions": 0,
+            "nullable": false,
+            "description": "更新日 YYYYMMDD",
+            "columnHeading": "更新日",
+            "constraints": []
+          },
+          {
+            "name": "STUADB",
+            "ddsType": "A",
+            "sqlType": "VARCHAR(10)",
+            "length": 10,
+            "nullable": false,
+            "description": "登録者",
+            "columnHeading": "登録者",
+            "constraints": []
+          },
+          {
+            "name": "STUUPB",
+            "ddsType": "A",
+            "sqlType": "VARCHAR(10)",
+            "length": 10,
+            "nullable": false,
+            "description": "更新者",
+            "columnHeading": "更新者",
+            "constraints": []
+          }
+        ],
+        "primaryKey": [
+          "STUSCL",
+          "STUID"
+        ],
+        "unique": true,
+        "fileKeywords": {
+          "UNIQUE": "UNIQUE"
+        }
+      },
+      {
+        "name": "TEACHPF",
+        "recordFormat": "TCHREC",
+        "description": "教師マスターレコード",
+        "columns": [
+          {
+            "name": "TCHID",
+            "ddsType": "A",
+            "sqlType": "VARCHAR(6)",
+            "length": 6,
+            "nullable": false,
+            "description": "教師ID",
+            "columnHeading": "教師 ID",
+            "constraints": []
+          },
+          {
+            "name": "TCHNAM",
+            "ddsType": "A",
+            "sqlType": "VARCHAR(30)",
+            "length": 30,
+            "nullable": false,
+            "description": "教師氏名",
+            "columnHeading": "教師 氏名",
+            "constraints": []
+          },
+          {
+            "name": "TCHKNA",
+            "ddsType": "A",
+            "sqlType": "VARCHAR(30)",
+            "length": 30,
+            "nullable": false,
+            "description": "教師カナ名",
+            "columnHeading": "カナ 氏名",
+            "constraints": []
+          },
+          {
+            "name": "TCHBDT",
+            "ddsType": "S",
+            "sqlType": "NUMERIC(8)",
+            "length": 8,
+            "decimalPositions": 0,
+            "nullable": false,
+            "description": "生年月日 YYYYMMDD",
+            "columnHeading": "生年 月日",
+            "constraints": []
+          },
+          {
+            "name": "TCHGND",
+            "ddsType": "A",
+            "sqlType": "VARCHAR(1)",
+            "length": 1,
+            "nullable": false,
+            "constraints": []
+          },
+          {
+            "name": "TCHADR",
+            "ddsType": "A",
+            "sqlType": "VARCHAR(50)",
+            "length": 50,
+            "nullable": false,
+            "constraints": []
+          },
+          {
+            "name": "TCHTEL",
+            "ddsType": "A",
+            "sqlType": "VARCHAR(15)",
+            "length": 15,
+            "nullable": false,
+            "constraints": []
+          },
+          {
+            "name": "TCHMAL",
+            "ddsType": "A",
+            "sqlType": "VARCHAR(40)",
+            "length": 40,
+            "nullable": false,
+            "constraints": []
+          },
+          {
+            "name": "TCHSCL",
+            "ddsType": "A",
+            "sqlType": "VARCHAR(4)",
+            "length": 4,
+            "nullable": false,
+            "description": "所属学校コード",
+            "columnHeading": "学校 コード",
+            "constraints": []
+          },
+          {
+            "name": "TCHSBJ",
+            "ddsType": "A",
+            "sqlType": "VARCHAR(20)",
+            "length": 20,
+            "nullable": false,
+            "description": "担当教科",
+            "columnHeading": "担当 教科",
+            "constraints": []
+          },
+          {
+            "name": "TCHSTS",
+            "ddsType": "A",
+            "sqlType": "VARCHAR(1)",
+            "length": 1,
+            "nullable": false,
+            "description": "状態 A\u003d有効 R\u003d退職",
+            "constraints": []
+          },
+          {
+            "name": "TCHADD",
+            "ddsType": "S",
+            "sqlType": "NUMERIC(8)",
+            "length": 8,
+            "decimalPositions": 0,
+            "nullable": false,
+            "description": "登録日 YYYYMMDD",
+            "columnHeading": "登録日",
+            "constraints": []
+          },
+          {
+            "name": "TCHUPD",
+            "ddsType": "S",
+            "sqlType": "NUMERIC(8)",
+            "length": 8,
+            "decimalPositions": 0,
+            "nullable": false,
+            "description": "更新日 YYYYMMDD",
+            "columnHeading": "更新日",
+            "constraints": []
+          },
+          {
+            "name": "TCHADB",
+            "ddsType": "A",
+            "sqlType": "VARCHAR(10)",
+            "length": 10,
+            "nullable": false,
+            "description": "登録者",
+            "constraints": []
+          },
+          {
+            "name": "TCHUPB",
+            "ddsType": "A",
+            "sqlType": "VARCHAR(10)",
+            "length": 10,
+            "nullable": false,
+            "description": "更新者",
+            "constraints": []
+          }
+        ],
+        "primaryKey": [
+          "TCHSCL",
+          "TCHID"
+        ],
+        "unique": true,
+        "fileKeywords": {
+          "REF": "REF(FLDREFPF)",
+          "UNIQUE": "UNIQUE"
+        }
+      }
+    ],
+    "indexes": [
+      {
+        "name": "CLASSL1",
+        "tableName": "CLASSPF",
+        "type": "SELECT_OMIT",
+        "keyFields": [
+          {
+            "fieldName": "CLSNAM",
+            "sortOrder": "ASCENDING"
+          },
+          {
+            "fieldName": "CLSID",
+            "sortOrder": "ASCENDING"
+          }
+        ],
+        "selectOmitRules": []
+      },
+      {
+        "name": "SCHOOLL1",
+        "tableName": "SCHOOLPF",
+        "type": "SELECT_OMIT",
+        "keyFields": [
+          {
+            "fieldName": "SCLNAM",
+            "sortOrder": "ASCENDING"
+          },
+          {
+            "fieldName": "SCLID",
+            "sortOrder": "ASCENDING"
+          }
+        ],
+        "selectOmitRules": []
+      },
+      {
+        "name": "STUCLSL1",
+        "tableName": "STUCLSPF",
+        "type": "SELECT_OMIT",
+        "keyFields": [
+          {
+            "fieldName": "SCSTID",
+            "sortOrder": "ASCENDING"
+          },
+          {
+            "fieldName": "SCENDT",
+            "sortOrder": "ASCENDING"
+          }
+        ],
+        "selectOmitRules": [
+          {
+            "type": "select",
+            "fieldName": "SCSTS",
+            "value": "null"
+          }
+        ]
+      },
+      {
+        "name": "STUDNTL1",
+        "tableName": "STUDNTPF",
+        "type": "SELECT_OMIT",
+        "keyFields": [
+          {
+            "fieldName": "STUNAM",
+            "sortOrder": "ASCENDING"
+          },
+          {
+            "fieldName": "STUID",
+            "sortOrder": "ASCENDING"
+          }
+        ],
+        "selectOmitRules": []
+      },
+      {
+        "name": "STUDNTL2",
+        "tableName": "STUDNTPF",
+        "type": "SELECT_OMIT",
+        "keyFields": [
+          {
+            "fieldName": "STUSCL",
+            "sortOrder": "ASCENDING"
+          },
+          {
+            "fieldName": "STUID",
+            "sortOrder": "ASCENDING"
+          }
+        ],
+        "selectOmitRules": [
+          {
+            "type": "select",
+            "fieldName": "STUSTS",
+            "value": "null"
+          }
+        ]
+      }
+    ]
+  },
+  "crossReference": {
+    "callGraph": {},
+    "fileUsage": {},
+    "copyMembers": {
+      "STULST": [
+        {
+          "memberName": "STUDNTCPY",
+          "resolved": false
+        },
+        {
+          "memberName": "SCHOOLCPY",
+          "resolved": false
+        }
+      ],
+      "STUPRG": [
+        {
+          "memberName": "STUDNTCPY",
+          "resolved": false
+        },
+        {
+          "memberName": "SCHOOLCPY",
+          "resolved": false
+        }
+      ],
+      "STURPT": [
+        {
+          "memberName": "STUDNTCPY",
+          "resolved": false
+        },
+        {
+          "memberName": "SCHOOLCPY",
+          "resolved": false
+        }
+      ]
+    },
+    "indicatorUsage": {}
+  }
+}

@@ -1,0 +1,1005 @@
+{
+  "metadata": {
+    "irVersion": "1.0.0",
+    "sourceType": "DDS_PF",
+    "sourceMember": "FLDREFPF",
+    "sourceFile": "QDDSSRC",
+    "sourceLibrary": "rpg3-student-mgmt",
+    "parseInfo": {
+      "parserVersion": "1.0.0",
+      "parsedAt": "2026-04-13T16:01:46.644993Z",
+      "parseStatus": "complete",
+      "totalLines": 55,
+      "detectedEncoding": "UTF-8",
+      "errors": [],
+      "warnings": []
+    }
+  },
+  "content": {
+    "sourceLines": [
+      {
+        "lineNumber": 1,
+        "rawText": "     A*================================================================",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 2,
+        "rawText": "     A* ファイル名: FLDREFPF",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 3,
+        "rawText": "     A* 説明      : フィールド参照ファイル（共通項目定義）",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 4,
+        "rawText": "     A* 作成日    : 2026/03/21",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 5,
+        "rawText": "     A* 作成者    : システム開発部",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 6,
+        "rawText": "     A* 備考      : 各物理ファイルで共通使用するフィールドの",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 7,
+        "rawText": "     A*            : 属性・桁数・テキストを一元管理する",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 8,
+        "rawText": "     A*================================================================",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 9,
+        "rawText": "     A          R REFREC                     TEXT('参照フィールドレコード')",
+        "specType": "RECORD_FORMAT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 10,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 11,
+        "rawText": "     A*   --- コード系フィールド ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 12,
+        "rawText": "     A            RSCLCD         4A         TEXT('学校コード') +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 13,
+        "rawText": "     A                                      COLHDG('学校' 'コード')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 14,
+        "rawText": "     A            RCLSID         6A         TEXT('クラスID') +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 15,
+        "rawText": "     A                                      COLHDG('クラス' 'ID')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 16,
+        "rawText": "     A            RSTUID         6A         TEXT('学生ID') +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 17,
+        "rawText": "     A                                      COLHDG('学生' 'ID')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 18,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 19,
+        "rawText": "     A*   --- 名称系フィールド ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 20,
+        "rawText": "     A            RNAME         30A         TEXT('汎用名称') +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 21,
+        "rawText": "     A                                      COLHDG('名称')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 22,
+        "rawText": "     A            RKANA         30A         TEXT('汎用カナ名') +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 23,
+        "rawText": "     A                                      COLHDG('カナ名')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 24,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 25,
+        "rawText": "     A*   --- 日付系フィールド ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 26,
+        "rawText": "     A            RDATE          8S 0       TEXT('汎用日付 YYYYMMDD') +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 27,
+        "rawText": "     A                                      COLHDG('日付')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 28,
+        "rawText": "     A            RYEAR          4S 0       TEXT('年度') +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 29,
+        "rawText": "     A                                      COLHDG('年度')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 30,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 31,
+        "rawText": "     A*   --- 数値系フィールド ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 32,
+        "rawText": "     A            RQTY           3S 0       TEXT('汎用数量') +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 33,
+        "rawText": "     A                                      COLHDG('数量')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 34,
+        "rawText": "     A            RSCORE         5S 2       TEXT('汎用スコア') +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 35,
+        "rawText": "     A                                      COLHDG('スコア')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 36,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 37,
+        "rawText": "     A*   --- 状態・フラグ系フィールド ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 38,
+        "rawText": "     A            RSTS           1A         TEXT('状態フラグ') +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 39,
+        "rawText": "     A                                      COLHDG('状態') +",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 40,
+        "rawText": "     A                                      DFT('A')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 41,
+        "rawText": "     A            RGND           1A         TEXT('性別 M/F') +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 42,
+        "rawText": "     A                                      COLHDG('性別') +",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 43,
+        "rawText": "     A                                      VALUES('M' 'F')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 44,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 45,
+        "rawText": "     A*   --- 連絡先系フィールド ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 46,
+        "rawText": "     A            RADDR         50A         TEXT('住所') +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 47,
+        "rawText": "     A                                      COLHDG('住所')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 48,
+        "rawText": "     A            RTEL          15A         TEXT('電話番号') +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 49,
+        "rawText": "     A                                      COLHDG('電話' '番号')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 50,
+        "rawText": "     A            RMAIL         40A         TEXT('メールアドレス') +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 51,
+        "rawText": "     A                                      COLHDG('メール' 'アドレス')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 52,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 53,
+        "rawText": "     A*   --- 監査系フィールド ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 54,
+        "rawText": "     A            RUSER         10A         TEXT('ユーザー名') +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 55,
+        "rawText": "     A                                      COLHDG('ユーザー')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      }
+    ],
+    "fileKeywords": [],
+    "recordFormats": [
+      {
+        "location": {
+          "startLine": 9,
+          "endLine": 9
+        },
+        "rawSourceLine": "     A          R REFREC                     TEXT('参照フィールドレコード')",
+        "name": "REFREC",
+        "text": "参照フィールドレコード",
+        "keywords": [
+          {
+            "name": "TEXT",
+            "value": "参照フィールドレコード",
+            "rawText": "TEXT('参照フィールドレコード')"
+          }
+        ],
+        "fields": [
+          {
+            "location": {
+              "startLine": 12,
+              "endLine": 12
+            },
+            "rawSourceLines": [
+              "     A            RSCLCD         4A         TEXT('学校コード') +",
+              "     A                                      COLHDG('学校' 'コード')"
+            ],
+            "name": "RSCLCD",
+            "length": 4,
+            "dataType": "A",
+            "source": "direct",
+            "keywords": [
+              {
+                "name": "TEXT",
+                "value": "学校コード",
+                "rawText": "TEXT('学校コード')"
+              },
+              {
+                "name": "COLHDG",
+                "values": [
+                  "学校",
+                  "コード"
+                ],
+                "rawText": "COLHDG('学校' 'コード')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 14,
+              "endLine": 14
+            },
+            "rawSourceLines": [
+              "     A            RCLSID         6A         TEXT('クラスID') +",
+              "     A                                      COLHDG('クラス' 'ID')"
+            ],
+            "name": "RCLSID",
+            "length": 6,
+            "dataType": "A",
+            "source": "direct",
+            "keywords": [
+              {
+                "name": "TEXT",
+                "value": "クラスID",
+                "rawText": "TEXT('クラスID')"
+              },
+              {
+                "name": "COLHDG",
+                "values": [
+                  "クラス",
+                  "ID"
+                ],
+                "rawText": "COLHDG('クラス' 'ID')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 16,
+              "endLine": 16
+            },
+            "rawSourceLines": [
+              "     A            RSTUID         6A         TEXT('学生ID') +",
+              "     A                                      COLHDG('学生' 'ID')"
+            ],
+            "name": "RSTUID",
+            "length": 6,
+            "dataType": "A",
+            "source": "direct",
+            "keywords": [
+              {
+                "name": "TEXT",
+                "value": "学生ID",
+                "rawText": "TEXT('学生ID')"
+              },
+              {
+                "name": "COLHDG",
+                "values": [
+                  "学生",
+                  "ID"
+                ],
+                "rawText": "COLHDG('学生' 'ID')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 20,
+              "endLine": 20
+            },
+            "rawSourceLines": [
+              "     A            RNAME         30A         TEXT('汎用名称') +",
+              "     A                                      COLHDG('名称')"
+            ],
+            "name": "RNAME",
+            "length": 30,
+            "dataType": "A",
+            "source": "direct",
+            "keywords": [
+              {
+                "name": "TEXT",
+                "value": "汎用名称",
+                "rawText": "TEXT('汎用名称')"
+              },
+              {
+                "name": "COLHDG",
+                "value": "名称",
+                "rawText": "COLHDG('名称')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 22,
+              "endLine": 22
+            },
+            "rawSourceLines": [
+              "     A            RKANA         30A         TEXT('汎用カナ名') +",
+              "     A                                      COLHDG('カナ名')"
+            ],
+            "name": "RKANA",
+            "length": 30,
+            "dataType": "A",
+            "source": "direct",
+            "keywords": [
+              {
+                "name": "TEXT",
+                "value": "汎用カナ名",
+                "rawText": "TEXT('汎用カナ名')"
+              },
+              {
+                "name": "COLHDG",
+                "value": "カナ名",
+                "rawText": "COLHDG('カナ名')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 26,
+              "endLine": 26
+            },
+            "rawSourceLines": [
+              "     A            RDATE          8S 0       TEXT('汎用日付 YYYYMMDD') +",
+              "     A                                      COLHDG('日付')"
+            ],
+            "name": "RDATE",
+            "length": 8,
+            "dataType": "S",
+            "decimalPositions": 0,
+            "source": "direct",
+            "keywords": [
+              {
+                "name": "TEXT",
+                "value": "汎用日付 YYYYMMDD",
+                "rawText": "TEXT('汎用日付 YYYYMMDD')"
+              },
+              {
+                "name": "COLHDG",
+                "value": "日付",
+                "rawText": "COLHDG('日付')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 28,
+              "endLine": 28
+            },
+            "rawSourceLines": [
+              "     A            RYEAR          4S 0       TEXT('年度') +",
+              "     A                                      COLHDG('年度')"
+            ],
+            "name": "RYEAR",
+            "length": 4,
+            "dataType": "S",
+            "decimalPositions": 0,
+            "source": "direct",
+            "keywords": [
+              {
+                "name": "TEXT",
+                "value": "年度",
+                "rawText": "TEXT('年度')"
+              },
+              {
+                "name": "COLHDG",
+                "value": "年度",
+                "rawText": "COLHDG('年度')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 32,
+              "endLine": 32
+            },
+            "rawSourceLines": [
+              "     A            RQTY           3S 0       TEXT('汎用数量') +",
+              "     A                                      COLHDG('数量')"
+            ],
+            "name": "RQTY",
+            "length": 3,
+            "dataType": "S",
+            "decimalPositions": 0,
+            "source": "direct",
+            "keywords": [
+              {
+                "name": "TEXT",
+                "value": "汎用数量",
+                "rawText": "TEXT('汎用数量')"
+              },
+              {
+                "name": "COLHDG",
+                "value": "数量",
+                "rawText": "COLHDG('数量')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 34,
+              "endLine": 34
+            },
+            "rawSourceLines": [
+              "     A            RSCORE         5S 2       TEXT('汎用スコア') +",
+              "     A                                      COLHDG('スコア')"
+            ],
+            "name": "RSCORE",
+            "length": 5,
+            "dataType": "S",
+            "decimalPositions": 2,
+            "source": "direct",
+            "keywords": [
+              {
+                "name": "TEXT",
+                "value": "汎用スコア",
+                "rawText": "TEXT('汎用スコア')"
+              },
+              {
+                "name": "COLHDG",
+                "value": "スコア",
+                "rawText": "COLHDG('スコア')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 38,
+              "endLine": 38
+            },
+            "rawSourceLines": [
+              "     A            RSTS           1A         TEXT('状態フラグ') +",
+              "     A                                      COLHDG('状態') +",
+              "     A                                      DFT('A')"
+            ],
+            "name": "RSTS",
+            "length": 1,
+            "dataType": "A",
+            "source": "direct",
+            "keywords": [
+              {
+                "name": "TEXT",
+                "value": "状態フラグ",
+                "rawText": "TEXT('状態フラグ')"
+              },
+              {
+                "name": "COLHDG",
+                "value": "状態",
+                "rawText": "COLHDG('状態')"
+              },
+              {
+                "name": "DFT",
+                "value": "A",
+                "rawText": "DFT('A')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 41,
+              "endLine": 41
+            },
+            "rawSourceLines": [
+              "     A            RGND           1A         TEXT('性別 M/F') +",
+              "     A                                      COLHDG('性別') +",
+              "     A                                      VALUES('M' 'F')"
+            ],
+            "name": "RGND",
+            "length": 1,
+            "dataType": "A",
+            "source": "direct",
+            "keywords": [
+              {
+                "name": "TEXT",
+                "value": "性別 M/F",
+                "rawText": "TEXT('性別 M/F')"
+              },
+              {
+                "name": "COLHDG",
+                "value": "性別",
+                "rawText": "COLHDG('性別')"
+              },
+              {
+                "name": "VALUES",
+                "values": [
+                  "M",
+                  "F"
+                ],
+                "rawText": "VALUES('M' 'F')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 46,
+              "endLine": 46
+            },
+            "rawSourceLines": [
+              "     A            RADDR         50A         TEXT('住所') +",
+              "     A                                      COLHDG('住所')"
+            ],
+            "name": "RADDR",
+            "length": 50,
+            "dataType": "A",
+            "source": "direct",
+            "keywords": [
+              {
+                "name": "TEXT",
+                "value": "住所",
+                "rawText": "TEXT('住所')"
+              },
+              {
+                "name": "COLHDG",
+                "value": "住所",
+                "rawText": "COLHDG('住所')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 48,
+              "endLine": 48
+            },
+            "rawSourceLines": [
+              "     A            RTEL          15A         TEXT('電話番号') +",
+              "     A                                      COLHDG('電話' '番号')"
+            ],
+            "name": "RTEL",
+            "length": 15,
+            "dataType": "A",
+            "source": "direct",
+            "keywords": [
+              {
+                "name": "TEXT",
+                "value": "電話番号",
+                "rawText": "TEXT('電話番号')"
+              },
+              {
+                "name": "COLHDG",
+                "values": [
+                  "電話",
+                  "番号"
+                ],
+                "rawText": "COLHDG('電話' '番号')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 50,
+              "endLine": 50
+            },
+            "rawSourceLines": [
+              "     A            RMAIL         40A         TEXT('メールアドレス') +",
+              "     A                                      COLHDG('メール' 'アドレス')"
+            ],
+            "name": "RMAIL",
+            "length": 40,
+            "dataType": "A",
+            "source": "direct",
+            "keywords": [
+              {
+                "name": "TEXT",
+                "value": "メールアドレス",
+                "rawText": "TEXT('メールアドレス')"
+              },
+              {
+                "name": "COLHDG",
+                "values": [
+                  "メール",
+                  "アドレス"
+                ],
+                "rawText": "COLHDG('メール' 'アドレス')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 54,
+              "endLine": 54
+            },
+            "rawSourceLines": [
+              "     A            RUSER         10A         TEXT('ユーザー名') +",
+              "     A                                      COLHDG('ユーザー')"
+            ],
+            "name": "RUSER",
+            "length": 10,
+            "dataType": "A",
+            "source": "direct",
+            "keywords": [
+              {
+                "name": "TEXT",
+                "value": "ユーザー名",
+                "rawText": "TEXT('ユーザー名')"
+              },
+              {
+                "name": "COLHDG",
+                "value": "ユーザー",
+                "rawText": "COLHDG('ユーザー')"
+              }
+            ]
+          }
+        ],
+        "keys": []
+      }
+    ],
+    "comments": [
+      {
+        "lineNumber": 1,
+        "text": "================================================================"
+      },
+      {
+        "lineNumber": 2,
+        "text": "ファイル名: FLDREFPF"
+      },
+      {
+        "lineNumber": 3,
+        "text": "説明      : フィールド参照ファイル（共通項目定義）"
+      },
+      {
+        "lineNumber": 4,
+        "text": "作成日    : 2026/03/21"
+      },
+      {
+        "lineNumber": 5,
+        "text": "作成者    : システム開発部"
+      },
+      {
+        "lineNumber": 6,
+        "text": "備考      : 各物理ファイルで共通使用するフィールドの"
+      },
+      {
+        "lineNumber": 7,
+        "text": ": 属性・桁数・テキストを一元管理する"
+      },
+      {
+        "lineNumber": 8,
+        "text": "================================================================"
+      },
+      {
+        "lineNumber": 10,
+        "text": ""
+      },
+      {
+        "lineNumber": 11,
+        "text": "--- コード系フィールド ---"
+      },
+      {
+        "lineNumber": 18,
+        "text": ""
+      },
+      {
+        "lineNumber": 19,
+        "text": "--- 名称系フィールド ---"
+      },
+      {
+        "lineNumber": 24,
+        "text": ""
+      },
+      {
+        "lineNumber": 25,
+        "text": "--- 日付系フィールド ---"
+      },
+      {
+        "lineNumber": 30,
+        "text": ""
+      },
+      {
+        "lineNumber": 31,
+        "text": "--- 数値系フィールド ---"
+      },
+      {
+        "lineNumber": 36,
+        "text": ""
+      },
+      {
+        "lineNumber": 37,
+        "text": "--- 状態・フラグ系フィールド ---"
+      },
+      {
+        "lineNumber": 44,
+        "text": ""
+      },
+      {
+        "lineNumber": 45,
+        "text": "--- 連絡先系フィールド ---"
+      },
+      {
+        "lineNumber": 52,
+        "text": ""
+      },
+      {
+        "lineNumber": 53,
+        "text": "--- 監査系フィールド ---"
+      }
+    ],
+    "parseErrors": []
+  },
+  "dependencies": {
+    "referencedFiles": [],
+    "calledPrograms": [],
+    "copyMembers": []
+  },
+  "errors": []
+}

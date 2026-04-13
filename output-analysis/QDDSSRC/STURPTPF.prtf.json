@@ -1,0 +1,1781 @@
+{
+  "metadata": {
+    "irVersion": "1.0.0",
+    "sourceType": "PRTF",
+    "sourceMember": "STURPTPF",
+    "sourceFile": "QDDSSRC",
+    "sourceLibrary": "rpg3-student-mgmt",
+    "parseInfo": {
+      "parserVersion": "1.0.0",
+      "parsedAt": "2026-04-13T16:01:46.687820400Z",
+      "parseStatus": "complete",
+      "totalLines": 91,
+      "detectedEncoding": "UTF-8",
+      "errors": [],
+      "warnings": []
+    }
+  },
+  "content": {
+    "sourceLines": [
+      {
+        "lineNumber": 1,
+        "rawText": "     A*================================================================",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 2,
+        "rawText": "     A* ファイル名: STURPTPF",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 3,
+        "rawText": "     A* 説明      : 学生レポート印刷ファイル",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 4,
+        "rawText": "     A* 作成日    : 2026/03/14",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 5,
+        "rawText": "     A* 作成者    : システム開発部",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 6,
+        "rawText": "     A*================================================================",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 7,
+        "rawText": "     A          R TITLE",
+        "specType": "RECORD_FORMAT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 8,
+        "rawText": "     A                                      SPACEB(3)",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 9,
+        "rawText": "     A                                  1 30'学 生 名 簿 一 覧 表'",
+        "specType": "CONSTANT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 10,
+        "rawText": "     A                                      SPACEA(1)",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 11,
+        "rawText": "     A            RPDATE         8S 0   1  1",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 12,
+        "rawText": "     A                                      EDTCDE(Y)",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 13,
+        "rawText": "     A                                  1 70'ページ:'",
+        "specType": "CONSTANT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 14,
+        "rawText": "     A            RPPAGE         4S 0   1 78",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 15,
+        "rawText": "     A                                      EDTCDE(Z)",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 16,
+        "rawText": "     A                                      SPACEA(1)",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 17,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 18,
+        "rawText": "     A*================================================================",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 19,
+        "rawText": "     A* 学校ヘッダー（レベルブレイク用）",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 20,
+        "rawText": "     A*================================================================",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 21,
+        "rawText": "     A          R SCHLHDR",
+        "specType": "RECORD_FORMAT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 22,
+        "rawText": "     A                                      SPACEB(2)",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 23,
+        "rawText": "     A                                  1  1'学校:'",
+        "specType": "CONSTANT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 24,
+        "rawText": "     A            RHSCL          4A     1  7",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 25,
+        "rawText": "     A            RHSNAM        40A     1 13",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 26,
+        "rawText": "     A                                      SPACEA(1)",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 27,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 28,
+        "rawText": "     A*================================================================",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 29,
+        "rawText": "     A* 列ヘッダーレコード",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 30,
+        "rawText": "     A*================================================================",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 31,
+        "rawText": "     A          R COLHDR",
+        "specType": "RECORD_FORMAT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 32,
+        "rawText": "     A                                      SPACEB(1)",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 33,
+        "rawText": "     A                                  1  1'------'",
+        "specType": "CONSTANT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 34,
+        "rawText": "     A                                  1  8'------------------------------'",
+        "specType": "CONSTANT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 35,
+        "rawText": "     A                                  1 40'--------'",
+        "specType": "CONSTANT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 36,
+        "rawText": "     A                                  1 50'--'",
+        "specType": "CONSTANT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 37,
+        "rawText": "     A                                  1 54'----------'",
+        "specType": "CONSTANT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 38,
+        "rawText": "     A                                  1 66'---------------'",
+        "specType": "CONSTANT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 39,
+        "rawText": "     A                                      SPACEA(0)",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 40,
+        "rawText": "     A                                  1  1'学生ID'",
+        "specType": "CONSTANT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 41,
+        "rawText": "     A                                  1  8'学生氏名'",
+        "specType": "CONSTANT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 42,
+        "rawText": "     A                                  1 40'生年月日'",
+        "specType": "CONSTANT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 43,
+        "rawText": "     A                                  1 50'性別'",
+        "specType": "CONSTANT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 44,
+        "rawText": "     A                                  1 54'入学年度'",
+        "specType": "CONSTANT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 45,
+        "rawText": "     A                                  1 66'電話番号'",
+        "specType": "CONSTANT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 46,
+        "rawText": "     A                                      SPACEA(0)",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 47,
+        "rawText": "     A                                  1  1'------'",
+        "specType": "CONSTANT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 48,
+        "rawText": "     A                                  1  8'------------------------------'",
+        "specType": "CONSTANT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 49,
+        "rawText": "     A                                  1 40'--------'",
+        "specType": "CONSTANT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 50,
+        "rawText": "     A                                  1 50'--'",
+        "specType": "CONSTANT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 51,
+        "rawText": "     A                                  1 54'----------'",
+        "specType": "CONSTANT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 52,
+        "rawText": "     A                                  1 66'---------------'",
+        "specType": "CONSTANT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 53,
+        "rawText": "     A                                      SPACEA(1)",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 54,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 55,
+        "rawText": "     A*================================================================",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 56,
+        "rawText": "     A* 明細行レコード",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 57,
+        "rawText": "     A*================================================================",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 58,
+        "rawText": "     A          R DETAIL",
+        "specType": "RECORD_FORMAT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 59,
+        "rawText": "     A                                      SPACEB(1)",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 60,
+        "rawText": "     A            RDSTID         6A     1  1",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 61,
+        "rawText": "     A            RDNAM         30A     1  8",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 62,
+        "rawText": "     A            RDBDT          8S 0   1 40",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 63,
+        "rawText": "     A                                      EDTCDE(Y)",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 64,
+        "rawText": "     A            RDGND          1A     1 50",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 65,
+        "rawText": "     A            RDYR           4S 0   1 54",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 66,
+        "rawText": "     A                                      EDTCDE(Z)",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 67,
+        "rawText": "     A            RDTEL         15A     1 66",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 68,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 69,
+        "rawText": "     A*================================================================",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 70,
+        "rawText": "     A* 学校小計レコード",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 71,
+        "rawText": "     A*================================================================",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 72,
+        "rawText": "     A          R SCHLTOT",
+        "specType": "RECORD_FORMAT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 73,
+        "rawText": "     A                                      SPACEB(1)",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 74,
+        "rawText": "     A                                  1  8'*** 学校小計 ***'",
+        "specType": "CONSTANT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 75,
+        "rawText": "     A            RTSCT          5S 0   1 30",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 76,
+        "rawText": "     A                                      EDTCDE(Z)",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 77,
+        "rawText": "     A                                  1 37'名'",
+        "specType": "CONSTANT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 78,
+        "rawText": "     A                                      SPACEA(1)",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 79,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 80,
+        "rawText": "     A*================================================================",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 81,
+        "rawText": "     A* 総合計レコード",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 82,
+        "rawText": "     A*================================================================",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 83,
+        "rawText": "     A          R GRANDTOT",
+        "specType": "RECORD_FORMAT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 84,
+        "rawText": "     A                                      SPACEB(2)",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 85,
+        "rawText": "     A                                  1  8'*** 総 合 計 ***'",
+        "specType": "CONSTANT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 86,
+        "rawText": "     A                                      DSPATR(UL)",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 87,
+        "rawText": "     A            RTGCT          5S 0   1 30",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 88,
+        "rawText": "     A                                      EDTCDE(Z)",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 89,
+        "rawText": "     A                                  1 37'名'",
+        "specType": "CONSTANT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 90,
+        "rawText": "     A                                      SPACEA(2)",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 91,
+        "rawText": "     A                                  1  1'*** レポート終了 ***'",
+        "specType": "CONSTANT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      }
+    ],
+    "fileKeywords": [],
+    "recordFormats": [
+      {
+        "location": {
+          "startLine": 7,
+          "endLine": 8
+        },
+        "rawSourceLines": [
+          "     A          R TITLE",
+          "     A                                      SPACEB(3)"
+        ],
+        "conditioningIndicators": [],
+        "name": "TITLE",
+        "keywords": [
+          {
+            "keyword": {
+              "name": "SPACEB",
+              "value": "3",
+              "rawText": "SPACEB(3)"
+            },
+            "conditioningIndicators": []
+          }
+        ],
+        "fields": [
+          {
+            "location": {
+              "startLine": 11,
+              "endLine": 12
+            },
+            "rawSourceLines": [
+              "     A            RPDATE         8S 0   1  1",
+              "     A                                      EDTCDE(Y)"
+            ],
+            "conditioningIndicators": [],
+            "name": "RPDATE",
+            "length": 8,
+            "dataType": "S",
+            "decimalPositions": 0,
+            "printLine": 1,
+            "printPosition": 1,
+            "printPositionRaw": "1",
+            "source": "direct",
+            "keywords": [
+              {
+                "keyword": {
+                  "name": "EDTCDE",
+                  "value": "Y",
+                  "rawText": "EDTCDE(Y)"
+                },
+                "conditioningIndicators": []
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 14,
+              "endLine": 16
+            },
+            "rawSourceLines": [
+              "     A            RPPAGE         4S 0   1 78",
+              "     A                                      EDTCDE(Z)",
+              "     A                                      SPACEA(1)"
+            ],
+            "conditioningIndicators": [],
+            "name": "RPPAGE",
+            "length": 4,
+            "dataType": "S",
+            "decimalPositions": 0,
+            "printLine": 1,
+            "printPosition": 78,
+            "printPositionRaw": "78",
+            "source": "direct",
+            "keywords": [
+              {
+                "keyword": {
+                  "name": "EDTCDE",
+                  "value": "Z",
+                  "rawText": "EDTCDE(Z)"
+                },
+                "conditioningIndicators": []
+              },
+              {
+                "keyword": {
+                  "name": "SPACEA",
+                  "value": "1",
+                  "rawText": "SPACEA(1)"
+                },
+                "conditioningIndicators": []
+              }
+            ]
+          }
+        ],
+        "constants": [
+          {
+            "location": {
+              "startLine": 9,
+              "endLine": 10
+            },
+            "rawSourceLines": [
+              "     A                                  1 30'学 生 名 簿 一 覧 表'",
+              "     A                                      SPACEA(1)"
+            ],
+            "conditioningIndicators": [],
+            "printLine": 1,
+            "printPosition": 30,
+            "printPositionRaw": "30",
+            "text": "学 生 名 簿 一 覧 表",
+            "keywords": [
+              {
+                "keyword": {
+                  "name": "SPACEA",
+                  "value": "1",
+                  "rawText": "SPACEA(1)"
+                },
+                "conditioningIndicators": []
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 13,
+              "endLine": 13
+            },
+            "rawSourceLines": [
+              "     A                                  1 70'ページ:'"
+            ],
+            "conditioningIndicators": [],
+            "printLine": 1,
+            "printPosition": 70,
+            "printPositionRaw": "70",
+            "text": "ページ:",
+            "keywords": []
+          }
+        ]
+      },
+      {
+        "location": {
+          "startLine": 21,
+          "endLine": 22
+        },
+        "rawSourceLines": [
+          "     A          R SCHLHDR",
+          "     A                                      SPACEB(2)"
+        ],
+        "conditioningIndicators": [],
+        "name": "SCHLHDR",
+        "keywords": [
+          {
+            "keyword": {
+              "name": "SPACEB",
+              "value": "2",
+              "rawText": "SPACEB(2)"
+            },
+            "conditioningIndicators": []
+          }
+        ],
+        "fields": [
+          {
+            "location": {
+              "startLine": 24,
+              "endLine": 24
+            },
+            "rawSourceLines": [
+              "     A            RHSCL          4A     1  7"
+            ],
+            "conditioningIndicators": [],
+            "name": "RHSCL",
+            "length": 4,
+            "dataType": "A",
+            "printLine": 1,
+            "printPosition": 7,
+            "printPositionRaw": "7",
+            "source": "direct",
+            "keywords": []
+          },
+          {
+            "location": {
+              "startLine": 25,
+              "endLine": 26
+            },
+            "rawSourceLines": [
+              "     A            RHSNAM        40A     1 13",
+              "     A                                      SPACEA(1)"
+            ],
+            "conditioningIndicators": [],
+            "name": "RHSNAM",
+            "length": 40,
+            "dataType": "A",
+            "printLine": 1,
+            "printPosition": 13,
+            "printPositionRaw": "13",
+            "source": "direct",
+            "keywords": [
+              {
+                "keyword": {
+                  "name": "SPACEA",
+                  "value": "1",
+                  "rawText": "SPACEA(1)"
+                },
+                "conditioningIndicators": []
+              }
+            ]
+          }
+        ],
+        "constants": [
+          {
+            "location": {
+              "startLine": 23,
+              "endLine": 23
+            },
+            "rawSourceLines": [
+              "     A                                  1  1'学校:'"
+            ],
+            "conditioningIndicators": [],
+            "printLine": 1,
+            "printPosition": 1,
+            "printPositionRaw": "1",
+            "text": "学校:",
+            "keywords": []
+          }
+        ]
+      },
+      {
+        "location": {
+          "startLine": 31,
+          "endLine": 32
+        },
+        "rawSourceLines": [
+          "     A          R COLHDR",
+          "     A                                      SPACEB(1)"
+        ],
+        "conditioningIndicators": [],
+        "name": "COLHDR",
+        "keywords": [
+          {
+            "keyword": {
+              "name": "SPACEB",
+              "value": "1",
+              "rawText": "SPACEB(1)"
+            },
+            "conditioningIndicators": []
+          }
+        ],
+        "fields": [],
+        "constants": [
+          {
+            "location": {
+              "startLine": 33,
+              "endLine": 33
+            },
+            "rawSourceLines": [
+              "     A                                  1  1'------'"
+            ],
+            "conditioningIndicators": [],
+            "printLine": 1,
+            "printPosition": 1,
+            "printPositionRaw": "1",
+            "text": "------",
+            "keywords": []
+          },
+          {
+            "location": {
+              "startLine": 34,
+              "endLine": 34
+            },
+            "rawSourceLines": [
+              "     A                                  1  8'------------------------------'"
+            ],
+            "conditioningIndicators": [],
+            "printLine": 1,
+            "printPosition": 8,
+            "printPositionRaw": "8",
+            "text": "------------------------------",
+            "keywords": []
+          },
+          {
+            "location": {
+              "startLine": 35,
+              "endLine": 35
+            },
+            "rawSourceLines": [
+              "     A                                  1 40'--------'"
+            ],
+            "conditioningIndicators": [],
+            "printLine": 1,
+            "printPosition": 40,
+            "printPositionRaw": "40",
+            "text": "--------",
+            "keywords": []
+          },
+          {
+            "location": {
+              "startLine": 36,
+              "endLine": 36
+            },
+            "rawSourceLines": [
+              "     A                                  1 50'--'"
+            ],
+            "conditioningIndicators": [],
+            "printLine": 1,
+            "printPosition": 50,
+            "printPositionRaw": "50",
+            "text": "--",
+            "keywords": []
+          },
+          {
+            "location": {
+              "startLine": 37,
+              "endLine": 37
+            },
+            "rawSourceLines": [
+              "     A                                  1 54'----------'"
+            ],
+            "conditioningIndicators": [],
+            "printLine": 1,
+            "printPosition": 54,
+            "printPositionRaw": "54",
+            "text": "----------",
+            "keywords": []
+          },
+          {
+            "location": {
+              "startLine": 38,
+              "endLine": 39
+            },
+            "rawSourceLines": [
+              "     A                                  1 66'---------------'",
+              "     A                                      SPACEA(0)"
+            ],
+            "conditioningIndicators": [],
+            "printLine": 1,
+            "printPosition": 66,
+            "printPositionRaw": "66",
+            "text": "---------------",
+            "keywords": [
+              {
+                "keyword": {
+                  "name": "SPACEA",
+                  "value": "0",
+                  "rawText": "SPACEA(0)"
+                },
+                "conditioningIndicators": []
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 40,
+              "endLine": 40
+            },
+            "rawSourceLines": [
+              "     A                                  1  1'学生ID'"
+            ],
+            "conditioningIndicators": [],
+            "printLine": 1,
+            "printPosition": 1,
+            "printPositionRaw": "1",
+            "text": "学生ID",
+            "keywords": []
+          },
+          {
+            "location": {
+              "startLine": 41,
+              "endLine": 41
+            },
+            "rawSourceLines": [
+              "     A                                  1  8'学生氏名'"
+            ],
+            "conditioningIndicators": [],
+            "printLine": 1,
+            "printPosition": 8,
+            "printPositionRaw": "8",
+            "text": "学生氏名",
+            "keywords": []
+          },
+          {
+            "location": {
+              "startLine": 42,
+              "endLine": 42
+            },
+            "rawSourceLines": [
+              "     A                                  1 40'生年月日'"
+            ],
+            "conditioningIndicators": [],
+            "printLine": 1,
+            "printPosition": 40,
+            "printPositionRaw": "40",
+            "text": "生年月日",
+            "keywords": []
+          },
+          {
+            "location": {
+              "startLine": 43,
+              "endLine": 43
+            },
+            "rawSourceLines": [
+              "     A                                  1 50'性別'"
+            ],
+            "conditioningIndicators": [],
+            "printLine": 1,
+            "printPosition": 50,
+            "printPositionRaw": "50",
+            "text": "性別",
+            "keywords": []
+          },
+          {
+            "location": {
+              "startLine": 44,
+              "endLine": 44
+            },
+            "rawSourceLines": [
+              "     A                                  1 54'入学年度'"
+            ],
+            "conditioningIndicators": [],
+            "printLine": 1,
+            "printPosition": 54,
+            "printPositionRaw": "54",
+            "text": "入学年度",
+            "keywords": []
+          },
+          {
+            "location": {
+              "startLine": 45,
+              "endLine": 46
+            },
+            "rawSourceLines": [
+              "     A                                  1 66'電話番号'",
+              "     A                                      SPACEA(0)"
+            ],
+            "conditioningIndicators": [],
+            "printLine": 1,
+            "printPosition": 66,
+            "printPositionRaw": "66",
+            "text": "電話番号",
+            "keywords": [
+              {
+                "keyword": {
+                  "name": "SPACEA",
+                  "value": "0",
+                  "rawText": "SPACEA(0)"
+                },
+                "conditioningIndicators": []
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 47,
+              "endLine": 47
+            },
+            "rawSourceLines": [
+              "     A                                  1  1'------'"
+            ],
+            "conditioningIndicators": [],
+            "printLine": 1,
+            "printPosition": 1,
+            "printPositionRaw": "1",
+            "text": "------",
+            "keywords": []
+          },
+          {
+            "location": {
+              "startLine": 48,
+              "endLine": 48
+            },
+            "rawSourceLines": [
+              "     A                                  1  8'------------------------------'"
+            ],
+            "conditioningIndicators": [],
+            "printLine": 1,
+            "printPosition": 8,
+            "printPositionRaw": "8",
+            "text": "------------------------------",
+            "keywords": []
+          },
+          {
+            "location": {
+              "startLine": 49,
+              "endLine": 49
+            },
+            "rawSourceLines": [
+              "     A                                  1 40'--------'"
+            ],
+            "conditioningIndicators": [],
+            "printLine": 1,
+            "printPosition": 40,
+            "printPositionRaw": "40",
+            "text": "--------",
+            "keywords": []
+          },
+          {
+            "location": {
+              "startLine": 50,
+              "endLine": 50
+            },
+            "rawSourceLines": [
+              "     A                                  1 50'--'"
+            ],
+            "conditioningIndicators": [],
+            "printLine": 1,
+            "printPosition": 50,
+            "printPositionRaw": "50",
+            "text": "--",
+            "keywords": []
+          },
+          {
+            "location": {
+              "startLine": 51,
+              "endLine": 51
+            },
+            "rawSourceLines": [
+              "     A                                  1 54'----------'"
+            ],
+            "conditioningIndicators": [],
+            "printLine": 1,
+            "printPosition": 54,
+            "printPositionRaw": "54",
+            "text": "----------",
+            "keywords": []
+          },
+          {
+            "location": {
+              "startLine": 52,
+              "endLine": 53
+            },
+            "rawSourceLines": [
+              "     A                                  1 66'---------------'",
+              "     A                                      SPACEA(1)"
+            ],
+            "conditioningIndicators": [],
+            "printLine": 1,
+            "printPosition": 66,
+            "printPositionRaw": "66",
+            "text": "---------------",
+            "keywords": [
+              {
+                "keyword": {
+                  "name": "SPACEA",
+                  "value": "1",
+                  "rawText": "SPACEA(1)"
+                },
+                "conditioningIndicators": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "location": {
+          "startLine": 58,
+          "endLine": 59
+        },
+        "rawSourceLines": [
+          "     A          R DETAIL",
+          "     A                                      SPACEB(1)"
+        ],
+        "conditioningIndicators": [],
+        "name": "DETAIL",
+        "keywords": [
+          {
+            "keyword": {
+              "name": "SPACEB",
+              "value": "1",
+              "rawText": "SPACEB(1)"
+            },
+            "conditioningIndicators": []
+          }
+        ],
+        "fields": [
+          {
+            "location": {
+              "startLine": 60,
+              "endLine": 60
+            },
+            "rawSourceLines": [
+              "     A            RDSTID         6A     1  1"
+            ],
+            "conditioningIndicators": [],
+            "name": "RDSTID",
+            "length": 6,
+            "dataType": "A",
+            "printLine": 1,
+            "printPosition": 1,
+            "printPositionRaw": "1",
+            "source": "direct",
+            "keywords": []
+          },
+          {
+            "location": {
+              "startLine": 61,
+              "endLine": 61
+            },
+            "rawSourceLines": [
+              "     A            RDNAM         30A     1  8"
+            ],
+            "conditioningIndicators": [],
+            "name": "RDNAM",
+            "length": 30,
+            "dataType": "A",
+            "printLine": 1,
+            "printPosition": 8,
+            "printPositionRaw": "8",
+            "source": "direct",
+            "keywords": []
+          },
+          {
+            "location": {
+              "startLine": 62,
+              "endLine": 63
+            },
+            "rawSourceLines": [
+              "     A            RDBDT          8S 0   1 40",
+              "     A                                      EDTCDE(Y)"
+            ],
+            "conditioningIndicators": [],
+            "name": "RDBDT",
+            "length": 8,
+            "dataType": "S",
+            "decimalPositions": 0,
+            "printLine": 1,
+            "printPosition": 40,
+            "printPositionRaw": "40",
+            "source": "direct",
+            "keywords": [
+              {
+                "keyword": {
+                  "name": "EDTCDE",
+                  "value": "Y",
+                  "rawText": "EDTCDE(Y)"
+                },
+                "conditioningIndicators": []
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 64,
+              "endLine": 64
+            },
+            "rawSourceLines": [
+              "     A            RDGND          1A     1 50"
+            ],
+            "conditioningIndicators": [],
+            "name": "RDGND",
+            "length": 1,
+            "dataType": "A",
+            "printLine": 1,
+            "printPosition": 50,
+            "printPositionRaw": "50",
+            "source": "direct",
+            "keywords": []
+          },
+          {
+            "location": {
+              "startLine": 65,
+              "endLine": 66
+            },
+            "rawSourceLines": [
+              "     A            RDYR           4S 0   1 54",
+              "     A                                      EDTCDE(Z)"
+            ],
+            "conditioningIndicators": [],
+            "name": "RDYR",
+            "length": 4,
+            "dataType": "S",
+            "decimalPositions": 0,
+            "printLine": 1,
+            "printPosition": 54,
+            "printPositionRaw": "54",
+            "source": "direct",
+            "keywords": [
+              {
+                "keyword": {
+                  "name": "EDTCDE",
+                  "value": "Z",
+                  "rawText": "EDTCDE(Z)"
+                },
+                "conditioningIndicators": []
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 67,
+              "endLine": 67
+            },
+            "rawSourceLines": [
+              "     A            RDTEL         15A     1 66"
+            ],
+            "conditioningIndicators": [],
+            "name": "RDTEL",
+            "length": 15,
+            "dataType": "A",
+            "printLine": 1,
+            "printPosition": 66,
+            "printPositionRaw": "66",
+            "source": "direct",
+            "keywords": []
+          }
+        ],
+        "constants": []
+      },
+      {
+        "location": {
+          "startLine": 72,
+          "endLine": 73
+        },
+        "rawSourceLines": [
+          "     A          R SCHLTOT",
+          "     A                                      SPACEB(1)"
+        ],
+        "conditioningIndicators": [],
+        "name": "SCHLTOT",
+        "keywords": [
+          {
+            "keyword": {
+              "name": "SPACEB",
+              "value": "1",
+              "rawText": "SPACEB(1)"
+            },
+            "conditioningIndicators": []
+          }
+        ],
+        "fields": [
+          {
+            "location": {
+              "startLine": 75,
+              "endLine": 76
+            },
+            "rawSourceLines": [
+              "     A            RTSCT          5S 0   1 30",
+              "     A                                      EDTCDE(Z)"
+            ],
+            "conditioningIndicators": [],
+            "name": "RTSCT",
+            "length": 5,
+            "dataType": "S",
+            "decimalPositions": 0,
+            "printLine": 1,
+            "printPosition": 30,
+            "printPositionRaw": "30",
+            "source": "direct",
+            "keywords": [
+              {
+                "keyword": {
+                  "name": "EDTCDE",
+                  "value": "Z",
+                  "rawText": "EDTCDE(Z)"
+                },
+                "conditioningIndicators": []
+              }
+            ]
+          }
+        ],
+        "constants": [
+          {
+            "location": {
+              "startLine": 74,
+              "endLine": 74
+            },
+            "rawSourceLines": [
+              "     A                                  1  8'*** 学校小計 ***'"
+            ],
+            "conditioningIndicators": [],
+            "printLine": 1,
+            "printPosition": 8,
+            "printPositionRaw": "8",
+            "text": "*** 学校小計 ***",
+            "keywords": []
+          },
+          {
+            "location": {
+              "startLine": 77,
+              "endLine": 78
+            },
+            "rawSourceLines": [
+              "     A                                  1 37'名'",
+              "     A                                      SPACEA(1)"
+            ],
+            "conditioningIndicators": [],
+            "printLine": 1,
+            "printPosition": 37,
+            "printPositionRaw": "37",
+            "text": "名",
+            "keywords": [
+              {
+                "keyword": {
+                  "name": "SPACEA",
+                  "value": "1",
+                  "rawText": "SPACEA(1)"
+                },
+                "conditioningIndicators": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "location": {
+          "startLine": 83,
+          "endLine": 84
+        },
+        "rawSourceLines": [
+          "     A          R GRANDTOT",
+          "     A                                      SPACEB(2)"
+        ],
+        "conditioningIndicators": [],
+        "name": "GRANDTOT",
+        "keywords": [
+          {
+            "keyword": {
+              "name": "SPACEB",
+              "value": "2",
+              "rawText": "SPACEB(2)"
+            },
+            "conditioningIndicators": []
+          }
+        ],
+        "fields": [
+          {
+            "location": {
+              "startLine": 87,
+              "endLine": 88
+            },
+            "rawSourceLines": [
+              "     A            RTGCT          5S 0   1 30",
+              "     A                                      EDTCDE(Z)"
+            ],
+            "conditioningIndicators": [],
+            "name": "RTGCT",
+            "length": 5,
+            "dataType": "S",
+            "decimalPositions": 0,
+            "printLine": 1,
+            "printPosition": 30,
+            "printPositionRaw": "30",
+            "source": "direct",
+            "keywords": [
+              {
+                "keyword": {
+                  "name": "EDTCDE",
+                  "value": "Z",
+                  "rawText": "EDTCDE(Z)"
+                },
+                "conditioningIndicators": []
+              }
+            ]
+          }
+        ],
+        "constants": [
+          {
+            "location": {
+              "startLine": 85,
+              "endLine": 86
+            },
+            "rawSourceLines": [
+              "     A                                  1  8'*** 総 合 計 ***'",
+              "     A                                      DSPATR(UL)"
+            ],
+            "conditioningIndicators": [],
+            "printLine": 1,
+            "printPosition": 8,
+            "printPositionRaw": "8",
+            "text": "*** 総 合 計 ***",
+            "keywords": [
+              {
+                "keyword": {
+                  "name": "DSPATR",
+                  "value": "UL",
+                  "rawText": "DSPATR(UL)"
+                },
+                "conditioningIndicators": []
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 89,
+              "endLine": 90
+            },
+            "rawSourceLines": [
+              "     A                                  1 37'名'",
+              "     A                                      SPACEA(2)"
+            ],
+            "conditioningIndicators": [],
+            "printLine": 1,
+            "printPosition": 37,
+            "printPositionRaw": "37",
+            "text": "名",
+            "keywords": [
+              {
+                "keyword": {
+                  "name": "SPACEA",
+                  "value": "2",
+                  "rawText": "SPACEA(2)"
+                },
+                "conditioningIndicators": []
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 91,
+              "endLine": 91
+            },
+            "rawSourceLines": [
+              "     A                                  1  1'*** レポート終了 ***'"
+            ],
+            "conditioningIndicators": [],
+            "printLine": 1,
+            "printPosition": 1,
+            "printPositionRaw": "1",
+            "text": "*** レポート終了 ***",
+            "keywords": []
+          }
+        ]
+      }
+    ],
+    "comments": [
+      {
+        "lineNumber": 1,
+        "text": "================================================================"
+      },
+      {
+        "lineNumber": 2,
+        "text": "ファイル名: STURPTPF"
+      },
+      {
+        "lineNumber": 3,
+        "text": "説明      : 学生レポート印刷ファイル"
+      },
+      {
+        "lineNumber": 4,
+        "text": "作成日    : 2026/03/14"
+      },
+      {
+        "lineNumber": 5,
+        "text": "作成者    : システム開発部"
+      },
+      {
+        "lineNumber": 6,
+        "text": "================================================================"
+      },
+      {
+        "lineNumber": 17,
+        "text": ""
+      },
+      {
+        "lineNumber": 18,
+        "text": "================================================================"
+      },
+      {
+        "lineNumber": 19,
+        "text": "学校ヘッダー（レベルブレイク用）"
+      },
+      {
+        "lineNumber": 20,
+        "text": "================================================================"
+      },
+      {
+        "lineNumber": 27,
+        "text": ""
+      },
+      {
+        "lineNumber": 28,
+        "text": "================================================================"
+      },
+      {
+        "lineNumber": 29,
+        "text": "列ヘッダーレコード"
+      },
+      {
+        "lineNumber": 30,
+        "text": "================================================================"
+      },
+      {
+        "lineNumber": 54,
+        "text": ""
+      },
+      {
+        "lineNumber": 55,
+        "text": "================================================================"
+      },
+      {
+        "lineNumber": 56,
+        "text": "明細行レコード"
+      },
+      {
+        "lineNumber": 57,
+        "text": "================================================================"
+      },
+      {
+        "lineNumber": 68,
+        "text": ""
+      },
+      {
+        "lineNumber": 69,
+        "text": "================================================================"
+      },
+      {
+        "lineNumber": 70,
+        "text": "学校小計レコード"
+      },
+      {
+        "lineNumber": 71,
+        "text": "================================================================"
+      },
+      {
+        "lineNumber": 79,
+        "text": ""
+      },
+      {
+        "lineNumber": 80,
+        "text": "================================================================"
+      },
+      {
+        "lineNumber": 81,
+        "text": "総合計レコード"
+      },
+      {
+        "lineNumber": 82,
+        "text": "================================================================"
+      }
+    ],
+    "parseErrors": []
+  },
+  "dependencies": {
+    "referencedFiles": [],
+    "calledPrograms": [],
+    "copyMembers": []
+  },
+  "errors": []
+}
