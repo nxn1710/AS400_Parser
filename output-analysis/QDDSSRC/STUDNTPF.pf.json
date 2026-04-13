@@ -1,0 +1,1040 @@
+{
+  "metadata": {
+    "irVersion": "1.0.0",
+    "sourceType": "DDS_PF",
+    "sourceMember": "STUDNTPF",
+    "sourceFile": "QDDSSRC",
+    "sourceLibrary": "rpg3-student-mgmt",
+    "parseInfo": {
+      "parserVersion": "1.0.0",
+      "parsedAt": "2026-04-13T16:01:46.668965200Z",
+      "parseStatus": "complete",
+      "totalLines": 56,
+      "detectedEncoding": "UTF-8",
+      "errors": [],
+      "warnings": []
+    }
+  },
+  "content": {
+    "sourceLines": [
+      {
+        "lineNumber": 1,
+        "rawText": "     A*================================================================",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 2,
+        "rawText": "     A* ファイル名: STUDNTPF",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 3,
+        "rawText": "     A* 説明      : 学生マスター物理ファイル",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 4,
+        "rawText": "     A* 作成日    : 2026/03/14",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 5,
+        "rawText": "     A* 作成者    : システム開発部",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 6,
+        "rawText": "     A*================================================================",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 7,
+        "rawText": "     A                                      UNIQUE",
+        "specType": "FILE_KEYWORD",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 8,
+        "rawText": "     A          R STUREC                     TEXT('学生マスターレコード')",
+        "specType": "RECORD_FORMAT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 9,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 10,
+        "rawText": "     A*   --- 主キー ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 11,
+        "rawText": "     A            STUID          6A         TEXT('学生ID') +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 12,
+        "rawText": "     A                                      COLHDG('学生' 'ID')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 13,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 14,
+        "rawText": "     A*   --- 基本情報 ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 15,
+        "rawText": "     A            STUNAM        30A         TEXT('学生氏名') +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 16,
+        "rawText": "     A                                      COLHDG('学生' '氏名')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 17,
+        "rawText": "     A            STUKNA        30A         TEXT('学生カナ名') +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 18,
+        "rawText": "     A                                      COLHDG('カナ' '氏名')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 19,
+        "rawText": "     A            STUBDT         8S 0       TEXT('生年月日 YYYYMMDD') +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 20,
+        "rawText": "     A                                      COLHDG('生年' '月日')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 21,
+        "rawText": "     A            STUGND         1A         TEXT('性別 M/F') +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 22,
+        "rawText": "     A                                      COLHDG('性別') +",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 23,
+        "rawText": "     A                                      VALUES('M' 'F')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 24,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 25,
+        "rawText": "     A*   --- 連絡先情報 ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 26,
+        "rawText": "     A            STUADR        50A         TEXT('住所') +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 27,
+        "rawText": "     A                                      COLHDG('住所')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 28,
+        "rawText": "     A            STUTEL        15A         TEXT('電話番号') +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 29,
+        "rawText": "     A                                      COLHDG('電話' '番号')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 30,
+        "rawText": "     A            STUMAL        40A         TEXT('メールアドレス') +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 31,
+        "rawText": "     A                                      COLHDG('メール' 'アドレス')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 32,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 33,
+        "rawText": "     A*   --- 所属情報 ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 34,
+        "rawText": "     A            STUSCL         4A         TEXT('学校コード') +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 35,
+        "rawText": "     A                                      COLHDG('学校' 'コード')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 36,
+        "rawText": "     A            STUYR          4S 0       TEXT('入学年度') +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 37,
+        "rawText": "     A                                      COLHDG('入学' '年度')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 38,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 39,
+        "rawText": "     A*   --- 状態管理 ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 40,
+        "rawText": "     A            STUSTS         1A         TEXT('状態 A=有効 D=削除 G=卒業') +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 41,
+        "rawText": "     A                                      COLHDG('状態') +",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 42,
+        "rawText": "     A                                      DFT('A')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 43,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 44,
+        "rawText": "     A*   --- 監査情報 ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 45,
+        "rawText": "     A            STUADD         8S 0       TEXT('登録日 YYYYMMDD') +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 46,
+        "rawText": "     A                                      COLHDG('登録日')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 47,
+        "rawText": "     A            STUUPD         8S 0       TEXT('更新日 YYYYMMDD') +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 48,
+        "rawText": "     A                                      COLHDG('更新日')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 49,
+        "rawText": "     A            STUADB        10A         TEXT('登録者') +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 50,
+        "rawText": "     A                                      COLHDG('登録者')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 51,
+        "rawText": "     A            STUUPB        10A         TEXT('更新者') +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 52,
+        "rawText": "     A                                      COLHDG('更新者')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 53,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 54,
+        "rawText": "     A*   --- 主キー定義 (複合キー: 学校コード + 学生ID) ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 55,
+        "rawText": "     A          K STUSCL",
+        "specType": "KEY_FIELD",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 56,
+        "rawText": "     A          K STUID",
+        "specType": "KEY_FIELD",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      }
+    ],
+    "fileKeywords": [
+      {
+        "name": "UNIQUE",
+        "rawText": "UNIQUE"
+      }
+    ],
+    "recordFormats": [
+      {
+        "location": {
+          "startLine": 8,
+          "endLine": 8
+        },
+        "rawSourceLine": "     A          R STUREC                     TEXT('学生マスターレコード')",
+        "name": "STUREC",
+        "text": "学生マスターレコード",
+        "keywords": [
+          {
+            "name": "TEXT",
+            "value": "学生マスターレコード",
+            "rawText": "TEXT('学生マスターレコード')"
+          }
+        ],
+        "fields": [
+          {
+            "location": {
+              "startLine": 11,
+              "endLine": 11
+            },
+            "rawSourceLines": [
+              "     A            STUID          6A         TEXT('学生ID') +",
+              "     A                                      COLHDG('学生' 'ID')"
+            ],
+            "name": "STUID",
+            "length": 6,
+            "dataType": "A",
+            "source": "direct",
+            "keywords": [
+              {
+                "name": "TEXT",
+                "value": "学生ID",
+                "rawText": "TEXT('学生ID')"
+              },
+              {
+                "name": "COLHDG",
+                "values": [
+                  "学生",
+                  "ID"
+                ],
+                "rawText": "COLHDG('学生' 'ID')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 15,
+              "endLine": 15
+            },
+            "rawSourceLines": [
+              "     A            STUNAM        30A         TEXT('学生氏名') +",
+              "     A                                      COLHDG('学生' '氏名')"
+            ],
+            "name": "STUNAM",
+            "length": 30,
+            "dataType": "A",
+            "source": "direct",
+            "keywords": [
+              {
+                "name": "TEXT",
+                "value": "学生氏名",
+                "rawText": "TEXT('学生氏名')"
+              },
+              {
+                "name": "COLHDG",
+                "values": [
+                  "学生",
+                  "氏名"
+                ],
+                "rawText": "COLHDG('学生' '氏名')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 17,
+              "endLine": 17
+            },
+            "rawSourceLines": [
+              "     A            STUKNA        30A         TEXT('学生カナ名') +",
+              "     A                                      COLHDG('カナ' '氏名')"
+            ],
+            "name": "STUKNA",
+            "length": 30,
+            "dataType": "A",
+            "source": "direct",
+            "keywords": [
+              {
+                "name": "TEXT",
+                "value": "学生カナ名",
+                "rawText": "TEXT('学生カナ名')"
+              },
+              {
+                "name": "COLHDG",
+                "values": [
+                  "カナ",
+                  "氏名"
+                ],
+                "rawText": "COLHDG('カナ' '氏名')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 19,
+              "endLine": 19
+            },
+            "rawSourceLines": [
+              "     A            STUBDT         8S 0       TEXT('生年月日 YYYYMMDD') +",
+              "     A                                      COLHDG('生年' '月日')"
+            ],
+            "name": "STUBDT",
+            "length": 8,
+            "dataType": "S",
+            "decimalPositions": 0,
+            "source": "direct",
+            "keywords": [
+              {
+                "name": "TEXT",
+                "value": "生年月日 YYYYMMDD",
+                "rawText": "TEXT('生年月日 YYYYMMDD')"
+              },
+              {
+                "name": "COLHDG",
+                "values": [
+                  "生年",
+                  "月日"
+                ],
+                "rawText": "COLHDG('生年' '月日')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 21,
+              "endLine": 21
+            },
+            "rawSourceLines": [
+              "     A            STUGND         1A         TEXT('性別 M/F') +",
+              "     A                                      COLHDG('性別') +",
+              "     A                                      VALUES('M' 'F')"
+            ],
+            "name": "STUGND",
+            "length": 1,
+            "dataType": "A",
+            "source": "direct",
+            "keywords": [
+              {
+                "name": "TEXT",
+                "value": "性別 M/F",
+                "rawText": "TEXT('性別 M/F')"
+              },
+              {
+                "name": "COLHDG",
+                "value": "性別",
+                "rawText": "COLHDG('性別')"
+              },
+              {
+                "name": "VALUES",
+                "values": [
+                  "M",
+                  "F"
+                ],
+                "rawText": "VALUES('M' 'F')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 26,
+              "endLine": 26
+            },
+            "rawSourceLines": [
+              "     A            STUADR        50A         TEXT('住所') +",
+              "     A                                      COLHDG('住所')"
+            ],
+            "name": "STUADR",
+            "length": 50,
+            "dataType": "A",
+            "source": "direct",
+            "keywords": [
+              {
+                "name": "TEXT",
+                "value": "住所",
+                "rawText": "TEXT('住所')"
+              },
+              {
+                "name": "COLHDG",
+                "value": "住所",
+                "rawText": "COLHDG('住所')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 28,
+              "endLine": 28
+            },
+            "rawSourceLines": [
+              "     A            STUTEL        15A         TEXT('電話番号') +",
+              "     A                                      COLHDG('電話' '番号')"
+            ],
+            "name": "STUTEL",
+            "length": 15,
+            "dataType": "A",
+            "source": "direct",
+            "keywords": [
+              {
+                "name": "TEXT",
+                "value": "電話番号",
+                "rawText": "TEXT('電話番号')"
+              },
+              {
+                "name": "COLHDG",
+                "values": [
+                  "電話",
+                  "番号"
+                ],
+                "rawText": "COLHDG('電話' '番号')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 30,
+              "endLine": 30
+            },
+            "rawSourceLines": [
+              "     A            STUMAL        40A         TEXT('メールアドレス') +",
+              "     A                                      COLHDG('メール' 'アドレス')"
+            ],
+            "name": "STUMAL",
+            "length": 40,
+            "dataType": "A",
+            "source": "direct",
+            "keywords": [
+              {
+                "name": "TEXT",
+                "value": "メールアドレス",
+                "rawText": "TEXT('メールアドレス')"
+              },
+              {
+                "name": "COLHDG",
+                "values": [
+                  "メール",
+                  "アドレス"
+                ],
+                "rawText": "COLHDG('メール' 'アドレス')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 34,
+              "endLine": 34
+            },
+            "rawSourceLines": [
+              "     A            STUSCL         4A         TEXT('学校コード') +",
+              "     A                                      COLHDG('学校' 'コード')"
+            ],
+            "name": "STUSCL",
+            "length": 4,
+            "dataType": "A",
+            "source": "direct",
+            "keywords": [
+              {
+                "name": "TEXT",
+                "value": "学校コード",
+                "rawText": "TEXT('学校コード')"
+              },
+              {
+                "name": "COLHDG",
+                "values": [
+                  "学校",
+                  "コード"
+                ],
+                "rawText": "COLHDG('学校' 'コード')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 36,
+              "endLine": 36
+            },
+            "rawSourceLines": [
+              "     A            STUYR          4S 0       TEXT('入学年度') +",
+              "     A                                      COLHDG('入学' '年度')"
+            ],
+            "name": "STUYR",
+            "length": 4,
+            "dataType": "S",
+            "decimalPositions": 0,
+            "source": "direct",
+            "keywords": [
+              {
+                "name": "TEXT",
+                "value": "入学年度",
+                "rawText": "TEXT('入学年度')"
+              },
+              {
+                "name": "COLHDG",
+                "values": [
+                  "入学",
+                  "年度"
+                ],
+                "rawText": "COLHDG('入学' '年度')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 40,
+              "endLine": 40
+            },
+            "rawSourceLines": [
+              "     A            STUSTS         1A         TEXT('状態 A=有効 D=削除 G=卒業') +",
+              "     A                                      COLHDG('状態') +",
+              "     A                                      DFT('A')"
+            ],
+            "name": "STUSTS",
+            "length": 1,
+            "dataType": "A",
+            "source": "direct",
+            "keywords": [
+              {
+                "name": "TEXT",
+                "value": "状態 A=有効 D=削除 G=卒業",
+                "rawText": "TEXT('状態 A=有効 D=削除 G=卒業')"
+              },
+              {
+                "name": "COLHDG",
+                "value": "状態",
+                "rawText": "COLHDG('状態')"
+              },
+              {
+                "name": "DFT",
+                "value": "A",
+                "rawText": "DFT('A')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 45,
+              "endLine": 45
+            },
+            "rawSourceLines": [
+              "     A            STUADD         8S 0       TEXT('登録日 YYYYMMDD') +",
+              "     A                                      COLHDG('登録日')"
+            ],
+            "name": "STUADD",
+            "length": 8,
+            "dataType": "S",
+            "decimalPositions": 0,
+            "source": "direct",
+            "keywords": [
+              {
+                "name": "TEXT",
+                "value": "登録日 YYYYMMDD",
+                "rawText": "TEXT('登録日 YYYYMMDD')"
+              },
+              {
+                "name": "COLHDG",
+                "value": "登録日",
+                "rawText": "COLHDG('登録日')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 47,
+              "endLine": 47
+            },
+            "rawSourceLines": [
+              "     A            STUUPD         8S 0       TEXT('更新日 YYYYMMDD') +",
+              "     A                                      COLHDG('更新日')"
+            ],
+            "name": "STUUPD",
+            "length": 8,
+            "dataType": "S",
+            "decimalPositions": 0,
+            "source": "direct",
+            "keywords": [
+              {
+                "name": "TEXT",
+                "value": "更新日 YYYYMMDD",
+                "rawText": "TEXT('更新日 YYYYMMDD')"
+              },
+              {
+                "name": "COLHDG",
+                "value": "更新日",
+                "rawText": "COLHDG('更新日')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 49,
+              "endLine": 49
+            },
+            "rawSourceLines": [
+              "     A            STUADB        10A         TEXT('登録者') +",
+              "     A                                      COLHDG('登録者')"
+            ],
+            "name": "STUADB",
+            "length": 10,
+            "dataType": "A",
+            "source": "direct",
+            "keywords": [
+              {
+                "name": "TEXT",
+                "value": "登録者",
+                "rawText": "TEXT('登録者')"
+              },
+              {
+                "name": "COLHDG",
+                "value": "登録者",
+                "rawText": "COLHDG('登録者')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 51,
+              "endLine": 51
+            },
+            "rawSourceLines": [
+              "     A            STUUPB        10A         TEXT('更新者') +",
+              "     A                                      COLHDG('更新者')"
+            ],
+            "name": "STUUPB",
+            "length": 10,
+            "dataType": "A",
+            "source": "direct",
+            "keywords": [
+              {
+                "name": "TEXT",
+                "value": "更新者",
+                "rawText": "TEXT('更新者')"
+              },
+              {
+                "name": "COLHDG",
+                "value": "更新者",
+                "rawText": "COLHDG('更新者')"
+              }
+            ]
+          }
+        ],
+        "keys": [
+          {
+            "location": {
+              "startLine": 55,
+              "endLine": 55
+            },
+            "rawSourceLine": "     A          K STUSCL",
+            "fieldName": "STUSCL",
+            "sortOrder": "ascending",
+            "keywords": []
+          },
+          {
+            "location": {
+              "startLine": 56,
+              "endLine": 56
+            },
+            "rawSourceLine": "     A          K STUID",
+            "fieldName": "STUID",
+            "sortOrder": "ascending",
+            "keywords": []
+          }
+        ]
+      }
+    ],
+    "comments": [
+      {
+        "lineNumber": 1,
+        "text": "================================================================"
+      },
+      {
+        "lineNumber": 2,
+        "text": "ファイル名: STUDNTPF"
+      },
+      {
+        "lineNumber": 3,
+        "text": "説明      : 学生マスター物理ファイル"
+      },
+      {
+        "lineNumber": 4,
+        "text": "作成日    : 2026/03/14"
+      },
+      {
+        "lineNumber": 5,
+        "text": "作成者    : システム開発部"
+      },
+      {
+        "lineNumber": 6,
+        "text": "================================================================"
+      },
+      {
+        "lineNumber": 9,
+        "text": ""
+      },
+      {
+        "lineNumber": 10,
+        "text": "--- 主キー ---"
+      },
+      {
+        "lineNumber": 13,
+        "text": ""
+      },
+      {
+        "lineNumber": 14,
+        "text": "--- 基本情報 ---"
+      },
+      {
+        "lineNumber": 24,
+        "text": ""
+      },
+      {
+        "lineNumber": 25,
+        "text": "--- 連絡先情報 ---"
+      },
+      {
+        "lineNumber": 32,
+        "text": ""
+      },
+      {
+        "lineNumber": 33,
+        "text": "--- 所属情報 ---"
+      },
+      {
+        "lineNumber": 38,
+        "text": ""
+      },
+      {
+        "lineNumber": 39,
+        "text": "--- 状態管理 ---"
+      },
+      {
+        "lineNumber": 43,
+        "text": ""
+      },
+      {
+        "lineNumber": 44,
+        "text": "--- 監査情報 ---"
+      },
+      {
+        "lineNumber": 53,
+        "text": ""
+      },
+      {
+        "lineNumber": 54,
+        "text": "--- 主キー定義 (複合キー: 学校コード + 学生ID) ---"
+      }
+    ],
+    "parseErrors": []
+  },
+  "dependencies": {
+    "referencedFiles": [],
+    "calledPrograms": [],
+    "copyMembers": []
+  },
+  "errors": []
+}

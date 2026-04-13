@@ -1,0 +1,214 @@
+{
+  "metadata": {
+    "irVersion": "1.0.0",
+    "sourceType": "DDS_LF",
+    "sourceMember": "SCHOOLL1",
+    "sourceFile": "QDDSSRC",
+    "sourceLibrary": "rpg3-student-mgmt",
+    "parseInfo": {
+      "parserVersion": "1.0.0",
+      "parsedAt": "2026-04-13T16:01:46.653090800Z",
+      "parseStatus": "complete",
+      "totalLines": 12,
+      "detectedEncoding": "UTF-8",
+      "errors": [],
+      "warnings": []
+    }
+  },
+  "content": {
+    "sourceLines": [
+      {
+        "lineNumber": 1,
+        "rawText": "     A*================================================================",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 2,
+        "rawText": "     A* ファイル名: SCHOOLL1",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 3,
+        "rawText": "     A* 説明      : 学校論理ファイル（学校名順）",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 4,
+        "rawText": "     A* 基礎PF    : SCHOOLPF",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 5,
+        "rawText": "     A* 作成日    : 2026/03/14",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 6,
+        "rawText": "     A* 作成者    : システム開発部",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 7,
+        "rawText": "     A*================================================================",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 8,
+        "rawText": "     A          R SCLREC                     PFILE(SCHOOLPF)",
+        "specType": "RECORD_FORMAT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 9,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 10,
+        "rawText": "     A*   --- アクセスパス: 学校名順 ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 11,
+        "rawText": "     A          K SCLNAM",
+        "specType": "KEY_FIELD",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 12,
+        "rawText": "     A          K SCLID",
+        "specType": "KEY_FIELD",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      }
+    ],
+    "fileKeywords": [],
+    "recordFormats": [
+      {
+        "location": {
+          "startLine": 8,
+          "endLine": 8
+        },
+        "rawSourceLine": "     A          R SCLREC                     PFILE(SCHOOLPF)",
+        "name": "SCLREC",
+        "lfType": "simple",
+        "pfile": "SCHOOLPF",
+        "keywords": [
+          {
+            "name": "PFILE",
+            "value": "SCHOOLPF",
+            "rawText": "PFILE(SCHOOLPF)"
+          }
+        ],
+        "fields": [],
+        "keys": [
+          {
+            "location": {
+              "startLine": 11,
+              "endLine": 11
+            },
+            "rawSourceLine": "     A          K SCLNAM",
+            "fieldName": "SCLNAM",
+            "sortOrder": "ascending",
+            "keywords": []
+          },
+          {
+            "location": {
+              "startLine": 12,
+              "endLine": 12
+            },
+            "rawSourceLine": "     A          K SCLID",
+            "fieldName": "SCLID",
+            "sortOrder": "ascending",
+            "keywords": []
+          }
+        ],
+        "selectOmit": [],
+        "joinSpecs": []
+      }
+    ],
+    "comments": [
+      {
+        "lineNumber": 1,
+        "text": "================================================================"
+      },
+      {
+        "lineNumber": 2,
+        "text": "ファイル名: SCHOOLL1"
+      },
+      {
+        "lineNumber": 3,
+        "text": "説明      : 学校論理ファイル（学校名順）"
+      },
+      {
+        "lineNumber": 4,
+        "text": "基礎PF    : SCHOOLPF"
+      },
+      {
+        "lineNumber": 5,
+        "text": "作成日    : 2026/03/14"
+      },
+      {
+        "lineNumber": 6,
+        "text": "作成者    : システム開発部"
+      },
+      {
+        "lineNumber": 7,
+        "text": "================================================================"
+      },
+      {
+        "lineNumber": 9,
+        "text": ""
+      },
+      {
+        "lineNumber": 10,
+        "text": "--- アクセスパス: 学校名順 ---"
+      }
+    ],
+    "parseErrors": []
+  },
+  "dependencies": {
+    "referencedFiles": [
+      {
+        "name": "SCHOOLPF",
+        "referenceType": "physical-file",
+        "locations": []
+      }
+    ],
+    "calledPrograms": [],
+    "copyMembers": []
+  },
+  "errors": []
+}

@@ -17,8 +17,14 @@ import argparse
 import json
 import subprocess
 import sys
+import io
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor, as_completed
+
+# Force UTF-8 encoding for stdout/stderr on Windows to support symbols
+if sys.platform == "win32":
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8")
 
 # Default JAR location (relative to this script)
 DEFAULT_JAR = Path(__file__).parent.parent / "parser-core" / "build" / "libs" / "as400-parser-core-1.0.0-SNAPSHOT-all.jar"

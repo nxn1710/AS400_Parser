@@ -1,0 +1,3132 @@
+{
+  "metadata": {
+    "irVersion": "1.0.0",
+    "sourceType": "RPG3",
+    "sourceMember": "MNUPRG",
+    "sourceFile": "QRPGSRC",
+    "sourceLibrary": "rpg3-student-mgmt",
+    "parseInfo": {
+      "parserVersion": "1.0.0",
+      "parsedAt": "2026-04-13T16:01:46.713561200Z",
+      "parseStatus": "complete",
+      "totalLines": 128,
+      "detectedEncoding": "UTF-8",
+      "errors": [],
+      "warnings": []
+    }
+  },
+  "content": {
+    "headerSpecs": [],
+    "fileSpecs": [
+      {
+        "rawSourceLine": "     FMNUDSPF CF  E                    WORKSTN",
+        "location": {
+          "startLine": 19,
+          "endLine": 19
+        },
+        "parseQuality": "full",
+        "sourceSequence": "",
+        "fileName": "MNUDSPF",
+        "fileType": "C",
+        "fileDesignation": "F",
+        "endOfFile": "",
+        "sequence": "",
+        "fileFormat": "E",
+        "limits": "",
+        "recordAddressType": "",
+        "fileOrganization": "",
+        "overflowIndicator": "",
+        "extensionCode": "",
+        "device": "WORKSTN",
+        "continuationIndicator": "",
+        "fileAddition": "",
+        "fileCondition": ""
+      }
+    ],
+    "extensionSpecs": [],
+    "lineCounterSpecs": [],
+    "inputSpecs": [
+      {
+        "rawSourceLine": "     I            SDS",
+        "location": {
+          "startLine": 24,
+          "endLine": 24
+        },
+        "parseQuality": "full",
+        "sourceSequence": "",
+        "specLevel": "recordIdentification",
+        "option": "SDS"
+      }
+    ],
+    "calculationSpecs": [
+      {
+        "nodeType": "doWhileBlock",
+        "location": {
+          "startLine": 50,
+          "endLine": 50
+        },
+        "rawSourceLine": "     C           *IN03     DOWEQ*OFF",
+        "formType": "C",
+        "conditioningIndicators": {
+          "indicators": []
+        },
+        "condition": {
+          "nodeType": "indicator",
+          "rawText": "*IN03",
+          "indicator": "03",
+          "category": "numeric"
+        },
+        "comparisonType": "EQ",
+        "comparisonValue": {
+          "nodeType": "figurativeConstant",
+          "rawText": "*OFF",
+          "constant": "*OFF"
+        },
+        "resultingIndicators": {
+          "high": "",
+          "low": "",
+          "equal": ""
+        },
+        "bodyOps": [
+          {
+            "nodeType": "operation",
+            "location": {
+              "startLine": 53,
+              "endLine": 53
+            },
+            "rawSourceLine": "     C                     MOVEL*BLANKS   MNUERR",
+            "formType": "C",
+            "conditioningIndicators": {
+              "indicators": []
+            },
+            "opcode": "MOVEL",
+            "extendedOpcode": "",
+            "factor2": {
+              "nodeType": "figurativeConstant",
+              "rawText": "*BLANKS",
+              "constant": "*BLANKS"
+            },
+            "resultField": {
+              "nodeType": "identifier",
+              "rawText": "MNUERR",
+              "name": "MNUERR",
+              "isArray": false,
+              "dataType": "A"
+            },
+            "resultingIndicators": {
+              "high": "",
+              "low": "",
+              "equal": ""
+            }
+          },
+          {
+            "nodeType": "operation",
+            "location": {
+              "startLine": 56,
+              "endLine": 56
+            },
+            "rawSourceLine": "     C                     EXFMTMNUREC",
+            "formType": "C",
+            "conditioningIndicators": {
+              "indicators": []
+            },
+            "opcode": "EXFMT",
+            "extendedOpcode": "",
+            "factor2": {
+              "nodeType": "identifier",
+              "rawText": "MNUREC",
+              "name": "MNUREC",
+              "isArray": false
+            },
+            "resultingIndicators": {
+              "high": "",
+              "low": "",
+              "equal": ""
+            }
+          },
+          {
+            "nodeType": "conditionalBlock",
+            "location": {
+              "startLine": 59,
+              "endLine": 59
+            },
+            "rawSourceLine": "     C           *IN03     IFEQ *ON",
+            "formType": "C",
+            "conditioningIndicators": {
+              "indicators": []
+            },
+            "condition": {
+              "nodeType": "indicator",
+              "rawText": "*IN03",
+              "indicator": "03",
+              "category": "numeric"
+            },
+            "comparisonType": "EQ",
+            "comparisonValue": {
+              "nodeType": "figurativeConstant",
+              "rawText": "*ON",
+              "constant": "*ON"
+            },
+            "resultingIndicators": {
+              "high": "",
+              "low": "",
+              "equal": ""
+            },
+            "thenOps": [
+              {
+                "nodeType": "gotoNode",
+                "location": {
+                  "startLine": 60,
+                  "endLine": 60
+                },
+                "rawSourceLine": "     C                     GOTO EXIT",
+                "formType": "C",
+                "conditioningIndicators": {
+                  "indicators": []
+                },
+                "targetLabel": "EXIT",
+                "resultingIndicators": {
+                  "high": "",
+                  "low": "",
+                  "equal": ""
+                }
+              }
+            ],
+            "elseOps": [],
+            "endStatement": {
+              "nodeType": "operation",
+              "location": {
+                "startLine": 61,
+                "endLine": 61
+              },
+              "rawSourceLine": "     C                     ENDIF",
+              "formType": "C",
+              "conditioningIndicators": {
+                "indicators": []
+              },
+              "opcode": "ENDIF",
+              "extendedOpcode": "",
+              "resultingIndicators": {
+                "high": "",
+                "low": "",
+                "equal": ""
+              }
+            }
+          },
+          {
+            "nodeType": "conditionalBlock",
+            "location": {
+              "startLine": 64,
+              "endLine": 64
+            },
+            "rawSourceLine": "     C           *IN12     IFEQ *ON",
+            "formType": "C",
+            "conditioningIndicators": {
+              "indicators": []
+            },
+            "condition": {
+              "nodeType": "indicator",
+              "rawText": "*IN12",
+              "indicator": "12",
+              "category": "numeric"
+            },
+            "comparisonType": "EQ",
+            "comparisonValue": {
+              "nodeType": "figurativeConstant",
+              "rawText": "*ON",
+              "constant": "*ON"
+            },
+            "resultingIndicators": {
+              "high": "",
+              "low": "",
+              "equal": ""
+            },
+            "thenOps": [
+              {
+                "nodeType": "gotoNode",
+                "location": {
+                  "startLine": 65,
+                  "endLine": 65
+                },
+                "rawSourceLine": "     C                     GOTO EXIT",
+                "formType": "C",
+                "conditioningIndicators": {
+                  "indicators": []
+                },
+                "targetLabel": "EXIT",
+                "resultingIndicators": {
+                  "high": "",
+                  "low": "",
+                  "equal": ""
+                }
+              }
+            ],
+            "elseOps": [],
+            "endStatement": {
+              "nodeType": "operation",
+              "location": {
+                "startLine": 66,
+                "endLine": 66
+              },
+              "rawSourceLine": "     C                     ENDIF",
+              "formType": "C",
+              "conditioningIndicators": {
+                "indicators": []
+              },
+              "opcode": "ENDIF",
+              "extendedOpcode": "",
+              "resultingIndicators": {
+                "high": "",
+                "low": "",
+                "equal": ""
+              }
+            }
+          },
+          {
+            "nodeType": "caseBlock",
+            "location": {
+              "startLine": 72,
+              "endLine": 72
+            },
+            "rawSourceLine": "     C           MNUOPT    CASEQ'1'       OPT01",
+            "formType": "C",
+            "conditioningIndicators": {
+              "indicators": []
+            },
+            "cases": [
+              {
+                "comparisonType": "EQ",
+                "comparisonValue": {
+                  "nodeType": "literal",
+                  "rawText": "'1'",
+                  "value": "1",
+                  "dataType": "A"
+                },
+                "subroutineName": {
+                  "nodeType": "identifier",
+                  "rawText": "OPT01",
+                  "name": "OPT01",
+                  "isArray": false
+                },
+                "location": {
+                  "startLine": 72,
+                  "endLine": 72
+                }
+              },
+              {
+                "comparisonType": "EQ",
+                "comparisonValue": {
+                  "nodeType": "literal",
+                  "rawText": "'2'",
+                  "value": "2",
+                  "dataType": "A"
+                },
+                "subroutineName": {
+                  "nodeType": "identifier",
+                  "rawText": "OPT02",
+                  "name": "OPT02",
+                  "isArray": false
+                },
+                "location": {
+                  "startLine": 73,
+                  "endLine": 73
+                }
+              },
+              {
+                "comparisonType": "EQ",
+                "comparisonValue": {
+                  "nodeType": "literal",
+                  "rawText": "'3'",
+                  "value": "3",
+                  "dataType": "A"
+                },
+                "subroutineName": {
+                  "nodeType": "identifier",
+                  "rawText": "OPT03",
+                  "name": "OPT03",
+                  "isArray": false
+                },
+                "location": {
+                  "startLine": 74,
+                  "endLine": 74
+                }
+              },
+              {
+                "comparisonType": "EQ",
+                "comparisonValue": {
+                  "nodeType": "literal",
+                  "rawText": "'9'",
+                  "value": "9",
+                  "dataType": "A"
+                },
+                "subroutineName": {
+                  "nodeType": "identifier",
+                  "rawText": "OPT09",
+                  "name": "OPT09",
+                  "isArray": false
+                },
+                "location": {
+                  "startLine": 75,
+                  "endLine": 75
+                }
+              },
+              {
+                "subroutineName": {
+                  "nodeType": "identifier",
+                  "rawText": "OPTER",
+                  "name": "OPTER",
+                  "isArray": false
+                },
+                "location": {
+                  "startLine": 76,
+                  "endLine": 76
+                }
+              }
+            ],
+            "resultingIndicators": {
+              "high": "",
+              "low": "",
+              "equal": ""
+            },
+            "endStatement": {
+              "nodeType": "operation",
+              "location": {
+                "startLine": 77,
+                "endLine": 77
+              },
+              "rawSourceLine": "     C                     ENDCS",
+              "formType": "C",
+              "conditioningIndicators": {
+                "indicators": []
+              },
+              "opcode": "ENDCS",
+              "extendedOpcode": "",
+              "resultingIndicators": {
+                "high": "",
+                "low": "",
+                "equal": ""
+              }
+            }
+          },
+          {
+            "nodeType": "operation",
+            "location": {
+              "startLine": 80,
+              "endLine": 80
+            },
+            "rawSourceLine": "     C                     MOVEL*BLANKS   MNUOPT",
+            "formType": "C",
+            "conditioningIndicators": {
+              "indicators": []
+            },
+            "opcode": "MOVEL",
+            "extendedOpcode": "",
+            "factor2": {
+              "nodeType": "figurativeConstant",
+              "rawText": "*BLANKS",
+              "constant": "*BLANKS"
+            },
+            "resultField": {
+              "nodeType": "identifier",
+              "rawText": "MNUOPT",
+              "name": "MNUOPT",
+              "isArray": false,
+              "dataType": "A"
+            },
+            "resultingIndicators": {
+              "high": "",
+              "low": "",
+              "equal": ""
+            }
+          }
+        ],
+        "endStatement": {
+          "nodeType": "operation",
+          "location": {
+            "startLine": 82,
+            "endLine": 82
+          },
+          "rawSourceLine": "     C                     ENDDO",
+          "formType": "C",
+          "conditioningIndicators": {
+            "indicators": []
+          },
+          "opcode": "ENDDO",
+          "extendedOpcode": "",
+          "resultingIndicators": {
+            "high": "",
+            "low": "",
+            "equal": ""
+          }
+        }
+      },
+      {
+        "nodeType": "labelNode",
+        "location": {
+          "startLine": 87,
+          "endLine": 87
+        },
+        "rawSourceLine": "     C           EXIT      TAG",
+        "formType": "C",
+        "conditioningIndicators": {
+          "indicators": []
+        },
+        "name": "EXIT",
+        "resultingIndicators": {
+          "high": "",
+          "low": "",
+          "equal": ""
+        }
+      },
+      {
+        "nodeType": "operation",
+        "location": {
+          "startLine": 88,
+          "endLine": 88
+        },
+        "rawSourceLine": "     C                     SETON                         LR",
+        "formType": "C",
+        "conditioningIndicators": {
+          "indicators": []
+        },
+        "opcode": "SETON",
+        "extendedOpcode": "",
+        "resultingIndicators": {
+          "equal": {
+            "name": "LR",
+            "type": "special",
+            "meaning": "set"
+          }
+        }
+      },
+      {
+        "nodeType": "operation",
+        "location": {
+          "startLine": 89,
+          "endLine": 89
+        },
+        "rawSourceLine": "     C                     RETRN",
+        "formType": "C",
+        "conditioningIndicators": {
+          "indicators": []
+        },
+        "opcode": "RETRN",
+        "extendedOpcode": "",
+        "resultingIndicators": {
+          "high": "",
+          "low": "",
+          "equal": ""
+        }
+      }
+    ],
+    "outputSpecs": [],
+    "dataStructures": [
+      {
+        "name": "SDS",
+        "rawSourceLine": "     I            SDS",
+        "location": {
+          "startLine": 24,
+          "endLine": 24
+        },
+        "sourceSequence": "",
+        "type": "programStatusDS",
+        "subfields": [
+          {
+            "rawSourceLine": "     I                                        1  10 SDPGM",
+            "location": {
+              "startLine": 26,
+              "endLine": 26
+            },
+            "sourceSequence": "",
+            "fieldName": "SDPGM",
+            "fromPosition": 1,
+            "toPosition": 10,
+            "dataFormat": "",
+            "controlLevel": "",
+            "matchingFields": "",
+            "fieldRecordRelation": "",
+            "plusIndicator": "",
+            "minusIndicator": "",
+            "zeroBlankIndicator": ""
+          },
+          {
+            "rawSourceLine": "     I                                       11  15 SDSTS",
+            "location": {
+              "startLine": 28,
+              "endLine": 28
+            },
+            "sourceSequence": "",
+            "fieldName": "SDSTS",
+            "fromPosition": 11,
+            "toPosition": 15,
+            "dataFormat": "",
+            "controlLevel": "",
+            "matchingFields": "",
+            "fieldRecordRelation": "",
+            "plusIndicator": "",
+            "minusIndicator": "",
+            "zeroBlankIndicator": ""
+          },
+          {
+            "rawSourceLine": "     I                                       16  20 SDPSTS",
+            "location": {
+              "startLine": 30,
+              "endLine": 30
+            },
+            "sourceSequence": "",
+            "fieldName": "SDPSTS",
+            "fromPosition": 16,
+            "toPosition": 20,
+            "dataFormat": "",
+            "controlLevel": "",
+            "matchingFields": "",
+            "fieldRecordRelation": "",
+            "plusIndicator": "",
+            "minusIndicator": "",
+            "zeroBlankIndicator": ""
+          },
+          {
+            "rawSourceLine": "     I                                       21  28 SDSLIN",
+            "location": {
+              "startLine": 32,
+              "endLine": 32
+            },
+            "sourceSequence": "",
+            "fieldName": "SDSLIN",
+            "fromPosition": 21,
+            "toPosition": 28,
+            "dataFormat": "",
+            "controlLevel": "",
+            "matchingFields": "",
+            "fieldRecordRelation": "",
+            "plusIndicator": "",
+            "minusIndicator": "",
+            "zeroBlankIndicator": ""
+          },
+          {
+            "rawSourceLine": "     I                                       29  36 SDRTN",
+            "location": {
+              "startLine": 34,
+              "endLine": 34
+            },
+            "sourceSequence": "",
+            "fieldName": "SDRTN",
+            "fromPosition": 29,
+            "toPosition": 36,
+            "dataFormat": "",
+            "controlLevel": "",
+            "matchingFields": "",
+            "fieldRecordRelation": "",
+            "plusIndicator": "",
+            "minusIndicator": "",
+            "zeroBlankIndicator": ""
+          },
+          {
+            "rawSourceLine": "     I                                       40  42 SDEXTP",
+            "location": {
+              "startLine": 36,
+              "endLine": 36
+            },
+            "sourceSequence": "",
+            "fieldName": "SDEXTP",
+            "fromPosition": 40,
+            "toPosition": 42,
+            "dataFormat": "",
+            "controlLevel": "",
+            "matchingFields": "",
+            "fieldRecordRelation": "",
+            "plusIndicator": "",
+            "minusIndicator": "",
+            "zeroBlankIndicator": ""
+          },
+          {
+            "rawSourceLine": "     I                                       43  46 SDEXNB",
+            "location": {
+              "startLine": 38,
+              "endLine": 38
+            },
+            "sourceSequence": "",
+            "fieldName": "SDEXNB",
+            "fromPosition": 43,
+            "toPosition": 46,
+            "dataFormat": "",
+            "controlLevel": "",
+            "matchingFields": "",
+            "fieldRecordRelation": "",
+            "plusIndicator": "",
+            "minusIndicator": "",
+            "zeroBlankIndicator": ""
+          },
+          {
+            "rawSourceLine": "     I                                      244 253 SDJOB",
+            "location": {
+              "startLine": 40,
+              "endLine": 40
+            },
+            "sourceSequence": "",
+            "fieldName": "SDJOB",
+            "fromPosition": 244,
+            "toPosition": 253,
+            "dataFormat": "",
+            "controlLevel": "",
+            "matchingFields": "",
+            "fieldRecordRelation": "",
+            "plusIndicator": "",
+            "minusIndicator": "",
+            "zeroBlankIndicator": ""
+          },
+          {
+            "rawSourceLine": "     I                                      254 263 SDUSER",
+            "location": {
+              "startLine": 42,
+              "endLine": 42
+            },
+            "sourceSequence": "",
+            "fieldName": "SDUSER",
+            "fromPosition": 254,
+            "toPosition": 263,
+            "dataFormat": "",
+            "controlLevel": "",
+            "matchingFields": "",
+            "fieldRecordRelation": "",
+            "plusIndicator": "",
+            "minusIndicator": "",
+            "zeroBlankIndicator": ""
+          },
+          {
+            "rawSourceLine": "     I                                      264 269 SDJNBR",
+            "location": {
+              "startLine": 44,
+              "endLine": 44
+            },
+            "sourceSequence": "",
+            "fieldName": "SDJNBR",
+            "fromPosition": 264,
+            "toPosition": 269,
+            "dataFormat": "",
+            "controlLevel": "",
+            "matchingFields": "",
+            "fieldRecordRelation": "",
+            "plusIndicator": "",
+            "minusIndicator": "",
+            "zeroBlankIndicator": ""
+          }
+        ]
+      }
+    ],
+    "symbolTable": [
+      {
+        "name": "SDPGM",
+        "dataType": "A",
+        "length": 10,
+        "definedIn": "dataStructure",
+        "definedAtLine": 26,
+        "isDataStructure": true,
+        "dataStructureName": "SDS"
+      },
+      {
+        "name": "SDSTS",
+        "dataType": "A",
+        "length": 5,
+        "definedIn": "dataStructure",
+        "definedAtLine": 28,
+        "isDataStructure": true,
+        "dataStructureName": "SDS"
+      },
+      {
+        "name": "SDPSTS",
+        "dataType": "A",
+        "length": 5,
+        "definedIn": "dataStructure",
+        "definedAtLine": 30,
+        "isDataStructure": true,
+        "dataStructureName": "SDS"
+      },
+      {
+        "name": "SDSLIN",
+        "dataType": "A",
+        "length": 8,
+        "definedIn": "dataStructure",
+        "definedAtLine": 32,
+        "isDataStructure": true,
+        "dataStructureName": "SDS"
+      },
+      {
+        "name": "SDRTN",
+        "dataType": "A",
+        "length": 8,
+        "definedIn": "dataStructure",
+        "definedAtLine": 34,
+        "isDataStructure": true,
+        "dataStructureName": "SDS"
+      },
+      {
+        "name": "SDEXTP",
+        "dataType": "A",
+        "length": 3,
+        "definedIn": "dataStructure",
+        "definedAtLine": 36,
+        "isDataStructure": true,
+        "dataStructureName": "SDS"
+      },
+      {
+        "name": "SDEXNB",
+        "dataType": "A",
+        "length": 4,
+        "definedIn": "dataStructure",
+        "definedAtLine": 38,
+        "isDataStructure": true,
+        "dataStructureName": "SDS"
+      },
+      {
+        "name": "SDJOB",
+        "dataType": "A",
+        "length": 10,
+        "definedIn": "dataStructure",
+        "definedAtLine": 40,
+        "isDataStructure": true,
+        "dataStructureName": "SDS"
+      },
+      {
+        "name": "SDUSER",
+        "dataType": "A",
+        "length": 10,
+        "definedIn": "dataStructure",
+        "definedAtLine": 42,
+        "isDataStructure": true,
+        "dataStructureName": "SDS"
+      },
+      {
+        "name": "SDJNBR",
+        "dataType": "A",
+        "length": 6,
+        "definedIn": "dataStructure",
+        "definedAtLine": 44,
+        "isDataStructure": true,
+        "dataStructureName": "SDS"
+      },
+      {
+        "name": "MNUERR",
+        "dataType": "A",
+        "definedIn": "resultField",
+        "definedAtLine": 53,
+        "isDataStructure": false
+      },
+      {
+        "name": "MNUOPT",
+        "dataType": "A",
+        "definedIn": "resultField",
+        "definedAtLine": 80,
+        "isDataStructure": false
+      },
+      {
+        "name": "PMSCL",
+        "dataType": "A",
+        "definedIn": "resultField",
+        "definedAtLine": 95,
+        "isDataStructure": false
+      },
+      {
+        "name": "PMSTID",
+        "dataType": "A",
+        "definedIn": "resultField",
+        "definedAtLine": 96,
+        "isDataStructure": false
+      }
+    ],
+    "subroutines": [
+      {
+        "nodeType": "subroutineBlock",
+        "location": {
+          "startLine": 94,
+          "endLine": 94
+        },
+        "rawSourceLine": "     C           OPT01     BEGSR",
+        "formType": "C",
+        "conditioningIndicators": {
+          "indicators": []
+        },
+        "name": "OPT01",
+        "resultingIndicators": {
+          "high": "",
+          "low": "",
+          "equal": ""
+        },
+        "operations": [
+          {
+            "nodeType": "operation",
+            "location": {
+              "startLine": 95,
+              "endLine": 95
+            },
+            "rawSourceLine": "     C                     MOVEL*BLANKS   PMSCL",
+            "formType": "C",
+            "conditioningIndicators": {
+              "indicators": []
+            },
+            "opcode": "MOVEL",
+            "extendedOpcode": "",
+            "factor2": {
+              "nodeType": "figurativeConstant",
+              "rawText": "*BLANKS",
+              "constant": "*BLANKS"
+            },
+            "resultField": {
+              "nodeType": "identifier",
+              "rawText": "PMSCL",
+              "name": "PMSCL",
+              "isArray": false,
+              "dataType": "A"
+            },
+            "resultingIndicators": {
+              "high": "",
+              "low": "",
+              "equal": ""
+            }
+          },
+          {
+            "nodeType": "operation",
+            "location": {
+              "startLine": 96,
+              "endLine": 96
+            },
+            "rawSourceLine": "     C                     MOVEL*BLANKS   PMSTID",
+            "formType": "C",
+            "conditioningIndicators": {
+              "indicators": []
+            },
+            "opcode": "MOVEL",
+            "extendedOpcode": "",
+            "factor2": {
+              "nodeType": "figurativeConstant",
+              "rawText": "*BLANKS",
+              "constant": "*BLANKS"
+            },
+            "resultField": {
+              "nodeType": "identifier",
+              "rawText": "PMSTID",
+              "name": "PMSTID",
+              "isArray": false,
+              "dataType": "A"
+            },
+            "resultingIndicators": {
+              "high": "",
+              "low": "",
+              "equal": ""
+            }
+          },
+          {
+            "nodeType": "operation",
+            "location": {
+              "startLine": 97,
+              "endLine": 97
+            },
+            "rawSourceLine": "     C                     CALL 'STUPRG'",
+            "formType": "C",
+            "conditioningIndicators": {
+              "indicators": []
+            },
+            "opcode": "CALL",
+            "extendedOpcode": "",
+            "factor2": {
+              "nodeType": "literal",
+              "rawText": "'STUPRG'",
+              "value": "STUPRG",
+              "dataType": "A"
+            },
+            "resultingIndicators": {
+              "high": "",
+              "low": "",
+              "equal": ""
+            }
+          },
+          {
+            "nodeType": "operation",
+            "location": {
+              "startLine": 98,
+              "endLine": 98
+            },
+            "rawSourceLine": "     C                     PARM           PMSCL   4",
+            "formType": "C",
+            "conditioningIndicators": {
+              "indicators": []
+            },
+            "opcode": "PARM",
+            "extendedOpcode": "",
+            "resultField": {
+              "nodeType": "identifier",
+              "rawText": "PMSCL",
+              "name": "PMSCL",
+              "isArray": false,
+              "dataType": "A",
+              "length": 4
+            },
+            "fieldLength": 4,
+            "resultingIndicators": {
+              "high": "",
+              "low": "",
+              "equal": ""
+            }
+          },
+          {
+            "nodeType": "operation",
+            "location": {
+              "startLine": 99,
+              "endLine": 99
+            },
+            "rawSourceLine": "     C                     PARM           PMSTID  6",
+            "formType": "C",
+            "conditioningIndicators": {
+              "indicators": []
+            },
+            "opcode": "PARM",
+            "extendedOpcode": "",
+            "resultField": {
+              "nodeType": "identifier",
+              "rawText": "PMSTID",
+              "name": "PMSTID",
+              "isArray": false,
+              "dataType": "A",
+              "length": 6
+            },
+            "fieldLength": 6,
+            "resultingIndicators": {
+              "high": "",
+              "low": "",
+              "equal": ""
+            }
+          }
+        ],
+        "endStatement": {
+          "nodeType": "operation",
+          "location": {
+            "startLine": 100,
+            "endLine": 100
+          },
+          "rawSourceLine": "     C                     ENDSR",
+          "formType": "C",
+          "conditioningIndicators": {
+            "indicators": []
+          },
+          "opcode": "ENDSR",
+          "extendedOpcode": "",
+          "resultingIndicators": {
+            "high": "",
+            "low": "",
+            "equal": ""
+          }
+        },
+        "calledFrom": []
+      },
+      {
+        "nodeType": "subroutineBlock",
+        "location": {
+          "startLine": 105,
+          "endLine": 105
+        },
+        "rawSourceLine": "     C           OPT02     BEGSR",
+        "formType": "C",
+        "conditioningIndicators": {
+          "indicators": []
+        },
+        "name": "OPT02",
+        "resultingIndicators": {
+          "high": "",
+          "low": "",
+          "equal": ""
+        },
+        "operations": [
+          {
+            "nodeType": "operation",
+            "location": {
+              "startLine": 106,
+              "endLine": 106
+            },
+            "rawSourceLine": "     C                     CALL 'STULST'",
+            "formType": "C",
+            "conditioningIndicators": {
+              "indicators": []
+            },
+            "opcode": "CALL",
+            "extendedOpcode": "",
+            "factor2": {
+              "nodeType": "literal",
+              "rawText": "'STULST'",
+              "value": "STULST",
+              "dataType": "A"
+            },
+            "resultingIndicators": {
+              "high": "",
+              "low": "",
+              "equal": ""
+            }
+          }
+        ],
+        "endStatement": {
+          "nodeType": "operation",
+          "location": {
+            "startLine": 107,
+            "endLine": 107
+          },
+          "rawSourceLine": "     C                     ENDSR",
+          "formType": "C",
+          "conditioningIndicators": {
+            "indicators": []
+          },
+          "opcode": "ENDSR",
+          "extendedOpcode": "",
+          "resultingIndicators": {
+            "high": "",
+            "low": "",
+            "equal": ""
+          }
+        },
+        "calledFrom": []
+      },
+      {
+        "nodeType": "subroutineBlock",
+        "location": {
+          "startLine": 112,
+          "endLine": 112
+        },
+        "rawSourceLine": "     C           OPT03     BEGSR",
+        "formType": "C",
+        "conditioningIndicators": {
+          "indicators": []
+        },
+        "name": "OPT03",
+        "resultingIndicators": {
+          "high": "",
+          "low": "",
+          "equal": ""
+        },
+        "operations": [
+          {
+            "nodeType": "operation",
+            "location": {
+              "startLine": 113,
+              "endLine": 113
+            },
+            "rawSourceLine": "     C                     CALL 'STURPT'",
+            "formType": "C",
+            "conditioningIndicators": {
+              "indicators": []
+            },
+            "opcode": "CALL",
+            "extendedOpcode": "",
+            "factor2": {
+              "nodeType": "literal",
+              "rawText": "'STURPT'",
+              "value": "STURPT",
+              "dataType": "A"
+            },
+            "resultingIndicators": {
+              "high": "",
+              "low": "",
+              "equal": ""
+            }
+          }
+        ],
+        "endStatement": {
+          "nodeType": "operation",
+          "location": {
+            "startLine": 114,
+            "endLine": 114
+          },
+          "rawSourceLine": "     C                     ENDSR",
+          "formType": "C",
+          "conditioningIndicators": {
+            "indicators": []
+          },
+          "opcode": "ENDSR",
+          "extendedOpcode": "",
+          "resultingIndicators": {
+            "high": "",
+            "low": "",
+            "equal": ""
+          }
+        },
+        "calledFrom": []
+      },
+      {
+        "nodeType": "subroutineBlock",
+        "location": {
+          "startLine": 119,
+          "endLine": 119
+        },
+        "rawSourceLine": "     C           OPT09     BEGSR",
+        "formType": "C",
+        "conditioningIndicators": {
+          "indicators": []
+        },
+        "name": "OPT09",
+        "resultingIndicators": {
+          "high": "",
+          "low": "",
+          "equal": ""
+        },
+        "operations": [
+          {
+            "nodeType": "operation",
+            "location": {
+              "startLine": 120,
+              "endLine": 120
+            },
+            "rawSourceLine": "     C                     SETON                     03",
+            "formType": "C",
+            "conditioningIndicators": {
+              "indicators": []
+            },
+            "opcode": "SETON",
+            "extendedOpcode": "",
+            "resultingIndicators": {
+              "high": {
+                "name": "03",
+                "type": "numeric",
+                "meaning": "set"
+              }
+            }
+          }
+        ],
+        "endStatement": {
+          "nodeType": "operation",
+          "location": {
+            "startLine": 121,
+            "endLine": 121
+          },
+          "rawSourceLine": "     C                     ENDSR",
+          "formType": "C",
+          "conditioningIndicators": {
+            "indicators": []
+          },
+          "opcode": "ENDSR",
+          "extendedOpcode": "",
+          "resultingIndicators": {
+            "high": "",
+            "low": "",
+            "equal": ""
+          }
+        },
+        "calledFrom": []
+      },
+      {
+        "nodeType": "subroutineBlock",
+        "location": {
+          "startLine": 126,
+          "endLine": 126
+        },
+        "rawSourceLine": "     C           OPTER     BEGSR",
+        "formType": "C",
+        "conditioningIndicators": {
+          "indicators": []
+        },
+        "name": "OPTER",
+        "resultingIndicators": {
+          "high": "",
+          "low": "",
+          "equal": ""
+        },
+        "operations": [
+          {
+            "nodeType": "operation",
+            "location": {
+              "startLine": 127,
+              "endLine": 127
+            },
+            "rawSourceLine": "     C                     MOVEL'INVALID' MNUERR",
+            "formType": "C",
+            "conditioningIndicators": {
+              "indicators": []
+            },
+            "opcode": "MOVEL",
+            "extendedOpcode": "",
+            "factor2": {
+              "nodeType": "literal",
+              "rawText": "'INVALID'",
+              "value": "INVALID",
+              "dataType": "A"
+            },
+            "resultField": {
+              "nodeType": "identifier",
+              "rawText": "MNUERR",
+              "name": "MNUERR",
+              "isArray": false,
+              "dataType": "A"
+            },
+            "resultingIndicators": {
+              "high": "",
+              "low": "",
+              "equal": ""
+            }
+          }
+        ],
+        "endStatement": {
+          "nodeType": "operation",
+          "location": {
+            "startLine": 128,
+            "endLine": 128
+          },
+          "rawSourceLine": "     C                     ENDSR",
+          "formType": "C",
+          "conditioningIndicators": {
+            "indicators": []
+          },
+          "opcode": "ENDSR",
+          "extendedOpcode": "",
+          "resultingIndicators": {
+            "high": "",
+            "low": "",
+            "equal": ""
+          }
+        },
+        "calledFrom": []
+      }
+    ],
+    "comments": [
+      {
+        "text": "================================================================",
+        "lineNumber": 1,
+        "specContext": "H",
+        "rawSourceLine": "     H*================================================================",
+        "location": {
+          "startLine": 1,
+          "endLine": 1
+        }
+      },
+      {
+        "text": "プログラム名: MNUPRG",
+        "lineNumber": 2,
+        "specContext": "H",
+        "rawSourceLine": "     H* プログラム名: MNUPRG",
+        "location": {
+          "startLine": 2,
+          "endLine": 2
+        }
+      },
+      {
+        "text": "説明        : 学生管理システム メインメニュープログラム",
+        "lineNumber": 3,
+        "specContext": "H",
+        "rawSourceLine": "     H* 説明        : 学生管理システム メインメニュープログラム",
+        "location": {
+          "startLine": 3,
+          "endLine": 3
+        }
+      },
+      {
+        "text": "作成日      : 2026/03/14",
+        "lineNumber": 4,
+        "specContext": "H",
+        "rawSourceLine": "     H* 作成日      : 2026/03/14",
+        "location": {
+          "startLine": 4,
+          "endLine": 4
+        }
+      },
+      {
+        "text": "作成者      : システム開発部",
+        "lineNumber": 5,
+        "specContext": "H",
+        "rawSourceLine": "     H* 作成者      : システム開発部",
+        "location": {
+          "startLine": 5,
+          "endLine": 5
+        }
+      },
+      {
+        "text": "",
+        "lineNumber": 6,
+        "specContext": "H",
+        "rawSourceLine": "     H*",
+        "location": {
+          "startLine": 6,
+          "endLine": 6
+        }
+      },
+      {
+        "text": "機能概要:",
+        "lineNumber": 7,
+        "specContext": "H",
+        "rawSourceLine": "     H* 機能概要:",
+        "location": {
+          "startLine": 7,
+          "endLine": 7
+        }
+      },
+      {
+        "text": "メインメニューを表示し、ユーザーの選択に応じて",
+        "lineNumber": 8,
+        "specContext": "H",
+        "rawSourceLine": "     H*   メインメニューを表示し、ユーザーの選択に応じて",
+        "location": {
+          "startLine": 8,
+          "endLine": 8
+        }
+      },
+      {
+        "text": "各サブプログラムを呼び出す",
+        "lineNumber": 9,
+        "specContext": "H",
+        "rawSourceLine": "     H*   各サブプログラムを呼び出す",
+        "location": {
+          "startLine": 9,
+          "endLine": 9
+        }
+      },
+      {
+        "text": "",
+        "lineNumber": 10,
+        "specContext": "H",
+        "rawSourceLine": "     H*",
+        "location": {
+          "startLine": 10,
+          "endLine": 10
+        }
+      },
+      {
+        "text": "使用ファイル:",
+        "lineNumber": 11,
+        "specContext": "H",
+        "rawSourceLine": "     H* 使用ファイル:",
+        "location": {
+          "startLine": 11,
+          "endLine": 11
+        }
+      },
+      {
+        "text": "MNUDSPF  - メインメニュー画面",
+        "lineNumber": 12,
+        "specContext": "H",
+        "rawSourceLine": "     H*   MNUDSPF  - メインメニュー画面",
+        "location": {
+          "startLine": 12,
+          "endLine": 12
+        }
+      },
+      {
+        "text": "",
+        "lineNumber": 13,
+        "specContext": "H",
+        "rawSourceLine": "     H*",
+        "location": {
+          "startLine": 13,
+          "endLine": 13
+        }
+      },
+      {
+        "text": "呼出プログラム:",
+        "lineNumber": 14,
+        "specContext": "H",
+        "rawSourceLine": "     H* 呼出プログラム:",
+        "location": {
+          "startLine": 14,
+          "endLine": 14
+        }
+      },
+      {
+        "text": "STUPRG   - 学生メンテナンス",
+        "lineNumber": 15,
+        "specContext": "H",
+        "rawSourceLine": "     H*   STUPRG   - 学生メンテナンス",
+        "location": {
+          "startLine": 15,
+          "endLine": 15
+        }
+      },
+      {
+        "text": "STULST   - 学生一覧表示",
+        "lineNumber": 16,
+        "specContext": "H",
+        "rawSourceLine": "     H*   STULST   - 学生一覧表示",
+        "location": {
+          "startLine": 16,
+          "endLine": 16
+        }
+      },
+      {
+        "text": "STURPT   - 学生レポート印刷",
+        "lineNumber": 17,
+        "specContext": "H",
+        "rawSourceLine": "     H*   STURPT   - 学生レポート印刷",
+        "location": {
+          "startLine": 17,
+          "endLine": 17
+        }
+      },
+      {
+        "text": "================================================================",
+        "lineNumber": 18,
+        "specContext": "H",
+        "rawSourceLine": "     H*================================================================",
+        "location": {
+          "startLine": 18,
+          "endLine": 18
+        }
+      },
+      {
+        "text": "",
+        "lineNumber": 20,
+        "specContext": "F",
+        "rawSourceLine": "     F*",
+        "location": {
+          "startLine": 20,
+          "endLine": 20
+        }
+      },
+      {
+        "text": "================================================================",
+        "lineNumber": 21,
+        "specContext": "I",
+        "rawSourceLine": "     I*================================================================",
+        "location": {
+          "startLine": 21,
+          "endLine": 21
+        }
+      },
+      {
+        "text": "プログラム状態データ構造 (SDS)",
+        "lineNumber": 22,
+        "specContext": "I",
+        "rawSourceLine": "     I* プログラム状態データ構造 (SDS)",
+        "location": {
+          "startLine": 22,
+          "endLine": 22
+        }
+      },
+      {
+        "text": "================================================================",
+        "lineNumber": 23,
+        "specContext": "I",
+        "rawSourceLine": "     I*================================================================",
+        "location": {
+          "startLine": 23,
+          "endLine": 23
+        }
+      },
+      {
+        "text": "--- プログラム名 ---",
+        "lineNumber": 25,
+        "specContext": "I",
+        "rawSourceLine": "     I*  --- プログラム名 ---",
+        "location": {
+          "startLine": 25,
+          "endLine": 25
+        }
+      },
+      {
+        "text": "--- プログラム状態コード ---",
+        "lineNumber": 27,
+        "specContext": "I",
+        "rawSourceLine": "     I*  --- プログラム状態コード ---",
+        "location": {
+          "startLine": 27,
+          "endLine": 27
+        }
+      },
+      {
+        "text": "--- 前回の状態コード ---",
+        "lineNumber": 29,
+        "specContext": "I",
+        "rawSourceLine": "     I*  --- 前回の状態コード ---",
+        "location": {
+          "startLine": 29,
+          "endLine": 29
+        }
+      },
+      {
+        "text": "--- ソースリスト行番号 ---",
+        "lineNumber": 31,
+        "specContext": "I",
+        "rawSourceLine": "     I*  --- ソースリスト行番号 ---",
+        "location": {
+          "startLine": 31,
+          "endLine": 31
+        }
+      },
+      {
+        "text": "--- 実行中のルーチン名 ---",
+        "lineNumber": 33,
+        "specContext": "I",
+        "rawSourceLine": "     I*  --- 実行中のルーチン名 ---",
+        "location": {
+          "startLine": 33,
+          "endLine": 33
+        }
+      },
+      {
+        "text": "--- 例外タイプ ---",
+        "lineNumber": 35,
+        "specContext": "I",
+        "rawSourceLine": "     I*  --- 例外タイプ ---",
+        "location": {
+          "startLine": 35,
+          "endLine": 35
+        }
+      },
+      {
+        "text": "--- 例外番号 ---",
+        "lineNumber": 37,
+        "specContext": "I",
+        "rawSourceLine": "     I*  --- 例外番号 ---",
+        "location": {
+          "startLine": 37,
+          "endLine": 37
+        }
+      },
+      {
+        "text": "--- ジョブ名 ---",
+        "lineNumber": 39,
+        "specContext": "I",
+        "rawSourceLine": "     I*  --- ジョブ名 ---",
+        "location": {
+          "startLine": 39,
+          "endLine": 39
+        }
+      },
+      {
+        "text": "--- ユーザー名 ---",
+        "lineNumber": 41,
+        "specContext": "I",
+        "rawSourceLine": "     I*  --- ユーザー名 ---",
+        "location": {
+          "startLine": 41,
+          "endLine": 41
+        }
+      },
+      {
+        "text": "--- ジョブ番号 ---",
+        "lineNumber": 43,
+        "specContext": "I",
+        "rawSourceLine": "     I*  --- ジョブ番号 ---",
+        "location": {
+          "startLine": 43,
+          "endLine": 43
+        }
+      },
+      {
+        "text": "",
+        "lineNumber": 45,
+        "specContext": "I",
+        "rawSourceLine": "     I*",
+        "location": {
+          "startLine": 45,
+          "endLine": 45
+        }
+      },
+      {
+        "text": "================================================================",
+        "lineNumber": 46,
+        "specContext": "C",
+        "rawSourceLine": "     C*================================================================",
+        "location": {
+          "startLine": 46,
+          "endLine": 46
+        }
+      },
+      {
+        "text": "メインループ処理",
+        "lineNumber": 47,
+        "specContext": "C",
+        "rawSourceLine": "     C* メインループ処理",
+        "location": {
+          "startLine": 47,
+          "endLine": 47
+        }
+      },
+      {
+        "text": "F3=終了が押されるまで繰り返す",
+        "lineNumber": 48,
+        "specContext": "C",
+        "rawSourceLine": "     C* F3=終了が押されるまで繰り返す",
+        "location": {
+          "startLine": 48,
+          "endLine": 48
+        }
+      },
+      {
+        "text": "================================================================",
+        "lineNumber": 49,
+        "specContext": "C",
+        "rawSourceLine": "     C*================================================================",
+        "location": {
+          "startLine": 49,
+          "endLine": 49
+        }
+      },
+      {
+        "text": "",
+        "lineNumber": 51,
+        "specContext": "C",
+        "rawSourceLine": "     C*",
+        "location": {
+          "startLine": 51,
+          "endLine": 51
+        }
+      },
+      {
+        "text": "--- エラーメッセージ初期化 ---",
+        "lineNumber": 52,
+        "specContext": "C",
+        "rawSourceLine": "     C*  --- エラーメッセージ初期化 ---",
+        "location": {
+          "startLine": 52,
+          "endLine": 52
+        }
+      },
+      {
+        "text": "",
+        "lineNumber": 54,
+        "specContext": "C",
+        "rawSourceLine": "     C*",
+        "location": {
+          "startLine": 54,
+          "endLine": 54
+        }
+      },
+      {
+        "text": "--- メニュー画面表示 ---",
+        "lineNumber": 55,
+        "specContext": "C",
+        "rawSourceLine": "     C*  --- メニュー画面表示 ---",
+        "location": {
+          "startLine": 55,
+          "endLine": 55
+        }
+      },
+      {
+        "text": "",
+        "lineNumber": 57,
+        "specContext": "C",
+        "rawSourceLine": "     C*",
+        "location": {
+          "startLine": 57,
+          "endLine": 57
+        }
+      },
+      {
+        "text": "--- F3=終了チェック ---",
+        "lineNumber": 58,
+        "specContext": "C",
+        "rawSourceLine": "     C*  --- F3=終了チェック ---",
+        "location": {
+          "startLine": 58,
+          "endLine": 58
+        }
+      },
+      {
+        "text": "",
+        "lineNumber": 62,
+        "specContext": "C",
+        "rawSourceLine": "     C*",
+        "location": {
+          "startLine": 62,
+          "endLine": 62
+        }
+      },
+      {
+        "text": "--- F12=戻るチェック ---",
+        "lineNumber": 63,
+        "specContext": "C",
+        "rawSourceLine": "     C*  --- F12=戻るチェック ---",
+        "location": {
+          "startLine": 63,
+          "endLine": 63
+        }
+      },
+      {
+        "text": "",
+        "lineNumber": 67,
+        "specContext": "C",
+        "rawSourceLine": "     C*",
+        "location": {
+          "startLine": 67,
+          "endLine": 67
+        }
+      },
+      {
+        "text": "================================================================",
+        "lineNumber": 68,
+        "specContext": "C",
+        "rawSourceLine": "     C*================================================================",
+        "location": {
+          "startLine": 68,
+          "endLine": 68
+        }
+      },
+      {
+        "text": "選択処理振分け",
+        "lineNumber": 69,
+        "specContext": "C",
+        "rawSourceLine": "     C* 選択処理振分け",
+        "location": {
+          "startLine": 69,
+          "endLine": 69
+        }
+      },
+      {
+        "text": "CASxx構文で選択番号に応じたサブルーチンを実行",
+        "lineNumber": 70,
+        "specContext": "C",
+        "rawSourceLine": "     C* CASxx構文で選択番号に応じたサブルーチンを実行",
+        "location": {
+          "startLine": 70,
+          "endLine": 70
+        }
+      },
+      {
+        "text": "================================================================",
+        "lineNumber": 71,
+        "specContext": "C",
+        "rawSourceLine": "     C*================================================================",
+        "location": {
+          "startLine": 71,
+          "endLine": 71
+        }
+      },
+      {
+        "text": "",
+        "lineNumber": 78,
+        "specContext": "C",
+        "rawSourceLine": "     C*",
+        "location": {
+          "startLine": 78,
+          "endLine": 78
+        }
+      },
+      {
+        "text": "--- 選択番号クリア ---",
+        "lineNumber": 79,
+        "specContext": "C",
+        "rawSourceLine": "     C*  --- 選択番号クリア ---",
+        "location": {
+          "startLine": 79,
+          "endLine": 79
+        }
+      },
+      {
+        "text": "",
+        "lineNumber": 81,
+        "specContext": "C",
+        "rawSourceLine": "     C*",
+        "location": {
+          "startLine": 81,
+          "endLine": 81
+        }
+      },
+      {
+        "text": "",
+        "lineNumber": 83,
+        "specContext": "C",
+        "rawSourceLine": "     C*",
+        "location": {
+          "startLine": 83,
+          "endLine": 83
+        }
+      },
+      {
+        "text": "================================================================",
+        "lineNumber": 84,
+        "specContext": "C",
+        "rawSourceLine": "     C*================================================================",
+        "location": {
+          "startLine": 84,
+          "endLine": 84
+        }
+      },
+      {
+        "text": "プログラム終了処理",
+        "lineNumber": 85,
+        "specContext": "C",
+        "rawSourceLine": "     C* プログラム終了処理",
+        "location": {
+          "startLine": 85,
+          "endLine": 85
+        }
+      },
+      {
+        "text": "================================================================",
+        "lineNumber": 86,
+        "specContext": "C",
+        "rawSourceLine": "     C*================================================================",
+        "location": {
+          "startLine": 86,
+          "endLine": 86
+        }
+      },
+      {
+        "text": "",
+        "lineNumber": 90,
+        "specContext": "C",
+        "rawSourceLine": "     C*",
+        "location": {
+          "startLine": 90,
+          "endLine": 90
+        }
+      },
+      {
+        "text": "================================================================",
+        "lineNumber": 91,
+        "specContext": "C",
+        "rawSourceLine": "     C*================================================================",
+        "location": {
+          "startLine": 91,
+          "endLine": 91
+        }
+      },
+      {
+        "text": "サブルーチン: OPT01 - 学生メンテナンス呼出",
+        "lineNumber": 92,
+        "specContext": "C",
+        "rawSourceLine": "     C* サブルーチン: OPT01 - 学生メンテナンス呼出",
+        "location": {
+          "startLine": 92,
+          "endLine": 92
+        }
+      },
+      {
+        "text": "================================================================",
+        "lineNumber": 93,
+        "specContext": "C",
+        "rawSourceLine": "     C*================================================================",
+        "location": {
+          "startLine": 93,
+          "endLine": 93
+        }
+      },
+      {
+        "text": "",
+        "lineNumber": 101,
+        "specContext": "C",
+        "rawSourceLine": "     C*",
+        "location": {
+          "startLine": 101,
+          "endLine": 101
+        }
+      },
+      {
+        "text": "================================================================",
+        "lineNumber": 102,
+        "specContext": "C",
+        "rawSourceLine": "     C*================================================================",
+        "location": {
+          "startLine": 102,
+          "endLine": 102
+        }
+      },
+      {
+        "text": "サブルーチン: OPT02 - 学生一覧表示呼出",
+        "lineNumber": 103,
+        "specContext": "C",
+        "rawSourceLine": "     C* サブルーチン: OPT02 - 学生一覧表示呼出",
+        "location": {
+          "startLine": 103,
+          "endLine": 103
+        }
+      },
+      {
+        "text": "================================================================",
+        "lineNumber": 104,
+        "specContext": "C",
+        "rawSourceLine": "     C*================================================================",
+        "location": {
+          "startLine": 104,
+          "endLine": 104
+        }
+      },
+      {
+        "text": "",
+        "lineNumber": 108,
+        "specContext": "C",
+        "rawSourceLine": "     C*",
+        "location": {
+          "startLine": 108,
+          "endLine": 108
+        }
+      },
+      {
+        "text": "================================================================",
+        "lineNumber": 109,
+        "specContext": "C",
+        "rawSourceLine": "     C*================================================================",
+        "location": {
+          "startLine": 109,
+          "endLine": 109
+        }
+      },
+      {
+        "text": "サブルーチン: OPT03 - 学生レポート印刷呼出",
+        "lineNumber": 110,
+        "specContext": "C",
+        "rawSourceLine": "     C* サブルーチン: OPT03 - 学生レポート印刷呼出",
+        "location": {
+          "startLine": 110,
+          "endLine": 110
+        }
+      },
+      {
+        "text": "================================================================",
+        "lineNumber": 111,
+        "specContext": "C",
+        "rawSourceLine": "     C*================================================================",
+        "location": {
+          "startLine": 111,
+          "endLine": 111
+        }
+      },
+      {
+        "text": "",
+        "lineNumber": 115,
+        "specContext": "C",
+        "rawSourceLine": "     C*",
+        "location": {
+          "startLine": 115,
+          "endLine": 115
+        }
+      },
+      {
+        "text": "================================================================",
+        "lineNumber": 116,
+        "specContext": "C",
+        "rawSourceLine": "     C*================================================================",
+        "location": {
+          "startLine": 116,
+          "endLine": 116
+        }
+      },
+      {
+        "text": "サブルーチン: OPT09 - プログラム終了",
+        "lineNumber": 117,
+        "specContext": "C",
+        "rawSourceLine": "     C* サブルーチン: OPT09 - プログラム終了",
+        "location": {
+          "startLine": 117,
+          "endLine": 117
+        }
+      },
+      {
+        "text": "================================================================",
+        "lineNumber": 118,
+        "specContext": "C",
+        "rawSourceLine": "     C*================================================================",
+        "location": {
+          "startLine": 118,
+          "endLine": 118
+        }
+      },
+      {
+        "text": "",
+        "lineNumber": 122,
+        "specContext": "C",
+        "rawSourceLine": "     C*",
+        "location": {
+          "startLine": 122,
+          "endLine": 122
+        }
+      },
+      {
+        "text": "================================================================",
+        "lineNumber": 123,
+        "specContext": "C",
+        "rawSourceLine": "     C*================================================================",
+        "location": {
+          "startLine": 123,
+          "endLine": 123
+        }
+      },
+      {
+        "text": "サブルーチン: OPTER - 無効な選択番号",
+        "lineNumber": 124,
+        "specContext": "C",
+        "rawSourceLine": "     C* サブルーチン: OPTER - 無効な選択番号",
+        "location": {
+          "startLine": 124,
+          "endLine": 124
+        }
+      },
+      {
+        "text": "================================================================",
+        "lineNumber": 125,
+        "specContext": "C",
+        "rawSourceLine": "     C*================================================================",
+        "location": {
+          "startLine": 125,
+          "endLine": 125
+        }
+      }
+    ],
+    "sourceLines": [
+      {
+        "lineNumber": 1,
+        "rawText": "     H*================================================================",
+        "specType": "H",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 2,
+        "rawText": "     H* プログラム名: MNUPRG",
+        "specType": "H",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 3,
+        "rawText": "     H* 説明        : 学生管理システム メインメニュープログラム",
+        "specType": "H",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 4,
+        "rawText": "     H* 作成日      : 2026/03/14",
+        "specType": "H",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 5,
+        "rawText": "     H* 作成者      : システム開発部",
+        "specType": "H",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 6,
+        "rawText": "     H*",
+        "specType": "H",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 7,
+        "rawText": "     H* 機能概要:",
+        "specType": "H",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 8,
+        "rawText": "     H*   メインメニューを表示し、ユーザーの選択に応じて",
+        "specType": "H",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 9,
+        "rawText": "     H*   各サブプログラムを呼び出す",
+        "specType": "H",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 10,
+        "rawText": "     H*",
+        "specType": "H",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 11,
+        "rawText": "     H* 使用ファイル:",
+        "specType": "H",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 12,
+        "rawText": "     H*   MNUDSPF  - メインメニュー画面",
+        "specType": "H",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 13,
+        "rawText": "     H*",
+        "specType": "H",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 14,
+        "rawText": "     H* 呼出プログラム:",
+        "specType": "H",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 15,
+        "rawText": "     H*   STUPRG   - 学生メンテナンス",
+        "specType": "H",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 16,
+        "rawText": "     H*   STULST   - 学生一覧表示",
+        "specType": "H",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 17,
+        "rawText": "     H*   STURPT   - 学生レポート印刷",
+        "specType": "H",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 18,
+        "rawText": "     H*================================================================",
+        "specType": "H",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 19,
+        "rawText": "     FMNUDSPF CF  E                    WORKSTN",
+        "specType": "F",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 20,
+        "rawText": "     F*",
+        "specType": "F",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 21,
+        "rawText": "     I*================================================================",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 22,
+        "rawText": "     I* プログラム状態データ構造 (SDS)",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 23,
+        "rawText": "     I*================================================================",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 24,
+        "rawText": "     I            SDS",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 25,
+        "rawText": "     I*  --- プログラム名 ---",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 26,
+        "rawText": "     I                                        1  10 SDPGM",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 27,
+        "rawText": "     I*  --- プログラム状態コード ---",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 28,
+        "rawText": "     I                                       11  15 SDSTS",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 29,
+        "rawText": "     I*  --- 前回の状態コード ---",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 30,
+        "rawText": "     I                                       16  20 SDPSTS",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 31,
+        "rawText": "     I*  --- ソースリスト行番号 ---",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 32,
+        "rawText": "     I                                       21  28 SDSLIN",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 33,
+        "rawText": "     I*  --- 実行中のルーチン名 ---",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 34,
+        "rawText": "     I                                       29  36 SDRTN",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 35,
+        "rawText": "     I*  --- 例外タイプ ---",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 36,
+        "rawText": "     I                                       40  42 SDEXTP",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 37,
+        "rawText": "     I*  --- 例外番号 ---",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 38,
+        "rawText": "     I                                       43  46 SDEXNB",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 39,
+        "rawText": "     I*  --- ジョブ名 ---",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 40,
+        "rawText": "     I                                      244 253 SDJOB",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 41,
+        "rawText": "     I*  --- ユーザー名 ---",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 42,
+        "rawText": "     I                                      254 263 SDUSER",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 43,
+        "rawText": "     I*  --- ジョブ番号 ---",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 44,
+        "rawText": "     I                                      264 269 SDJNBR",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 45,
+        "rawText": "     I*",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 46,
+        "rawText": "     C*================================================================",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 47,
+        "rawText": "     C* メインループ処理",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 48,
+        "rawText": "     C* F3=終了が押されるまで繰り返す",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 49,
+        "rawText": "     C*================================================================",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 50,
+        "rawText": "     C           *IN03     DOWEQ*OFF",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 51,
+        "rawText": "     C*",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 52,
+        "rawText": "     C*  --- エラーメッセージ初期化 ---",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 53,
+        "rawText": "     C                     MOVEL*BLANKS   MNUERR",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 54,
+        "rawText": "     C*",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 55,
+        "rawText": "     C*  --- メニュー画面表示 ---",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 56,
+        "rawText": "     C                     EXFMTMNUREC",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 57,
+        "rawText": "     C*",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 58,
+        "rawText": "     C*  --- F3=終了チェック ---",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 59,
+        "rawText": "     C           *IN03     IFEQ *ON",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 60,
+        "rawText": "     C                     GOTO EXIT",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 61,
+        "rawText": "     C                     ENDIF",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 62,
+        "rawText": "     C*",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 63,
+        "rawText": "     C*  --- F12=戻るチェック ---",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 64,
+        "rawText": "     C           *IN12     IFEQ *ON",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 65,
+        "rawText": "     C                     GOTO EXIT",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 66,
+        "rawText": "     C                     ENDIF",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 67,
+        "rawText": "     C*",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 68,
+        "rawText": "     C*================================================================",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 69,
+        "rawText": "     C* 選択処理振分け",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 70,
+        "rawText": "     C* CASxx構文で選択番号に応じたサブルーチンを実行",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 71,
+        "rawText": "     C*================================================================",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 72,
+        "rawText": "     C           MNUOPT    CASEQ'1'       OPT01",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 73,
+        "rawText": "     C           MNUOPT    CASEQ'2'       OPT02",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 74,
+        "rawText": "     C           MNUOPT    CASEQ'3'       OPT03",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 75,
+        "rawText": "     C           MNUOPT    CASEQ'9'       OPT09",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 76,
+        "rawText": "     C                     CAS            OPTER",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 77,
+        "rawText": "     C                     ENDCS",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 78,
+        "rawText": "     C*",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 79,
+        "rawText": "     C*  --- 選択番号クリア ---",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 80,
+        "rawText": "     C                     MOVEL*BLANKS   MNUOPT",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 81,
+        "rawText": "     C*",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 82,
+        "rawText": "     C                     ENDDO",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 83,
+        "rawText": "     C*",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 84,
+        "rawText": "     C*================================================================",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 85,
+        "rawText": "     C* プログラム終了処理",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 86,
+        "rawText": "     C*================================================================",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 87,
+        "rawText": "     C           EXIT      TAG",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 88,
+        "rawText": "     C                     SETON                         LR",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 89,
+        "rawText": "     C                     RETRN",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 90,
+        "rawText": "     C*",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 91,
+        "rawText": "     C*================================================================",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 92,
+        "rawText": "     C* サブルーチン: OPT01 - 学生メンテナンス呼出",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 93,
+        "rawText": "     C*================================================================",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 94,
+        "rawText": "     C           OPT01     BEGSR",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 95,
+        "rawText": "     C                     MOVEL*BLANKS   PMSCL",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 96,
+        "rawText": "     C                     MOVEL*BLANKS   PMSTID",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 97,
+        "rawText": "     C                     CALL 'STUPRG'",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 98,
+        "rawText": "     C                     PARM           PMSCL   4",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 99,
+        "rawText": "     C                     PARM           PMSTID  6",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 100,
+        "rawText": "     C                     ENDSR",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 101,
+        "rawText": "     C*",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 102,
+        "rawText": "     C*================================================================",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 103,
+        "rawText": "     C* サブルーチン: OPT02 - 学生一覧表示呼出",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 104,
+        "rawText": "     C*================================================================",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 105,
+        "rawText": "     C           OPT02     BEGSR",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 106,
+        "rawText": "     C                     CALL 'STULST'",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 107,
+        "rawText": "     C                     ENDSR",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 108,
+        "rawText": "     C*",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 109,
+        "rawText": "     C*================================================================",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 110,
+        "rawText": "     C* サブルーチン: OPT03 - 学生レポート印刷呼出",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 111,
+        "rawText": "     C*================================================================",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 112,
+        "rawText": "     C           OPT03     BEGSR",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 113,
+        "rawText": "     C                     CALL 'STURPT'",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 114,
+        "rawText": "     C                     ENDSR",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 115,
+        "rawText": "     C*",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 116,
+        "rawText": "     C*================================================================",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 117,
+        "rawText": "     C* サブルーチン: OPT09 - プログラム終了",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 118,
+        "rawText": "     C*================================================================",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 119,
+        "rawText": "     C           OPT09     BEGSR",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 120,
+        "rawText": "     C                     SETON                     03",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 121,
+        "rawText": "     C                     ENDSR",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 122,
+        "rawText": "     C*",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 123,
+        "rawText": "     C*================================================================",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 124,
+        "rawText": "     C* サブルーチン: OPTER - 無効な選択番号",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 125,
+        "rawText": "     C*================================================================",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 126,
+        "rawText": "     C           OPTER     BEGSR",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 127,
+        "rawText": "     C                     MOVEL'INVALID' MNUERR",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 128,
+        "rawText": "     C                     ENDSR",
+        "specType": "C",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      }
+    ]
+  },
+  "dependencies": {
+    "referencedFiles": [
+      {
+        "name": "MNUDSPF",
+        "referenceType": "combined",
+        "locations": [
+          {
+            "startLine": 19,
+            "endLine": 19
+          }
+        ]
+      }
+    ],
+    "calledPrograms": [
+      {
+        "name": "STUPRG",
+        "referenceType": "call",
+        "locations": [
+          {
+            "startLine": 97,
+            "endLine": 97
+          }
+        ]
+      },
+      {
+        "name": "STULST",
+        "referenceType": "call",
+        "locations": [
+          {
+            "startLine": 106,
+            "endLine": 106
+          }
+        ]
+      },
+      {
+        "name": "STURPT",
+        "referenceType": "call",
+        "locations": [
+          {
+            "startLine": 113,
+            "endLine": 113
+          }
+        ]
+      }
+    ],
+    "copyMembers": []
+  },
+  "errors": []
+}

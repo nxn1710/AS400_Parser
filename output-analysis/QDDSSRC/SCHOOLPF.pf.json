@@ -1,0 +1,787 @@
+{
+  "metadata": {
+    "irVersion": "1.0.0",
+    "sourceType": "DDS_PF",
+    "sourceMember": "SCHOOLPF",
+    "sourceFile": "QDDSSRC",
+    "sourceLibrary": "rpg3-student-mgmt",
+    "parseInfo": {
+      "parserVersion": "1.0.0",
+      "parsedAt": "2026-04-13T16:01:46.656195300Z",
+      "parseStatus": "complete",
+      "totalLines": 44,
+      "detectedEncoding": "UTF-8",
+      "errors": [],
+      "warnings": []
+    }
+  },
+  "content": {
+    "sourceLines": [
+      {
+        "lineNumber": 1,
+        "rawText": "     A*================================================================",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 2,
+        "rawText": "     A* ファイル名: SCHOOLPF",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 3,
+        "rawText": "     A* 説明      : 学校マスター物理ファイル",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 4,
+        "rawText": "     A* 作成日    : 2026/03/14",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 5,
+        "rawText": "     A* 作成者    : システム開発部",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 6,
+        "rawText": "     A*================================================================",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 7,
+        "rawText": "     A                                      UNIQUE",
+        "specType": "FILE_KEYWORD",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 8,
+        "rawText": "     A          R SCLREC                     TEXT('学校マスターレコード')",
+        "specType": "RECORD_FORMAT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 9,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 10,
+        "rawText": "     A*   --- 主キー ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 11,
+        "rawText": "     A            SCLID          4A         TEXT('学校コード') +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 12,
+        "rawText": "     A                                      COLHDG('学校' 'コード')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 13,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 14,
+        "rawText": "     A*   --- 基本情報 ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 15,
+        "rawText": "     A            SCLNAM        40A         TEXT('学校名') +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 16,
+        "rawText": "     A                                      COLHDG('学校名')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 17,
+        "rawText": "     A            SCLTYP         1A         TEXT('種別 E=小 M=中 H=高 U=大') +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 18,
+        "rawText": "     A                                      COLHDG('種別') +",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 19,
+        "rawText": "     A                                      VALUES('E' 'M' 'H' 'U')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 20,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 21,
+        "rawText": "     A*   --- 所在地情報 ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 22,
+        "rawText": "     A            SCLADR        50A         TEXT('住所') +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 23,
+        "rawText": "     A                                      COLHDG('住所')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 24,
+        "rawText": "     A            SCLTEL        15A         TEXT('電話番号') +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 25,
+        "rawText": "     A                                      COLHDG('電話' '番号')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 26,
+        "rawText": "     A            SCLFAX        15A         TEXT('FAX番号') +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 27,
+        "rawText": "     A                                      COLHDG('FAX' '番号')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 28,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 29,
+        "rawText": "     A*   --- 責任者情報 ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 30,
+        "rawText": "     A            SCLPRI        20A         TEXT('校長名') +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 31,
+        "rawText": "     A                                      COLHDG('校長名')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 32,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 33,
+        "rawText": "     A*   --- 統計情報 ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 34,
+        "rawText": "     A            SCLCNT         5S 0       TEXT('在籍生徒数') +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 35,
+        "rawText": "     A                                      COLHDG('在籍' '生徒数')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 36,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 37,
+        "rawText": "     A*   --- 監査情報 ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 38,
+        "rawText": "     A            SCLADD         8S 0       TEXT('登録日 YYYYMMDD') +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 39,
+        "rawText": "     A                                      COLHDG('登録日')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 40,
+        "rawText": "     A            SCLUPD         8S 0       TEXT('更新日 YYYYMMDD') +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 41,
+        "rawText": "     A                                      COLHDG('更新日')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 42,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 43,
+        "rawText": "     A*   --- 主キー定義 ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 44,
+        "rawText": "     A          K SCLID",
+        "specType": "KEY_FIELD",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      }
+    ],
+    "fileKeywords": [
+      {
+        "name": "UNIQUE",
+        "rawText": "UNIQUE"
+      }
+    ],
+    "recordFormats": [
+      {
+        "location": {
+          "startLine": 8,
+          "endLine": 8
+        },
+        "rawSourceLine": "     A          R SCLREC                     TEXT('学校マスターレコード')",
+        "name": "SCLREC",
+        "text": "学校マスターレコード",
+        "keywords": [
+          {
+            "name": "TEXT",
+            "value": "学校マスターレコード",
+            "rawText": "TEXT('学校マスターレコード')"
+          }
+        ],
+        "fields": [
+          {
+            "location": {
+              "startLine": 11,
+              "endLine": 11
+            },
+            "rawSourceLines": [
+              "     A            SCLID          4A         TEXT('学校コード') +",
+              "     A                                      COLHDG('学校' 'コード')"
+            ],
+            "name": "SCLID",
+            "length": 4,
+            "dataType": "A",
+            "source": "direct",
+            "keywords": [
+              {
+                "name": "TEXT",
+                "value": "学校コード",
+                "rawText": "TEXT('学校コード')"
+              },
+              {
+                "name": "COLHDG",
+                "values": [
+                  "学校",
+                  "コード"
+                ],
+                "rawText": "COLHDG('学校' 'コード')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 15,
+              "endLine": 15
+            },
+            "rawSourceLines": [
+              "     A            SCLNAM        40A         TEXT('学校名') +",
+              "     A                                      COLHDG('学校名')"
+            ],
+            "name": "SCLNAM",
+            "length": 40,
+            "dataType": "A",
+            "source": "direct",
+            "keywords": [
+              {
+                "name": "TEXT",
+                "value": "学校名",
+                "rawText": "TEXT('学校名')"
+              },
+              {
+                "name": "COLHDG",
+                "value": "学校名",
+                "rawText": "COLHDG('学校名')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 17,
+              "endLine": 17
+            },
+            "rawSourceLines": [
+              "     A            SCLTYP         1A         TEXT('種別 E=小 M=中 H=高 U=大') +",
+              "     A                                      COLHDG('種別') +",
+              "     A                                      VALUES('E' 'M' 'H' 'U')"
+            ],
+            "name": "SCLTYP",
+            "length": 1,
+            "dataType": "A",
+            "source": "direct",
+            "keywords": [
+              {
+                "name": "TEXT",
+                "value": "種別 E=小 M=中 H=高 U=大",
+                "rawText": "TEXT('種別 E=小 M=中 H=高 U=大')"
+              },
+              {
+                "name": "COLHDG",
+                "value": "種別",
+                "rawText": "COLHDG('種別')"
+              },
+              {
+                "name": "VALUES",
+                "values": [
+                  "E",
+                  "M",
+                  "H",
+                  "U"
+                ],
+                "rawText": "VALUES('E' 'M' 'H' 'U')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 22,
+              "endLine": 22
+            },
+            "rawSourceLines": [
+              "     A            SCLADR        50A         TEXT('住所') +",
+              "     A                                      COLHDG('住所')"
+            ],
+            "name": "SCLADR",
+            "length": 50,
+            "dataType": "A",
+            "source": "direct",
+            "keywords": [
+              {
+                "name": "TEXT",
+                "value": "住所",
+                "rawText": "TEXT('住所')"
+              },
+              {
+                "name": "COLHDG",
+                "value": "住所",
+                "rawText": "COLHDG('住所')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 24,
+              "endLine": 24
+            },
+            "rawSourceLines": [
+              "     A            SCLTEL        15A         TEXT('電話番号') +",
+              "     A                                      COLHDG('電話' '番号')"
+            ],
+            "name": "SCLTEL",
+            "length": 15,
+            "dataType": "A",
+            "source": "direct",
+            "keywords": [
+              {
+                "name": "TEXT",
+                "value": "電話番号",
+                "rawText": "TEXT('電話番号')"
+              },
+              {
+                "name": "COLHDG",
+                "values": [
+                  "電話",
+                  "番号"
+                ],
+                "rawText": "COLHDG('電話' '番号')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 26,
+              "endLine": 26
+            },
+            "rawSourceLines": [
+              "     A            SCLFAX        15A         TEXT('FAX番号') +",
+              "     A                                      COLHDG('FAX' '番号')"
+            ],
+            "name": "SCLFAX",
+            "length": 15,
+            "dataType": "A",
+            "source": "direct",
+            "keywords": [
+              {
+                "name": "TEXT",
+                "value": "FAX番号",
+                "rawText": "TEXT('FAX番号')"
+              },
+              {
+                "name": "COLHDG",
+                "values": [
+                  "FAX",
+                  "番号"
+                ],
+                "rawText": "COLHDG('FAX' '番号')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 30,
+              "endLine": 30
+            },
+            "rawSourceLines": [
+              "     A            SCLPRI        20A         TEXT('校長名') +",
+              "     A                                      COLHDG('校長名')"
+            ],
+            "name": "SCLPRI",
+            "length": 20,
+            "dataType": "A",
+            "source": "direct",
+            "keywords": [
+              {
+                "name": "TEXT",
+                "value": "校長名",
+                "rawText": "TEXT('校長名')"
+              },
+              {
+                "name": "COLHDG",
+                "value": "校長名",
+                "rawText": "COLHDG('校長名')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 34,
+              "endLine": 34
+            },
+            "rawSourceLines": [
+              "     A            SCLCNT         5S 0       TEXT('在籍生徒数') +",
+              "     A                                      COLHDG('在籍' '生徒数')"
+            ],
+            "name": "SCLCNT",
+            "length": 5,
+            "dataType": "S",
+            "decimalPositions": 0,
+            "source": "direct",
+            "keywords": [
+              {
+                "name": "TEXT",
+                "value": "在籍生徒数",
+                "rawText": "TEXT('在籍生徒数')"
+              },
+              {
+                "name": "COLHDG",
+                "values": [
+                  "在籍",
+                  "生徒数"
+                ],
+                "rawText": "COLHDG('在籍' '生徒数')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 38,
+              "endLine": 38
+            },
+            "rawSourceLines": [
+              "     A            SCLADD         8S 0       TEXT('登録日 YYYYMMDD') +",
+              "     A                                      COLHDG('登録日')"
+            ],
+            "name": "SCLADD",
+            "length": 8,
+            "dataType": "S",
+            "decimalPositions": 0,
+            "source": "direct",
+            "keywords": [
+              {
+                "name": "TEXT",
+                "value": "登録日 YYYYMMDD",
+                "rawText": "TEXT('登録日 YYYYMMDD')"
+              },
+              {
+                "name": "COLHDG",
+                "value": "登録日",
+                "rawText": "COLHDG('登録日')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 40,
+              "endLine": 40
+            },
+            "rawSourceLines": [
+              "     A            SCLUPD         8S 0       TEXT('更新日 YYYYMMDD') +",
+              "     A                                      COLHDG('更新日')"
+            ],
+            "name": "SCLUPD",
+            "length": 8,
+            "dataType": "S",
+            "decimalPositions": 0,
+            "source": "direct",
+            "keywords": [
+              {
+                "name": "TEXT",
+                "value": "更新日 YYYYMMDD",
+                "rawText": "TEXT('更新日 YYYYMMDD')"
+              },
+              {
+                "name": "COLHDG",
+                "value": "更新日",
+                "rawText": "COLHDG('更新日')"
+              }
+            ]
+          }
+        ],
+        "keys": [
+          {
+            "location": {
+              "startLine": 44,
+              "endLine": 44
+            },
+            "rawSourceLine": "     A          K SCLID",
+            "fieldName": "SCLID",
+            "sortOrder": "ascending",
+            "keywords": []
+          }
+        ]
+      }
+    ],
+    "comments": [
+      {
+        "lineNumber": 1,
+        "text": "================================================================"
+      },
+      {
+        "lineNumber": 2,
+        "text": "ファイル名: SCHOOLPF"
+      },
+      {
+        "lineNumber": 3,
+        "text": "説明      : 学校マスター物理ファイル"
+      },
+      {
+        "lineNumber": 4,
+        "text": "作成日    : 2026/03/14"
+      },
+      {
+        "lineNumber": 5,
+        "text": "作成者    : システム開発部"
+      },
+      {
+        "lineNumber": 6,
+        "text": "================================================================"
+      },
+      {
+        "lineNumber": 9,
+        "text": ""
+      },
+      {
+        "lineNumber": 10,
+        "text": "--- 主キー ---"
+      },
+      {
+        "lineNumber": 13,
+        "text": ""
+      },
+      {
+        "lineNumber": 14,
+        "text": "--- 基本情報 ---"
+      },
+      {
+        "lineNumber": 20,
+        "text": ""
+      },
+      {
+        "lineNumber": 21,
+        "text": "--- 所在地情報 ---"
+      },
+      {
+        "lineNumber": 28,
+        "text": ""
+      },
+      {
+        "lineNumber": 29,
+        "text": "--- 責任者情報 ---"
+      },
+      {
+        "lineNumber": 32,
+        "text": ""
+      },
+      {
+        "lineNumber": 33,
+        "text": "--- 統計情報 ---"
+      },
+      {
+        "lineNumber": 36,
+        "text": ""
+      },
+      {
+        "lineNumber": 37,
+        "text": "--- 監査情報 ---"
+      },
+      {
+        "lineNumber": 42,
+        "text": ""
+      },
+      {
+        "lineNumber": 43,
+        "text": "--- 主キー定義 ---"
+      }
+    ],
+    "parseErrors": []
+  },
+  "dependencies": {
+    "referencedFiles": [],
+    "calledPrograms": [],
+    "copyMembers": []
+  },
+  "errors": []
+}

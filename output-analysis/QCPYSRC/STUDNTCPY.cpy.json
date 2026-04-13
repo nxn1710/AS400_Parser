@@ -1,0 +1,840 @@
+{
+  "metadata": {
+    "irVersion": "1.0.0",
+    "sourceType": "RPG3",
+    "sourceMember": "STUDNTCPY",
+    "sourceFile": "QCPYSRC",
+    "sourceLibrary": "rpg3-student-mgmt",
+    "parseInfo": {
+      "parserVersion": "1.0.0",
+      "parsedAt": "2026-04-13T16:01:46.623964300Z",
+      "parseStatus": "complete",
+      "totalLines": 31,
+      "detectedEncoding": "UTF-8",
+      "errors": [],
+      "warnings": []
+    }
+  },
+  "content": {
+    "headerSpecs": [],
+    "fileSpecs": [],
+    "extensionSpecs": [],
+    "lineCounterSpecs": [],
+    "inputSpecs": [
+      {
+        "rawSourceLine": "     I                    STUID                           S1ID",
+        "location": {
+          "startLine": 12,
+          "endLine": 12
+        },
+        "parseQuality": "full",
+        "sourceSequence": "",
+        "specLevel": "fieldDefinition",
+        "fieldName": "S1ID",
+        "externalFieldName": "STUID",
+        "dataFormat": "",
+        "controlLevel": "S1",
+        "matchingFields": "ID",
+        "fieldRecordRelation": "",
+        "plusIndicator": "",
+        "minusIndicator": "",
+        "zeroBlankIndicator": ""
+      },
+      {
+        "rawSourceLine": "     I                    STUNAM                          S1NAM",
+        "location": {
+          "startLine": 14,
+          "endLine": 14
+        },
+        "parseQuality": "full",
+        "sourceSequence": "",
+        "specLevel": "fieldDefinition",
+        "fieldName": "S1NAM",
+        "externalFieldName": "STUNAM",
+        "dataFormat": "",
+        "controlLevel": "S1",
+        "matchingFields": "NA",
+        "fieldRecordRelation": "M",
+        "plusIndicator": "",
+        "minusIndicator": "",
+        "zeroBlankIndicator": ""
+      },
+      {
+        "rawSourceLine": "     I                    STUKNA                          S1KNA",
+        "location": {
+          "startLine": 15,
+          "endLine": 15
+        },
+        "parseQuality": "full",
+        "sourceSequence": "",
+        "specLevel": "fieldDefinition",
+        "fieldName": "S1KNA",
+        "externalFieldName": "STUKNA",
+        "dataFormat": "",
+        "controlLevel": "S1",
+        "matchingFields": "KN",
+        "fieldRecordRelation": "A",
+        "plusIndicator": "",
+        "minusIndicator": "",
+        "zeroBlankIndicator": ""
+      },
+      {
+        "rawSourceLine": "     I                    STUBDT                          S1BDT",
+        "location": {
+          "startLine": 16,
+          "endLine": 16
+        },
+        "parseQuality": "full",
+        "sourceSequence": "",
+        "specLevel": "fieldDefinition",
+        "fieldName": "S1BDT",
+        "externalFieldName": "STUBDT",
+        "dataFormat": "",
+        "controlLevel": "S1",
+        "matchingFields": "BD",
+        "fieldRecordRelation": "T",
+        "plusIndicator": "",
+        "minusIndicator": "",
+        "zeroBlankIndicator": ""
+      },
+      {
+        "rawSourceLine": "     I                    STUGND                          S1GND",
+        "location": {
+          "startLine": 17,
+          "endLine": 17
+        },
+        "parseQuality": "full",
+        "sourceSequence": "",
+        "specLevel": "fieldDefinition",
+        "fieldName": "S1GND",
+        "externalFieldName": "STUGND",
+        "dataFormat": "",
+        "controlLevel": "S1",
+        "matchingFields": "GN",
+        "fieldRecordRelation": "D",
+        "plusIndicator": "",
+        "minusIndicator": "",
+        "zeroBlankIndicator": ""
+      },
+      {
+        "rawSourceLine": "     I                    STUADR                          S1ADR",
+        "location": {
+          "startLine": 19,
+          "endLine": 19
+        },
+        "parseQuality": "full",
+        "sourceSequence": "",
+        "specLevel": "fieldDefinition",
+        "fieldName": "S1ADR",
+        "externalFieldName": "STUADR",
+        "dataFormat": "",
+        "controlLevel": "S1",
+        "matchingFields": "AD",
+        "fieldRecordRelation": "R",
+        "plusIndicator": "",
+        "minusIndicator": "",
+        "zeroBlankIndicator": ""
+      },
+      {
+        "rawSourceLine": "     I                    STUTEL                          S1TEL",
+        "location": {
+          "startLine": 20,
+          "endLine": 20
+        },
+        "parseQuality": "full",
+        "sourceSequence": "",
+        "specLevel": "fieldDefinition",
+        "fieldName": "S1TEL",
+        "externalFieldName": "STUTEL",
+        "dataFormat": "",
+        "controlLevel": "S1",
+        "matchingFields": "TE",
+        "fieldRecordRelation": "L",
+        "plusIndicator": "",
+        "minusIndicator": "",
+        "zeroBlankIndicator": ""
+      },
+      {
+        "rawSourceLine": "     I                    STUMAL                          S1MAL",
+        "location": {
+          "startLine": 21,
+          "endLine": 21
+        },
+        "parseQuality": "full",
+        "sourceSequence": "",
+        "specLevel": "fieldDefinition",
+        "fieldName": "S1MAL",
+        "externalFieldName": "STUMAL",
+        "dataFormat": "",
+        "controlLevel": "S1",
+        "matchingFields": "MA",
+        "fieldRecordRelation": "L",
+        "plusIndicator": "",
+        "minusIndicator": "",
+        "zeroBlankIndicator": ""
+      },
+      {
+        "rawSourceLine": "     I                    STUSCL                          S1SCL",
+        "location": {
+          "startLine": 23,
+          "endLine": 23
+        },
+        "parseQuality": "full",
+        "sourceSequence": "",
+        "specLevel": "fieldDefinition",
+        "fieldName": "S1SCL",
+        "externalFieldName": "STUSCL",
+        "dataFormat": "",
+        "controlLevel": "S1",
+        "matchingFields": "SC",
+        "fieldRecordRelation": "L",
+        "plusIndicator": "",
+        "minusIndicator": "",
+        "zeroBlankIndicator": ""
+      },
+      {
+        "rawSourceLine": "     I                    STUYR                           S1YR",
+        "location": {
+          "startLine": 24,
+          "endLine": 24
+        },
+        "parseQuality": "full",
+        "sourceSequence": "",
+        "specLevel": "fieldDefinition",
+        "fieldName": "S1YR",
+        "externalFieldName": "STUYR",
+        "dataFormat": "",
+        "controlLevel": "S1",
+        "matchingFields": "YR",
+        "fieldRecordRelation": "",
+        "plusIndicator": "",
+        "minusIndicator": "",
+        "zeroBlankIndicator": ""
+      },
+      {
+        "rawSourceLine": "     I                    STUSTS                          S1STS",
+        "location": {
+          "startLine": 26,
+          "endLine": 26
+        },
+        "parseQuality": "full",
+        "sourceSequence": "",
+        "specLevel": "fieldDefinition",
+        "fieldName": "S1STS",
+        "externalFieldName": "STUSTS",
+        "dataFormat": "",
+        "controlLevel": "S1",
+        "matchingFields": "ST",
+        "fieldRecordRelation": "S",
+        "plusIndicator": "",
+        "minusIndicator": "",
+        "zeroBlankIndicator": ""
+      },
+      {
+        "rawSourceLine": "     I                    STUADD                          S1ADD",
+        "location": {
+          "startLine": 28,
+          "endLine": 28
+        },
+        "parseQuality": "full",
+        "sourceSequence": "",
+        "specLevel": "fieldDefinition",
+        "fieldName": "S1ADD",
+        "externalFieldName": "STUADD",
+        "dataFormat": "",
+        "controlLevel": "S1",
+        "matchingFields": "AD",
+        "fieldRecordRelation": "D",
+        "plusIndicator": "",
+        "minusIndicator": "",
+        "zeroBlankIndicator": ""
+      },
+      {
+        "rawSourceLine": "     I                    STUUPD                          S1UPD",
+        "location": {
+          "startLine": 29,
+          "endLine": 29
+        },
+        "parseQuality": "full",
+        "sourceSequence": "",
+        "specLevel": "fieldDefinition",
+        "fieldName": "S1UPD",
+        "externalFieldName": "STUUPD",
+        "dataFormat": "",
+        "controlLevel": "S1",
+        "matchingFields": "UP",
+        "fieldRecordRelation": "D",
+        "plusIndicator": "",
+        "minusIndicator": "",
+        "zeroBlankIndicator": ""
+      },
+      {
+        "rawSourceLine": "     I                    STUADB                          S1ADB",
+        "location": {
+          "startLine": 30,
+          "endLine": 30
+        },
+        "parseQuality": "full",
+        "sourceSequence": "",
+        "specLevel": "fieldDefinition",
+        "fieldName": "S1ADB",
+        "externalFieldName": "STUADB",
+        "dataFormat": "",
+        "controlLevel": "S1",
+        "matchingFields": "AD",
+        "fieldRecordRelation": "B",
+        "plusIndicator": "",
+        "minusIndicator": "",
+        "zeroBlankIndicator": ""
+      },
+      {
+        "rawSourceLine": "     I                    STUUPB                          S1UPB",
+        "location": {
+          "startLine": 31,
+          "endLine": 31
+        },
+        "parseQuality": "full",
+        "sourceSequence": "",
+        "specLevel": "fieldDefinition",
+        "fieldName": "S1UPB",
+        "externalFieldName": "STUUPB",
+        "dataFormat": "",
+        "controlLevel": "S1",
+        "matchingFields": "UP",
+        "fieldRecordRelation": "B",
+        "plusIndicator": "",
+        "minusIndicator": "",
+        "zeroBlankIndicator": ""
+      }
+    ],
+    "calculationSpecs": [],
+    "outputSpecs": [],
+    "dataStructures": [],
+    "symbolTable": [
+      {
+        "name": "S1ID",
+        "dataType": "A",
+        "definedIn": "inputField",
+        "definedAtLine": 12,
+        "isDataStructure": false
+      },
+      {
+        "name": "S1NAM",
+        "dataType": "A",
+        "definedIn": "inputField",
+        "definedAtLine": 14,
+        "isDataStructure": false
+      },
+      {
+        "name": "S1KNA",
+        "dataType": "A",
+        "definedIn": "inputField",
+        "definedAtLine": 15,
+        "isDataStructure": false
+      },
+      {
+        "name": "S1BDT",
+        "dataType": "A",
+        "definedIn": "inputField",
+        "definedAtLine": 16,
+        "isDataStructure": false
+      },
+      {
+        "name": "S1GND",
+        "dataType": "A",
+        "definedIn": "inputField",
+        "definedAtLine": 17,
+        "isDataStructure": false
+      },
+      {
+        "name": "S1ADR",
+        "dataType": "A",
+        "definedIn": "inputField",
+        "definedAtLine": 19,
+        "isDataStructure": false
+      },
+      {
+        "name": "S1TEL",
+        "dataType": "A",
+        "definedIn": "inputField",
+        "definedAtLine": 20,
+        "isDataStructure": false
+      },
+      {
+        "name": "S1MAL",
+        "dataType": "A",
+        "definedIn": "inputField",
+        "definedAtLine": 21,
+        "isDataStructure": false
+      },
+      {
+        "name": "S1SCL",
+        "dataType": "A",
+        "definedIn": "inputField",
+        "definedAtLine": 23,
+        "isDataStructure": false
+      },
+      {
+        "name": "S1YR",
+        "dataType": "A",
+        "definedIn": "inputField",
+        "definedAtLine": 24,
+        "isDataStructure": false
+      },
+      {
+        "name": "S1STS",
+        "dataType": "A",
+        "definedIn": "inputField",
+        "definedAtLine": 26,
+        "isDataStructure": false
+      },
+      {
+        "name": "S1ADD",
+        "dataType": "A",
+        "definedIn": "inputField",
+        "definedAtLine": 28,
+        "isDataStructure": false
+      },
+      {
+        "name": "S1UPD",
+        "dataType": "A",
+        "definedIn": "inputField",
+        "definedAtLine": 29,
+        "isDataStructure": false
+      },
+      {
+        "name": "S1ADB",
+        "dataType": "A",
+        "definedIn": "inputField",
+        "definedAtLine": 30,
+        "isDataStructure": false
+      },
+      {
+        "name": "S1UPB",
+        "dataType": "A",
+        "definedIn": "inputField",
+        "definedAtLine": 31,
+        "isDataStructure": false
+      }
+    ],
+    "subroutines": [],
+    "comments": [
+      {
+        "text": "================================================================",
+        "lineNumber": 1,
+        "specContext": "I",
+        "rawSourceLine": "     I*================================================================",
+        "location": {
+          "startLine": 1,
+          "endLine": 1
+        }
+      },
+      {
+        "text": "コピーブック: STUDNTCPY",
+        "lineNumber": 2,
+        "specContext": "I",
+        "rawSourceLine": "     I* コピーブック: STUDNTCPY",
+        "location": {
+          "startLine": 2,
+          "endLine": 2
+        }
+      },
+      {
+        "text": "説明        : 学生マスター フィールドリネーム定義",
+        "lineNumber": 3,
+        "specContext": "I",
+        "rawSourceLine": "     I* 説明        : 学生マスター フィールドリネーム定義",
+        "location": {
+          "startLine": 3,
+          "endLine": 3
+        }
+      },
+      {
+        "text": "対象ファイル: STUDNTPF / STUDNTL1 / STUDNTL2",
+        "lineNumber": 4,
+        "specContext": "I",
+        "rawSourceLine": "     I* 対象ファイル: STUDNTPF / STUDNTL1 / STUDNTL2",
+        "location": {
+          "startLine": 4,
+          "endLine": 4
+        }
+      },
+      {
+        "text": "リネーム規則: STU → S1",
+        "lineNumber": 5,
+        "specContext": "I",
+        "rawSourceLine": "     I* リネーム規則: STU → S1",
+        "location": {
+          "startLine": 5,
+          "endLine": 5
+        }
+      },
+      {
+        "text": "",
+        "lineNumber": 6,
+        "specContext": "I",
+        "rawSourceLine": "     I*",
+        "location": {
+          "startLine": 6,
+          "endLine": 6
+        }
+      },
+      {
+        "text": "使用方法:",
+        "lineNumber": 7,
+        "specContext": "I",
+        "rawSourceLine": "     I* 使用方法:",
+        "location": {
+          "startLine": 7,
+          "endLine": 7
+        }
+      },
+      {
+        "text": "IFILENAME",
+        "lineNumber": 8,
+        "specContext": "I",
+        "rawSourceLine": "     I*   IFILENAME",
+        "location": {
+          "startLine": 8,
+          "endLine": 8
+        }
+      },
+      {
+        "text": "I/COPY QCPYSRC,STUDNTCPY",
+        "lineNumber": 9,
+        "specContext": "I",
+        "rawSourceLine": "     I*   I/COPY QCPYSRC,STUDNTCPY",
+        "location": {
+          "startLine": 9,
+          "endLine": 9
+        }
+      },
+      {
+        "text": "================================================================",
+        "lineNumber": 10,
+        "specContext": "I",
+        "rawSourceLine": "     I*================================================================",
+        "location": {
+          "startLine": 10,
+          "endLine": 10
+        }
+      },
+      {
+        "text": "--- 主キー ---",
+        "lineNumber": 11,
+        "specContext": "I",
+        "rawSourceLine": "     I*   --- 主キー ---",
+        "location": {
+          "startLine": 11,
+          "endLine": 11
+        }
+      },
+      {
+        "text": "--- 基本情報 ---",
+        "lineNumber": 13,
+        "specContext": "I",
+        "rawSourceLine": "     I*   --- 基本情報 ---",
+        "location": {
+          "startLine": 13,
+          "endLine": 13
+        }
+      },
+      {
+        "text": "--- 連絡先情報 ---",
+        "lineNumber": 18,
+        "specContext": "I",
+        "rawSourceLine": "     I*   --- 連絡先情報 ---",
+        "location": {
+          "startLine": 18,
+          "endLine": 18
+        }
+      },
+      {
+        "text": "--- 所属情報 ---",
+        "lineNumber": 22,
+        "specContext": "I",
+        "rawSourceLine": "     I*   --- 所属情報 ---",
+        "location": {
+          "startLine": 22,
+          "endLine": 22
+        }
+      },
+      {
+        "text": "--- 状態管理 ---",
+        "lineNumber": 25,
+        "specContext": "I",
+        "rawSourceLine": "     I*   --- 状態管理 ---",
+        "location": {
+          "startLine": 25,
+          "endLine": 25
+        }
+      },
+      {
+        "text": "--- 監査情報 ---",
+        "lineNumber": 27,
+        "specContext": "I",
+        "rawSourceLine": "     I*   --- 監査情報 ---",
+        "location": {
+          "startLine": 27,
+          "endLine": 27
+        }
+      }
+    ],
+    "sourceLines": [
+      {
+        "lineNumber": 1,
+        "rawText": "     I*================================================================",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 2,
+        "rawText": "     I* コピーブック: STUDNTCPY",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 3,
+        "rawText": "     I* 説明        : 学生マスター フィールドリネーム定義",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 4,
+        "rawText": "     I* 対象ファイル: STUDNTPF / STUDNTL1 / STUDNTL2",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 5,
+        "rawText": "     I* リネーム規則: STU → S1",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 6,
+        "rawText": "     I*",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 7,
+        "rawText": "     I* 使用方法:",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 8,
+        "rawText": "     I*   IFILENAME",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 9,
+        "rawText": "     I*   I/COPY QCPYSRC,STUDNTCPY",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 10,
+        "rawText": "     I*================================================================",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 11,
+        "rawText": "     I*   --- 主キー ---",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 12,
+        "rawText": "     I                    STUID                           S1ID",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 13,
+        "rawText": "     I*   --- 基本情報 ---",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 14,
+        "rawText": "     I                    STUNAM                          S1NAM",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 15,
+        "rawText": "     I                    STUKNA                          S1KNA",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 16,
+        "rawText": "     I                    STUBDT                          S1BDT",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 17,
+        "rawText": "     I                    STUGND                          S1GND",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 18,
+        "rawText": "     I*   --- 連絡先情報 ---",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 19,
+        "rawText": "     I                    STUADR                          S1ADR",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 20,
+        "rawText": "     I                    STUTEL                          S1TEL",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 21,
+        "rawText": "     I                    STUMAL                          S1MAL",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 22,
+        "rawText": "     I*   --- 所属情報 ---",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 23,
+        "rawText": "     I                    STUSCL                          S1SCL",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 24,
+        "rawText": "     I                    STUYR                           S1YR",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 25,
+        "rawText": "     I*   --- 状態管理 ---",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 26,
+        "rawText": "     I                    STUSTS                          S1STS",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 27,
+        "rawText": "     I*   --- 監査情報 ---",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 28,
+        "rawText": "     I                    STUADD                          S1ADD",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 29,
+        "rawText": "     I                    STUUPD                          S1UPD",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 30,
+        "rawText": "     I                    STUADB                          S1ADB",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 31,
+        "rawText": "     I                    STUUPB                          S1UPB",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      }
+    ]
+  },
+  "dependencies": {
+    "referencedFiles": [],
+    "calledPrograms": [],
+    "copyMembers": []
+  },
+  "errors": []
+}

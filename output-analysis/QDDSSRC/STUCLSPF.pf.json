@@ -1,0 +1,762 @@
+{
+  "metadata": {
+    "irVersion": "1.0.0",
+    "sourceType": "DDS_PF",
+    "sourceMember": "STUCLSPF",
+    "sourceFile": "QDDSSRC",
+    "sourceLibrary": "rpg3-student-mgmt",
+    "parseInfo": {
+      "parserVersion": "1.0.0",
+      "parsedAt": "2026-04-13T16:01:46.664833100Z",
+      "parseStatus": "complete",
+      "totalLines": 43,
+      "detectedEncoding": "UTF-8",
+      "errors": [],
+      "warnings": []
+    }
+  },
+  "content": {
+    "sourceLines": [
+      {
+        "lineNumber": 1,
+        "rawText": "     A*================================================================",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 2,
+        "rawText": "     A* ファイル名: STUCLSPF",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 3,
+        "rawText": "     A* 説明      : 学生・クラス関連物理ファイル",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 4,
+        "rawText": "     A*             学生がどのクラスに所属するかを管理する",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 5,
+        "rawText": "     A* 作成日    : 2026/03/14",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 6,
+        "rawText": "     A* 作成者    : システム開発部",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 7,
+        "rawText": "     A*================================================================",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 8,
+        "rawText": "     A                                      UNIQUE",
+        "specType": "FILE_KEYWORD",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 9,
+        "rawText": "     A          R SCRREC                     TEXT('学生・クラス関連レコード')",
+        "specType": "RECORD_FORMAT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 10,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 11,
+        "rawText": "     A*   --- 複合キー ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 12,
+        "rawText": "     A            SCSTID         6A         TEXT('学生ID') +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 13,
+        "rawText": "     A                                      COLHDG('学生' 'ID')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 14,
+        "rawText": "     A            SCCLID         6A         TEXT('クラスID') +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 15,
+        "rawText": "     A                                      COLHDG('クラス' 'ID')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 16,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 17,
+        "rawText": "     A*   --- 所属情報 ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 18,
+        "rawText": "     A            SCENDT         8S 0       TEXT('入級日 YYYYMMDD') +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 19,
+        "rawText": "     A                                      COLHDG('入級日')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 20,
+        "rawText": "     A            SCLVDT         8S 0       TEXT('退級日 YYYYMMDD') +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 21,
+        "rawText": "     A                                      COLHDG('退級日')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 22,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 23,
+        "rawText": "     A*   --- 成績情報 ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 24,
+        "rawText": "     A            SCGRAD         3S 0       TEXT('成績点 0-100') +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 25,
+        "rawText": "     A                                      COLHDG('成績点')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 26,
+        "rawText": "     A            SCRANK         1A         TEXT('評価 A/B/C/D/F') +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 27,
+        "rawText": "     A                                      COLHDG('評価') +",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 28,
+        "rawText": "     A                                      VALUES('A' 'B' 'C' 'D' 'F')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 29,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 30,
+        "rawText": "     A*   --- 状態管理 ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 31,
+        "rawText": "     A            SCSTS          1A         TEXT('状態 A=有効 D=退級') +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 32,
+        "rawText": "     A                                      COLHDG('状態') +",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 33,
+        "rawText": "     A                                      DFT('A')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 34,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 35,
+        "rawText": "     A*   --- 監査情報 ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 36,
+        "rawText": "     A            SCADD          8S 0       TEXT('登録日 YYYYMMDD') +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 37,
+        "rawText": "     A                                      COLHDG('登録日')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 38,
+        "rawText": "     A            SCUPD          8S 0       TEXT('更新日 YYYYMMDD') +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 39,
+        "rawText": "     A                                      COLHDG('更新日')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 40,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 41,
+        "rawText": "     A*   --- 複合キー定義 ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 42,
+        "rawText": "     A          K SCSTID",
+        "specType": "KEY_FIELD",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 43,
+        "rawText": "     A          K SCCLID",
+        "specType": "KEY_FIELD",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      }
+    ],
+    "fileKeywords": [
+      {
+        "name": "UNIQUE",
+        "rawText": "UNIQUE"
+      }
+    ],
+    "recordFormats": [
+      {
+        "location": {
+          "startLine": 9,
+          "endLine": 9
+        },
+        "rawSourceLine": "     A          R SCRREC                     TEXT('学生・クラス関連レコード')",
+        "name": "SCRREC",
+        "text": "学生・クラス関連レコード",
+        "keywords": [
+          {
+            "name": "TEXT",
+            "value": "学生・クラス関連レコード",
+            "rawText": "TEXT('学生・クラス関連レコード')"
+          }
+        ],
+        "fields": [
+          {
+            "location": {
+              "startLine": 12,
+              "endLine": 12
+            },
+            "rawSourceLines": [
+              "     A            SCSTID         6A         TEXT('学生ID') +",
+              "     A                                      COLHDG('学生' 'ID')"
+            ],
+            "name": "SCSTID",
+            "length": 6,
+            "dataType": "A",
+            "source": "direct",
+            "keywords": [
+              {
+                "name": "TEXT",
+                "value": "学生ID",
+                "rawText": "TEXT('学生ID')"
+              },
+              {
+                "name": "COLHDG",
+                "values": [
+                  "学生",
+                  "ID"
+                ],
+                "rawText": "COLHDG('学生' 'ID')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 14,
+              "endLine": 14
+            },
+            "rawSourceLines": [
+              "     A            SCCLID         6A         TEXT('クラスID') +",
+              "     A                                      COLHDG('クラス' 'ID')"
+            ],
+            "name": "SCCLID",
+            "length": 6,
+            "dataType": "A",
+            "source": "direct",
+            "keywords": [
+              {
+                "name": "TEXT",
+                "value": "クラスID",
+                "rawText": "TEXT('クラスID')"
+              },
+              {
+                "name": "COLHDG",
+                "values": [
+                  "クラス",
+                  "ID"
+                ],
+                "rawText": "COLHDG('クラス' 'ID')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 18,
+              "endLine": 18
+            },
+            "rawSourceLines": [
+              "     A            SCENDT         8S 0       TEXT('入級日 YYYYMMDD') +",
+              "     A                                      COLHDG('入級日')"
+            ],
+            "name": "SCENDT",
+            "length": 8,
+            "dataType": "S",
+            "decimalPositions": 0,
+            "source": "direct",
+            "keywords": [
+              {
+                "name": "TEXT",
+                "value": "入級日 YYYYMMDD",
+                "rawText": "TEXT('入級日 YYYYMMDD')"
+              },
+              {
+                "name": "COLHDG",
+                "value": "入級日",
+                "rawText": "COLHDG('入級日')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 20,
+              "endLine": 20
+            },
+            "rawSourceLines": [
+              "     A            SCLVDT         8S 0       TEXT('退級日 YYYYMMDD') +",
+              "     A                                      COLHDG('退級日')"
+            ],
+            "name": "SCLVDT",
+            "length": 8,
+            "dataType": "S",
+            "decimalPositions": 0,
+            "source": "direct",
+            "keywords": [
+              {
+                "name": "TEXT",
+                "value": "退級日 YYYYMMDD",
+                "rawText": "TEXT('退級日 YYYYMMDD')"
+              },
+              {
+                "name": "COLHDG",
+                "value": "退級日",
+                "rawText": "COLHDG('退級日')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 24,
+              "endLine": 24
+            },
+            "rawSourceLines": [
+              "     A            SCGRAD         3S 0       TEXT('成績点 0-100') +",
+              "     A                                      COLHDG('成績点')"
+            ],
+            "name": "SCGRAD",
+            "length": 3,
+            "dataType": "S",
+            "decimalPositions": 0,
+            "source": "direct",
+            "keywords": [
+              {
+                "name": "TEXT",
+                "value": "成績点 0-100",
+                "rawText": "TEXT('成績点 0-100')"
+              },
+              {
+                "name": "COLHDG",
+                "value": "成績点",
+                "rawText": "COLHDG('成績点')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 26,
+              "endLine": 26
+            },
+            "rawSourceLines": [
+              "     A            SCRANK         1A         TEXT('評価 A/B/C/D/F') +",
+              "     A                                      COLHDG('評価') +",
+              "     A                                      VALUES('A' 'B' 'C' 'D' 'F')"
+            ],
+            "name": "SCRANK",
+            "length": 1,
+            "dataType": "A",
+            "source": "direct",
+            "keywords": [
+              {
+                "name": "TEXT",
+                "value": "評価 A/B/C/D/F",
+                "rawText": "TEXT('評価 A/B/C/D/F')"
+              },
+              {
+                "name": "COLHDG",
+                "value": "評価",
+                "rawText": "COLHDG('評価')"
+              },
+              {
+                "name": "VALUES",
+                "values": [
+                  "A",
+                  "B",
+                  "C",
+                  "D",
+                  "F"
+                ],
+                "rawText": "VALUES('A' 'B' 'C' 'D' 'F')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 31,
+              "endLine": 31
+            },
+            "rawSourceLines": [
+              "     A            SCSTS          1A         TEXT('状態 A=有効 D=退級') +",
+              "     A                                      COLHDG('状態') +",
+              "     A                                      DFT('A')"
+            ],
+            "name": "SCSTS",
+            "length": 1,
+            "dataType": "A",
+            "source": "direct",
+            "keywords": [
+              {
+                "name": "TEXT",
+                "value": "状態 A=有効 D=退級",
+                "rawText": "TEXT('状態 A=有効 D=退級')"
+              },
+              {
+                "name": "COLHDG",
+                "value": "状態",
+                "rawText": "COLHDG('状態')"
+              },
+              {
+                "name": "DFT",
+                "value": "A",
+                "rawText": "DFT('A')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 36,
+              "endLine": 36
+            },
+            "rawSourceLines": [
+              "     A            SCADD          8S 0       TEXT('登録日 YYYYMMDD') +",
+              "     A                                      COLHDG('登録日')"
+            ],
+            "name": "SCADD",
+            "length": 8,
+            "dataType": "S",
+            "decimalPositions": 0,
+            "source": "direct",
+            "keywords": [
+              {
+                "name": "TEXT",
+                "value": "登録日 YYYYMMDD",
+                "rawText": "TEXT('登録日 YYYYMMDD')"
+              },
+              {
+                "name": "COLHDG",
+                "value": "登録日",
+                "rawText": "COLHDG('登録日')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 38,
+              "endLine": 38
+            },
+            "rawSourceLines": [
+              "     A            SCUPD          8S 0       TEXT('更新日 YYYYMMDD') +",
+              "     A                                      COLHDG('更新日')"
+            ],
+            "name": "SCUPD",
+            "length": 8,
+            "dataType": "S",
+            "decimalPositions": 0,
+            "source": "direct",
+            "keywords": [
+              {
+                "name": "TEXT",
+                "value": "更新日 YYYYMMDD",
+                "rawText": "TEXT('更新日 YYYYMMDD')"
+              },
+              {
+                "name": "COLHDG",
+                "value": "更新日",
+                "rawText": "COLHDG('更新日')"
+              }
+            ]
+          }
+        ],
+        "keys": [
+          {
+            "location": {
+              "startLine": 42,
+              "endLine": 42
+            },
+            "rawSourceLine": "     A          K SCSTID",
+            "fieldName": "SCSTID",
+            "sortOrder": "ascending",
+            "keywords": []
+          },
+          {
+            "location": {
+              "startLine": 43,
+              "endLine": 43
+            },
+            "rawSourceLine": "     A          K SCCLID",
+            "fieldName": "SCCLID",
+            "sortOrder": "ascending",
+            "keywords": []
+          }
+        ]
+      }
+    ],
+    "comments": [
+      {
+        "lineNumber": 1,
+        "text": "================================================================"
+      },
+      {
+        "lineNumber": 2,
+        "text": "ファイル名: STUCLSPF"
+      },
+      {
+        "lineNumber": 3,
+        "text": "説明      : 学生・クラス関連物理ファイル"
+      },
+      {
+        "lineNumber": 4,
+        "text": "学生がどのクラスに所属するかを管理する"
+      },
+      {
+        "lineNumber": 5,
+        "text": "作成日    : 2026/03/14"
+      },
+      {
+        "lineNumber": 6,
+        "text": "作成者    : システム開発部"
+      },
+      {
+        "lineNumber": 7,
+        "text": "================================================================"
+      },
+      {
+        "lineNumber": 10,
+        "text": ""
+      },
+      {
+        "lineNumber": 11,
+        "text": "--- 複合キー ---"
+      },
+      {
+        "lineNumber": 16,
+        "text": ""
+      },
+      {
+        "lineNumber": 17,
+        "text": "--- 所属情報 ---"
+      },
+      {
+        "lineNumber": 22,
+        "text": ""
+      },
+      {
+        "lineNumber": 23,
+        "text": "--- 成績情報 ---"
+      },
+      {
+        "lineNumber": 29,
+        "text": ""
+      },
+      {
+        "lineNumber": 30,
+        "text": "--- 状態管理 ---"
+      },
+      {
+        "lineNumber": 34,
+        "text": ""
+      },
+      {
+        "lineNumber": 35,
+        "text": "--- 監査情報 ---"
+      },
+      {
+        "lineNumber": 40,
+        "text": ""
+      },
+      {
+        "lineNumber": 41,
+        "text": "--- 複合キー定義 ---"
+      }
+    ],
+    "parseErrors": []
+  },
+  "dependencies": {
+    "referencedFiles": [],
+    "calledPrograms": [],
+    "copyMembers": []
+  },
+  "errors": []
+}

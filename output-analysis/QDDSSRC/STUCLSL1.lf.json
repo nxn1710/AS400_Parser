@@ -1,0 +1,264 @@
+{
+  "metadata": {
+    "irVersion": "1.0.0",
+    "sourceType": "DDS_LF",
+    "sourceMember": "STUCLSL1",
+    "sourceFile": "QDDSSRC",
+    "sourceLibrary": "rpg3-student-mgmt",
+    "parseInfo": {
+      "parserVersion": "1.0.0",
+      "parsedAt": "2026-04-13T16:01:46.660702400Z",
+      "parseStatus": "complete",
+      "totalLines": 15,
+      "detectedEncoding": "UTF-8",
+      "errors": [],
+      "warnings": []
+    }
+  },
+  "content": {
+    "sourceLines": [
+      {
+        "lineNumber": 1,
+        "rawText": "     A*================================================================",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 2,
+        "rawText": "     A* ファイル名: STUCLSL1",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 3,
+        "rawText": "     A* 説明      : 学生・クラス関連論理ファイル（学生ID順）",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 4,
+        "rawText": "     A* 基礎PF    : STUCLSPF",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 5,
+        "rawText": "     A* 作成日    : 2026/03/14",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 6,
+        "rawText": "     A* 作成者    : システム開発部",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 7,
+        "rawText": "     A*================================================================",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 8,
+        "rawText": "     A          R SCRREC                     PFILE(STUCLSPF)",
+        "specType": "RECORD_FORMAT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 9,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 10,
+        "rawText": "     A*   --- 選択条件: 有効レコードのみ ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 11,
+        "rawText": "     A          S SCSTS                      COMP(EQ 'A')",
+        "specType": "SELECT_FIELD",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 12,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 13,
+        "rawText": "     A*   --- アクセスパス: 学生ID＋入級日順 ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 14,
+        "rawText": "     A          K SCSTID",
+        "specType": "KEY_FIELD",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 15,
+        "rawText": "     A          K SCENDT",
+        "specType": "KEY_FIELD",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      }
+    ],
+    "fileKeywords": [],
+    "recordFormats": [
+      {
+        "location": {
+          "startLine": 8,
+          "endLine": 8
+        },
+        "rawSourceLine": "     A          R SCRREC                     PFILE(STUCLSPF)",
+        "name": "SCRREC",
+        "lfType": "simple",
+        "pfile": "STUCLSPF",
+        "keywords": [
+          {
+            "name": "PFILE",
+            "value": "STUCLSPF",
+            "rawText": "PFILE(STUCLSPF)"
+          }
+        ],
+        "fields": [],
+        "keys": [
+          {
+            "location": {
+              "startLine": 14,
+              "endLine": 14
+            },
+            "rawSourceLine": "     A          K SCSTID",
+            "fieldName": "SCSTID",
+            "sortOrder": "ascending",
+            "keywords": []
+          },
+          {
+            "location": {
+              "startLine": 15,
+              "endLine": 15
+            },
+            "rawSourceLine": "     A          K SCENDT",
+            "fieldName": "SCENDT",
+            "sortOrder": "ascending",
+            "keywords": []
+          }
+        ],
+        "selectOmit": [
+          {
+            "location": {
+              "startLine": 11,
+              "endLine": 11
+            },
+            "rawSourceLine": "     A          S SCSTS                      COMP(EQ 'A')",
+            "type": "select",
+            "fieldName": "SCSTS",
+            "keywords": [
+              {
+                "name": "COMP",
+                "rawText": "COMP(EQ 'A')",
+                "comparisonOperator": "EQ",
+                "comparisonValue": "A"
+              }
+            ]
+          }
+        ],
+        "joinSpecs": []
+      }
+    ],
+    "comments": [
+      {
+        "lineNumber": 1,
+        "text": "================================================================"
+      },
+      {
+        "lineNumber": 2,
+        "text": "ファイル名: STUCLSL1"
+      },
+      {
+        "lineNumber": 3,
+        "text": "説明      : 学生・クラス関連論理ファイル（学生ID順）"
+      },
+      {
+        "lineNumber": 4,
+        "text": "基礎PF    : STUCLSPF"
+      },
+      {
+        "lineNumber": 5,
+        "text": "作成日    : 2026/03/14"
+      },
+      {
+        "lineNumber": 6,
+        "text": "作成者    : システム開発部"
+      },
+      {
+        "lineNumber": 7,
+        "text": "================================================================"
+      },
+      {
+        "lineNumber": 9,
+        "text": ""
+      },
+      {
+        "lineNumber": 10,
+        "text": "--- 選択条件: 有効レコードのみ ---"
+      },
+      {
+        "lineNumber": 12,
+        "text": ""
+      },
+      {
+        "lineNumber": 13,
+        "text": "--- アクセスパス: 学生ID＋入級日順 ---"
+      }
+    ],
+    "parseErrors": []
+  },
+  "dependencies": {
+    "referencedFiles": [
+      {
+        "name": "STUCLSPF",
+        "referenceType": "physical-file",
+        "locations": []
+      }
+    ],
+    "calledPrograms": [],
+    "copyMembers": []
+  },
+  "errors": []
+}

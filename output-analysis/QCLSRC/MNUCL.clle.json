@@ -1,0 +1,1458 @@
+{
+  "metadata": {
+    "irVersion": "1.0.0",
+    "sourceType": "CLLE",
+    "sourceMember": "MNUCL",
+    "sourceFile": "QCLSRC",
+    "sourceLibrary": "rpg3-student-mgmt",
+    "parseInfo": {
+      "parserVersion": "1.0.0",
+      "parsedAt": "2026-04-13T16:01:46.598230500Z",
+      "parseStatus": "complete",
+      "totalLines": 81,
+      "detectedEncoding": "UTF-8",
+      "errors": [],
+      "warnings": []
+    }
+  },
+  "content": {
+    "sourceLines": [
+      {
+        "lineNumber": 1,
+        "rawText": "/*================================================================*/",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 2,
+        "rawText": "/* プログラム名: MNUCL                                             */",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 3,
+        "rawText": "/* 説明        : 学生管理システム メニュー呼出CLプログラム          */",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 4,
+        "rawText": "/* 作成日      : 2026/03/14                                        */",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 5,
+        "rawText": "/* 作成者      : システム開発部                                    */",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 6,
+        "rawText": "/*                                                                  */",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 7,
+        "rawText": "/* 機能概要:                                                        */",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 8,
+        "rawText": "/*   データベースファイルのオーバーライドを設定し、                  */",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 9,
+        "rawText": "/*   メインメニュープログラム（MNUPRG）を呼び出す                  */",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 10,
+        "rawText": "/*   エラー発生時はメッセージを送信して終了する                    */",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 11,
+        "rawText": "/*                                                                  */",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 12,
+        "rawText": "/* 使用ライブラリ:                                                  */",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 13,
+        "rawText": "/*   STULIB - 学生管理システムライブラリ                            */",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 14,
+        "rawText": "/*================================================================*/",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 15,
+        "rawText": "             PGM",
+        "specType": "COMMAND",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 16,
+        "rawText": "",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": true
+      },
+      {
+        "lineNumber": 17,
+        "rawText": "/*--------------------------------------------------------------*/",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 18,
+        "rawText": "/* エラー監視: CPF0000系エラーを捕捉                              */",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 19,
+        "rawText": "/*--------------------------------------------------------------*/",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 20,
+        "rawText": "             MONMSG     MSGID(CPF0000) EXEC(GOTO CMDLBL(ERROR))",
+        "specType": "COMMAND",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 21,
+        "rawText": "",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": true
+      },
+      {
+        "lineNumber": 22,
+        "rawText": "/*--------------------------------------------------------------*/",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 23,
+        "rawText": "/* ライブラリリスト設定                                          */",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 24,
+        "rawText": "/*--------------------------------------------------------------*/",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 25,
+        "rawText": "             ADDLIBLE   LIB(STULIB)",
+        "specType": "COMMAND",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 26,
+        "rawText": "             MONMSG     MSGID(CPF2103)",
+        "specType": "COMMAND",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 27,
+        "rawText": "",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": true
+      },
+      {
+        "lineNumber": 28,
+        "rawText": "/*--------------------------------------------------------------*/",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 29,
+        "rawText": "/* データベースファイル オーバーライド設定                        */",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 30,
+        "rawText": "/* 物理ファイルと論理ファイルを明示的に指定する                  */",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 31,
+        "rawText": "/*--------------------------------------------------------------*/",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 32,
+        "rawText": "             OVRDBF     FILE(STUDNTPF) TOFILE(STULIB/STUDNTPF)",
+        "specType": "COMMAND",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 33,
+        "rawText": "             OVRDBF     FILE(STUDNTL1) TOFILE(STULIB/STUDNTL1)",
+        "specType": "COMMAND",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 34,
+        "rawText": "             OVRDBF     FILE(STUDNTL2) TOFILE(STULIB/STUDNTL2)",
+        "specType": "COMMAND",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 35,
+        "rawText": "             OVRDBF     FILE(SCHOOLPF)  TOFILE(STULIB/SCHOOLPF)",
+        "specType": "COMMAND",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 36,
+        "rawText": "             OVRDBF     FILE(CLASSPF)   TOFILE(STULIB/CLASSPF)",
+        "specType": "COMMAND",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 37,
+        "rawText": "",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": true
+      },
+      {
+        "lineNumber": 38,
+        "rawText": "/*--------------------------------------------------------------*/",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 39,
+        "rawText": "/* 表示ファイル オーバーライド設定                                */",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 40,
+        "rawText": "/*--------------------------------------------------------------*/",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 41,
+        "rawText": "             OVRDBF     FILE(MNUDSPF)   TOFILE(STULIB/MNUDSPF)",
+        "specType": "COMMAND",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 42,
+        "rawText": "             OVRDBF     FILE(STUDSPF)   TOFILE(STULIB/STUDSPF)",
+        "specType": "COMMAND",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 43,
+        "rawText": "             OVRDBF     FILE(STULSTD)   TOFILE(STULIB/STULSTD)",
+        "specType": "COMMAND",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 44,
+        "rawText": "",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": true
+      },
+      {
+        "lineNumber": 45,
+        "rawText": "/*--------------------------------------------------------------*/",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 46,
+        "rawText": "/* 印刷ファイル オーバーライド設定                                */",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 47,
+        "rawText": "/*--------------------------------------------------------------*/",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 48,
+        "rawText": "             OVRDBF     FILE(STURPTPF)  TOFILE(STULIB/STURPTPF)",
+        "specType": "COMMAND",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 49,
+        "rawText": "",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": true
+      },
+      {
+        "lineNumber": 50,
+        "rawText": "/*--------------------------------------------------------------*/",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 51,
+        "rawText": "/* メインメニュープログラム呼出                                  */",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 52,
+        "rawText": "/*--------------------------------------------------------------*/",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 53,
+        "rawText": "             CALL       PGM(STULIB/MNUPRG)",
+        "specType": "COMMAND",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 54,
+        "rawText": "             MONMSG     MSGID(CPF0000)",
+        "specType": "COMMAND",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 55,
+        "rawText": "",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": true
+      },
+      {
+        "lineNumber": 56,
+        "rawText": "/*--------------------------------------------------------------*/",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 57,
+        "rawText": "/* オーバーライド削除                                            */",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 58,
+        "rawText": "/*--------------------------------------------------------------*/",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 59,
+        "rawText": "             DLTOVR     FILE(*ALL)",
+        "specType": "COMMAND",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 60,
+        "rawText": "",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": true
+      },
+      {
+        "lineNumber": 61,
+        "rawText": "/*--------------------------------------------------------------*/",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 62,
+        "rawText": "/* ライブラリリストから削除                                      */",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 63,
+        "rawText": "/*--------------------------------------------------------------*/",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 64,
+        "rawText": "             RMVLIBLE   LIB(STULIB)",
+        "specType": "COMMAND",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 65,
+        "rawText": "             MONMSG     MSGID(CPF2104)",
+        "specType": "COMMAND",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 66,
+        "rawText": "",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": true
+      },
+      {
+        "lineNumber": 67,
+        "rawText": "             GOTO       CMDLBL(ENDPGM)",
+        "specType": "COMMAND",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 68,
+        "rawText": "",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": true
+      },
+      {
+        "lineNumber": 69,
+        "rawText": "/*--------------------------------------------------------------*/",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 70,
+        "rawText": "/* エラー処理                                                    */",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 71,
+        "rawText": "/*--------------------------------------------------------------*/",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 72,
+        "rawText": " ERROR:",
+        "specType": "LABEL",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 73,
+        "rawText": "             SNDPGMMSG  MSGID(CPF9898) MSGF(QCPFMSG) +",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 74,
+        "rawText": "                          MSGDTA('学生管理システムでエラーが +",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 75,
+        "rawText": "                          発生しました') MSGTYPE(*ESCAPE)",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 76,
+        "rawText": "",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": true
+      },
+      {
+        "lineNumber": 77,
+        "rawText": "/*--------------------------------------------------------------*/",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 78,
+        "rawText": "/* プログラム終了                                                */",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 79,
+        "rawText": "/*--------------------------------------------------------------*/",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 80,
+        "rawText": " ENDPGM:",
+        "specType": "LABEL",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 81,
+        "rawText": "             ENDPGM",
+        "specType": "COMMAND",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      }
+    ],
+    "variables": [],
+    "fileDeclarations": [],
+    "commands": [
+      {
+        "name": "MONMSG",
+        "parameters": [
+          {
+            "keyword": "MSGID",
+            "value": "CPF0000",
+            "isPositional": false
+          },
+          {
+            "keyword": "EXEC",
+            "value": "GOTO CMDLBL(ERROR)",
+            "isPositional": false
+          }
+        ],
+        "location": {
+          "startLine": 20,
+          "endLine": 20
+        },
+        "rawSourceLines": [
+          "             MONMSG     MSGID(CPF0000) EXEC(GOTO CMDLBL(ERROR))                 "
+        ],
+        "monitorMessage": {
+          "msgId": "CPF0000",
+          "execCommands": [
+            {
+              "name": "GOTO",
+              "parameters": [
+                {
+                  "keyword": "CMDLBL",
+                  "value": "ERROR",
+                  "isPositional": false
+                }
+              ],
+              "location": {
+                "startLine": 20,
+                "endLine": 20
+              },
+              "rawSourceLines": [
+                "             MONMSG     MSGID(CPF0000) EXEC(GOTO CMDLBL(ERROR))                 "
+              ],
+              "execCommands": []
+            }
+          ]
+        },
+        "execCommands": [
+          {
+            "name": "GOTO",
+            "parameters": [
+              {
+                "keyword": "CMDLBL",
+                "value": "ERROR",
+                "isPositional": false
+              }
+            ],
+            "location": {
+              "startLine": 20,
+              "endLine": 20
+            },
+            "rawSourceLines": [
+              "             MONMSG     MSGID(CPF0000) EXEC(GOTO CMDLBL(ERROR))                 "
+            ],
+            "execCommands": []
+          }
+        ]
+      },
+      {
+        "name": "ADDLIBLE",
+        "parameters": [
+          {
+            "keyword": "LIB",
+            "value": "STULIB",
+            "isPositional": false
+          }
+        ],
+        "location": {
+          "startLine": 25,
+          "endLine": 25
+        },
+        "rawSourceLines": [
+          "             ADDLIBLE   LIB(STULIB)                                             "
+        ],
+        "execCommands": []
+      },
+      {
+        "name": "MONMSG",
+        "parameters": [
+          {
+            "keyword": "MSGID",
+            "value": "CPF2103",
+            "isPositional": false
+          }
+        ],
+        "location": {
+          "startLine": 26,
+          "endLine": 26
+        },
+        "rawSourceLines": [
+          "             MONMSG     MSGID(CPF2103)                                          "
+        ],
+        "monitorMessage": {
+          "msgId": "CPF2103",
+          "execCommands": []
+        },
+        "execCommands": []
+      },
+      {
+        "name": "OVRDBF",
+        "parameters": [
+          {
+            "keyword": "FILE",
+            "value": "STUDNTPF",
+            "isPositional": false
+          },
+          {
+            "keyword": "TOFILE",
+            "value": "STULIB/STUDNTPF",
+            "isPositional": false
+          }
+        ],
+        "location": {
+          "startLine": 32,
+          "endLine": 32
+        },
+        "rawSourceLines": [
+          "             OVRDBF     FILE(STUDNTPF) TOFILE(STULIB/STUDNTPF)                  "
+        ],
+        "execCommands": []
+      },
+      {
+        "name": "OVRDBF",
+        "parameters": [
+          {
+            "keyword": "FILE",
+            "value": "STUDNTL1",
+            "isPositional": false
+          },
+          {
+            "keyword": "TOFILE",
+            "value": "STULIB/STUDNTL1",
+            "isPositional": false
+          }
+        ],
+        "location": {
+          "startLine": 33,
+          "endLine": 33
+        },
+        "rawSourceLines": [
+          "             OVRDBF     FILE(STUDNTL1) TOFILE(STULIB/STUDNTL1)                  "
+        ],
+        "execCommands": []
+      },
+      {
+        "name": "OVRDBF",
+        "parameters": [
+          {
+            "keyword": "FILE",
+            "value": "STUDNTL2",
+            "isPositional": false
+          },
+          {
+            "keyword": "TOFILE",
+            "value": "STULIB/STUDNTL2",
+            "isPositional": false
+          }
+        ],
+        "location": {
+          "startLine": 34,
+          "endLine": 34
+        },
+        "rawSourceLines": [
+          "             OVRDBF     FILE(STUDNTL2) TOFILE(STULIB/STUDNTL2)                  "
+        ],
+        "execCommands": []
+      },
+      {
+        "name": "OVRDBF",
+        "parameters": [
+          {
+            "keyword": "FILE",
+            "value": "SCHOOLPF",
+            "isPositional": false
+          },
+          {
+            "keyword": "TOFILE",
+            "value": "STULIB/SCHOOLPF",
+            "isPositional": false
+          }
+        ],
+        "location": {
+          "startLine": 35,
+          "endLine": 35
+        },
+        "rawSourceLines": [
+          "             OVRDBF     FILE(SCHOOLPF)  TOFILE(STULIB/SCHOOLPF)                 "
+        ],
+        "execCommands": []
+      },
+      {
+        "name": "OVRDBF",
+        "parameters": [
+          {
+            "keyword": "FILE",
+            "value": "CLASSPF",
+            "isPositional": false
+          },
+          {
+            "keyword": "TOFILE",
+            "value": "STULIB/CLASSPF",
+            "isPositional": false
+          }
+        ],
+        "location": {
+          "startLine": 36,
+          "endLine": 36
+        },
+        "rawSourceLines": [
+          "             OVRDBF     FILE(CLASSPF)   TOFILE(STULIB/CLASSPF)                  "
+        ],
+        "execCommands": []
+      },
+      {
+        "name": "OVRDBF",
+        "parameters": [
+          {
+            "keyword": "FILE",
+            "value": "MNUDSPF",
+            "isPositional": false
+          },
+          {
+            "keyword": "TOFILE",
+            "value": "STULIB/MNUDSPF",
+            "isPositional": false
+          }
+        ],
+        "location": {
+          "startLine": 41,
+          "endLine": 41
+        },
+        "rawSourceLines": [
+          "             OVRDBF     FILE(MNUDSPF)   TOFILE(STULIB/MNUDSPF)                  "
+        ],
+        "execCommands": []
+      },
+      {
+        "name": "OVRDBF",
+        "parameters": [
+          {
+            "keyword": "FILE",
+            "value": "STUDSPF",
+            "isPositional": false
+          },
+          {
+            "keyword": "TOFILE",
+            "value": "STULIB/STUDSPF",
+            "isPositional": false
+          }
+        ],
+        "location": {
+          "startLine": 42,
+          "endLine": 42
+        },
+        "rawSourceLines": [
+          "             OVRDBF     FILE(STUDSPF)   TOFILE(STULIB/STUDSPF)                  "
+        ],
+        "execCommands": []
+      },
+      {
+        "name": "OVRDBF",
+        "parameters": [
+          {
+            "keyword": "FILE",
+            "value": "STULSTD",
+            "isPositional": false
+          },
+          {
+            "keyword": "TOFILE",
+            "value": "STULIB/STULSTD",
+            "isPositional": false
+          }
+        ],
+        "location": {
+          "startLine": 43,
+          "endLine": 43
+        },
+        "rawSourceLines": [
+          "             OVRDBF     FILE(STULSTD)   TOFILE(STULIB/STULSTD)                  "
+        ],
+        "execCommands": []
+      },
+      {
+        "name": "OVRDBF",
+        "parameters": [
+          {
+            "keyword": "FILE",
+            "value": "STURPTPF",
+            "isPositional": false
+          },
+          {
+            "keyword": "TOFILE",
+            "value": "STULIB/STURPTPF",
+            "isPositional": false
+          }
+        ],
+        "location": {
+          "startLine": 48,
+          "endLine": 48
+        },
+        "rawSourceLines": [
+          "             OVRDBF     FILE(STURPTPF)  TOFILE(STULIB/STURPTPF)                 "
+        ],
+        "execCommands": []
+      },
+      {
+        "name": "CALL",
+        "parameters": [
+          {
+            "keyword": "PGM",
+            "value": "STULIB/MNUPRG",
+            "isPositional": false
+          }
+        ],
+        "location": {
+          "startLine": 53,
+          "endLine": 53
+        },
+        "rawSourceLines": [
+          "             CALL       PGM(STULIB/MNUPRG)                                      "
+        ],
+        "execCommands": []
+      },
+      {
+        "name": "MONMSG",
+        "parameters": [
+          {
+            "keyword": "MSGID",
+            "value": "CPF0000",
+            "isPositional": false
+          }
+        ],
+        "location": {
+          "startLine": 54,
+          "endLine": 54
+        },
+        "rawSourceLines": [
+          "             MONMSG     MSGID(CPF0000)                                          "
+        ],
+        "monitorMessage": {
+          "msgId": "CPF0000",
+          "execCommands": []
+        },
+        "execCommands": []
+      },
+      {
+        "name": "DLTOVR",
+        "parameters": [
+          {
+            "keyword": "FILE",
+            "value": "*ALL",
+            "isPositional": false
+          }
+        ],
+        "location": {
+          "startLine": 59,
+          "endLine": 59
+        },
+        "rawSourceLines": [
+          "             DLTOVR     FILE(*ALL)                                              "
+        ],
+        "execCommands": []
+      },
+      {
+        "name": "RMVLIBLE",
+        "parameters": [
+          {
+            "keyword": "LIB",
+            "value": "STULIB",
+            "isPositional": false
+          }
+        ],
+        "location": {
+          "startLine": 64,
+          "endLine": 64
+        },
+        "rawSourceLines": [
+          "             RMVLIBLE   LIB(STULIB)                                             "
+        ],
+        "execCommands": []
+      },
+      {
+        "name": "MONMSG",
+        "parameters": [
+          {
+            "keyword": "MSGID",
+            "value": "CPF2104",
+            "isPositional": false
+          }
+        ],
+        "location": {
+          "startLine": 65,
+          "endLine": 65
+        },
+        "rawSourceLines": [
+          "             MONMSG     MSGID(CPF2104)                                          "
+        ],
+        "monitorMessage": {
+          "msgId": "CPF2104",
+          "execCommands": []
+        },
+        "execCommands": []
+      },
+      {
+        "name": "GOTO",
+        "parameters": [
+          {
+            "keyword": "CMDLBL",
+            "value": "ENDPGM",
+            "isPositional": false
+          }
+        ],
+        "location": {
+          "startLine": 67,
+          "endLine": 67
+        },
+        "rawSourceLines": [
+          "             GOTO       CMDLBL(ENDPGM)                                          "
+        ],
+        "execCommands": []
+      },
+      {
+        "name": "SNDPGMMSG",
+        "parameters": [
+          {
+            "keyword": "MSGID",
+            "value": "CPF9898",
+            "isPositional": false
+          },
+          {
+            "keyword": "MSGF",
+            "value": "QCPFMSG",
+            "isPositional": false
+          },
+          {
+            "keyword": "MSGDTA",
+            "value": "'学生管理システムでエラーが 発生しました'",
+            "isPositional": false
+          },
+          {
+            "keyword": "MSGTYPE",
+            "value": "*ESCAPE",
+            "isPositional": false
+          }
+        ],
+        "location": {
+          "startLine": 73,
+          "endLine": 75
+        },
+        "rawSourceLines": [
+          "             SNDPGMMSG  MSGID(CPF9898) MSGF(QCPFMSG) +                          ",
+          "                          MSGDTA('学生管理システムでエラーが +                  ",
+          "                          発生しました') MSGTYPE(*ESCAPE)                       "
+        ],
+        "execCommands": []
+      }
+    ],
+    "labels": [
+      {
+        "name": "ERROR",
+        "line": 72
+      },
+      {
+        "name": "ENDPGM",
+        "line": 80
+      }
+    ],
+    "subroutines": [],
+    "comments": [
+      {
+        "text": "/*================================================================*/",
+        "line": 1
+      },
+      {
+        "text": "/* プログラム名: MNUCL                                             */",
+        "line": 2
+      },
+      {
+        "text": "/* 説明        : 学生管理システム メニュー呼出CLプログラム          */",
+        "line": 3
+      },
+      {
+        "text": "/* 作成日      : 2026/03/14                                        */",
+        "line": 4
+      },
+      {
+        "text": "/* 作成者      : システム開発部                                    */",
+        "line": 5
+      },
+      {
+        "text": "/*                                                                  */",
+        "line": 6
+      },
+      {
+        "text": "/* 機能概要:                                                        */",
+        "line": 7
+      },
+      {
+        "text": "/*   データベースファイルのオーバーライドを設定し、                  */",
+        "line": 8
+      },
+      {
+        "text": "/*   メインメニュープログラム（MNUPRG）を呼び出す                  */",
+        "line": 9
+      },
+      {
+        "text": "/*   エラー発生時はメッセージを送信して終了する                    */",
+        "line": 10
+      },
+      {
+        "text": "/*                                                                  */",
+        "line": 11
+      },
+      {
+        "text": "/* 使用ライブラリ:                                                  */",
+        "line": 12
+      },
+      {
+        "text": "/*   STULIB - 学生管理システムライブラリ                            */",
+        "line": 13
+      },
+      {
+        "text": "/*================================================================*/",
+        "line": 14
+      },
+      {
+        "text": "/*--------------------------------------------------------------*/",
+        "line": 17
+      },
+      {
+        "text": "/* エラー監視: CPF0000系エラーを捕捉                              */",
+        "line": 18
+      },
+      {
+        "text": "/*--------------------------------------------------------------*/",
+        "line": 19
+      },
+      {
+        "text": "/*--------------------------------------------------------------*/",
+        "line": 22
+      },
+      {
+        "text": "/* ライブラリリスト設定                                          */",
+        "line": 23
+      },
+      {
+        "text": "/*--------------------------------------------------------------*/",
+        "line": 24
+      },
+      {
+        "text": "/*--------------------------------------------------------------*/",
+        "line": 28
+      },
+      {
+        "text": "/* データベースファイル オーバーライド設定                        */",
+        "line": 29
+      },
+      {
+        "text": "/* 物理ファイルと論理ファイルを明示的に指定する                  */",
+        "line": 30
+      },
+      {
+        "text": "/*--------------------------------------------------------------*/",
+        "line": 31
+      },
+      {
+        "text": "/*--------------------------------------------------------------*/",
+        "line": 38
+      },
+      {
+        "text": "/* 表示ファイル オーバーライド設定                                */",
+        "line": 39
+      },
+      {
+        "text": "/*--------------------------------------------------------------*/",
+        "line": 40
+      },
+      {
+        "text": "/*--------------------------------------------------------------*/",
+        "line": 45
+      },
+      {
+        "text": "/* 印刷ファイル オーバーライド設定                                */",
+        "line": 46
+      },
+      {
+        "text": "/*--------------------------------------------------------------*/",
+        "line": 47
+      },
+      {
+        "text": "/*--------------------------------------------------------------*/",
+        "line": 50
+      },
+      {
+        "text": "/* メインメニュープログラム呼出                                  */",
+        "line": 51
+      },
+      {
+        "text": "/*--------------------------------------------------------------*/",
+        "line": 52
+      },
+      {
+        "text": "/*--------------------------------------------------------------*/",
+        "line": 56
+      },
+      {
+        "text": "/* オーバーライド削除                                            */",
+        "line": 57
+      },
+      {
+        "text": "/*--------------------------------------------------------------*/",
+        "line": 58
+      },
+      {
+        "text": "/*--------------------------------------------------------------*/",
+        "line": 61
+      },
+      {
+        "text": "/* ライブラリリストから削除                                      */",
+        "line": 62
+      },
+      {
+        "text": "/*--------------------------------------------------------------*/",
+        "line": 63
+      },
+      {
+        "text": "/*--------------------------------------------------------------*/",
+        "line": 69
+      },
+      {
+        "text": "/* エラー処理                                                    */",
+        "line": 70
+      },
+      {
+        "text": "/*--------------------------------------------------------------*/",
+        "line": 71
+      },
+      {
+        "text": "/*--------------------------------------------------------------*/",
+        "line": 77
+      },
+      {
+        "text": "/* プログラム終了                                                */",
+        "line": 78
+      },
+      {
+        "text": "/*--------------------------------------------------------------*/",
+        "line": 79
+      }
+    ],
+    "parseErrors": []
+  },
+  "dependencies": {
+    "referencedFiles": [
+      {
+        "name": "STULIB",
+        "referenceType": "library",
+        "locations": [
+          {
+            "startLine": 25,
+            "endLine": 25
+          }
+        ]
+      },
+      {
+        "name": "STULIB/STUDNTPF",
+        "referenceType": "file-override",
+        "locations": [
+          {
+            "startLine": 32,
+            "endLine": 32
+          }
+        ]
+      },
+      {
+        "name": "STULIB/STUDNTL1",
+        "referenceType": "file-override",
+        "locations": [
+          {
+            "startLine": 33,
+            "endLine": 33
+          }
+        ]
+      },
+      {
+        "name": "STULIB/STUDNTL2",
+        "referenceType": "file-override",
+        "locations": [
+          {
+            "startLine": 34,
+            "endLine": 34
+          }
+        ]
+      },
+      {
+        "name": "STULIB/SCHOOLPF",
+        "referenceType": "file-override",
+        "locations": [
+          {
+            "startLine": 35,
+            "endLine": 35
+          }
+        ]
+      },
+      {
+        "name": "STULIB/CLASSPF",
+        "referenceType": "file-override",
+        "locations": [
+          {
+            "startLine": 36,
+            "endLine": 36
+          }
+        ]
+      },
+      {
+        "name": "STULIB/MNUDSPF",
+        "referenceType": "file-override",
+        "locations": [
+          {
+            "startLine": 41,
+            "endLine": 41
+          }
+        ]
+      },
+      {
+        "name": "STULIB/STUDSPF",
+        "referenceType": "file-override",
+        "locations": [
+          {
+            "startLine": 42,
+            "endLine": 42
+          }
+        ]
+      },
+      {
+        "name": "STULIB/STULSTD",
+        "referenceType": "file-override",
+        "locations": [
+          {
+            "startLine": 43,
+            "endLine": 43
+          }
+        ]
+      },
+      {
+        "name": "STULIB/STURPTPF",
+        "referenceType": "file-override",
+        "locations": [
+          {
+            "startLine": 48,
+            "endLine": 48
+          }
+        ]
+      },
+      {
+        "name": "STULIB",
+        "referenceType": "library-remove",
+        "locations": [
+          {
+            "startLine": 64,
+            "endLine": 64
+          }
+        ]
+      },
+      {
+        "name": "QCPFMSG",
+        "referenceType": "message-file",
+        "locations": [
+          {
+            "startLine": 73,
+            "endLine": 75
+          }
+        ]
+      }
+    ],
+    "calledPrograms": [
+      {
+        "name": "STULIB/MNUPRG",
+        "referenceType": "call",
+        "locations": [
+          {
+            "startLine": 53,
+            "endLine": 53
+          }
+        ]
+      }
+    ],
+    "copyMembers": []
+  },
+  "errors": []
+}

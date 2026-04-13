@@ -1,0 +1,816 @@
+{
+  "metadata": {
+    "irVersion": "1.0.0",
+    "sourceType": "DDS_PF",
+    "sourceMember": "CLASSPF",
+    "sourceFile": "QDDSSRC",
+    "sourceLibrary": "rpg3-student-mgmt",
+    "parseInfo": {
+      "parserVersion": "1.0.0",
+      "parsedAt": "2026-04-13T16:01:46.641871600Z",
+      "parseStatus": "complete",
+      "totalLines": 45,
+      "detectedEncoding": "UTF-8",
+      "errors": [],
+      "warnings": []
+    }
+  },
+  "content": {
+    "sourceLines": [
+      {
+        "lineNumber": 1,
+        "rawText": "     A*================================================================",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 2,
+        "rawText": "     A* ファイル名: CLASSPF",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 3,
+        "rawText": "     A* 説明      : クラスマスター物理ファイル",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 4,
+        "rawText": "     A* 作成日    : 2026/03/14",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 5,
+        "rawText": "     A* 作成者    : システム開発部",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 6,
+        "rawText": "     A*================================================================",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 7,
+        "rawText": "     A                                      UNIQUE",
+        "specType": "FILE_KEYWORD",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 8,
+        "rawText": "     A          R CLSREC                     TEXT('クラスマスターレコード')",
+        "specType": "RECORD_FORMAT",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 9,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 10,
+        "rawText": "     A*   --- 主キー ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 11,
+        "rawText": "     A            CLSID          6A         TEXT('クラスID') +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 12,
+        "rawText": "     A                                      COLHDG('クラス' 'ID')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 13,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 14,
+        "rawText": "     A*   --- 基本情報 ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 15,
+        "rawText": "     A            CLSNAM        30A         TEXT('クラス名') +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 16,
+        "rawText": "     A                                      COLHDG('クラス' '名称')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 17,
+        "rawText": "     A            CLSYR          4S 0       TEXT('年度') +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 18,
+        "rawText": "     A                                      COLHDG('年度')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 19,
+        "rawText": "     A            CLSGRD         2S 0       TEXT('学年') +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 20,
+        "rawText": "     A                                      COLHDG('学年')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 21,
+        "rawText": "     A            CLSSEC         1A         TEXT('組 A-Z') +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 22,
+        "rawText": "     A                                      COLHDG('組')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 23,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 24,
+        "rawText": "     A*   --- 担当情報 ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 25,
+        "rawText": "     A            CLSTCH        20A         TEXT('担任教師名') +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 26,
+        "rawText": "     A                                      COLHDG('担任' '教師名')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 27,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 28,
+        "rawText": "     A*   --- 所属学校 ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 29,
+        "rawText": "     A            CLSSCL         4A         TEXT('学校コード') +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 30,
+        "rawText": "     A                                      COLHDG('学校' 'コード')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 31,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 32,
+        "rawText": "     A*   --- 定員管理 ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 33,
+        "rawText": "     A            CLSCAP         3S 0       TEXT('定員') +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 34,
+        "rawText": "     A                                      COLHDG('定員')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 35,
+        "rawText": "     A            CLSCUR         3S 0       TEXT('現在人数') +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 36,
+        "rawText": "     A                                      COLHDG('現在' '人数')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 37,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 38,
+        "rawText": "     A*   --- 監査情報 ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 39,
+        "rawText": "     A            CLSADD         8S 0       TEXT('登録日 YYYYMMDD') +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 40,
+        "rawText": "     A                                      COLHDG('登録日')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 41,
+        "rawText": "     A            CLSUPD         8S 0       TEXT('更新日 YYYYMMDD') +",
+        "specType": "FIELD_DEFINITION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 42,
+        "rawText": "     A                                      COLHDG('更新日')",
+        "specType": "CONTINUATION",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 43,
+        "rawText": "     A*",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 44,
+        "rawText": "     A*   --- 主キー定義 ---",
+        "specType": "COMMENT",
+        "sequenceNumber": "",
+        "isComment": true,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 45,
+        "rawText": "     A          K CLSID",
+        "specType": "KEY_FIELD",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      }
+    ],
+    "fileKeywords": [
+      {
+        "name": "UNIQUE",
+        "rawText": "UNIQUE"
+      }
+    ],
+    "recordFormats": [
+      {
+        "location": {
+          "startLine": 8,
+          "endLine": 8
+        },
+        "rawSourceLine": "     A          R CLSREC                     TEXT('クラスマスターレコード')",
+        "name": "CLSREC",
+        "text": "クラスマスターレコード",
+        "keywords": [
+          {
+            "name": "TEXT",
+            "value": "クラスマスターレコード",
+            "rawText": "TEXT('クラスマスターレコード')"
+          }
+        ],
+        "fields": [
+          {
+            "location": {
+              "startLine": 11,
+              "endLine": 11
+            },
+            "rawSourceLines": [
+              "     A            CLSID          6A         TEXT('クラスID') +",
+              "     A                                      COLHDG('クラス' 'ID')"
+            ],
+            "name": "CLSID",
+            "length": 6,
+            "dataType": "A",
+            "source": "direct",
+            "keywords": [
+              {
+                "name": "TEXT",
+                "value": "クラスID",
+                "rawText": "TEXT('クラスID')"
+              },
+              {
+                "name": "COLHDG",
+                "values": [
+                  "クラス",
+                  "ID"
+                ],
+                "rawText": "COLHDG('クラス' 'ID')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 15,
+              "endLine": 15
+            },
+            "rawSourceLines": [
+              "     A            CLSNAM        30A         TEXT('クラス名') +",
+              "     A                                      COLHDG('クラス' '名称')"
+            ],
+            "name": "CLSNAM",
+            "length": 30,
+            "dataType": "A",
+            "source": "direct",
+            "keywords": [
+              {
+                "name": "TEXT",
+                "value": "クラス名",
+                "rawText": "TEXT('クラス名')"
+              },
+              {
+                "name": "COLHDG",
+                "values": [
+                  "クラス",
+                  "名称"
+                ],
+                "rawText": "COLHDG('クラス' '名称')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 17,
+              "endLine": 17
+            },
+            "rawSourceLines": [
+              "     A            CLSYR          4S 0       TEXT('年度') +",
+              "     A                                      COLHDG('年度')"
+            ],
+            "name": "CLSYR",
+            "length": 4,
+            "dataType": "S",
+            "decimalPositions": 0,
+            "source": "direct",
+            "keywords": [
+              {
+                "name": "TEXT",
+                "value": "年度",
+                "rawText": "TEXT('年度')"
+              },
+              {
+                "name": "COLHDG",
+                "value": "年度",
+                "rawText": "COLHDG('年度')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 19,
+              "endLine": 19
+            },
+            "rawSourceLines": [
+              "     A            CLSGRD         2S 0       TEXT('学年') +",
+              "     A                                      COLHDG('学年')"
+            ],
+            "name": "CLSGRD",
+            "length": 2,
+            "dataType": "S",
+            "decimalPositions": 0,
+            "source": "direct",
+            "keywords": [
+              {
+                "name": "TEXT",
+                "value": "学年",
+                "rawText": "TEXT('学年')"
+              },
+              {
+                "name": "COLHDG",
+                "value": "学年",
+                "rawText": "COLHDG('学年')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 21,
+              "endLine": 21
+            },
+            "rawSourceLines": [
+              "     A            CLSSEC         1A         TEXT('組 A-Z') +",
+              "     A                                      COLHDG('組')"
+            ],
+            "name": "CLSSEC",
+            "length": 1,
+            "dataType": "A",
+            "source": "direct",
+            "keywords": [
+              {
+                "name": "TEXT",
+                "value": "組 A-Z",
+                "rawText": "TEXT('組 A-Z')"
+              },
+              {
+                "name": "COLHDG",
+                "value": "組",
+                "rawText": "COLHDG('組')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 25,
+              "endLine": 25
+            },
+            "rawSourceLines": [
+              "     A            CLSTCH        20A         TEXT('担任教師名') +",
+              "     A                                      COLHDG('担任' '教師名')"
+            ],
+            "name": "CLSTCH",
+            "length": 20,
+            "dataType": "A",
+            "source": "direct",
+            "keywords": [
+              {
+                "name": "TEXT",
+                "value": "担任教師名",
+                "rawText": "TEXT('担任教師名')"
+              },
+              {
+                "name": "COLHDG",
+                "values": [
+                  "担任",
+                  "教師名"
+                ],
+                "rawText": "COLHDG('担任' '教師名')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 29,
+              "endLine": 29
+            },
+            "rawSourceLines": [
+              "     A            CLSSCL         4A         TEXT('学校コード') +",
+              "     A                                      COLHDG('学校' 'コード')"
+            ],
+            "name": "CLSSCL",
+            "length": 4,
+            "dataType": "A",
+            "source": "direct",
+            "keywords": [
+              {
+                "name": "TEXT",
+                "value": "学校コード",
+                "rawText": "TEXT('学校コード')"
+              },
+              {
+                "name": "COLHDG",
+                "values": [
+                  "学校",
+                  "コード"
+                ],
+                "rawText": "COLHDG('学校' 'コード')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 33,
+              "endLine": 33
+            },
+            "rawSourceLines": [
+              "     A            CLSCAP         3S 0       TEXT('定員') +",
+              "     A                                      COLHDG('定員')"
+            ],
+            "name": "CLSCAP",
+            "length": 3,
+            "dataType": "S",
+            "decimalPositions": 0,
+            "source": "direct",
+            "keywords": [
+              {
+                "name": "TEXT",
+                "value": "定員",
+                "rawText": "TEXT('定員')"
+              },
+              {
+                "name": "COLHDG",
+                "value": "定員",
+                "rawText": "COLHDG('定員')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 35,
+              "endLine": 35
+            },
+            "rawSourceLines": [
+              "     A            CLSCUR         3S 0       TEXT('現在人数') +",
+              "     A                                      COLHDG('現在' '人数')"
+            ],
+            "name": "CLSCUR",
+            "length": 3,
+            "dataType": "S",
+            "decimalPositions": 0,
+            "source": "direct",
+            "keywords": [
+              {
+                "name": "TEXT",
+                "value": "現在人数",
+                "rawText": "TEXT('現在人数')"
+              },
+              {
+                "name": "COLHDG",
+                "values": [
+                  "現在",
+                  "人数"
+                ],
+                "rawText": "COLHDG('現在' '人数')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 39,
+              "endLine": 39
+            },
+            "rawSourceLines": [
+              "     A            CLSADD         8S 0       TEXT('登録日 YYYYMMDD') +",
+              "     A                                      COLHDG('登録日')"
+            ],
+            "name": "CLSADD",
+            "length": 8,
+            "dataType": "S",
+            "decimalPositions": 0,
+            "source": "direct",
+            "keywords": [
+              {
+                "name": "TEXT",
+                "value": "登録日 YYYYMMDD",
+                "rawText": "TEXT('登録日 YYYYMMDD')"
+              },
+              {
+                "name": "COLHDG",
+                "value": "登録日",
+                "rawText": "COLHDG('登録日')"
+              }
+            ]
+          },
+          {
+            "location": {
+              "startLine": 41,
+              "endLine": 41
+            },
+            "rawSourceLines": [
+              "     A            CLSUPD         8S 0       TEXT('更新日 YYYYMMDD') +",
+              "     A                                      COLHDG('更新日')"
+            ],
+            "name": "CLSUPD",
+            "length": 8,
+            "dataType": "S",
+            "decimalPositions": 0,
+            "source": "direct",
+            "keywords": [
+              {
+                "name": "TEXT",
+                "value": "更新日 YYYYMMDD",
+                "rawText": "TEXT('更新日 YYYYMMDD')"
+              },
+              {
+                "name": "COLHDG",
+                "value": "更新日",
+                "rawText": "COLHDG('更新日')"
+              }
+            ]
+          }
+        ],
+        "keys": [
+          {
+            "location": {
+              "startLine": 45,
+              "endLine": 45
+            },
+            "rawSourceLine": "     A          K CLSID",
+            "fieldName": "CLSID",
+            "sortOrder": "ascending",
+            "keywords": []
+          }
+        ]
+      }
+    ],
+    "comments": [
+      {
+        "lineNumber": 1,
+        "text": "================================================================"
+      },
+      {
+        "lineNumber": 2,
+        "text": "ファイル名: CLASSPF"
+      },
+      {
+        "lineNumber": 3,
+        "text": "説明      : クラスマスター物理ファイル"
+      },
+      {
+        "lineNumber": 4,
+        "text": "作成日    : 2026/03/14"
+      },
+      {
+        "lineNumber": 5,
+        "text": "作成者    : システム開発部"
+      },
+      {
+        "lineNumber": 6,
+        "text": "================================================================"
+      },
+      {
+        "lineNumber": 9,
+        "text": ""
+      },
+      {
+        "lineNumber": 10,
+        "text": "--- 主キー ---"
+      },
+      {
+        "lineNumber": 13,
+        "text": ""
+      },
+      {
+        "lineNumber": 14,
+        "text": "--- 基本情報 ---"
+      },
+      {
+        "lineNumber": 23,
+        "text": ""
+      },
+      {
+        "lineNumber": 24,
+        "text": "--- 担当情報 ---"
+      },
+      {
+        "lineNumber": 27,
+        "text": ""
+      },
+      {
+        "lineNumber": 28,
+        "text": "--- 所属学校 ---"
+      },
+      {
+        "lineNumber": 31,
+        "text": ""
+      },
+      {
+        "lineNumber": 32,
+        "text": "--- 定員管理 ---"
+      },
+      {
+        "lineNumber": 37,
+        "text": ""
+      },
+      {
+        "lineNumber": 38,
+        "text": "--- 監査情報 ---"
+      },
+      {
+        "lineNumber": 43,
+        "text": ""
+      },
+      {
+        "lineNumber": 44,
+        "text": "--- 主キー定義 ---"
+      }
+    ],
+    "parseErrors": []
+  },
+  "dependencies": {
+    "referencedFiles": [],
+    "calledPrograms": [],
+    "copyMembers": []
+  },
+  "errors": []
+}

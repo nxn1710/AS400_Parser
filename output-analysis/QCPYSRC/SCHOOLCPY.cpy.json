@@ -1,0 +1,670 @@
+{
+  "metadata": {
+    "irVersion": "1.0.0",
+    "sourceType": "RPG3",
+    "sourceMember": "SCHOOLCPY",
+    "sourceFile": "QCPYSRC",
+    "sourceLibrary": "rpg3-student-mgmt",
+    "parseInfo": {
+      "parserVersion": "1.0.0",
+      "parsedAt": "2026-04-13T16:01:46.621962100Z",
+      "parseStatus": "complete",
+      "totalLines": 26,
+      "detectedEncoding": "UTF-8",
+      "errors": [],
+      "warnings": []
+    }
+  },
+  "content": {
+    "headerSpecs": [],
+    "fileSpecs": [],
+    "extensionSpecs": [],
+    "lineCounterSpecs": [],
+    "inputSpecs": [
+      {
+        "rawSourceLine": "     I                    SCLID                           S2ID",
+        "location": {
+          "startLine": 12,
+          "endLine": 12
+        },
+        "parseQuality": "full",
+        "sourceSequence": "",
+        "specLevel": "fieldDefinition",
+        "fieldName": "S2ID",
+        "externalFieldName": "SCLID",
+        "dataFormat": "",
+        "controlLevel": "S2",
+        "matchingFields": "ID",
+        "fieldRecordRelation": "",
+        "plusIndicator": "",
+        "minusIndicator": "",
+        "zeroBlankIndicator": ""
+      },
+      {
+        "rawSourceLine": "     I                    SCLNAM                          S2NAM",
+        "location": {
+          "startLine": 14,
+          "endLine": 14
+        },
+        "parseQuality": "full",
+        "sourceSequence": "",
+        "specLevel": "fieldDefinition",
+        "fieldName": "S2NAM",
+        "externalFieldName": "SCLNAM",
+        "dataFormat": "",
+        "controlLevel": "S2",
+        "matchingFields": "NA",
+        "fieldRecordRelation": "M",
+        "plusIndicator": "",
+        "minusIndicator": "",
+        "zeroBlankIndicator": ""
+      },
+      {
+        "rawSourceLine": "     I                    SCLTYP                          S2TYP",
+        "location": {
+          "startLine": 15,
+          "endLine": 15
+        },
+        "parseQuality": "full",
+        "sourceSequence": "",
+        "specLevel": "fieldDefinition",
+        "fieldName": "S2TYP",
+        "externalFieldName": "SCLTYP",
+        "dataFormat": "",
+        "controlLevel": "S2",
+        "matchingFields": "TY",
+        "fieldRecordRelation": "P",
+        "plusIndicator": "",
+        "minusIndicator": "",
+        "zeroBlankIndicator": ""
+      },
+      {
+        "rawSourceLine": "     I                    SCLADR                          S2ADR",
+        "location": {
+          "startLine": 17,
+          "endLine": 17
+        },
+        "parseQuality": "full",
+        "sourceSequence": "",
+        "specLevel": "fieldDefinition",
+        "fieldName": "S2ADR",
+        "externalFieldName": "SCLADR",
+        "dataFormat": "",
+        "controlLevel": "S2",
+        "matchingFields": "AD",
+        "fieldRecordRelation": "R",
+        "plusIndicator": "",
+        "minusIndicator": "",
+        "zeroBlankIndicator": ""
+      },
+      {
+        "rawSourceLine": "     I                    SCLTEL                          S2TEL",
+        "location": {
+          "startLine": 18,
+          "endLine": 18
+        },
+        "parseQuality": "full",
+        "sourceSequence": "",
+        "specLevel": "fieldDefinition",
+        "fieldName": "S2TEL",
+        "externalFieldName": "SCLTEL",
+        "dataFormat": "",
+        "controlLevel": "S2",
+        "matchingFields": "TE",
+        "fieldRecordRelation": "L",
+        "plusIndicator": "",
+        "minusIndicator": "",
+        "zeroBlankIndicator": ""
+      },
+      {
+        "rawSourceLine": "     I                    SCLFAX                          S2FAX",
+        "location": {
+          "startLine": 19,
+          "endLine": 19
+        },
+        "parseQuality": "full",
+        "sourceSequence": "",
+        "specLevel": "fieldDefinition",
+        "fieldName": "S2FAX",
+        "externalFieldName": "SCLFAX",
+        "dataFormat": "",
+        "controlLevel": "S2",
+        "matchingFields": "FA",
+        "fieldRecordRelation": "X",
+        "plusIndicator": "",
+        "minusIndicator": "",
+        "zeroBlankIndicator": ""
+      },
+      {
+        "rawSourceLine": "     I                    SCLPRI                          S2PRI",
+        "location": {
+          "startLine": 21,
+          "endLine": 21
+        },
+        "parseQuality": "full",
+        "sourceSequence": "",
+        "specLevel": "fieldDefinition",
+        "fieldName": "S2PRI",
+        "externalFieldName": "SCLPRI",
+        "dataFormat": "",
+        "controlLevel": "S2",
+        "matchingFields": "PR",
+        "fieldRecordRelation": "I",
+        "plusIndicator": "",
+        "minusIndicator": "",
+        "zeroBlankIndicator": ""
+      },
+      {
+        "rawSourceLine": "     I                    SCLCNT                          S2CNT",
+        "location": {
+          "startLine": 23,
+          "endLine": 23
+        },
+        "parseQuality": "full",
+        "sourceSequence": "",
+        "specLevel": "fieldDefinition",
+        "fieldName": "S2CNT",
+        "externalFieldName": "SCLCNT",
+        "dataFormat": "",
+        "controlLevel": "S2",
+        "matchingFields": "CN",
+        "fieldRecordRelation": "T",
+        "plusIndicator": "",
+        "minusIndicator": "",
+        "zeroBlankIndicator": ""
+      },
+      {
+        "rawSourceLine": "     I                    SCLADD                          S2ADD",
+        "location": {
+          "startLine": 25,
+          "endLine": 25
+        },
+        "parseQuality": "full",
+        "sourceSequence": "",
+        "specLevel": "fieldDefinition",
+        "fieldName": "S2ADD",
+        "externalFieldName": "SCLADD",
+        "dataFormat": "",
+        "controlLevel": "S2",
+        "matchingFields": "AD",
+        "fieldRecordRelation": "D",
+        "plusIndicator": "",
+        "minusIndicator": "",
+        "zeroBlankIndicator": ""
+      },
+      {
+        "rawSourceLine": "     I                    SCLUPD                          S2UPD",
+        "location": {
+          "startLine": 26,
+          "endLine": 26
+        },
+        "parseQuality": "full",
+        "sourceSequence": "",
+        "specLevel": "fieldDefinition",
+        "fieldName": "S2UPD",
+        "externalFieldName": "SCLUPD",
+        "dataFormat": "",
+        "controlLevel": "S2",
+        "matchingFields": "UP",
+        "fieldRecordRelation": "D",
+        "plusIndicator": "",
+        "minusIndicator": "",
+        "zeroBlankIndicator": ""
+      }
+    ],
+    "calculationSpecs": [],
+    "outputSpecs": [],
+    "dataStructures": [],
+    "symbolTable": [
+      {
+        "name": "S2ID",
+        "dataType": "A",
+        "definedIn": "inputField",
+        "definedAtLine": 12,
+        "isDataStructure": false
+      },
+      {
+        "name": "S2NAM",
+        "dataType": "A",
+        "definedIn": "inputField",
+        "definedAtLine": 14,
+        "isDataStructure": false
+      },
+      {
+        "name": "S2TYP",
+        "dataType": "A",
+        "definedIn": "inputField",
+        "definedAtLine": 15,
+        "isDataStructure": false
+      },
+      {
+        "name": "S2ADR",
+        "dataType": "A",
+        "definedIn": "inputField",
+        "definedAtLine": 17,
+        "isDataStructure": false
+      },
+      {
+        "name": "S2TEL",
+        "dataType": "A",
+        "definedIn": "inputField",
+        "definedAtLine": 18,
+        "isDataStructure": false
+      },
+      {
+        "name": "S2FAX",
+        "dataType": "A",
+        "definedIn": "inputField",
+        "definedAtLine": 19,
+        "isDataStructure": false
+      },
+      {
+        "name": "S2PRI",
+        "dataType": "A",
+        "definedIn": "inputField",
+        "definedAtLine": 21,
+        "isDataStructure": false
+      },
+      {
+        "name": "S2CNT",
+        "dataType": "A",
+        "definedIn": "inputField",
+        "definedAtLine": 23,
+        "isDataStructure": false
+      },
+      {
+        "name": "S2ADD",
+        "dataType": "A",
+        "definedIn": "inputField",
+        "definedAtLine": 25,
+        "isDataStructure": false
+      },
+      {
+        "name": "S2UPD",
+        "dataType": "A",
+        "definedIn": "inputField",
+        "definedAtLine": 26,
+        "isDataStructure": false
+      }
+    ],
+    "subroutines": [],
+    "comments": [
+      {
+        "text": "================================================================",
+        "lineNumber": 1,
+        "specContext": "I",
+        "rawSourceLine": "     I*================================================================",
+        "location": {
+          "startLine": 1,
+          "endLine": 1
+        }
+      },
+      {
+        "text": "コピーブック: SCHOOLCPY",
+        "lineNumber": 2,
+        "specContext": "I",
+        "rawSourceLine": "     I* コピーブック: SCHOOLCPY",
+        "location": {
+          "startLine": 2,
+          "endLine": 2
+        }
+      },
+      {
+        "text": "説明        : 学校マスター フィールドリネーム定義",
+        "lineNumber": 3,
+        "specContext": "I",
+        "rawSourceLine": "     I* 説明        : 学校マスター フィールドリネーム定義",
+        "location": {
+          "startLine": 3,
+          "endLine": 3
+        }
+      },
+      {
+        "text": "対象ファイル: SCHOOLPF / SCHOOLL1",
+        "lineNumber": 4,
+        "specContext": "I",
+        "rawSourceLine": "     I* 対象ファイル: SCHOOLPF / SCHOOLL1",
+        "location": {
+          "startLine": 4,
+          "endLine": 4
+        }
+      },
+      {
+        "text": "リネーム規則: SCL → S2",
+        "lineNumber": 5,
+        "specContext": "I",
+        "rawSourceLine": "     I* リネーム規則: SCL → S2",
+        "location": {
+          "startLine": 5,
+          "endLine": 5
+        }
+      },
+      {
+        "text": "",
+        "lineNumber": 6,
+        "specContext": "I",
+        "rawSourceLine": "     I*",
+        "location": {
+          "startLine": 6,
+          "endLine": 6
+        }
+      },
+      {
+        "text": "使用方法:",
+        "lineNumber": 7,
+        "specContext": "I",
+        "rawSourceLine": "     I* 使用方法:",
+        "location": {
+          "startLine": 7,
+          "endLine": 7
+        }
+      },
+      {
+        "text": "ISCHOOLPF",
+        "lineNumber": 8,
+        "specContext": "I",
+        "rawSourceLine": "     I*   ISCHOOLPF",
+        "location": {
+          "startLine": 8,
+          "endLine": 8
+        }
+      },
+      {
+        "text": "I/COPY QCPYSRC,SCHOOLCPY",
+        "lineNumber": 9,
+        "specContext": "I",
+        "rawSourceLine": "     I*   I/COPY QCPYSRC,SCHOOLCPY",
+        "location": {
+          "startLine": 9,
+          "endLine": 9
+        }
+      },
+      {
+        "text": "================================================================",
+        "lineNumber": 10,
+        "specContext": "I",
+        "rawSourceLine": "     I*================================================================",
+        "location": {
+          "startLine": 10,
+          "endLine": 10
+        }
+      },
+      {
+        "text": "--- 主キー ---",
+        "lineNumber": 11,
+        "specContext": "I",
+        "rawSourceLine": "     I*   --- 主キー ---",
+        "location": {
+          "startLine": 11,
+          "endLine": 11
+        }
+      },
+      {
+        "text": "--- 基本情報 ---",
+        "lineNumber": 13,
+        "specContext": "I",
+        "rawSourceLine": "     I*   --- 基本情報 ---",
+        "location": {
+          "startLine": 13,
+          "endLine": 13
+        }
+      },
+      {
+        "text": "--- 所在地情報 ---",
+        "lineNumber": 16,
+        "specContext": "I",
+        "rawSourceLine": "     I*   --- 所在地情報 ---",
+        "location": {
+          "startLine": 16,
+          "endLine": 16
+        }
+      },
+      {
+        "text": "--- 責任者情報 ---",
+        "lineNumber": 20,
+        "specContext": "I",
+        "rawSourceLine": "     I*   --- 責任者情報 ---",
+        "location": {
+          "startLine": 20,
+          "endLine": 20
+        }
+      },
+      {
+        "text": "--- 統計情報 ---",
+        "lineNumber": 22,
+        "specContext": "I",
+        "rawSourceLine": "     I*   --- 統計情報 ---",
+        "location": {
+          "startLine": 22,
+          "endLine": 22
+        }
+      },
+      {
+        "text": "--- 監査情報 ---",
+        "lineNumber": 24,
+        "specContext": "I",
+        "rawSourceLine": "     I*   --- 監査情報 ---",
+        "location": {
+          "startLine": 24,
+          "endLine": 24
+        }
+      }
+    ],
+    "sourceLines": [
+      {
+        "lineNumber": 1,
+        "rawText": "     I*================================================================",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 2,
+        "rawText": "     I* コピーブック: SCHOOLCPY",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 3,
+        "rawText": "     I* 説明        : 学校マスター フィールドリネーム定義",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 4,
+        "rawText": "     I* 対象ファイル: SCHOOLPF / SCHOOLL1",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 5,
+        "rawText": "     I* リネーム規則: SCL → S2",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 6,
+        "rawText": "     I*",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 7,
+        "rawText": "     I* 使用方法:",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 8,
+        "rawText": "     I*   ISCHOOLPF",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 9,
+        "rawText": "     I*   I/COPY QCPYSRC,SCHOOLCPY",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 10,
+        "rawText": "     I*================================================================",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 11,
+        "rawText": "     I*   --- 主キー ---",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 12,
+        "rawText": "     I                    SCLID                           S2ID",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 13,
+        "rawText": "     I*   --- 基本情報 ---",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 14,
+        "rawText": "     I                    SCLNAM                          S2NAM",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 15,
+        "rawText": "     I                    SCLTYP                          S2TYP",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 16,
+        "rawText": "     I*   --- 所在地情報 ---",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 17,
+        "rawText": "     I                    SCLADR                          S2ADR",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 18,
+        "rawText": "     I                    SCLTEL                          S2TEL",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 19,
+        "rawText": "     I                    SCLFAX                          S2FAX",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 20,
+        "rawText": "     I*   --- 責任者情報 ---",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 21,
+        "rawText": "     I                    SCLPRI                          S2PRI",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 22,
+        "rawText": "     I*   --- 統計情報 ---",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 23,
+        "rawText": "     I                    SCLCNT                          S2CNT",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 24,
+        "rawText": "     I*   --- 監査情報 ---",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 25,
+        "rawText": "     I                    SCLADD                          S2ADD",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      },
+      {
+        "lineNumber": 26,
+        "rawText": "     I                    SCLUPD                          S2UPD",
+        "specType": "I",
+        "sequenceNumber": "",
+        "isComment": false,
+        "isBlank": false
+      }
+    ]
+  },
+  "dependencies": {
+    "referencedFiles": [],
+    "calledPrograms": [],
+    "copyMembers": []
+  },
+  "errors": []
+}
