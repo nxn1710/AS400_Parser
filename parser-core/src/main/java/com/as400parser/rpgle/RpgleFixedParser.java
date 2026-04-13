@@ -90,7 +90,7 @@ public class RpgleFixedParser {
                 case 'I' -> scanISpec(line, origLine, i);
                 case 'O' -> scanOSpec(line, origLine, i);
                 case 'P' -> scanPSpec(line, origLine, i);
-                default -> { /* skip unknown spec types */ }
+                default -> { /* skip unknown spec types (E, L are RPG III only) */ }
             }
         }
 
@@ -168,6 +168,16 @@ public class RpgleFixedParser {
         }
         if (upper.contains("NOMAIN")) {
             spec.setNoMain("*YES");
+        }
+        // MAIN must be checked after NOMAIN — use MAIN( to avoid matching NOMAIN
+        if (upper.contains("MAIN(") && !upper.contains("NOMAIN")) {
+            spec.setMain(extractKeywordValue(keywords, "MAIN"));
+        }
+        if (upper.contains("COPYRIGHT")) {
+            spec.setCopyright(extractKeywordValue(keywords, "COPYRIGHT"));
+        }
+        if (upper.contains("ALTSEQ")) {
+            spec.setAltSequence(extractKeywordValue(keywords, "ALTSEQ"));
         }
     }
 
@@ -456,8 +466,8 @@ public class RpgleFixedParser {
     private boolean isExtendedFactor2Opcode(String opcode) {
         return switch (opcode) {
             case "EVAL", "EVALR", "EVAL-CORR", "IF", "ELSEIF", "DOW", "DOU",
-                 "FOR", "WHEN", "CALLP", "ON-ERROR", "RETURN", "DATA-INTO",
-                 "XML-INTO", "XML-SAX", "SORTA" -> true;
+                 "FOR", "FOR-EACH", "WHEN", "CALLP", "ON-ERROR", "RETURN",
+                 "DATA-INTO", "XML-INTO", "XML-SAX", "SORTA" -> true;
             default -> false;
         };
     }
@@ -753,6 +763,7 @@ public class RpgleFixedParser {
         }
     }
 
+
     // =========================================================================
     // I-spec (Input)
     // =========================================================================
@@ -814,6 +825,7 @@ public class RpgleFixedParser {
 
         content.getOutputSpecs().add(spec);
     }
+
 
     // =========================================================================
     // P-spec (Procedure)

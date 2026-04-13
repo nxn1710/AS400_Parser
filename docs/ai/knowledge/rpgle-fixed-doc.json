@@ -1,0 +1,965 @@
+{
+    "description": "RPGLE Fixed-Format Specification Knowhow - Parser Reference",
+    "version": "1.0.0",
+    "note": "Position numbers are 1-based. Each line in fixed-format RPG is 80+ chars. Position 6 identifies the spec type.",
+    "specTypes": {
+        "H": "Control (Header) specifications",
+        "F": "File specifications",
+        "D": "Definition specifications",
+        "C": "Calculation specifications",
+        "E": "Extension specifications",
+        "I": "Input specifications",
+        "O": "Output specifications",
+        "L": "Line counter specifications"
+    },
+    "specs": {
+        "H": {
+            "name": "Control (Header) Spec",
+            "formTypeChar": "H",
+            "description": "Control (header) specifications. Defines program-level attributes.",
+            "positions": [
+                {
+                    "pos": "1-5",
+                    "name": "Comment",
+                    "note": "Comment area"
+                },
+                {
+                    "pos": "6",
+                    "name": "Form type",
+                    "note": "Must be 'H'"
+                },
+                {
+                    "pos": "7-14",
+                    "name": "(Reserved)",
+                    "note": ""
+                },
+                {
+                    "pos": "15",
+                    "name": "Debug",
+                    "values": {
+                        " ": "DEBUG and DUMP operations are not used.",
+                        "1": "DEBUG and DUMP operations are used."
+                    }
+                },
+                {
+                    "pos": "16-17",
+                    "name": "(Reserved)",
+                    "note": ""
+                },
+                {
+                    "pos": "18",
+                    "name": "Currency symbol",
+                    "note": "Blank = dollar sign ($). Any char except 0, *, comma, period, &, -, C, R."
+                },
+                {
+                    "pos": "19",
+                    "name": "Date format",
+                    "values": {
+                        " ": "Month/day/year (mmddyy) - default",
+                        "M": "Month/day/year (mmddyy)",
+                        "D": "Day/month/year (ddmmyy)",
+                        "Y": "Year/month/day (yymmdd)"
+                    }
+                },
+                {
+                    "pos": "20",
+                    "name": "Date edit",
+                    "note": "Separator character used between date fields. '&' = blank separator."
+                },
+                {
+                    "pos": "21",
+                    "name": "Decimal notation",
+                    "values": {
+                        " ": "Period as decimal, comma as separator (default)",
+                        "I": "Comma as decimal, period as separator",
+                        "J": "Comma as decimal, period as separator",
+                        "D": "Period as decimal, comma as separator"
+                    }
+                },
+                {
+                    "pos": "22-25",
+                    "name": "(Reserved)",
+                    "note": ""
+                },
+                {
+                    "pos": "26",
+                    "name": "Alternate collating sequence",
+                    "values": {
+                        " ": "Normal collating sequence is used.",
+                        "S": "Alternate collating sequence is used."
+                    }
+                },
+                {
+                    "pos": "27-39",
+                    "name": "(Reserved)",
+                    "note": ""
+                },
+                {
+                    "pos": "40",
+                    "name": "Sign handling",
+                    "note": "Sign is always forced on input and output of zoned numeric fields."
+                },
+                {
+                    "pos": "41",
+                    "name": "Forms alignment",
+                    "values": {
+                        " ": "First line is printed only once.",
+                        "1": "First line can be printed repeatedly."
+                    }
+                },
+                {
+                    "pos": "42",
+                    "name": "(Reserved)",
+                    "note": ""
+                },
+                {
+                    "pos": "43",
+                    "name": "File translation",
+                    "values": {
+                        " ": "No file translation is requested.",
+                        "F": "Files are to be translated."
+                    }
+                },
+                {
+                    "pos": "44-56",
+                    "name": "(Reserved)",
+                    "note": ""
+                },
+                {
+                    "pos": "57",
+                    "name": "Transparency check",
+                    "values": {
+                        " ": "No check for DBCS in literals.",
+                        "1": "Check for DBCS in literals."
+                    }
+                },
+                {
+                    "pos": "58-74",
+                    "name": "(Reserved)",
+                    "note": ""
+                },
+                {
+                    "pos": "75-80",
+                    "name": "Program identification",
+                    "note": "Unique name assigned to the program."
+                },
+                {
+                    "pos": "81-",
+                    "name": "Comment",
+                    "note": "Comment area"
+                }
+            ]
+        },
+        "F": {
+            "name": "File Spec",
+            "formTypeChar": "F",
+            "description": "File specifications. Defines files used by the program.",
+            "lineTypes": [
+                "Main Line",
+                "Continuation Line"
+            ],
+            "positions": [
+                {
+                    "pos": "1-5",
+                    "name": "Comment",
+                    "note": "Comment area"
+                },
+                {
+                    "pos": "6",
+                    "name": "Form type",
+                    "note": "Must be 'F'"
+                },
+                {
+                    "pos": "7-16",
+                    "name": "File name",
+                    "note": "Name of the file (up to 10 chars)"
+                },
+                {
+                    "pos": "17",
+                    "name": "File type",
+                    "values": {
+                        "I": "File is opened for input",
+                        "O": "File is opened for output",
+                        "U": "File is opened for update (read, change, delete)",
+                        "C": "File is opened for combined (read, write) - WORKSTN files only"
+                    }
+                },
+                {
+                    "pos": "18",
+                    "name": "File designation",
+                    "values": {
+                        "P": "Primary file (only one primary file per program)",
+                        "S": "Secondary file",
+                        "R": "Record address (ADDROUT) file",
+                        "T": "Pre-runtime table",
+                        "F": "Full-procedural file",
+                        " ": "Output file"
+                    }
+                },
+                {
+                    "pos": "19",
+                    "name": "End of file",
+                    "values": {
+                        "E": "When all records processed, RPG cycle sets LR indicator (primary or secondary files)",
+                        " ": "All records in all files get processed before LR indicator is set"
+                    }
+                },
+                {
+                    "pos": "20",
+                    "name": "File addition",
+                    "values": {
+                        "A": "For I/U types: write operation allowed",
+                        " ": "For I/U types: no records can be added. Compile error if WRITE used"
+                    }
+                },
+                {
+                    "pos": "21",
+                    "name": "Sequence",
+                    "values": {
+                        "D": "Matching record fields in descending order",
+                        " ": "Matching record fields in ascending order"
+                    }
+                },
+                {
+                    "pos": "22",
+                    "name": "Format",
+                    "values": {
+                        "F": "File is program described (internal). I specs define record format",
+                        "E": "File is externally described. RPG compiler imports record format"
+                    }
+                },
+                {
+                    "pos": "23-27",
+                    "name": "Record length",
+                    "note": "Length of record (program described files only)"
+                },
+                {
+                    "pos": "28",
+                    "name": "Processing mode",
+                    "values": {
+                        "L": "Sequential within limits (ADDROUT file)",
+                        " ": "Controlled by file designation and record address type"
+                    }
+                },
+                {
+                    "pos": "29-33",
+                    "name": "Length of key fields",
+                    "note": "Length of the key field (program described files only)"
+                },
+                {
+                    "pos": "34",
+                    "name": "Record address type",
+                    "values": {
+                        "A": "Key is a character value (program described files only)",
+                        "P": "Key is a packed decimal value (program described files only)",
+                        "G": "Graphics keys (DBCS keyed database file)",
+                        "K": "Keyed file (externally described files only)",
+                        "D": "Key is a date value",
+                        "F": "Key is a floating point value",
+                        "T": "Key is a time value",
+                        "Z": "Key is a timestamp value",
+                        " ": "Sequential or relative record number processing"
+                    }
+                },
+                {
+                    "pos": "35",
+                    "name": "File organization",
+                    "values": {
+                        "I": "Program described file is indexed (keyed file)",
+                        "T": "Program described file is a record address file (ADDROUT)",
+                        " ": "File is not keyed (program described files)"
+                    }
+                },
+                {
+                    "pos": "36-42",
+                    "name": "Device type",
+                    "values": {
+                        "DISK": "File is a database file",
+                        "PRINTER": "File is a printer file and can be written to",
+                        "WORKSTN": "File is an interactive workstation",
+                        "SEQ": "Sequential file processed by read, write, open, and close operations",
+                        "SPECIAL": "Special device driver (another RPG program)"
+                    }
+                },
+                {
+                    "pos": "43",
+                    "name": "(Reserved)",
+                    "note": ""
+                },
+                {
+                    "pos": "44-80",
+                    "name": "Keywords",
+                    "note": "Keywords for file specification"
+                },
+                {
+                    "pos": "81-",
+                    "name": "Comment",
+                    "note": "Comment area"
+                }
+            ]
+        },
+        "D": {
+            "name": "Definition Spec",
+            "formTypeChar": "D",
+            "description": "Definition specifications. Defines data structures, standalone fields, constants, prototypes, and procedure interfaces.",
+            "positions": [
+                {
+                    "pos": "1-5",
+                    "name": "Comment",
+                    "note": "Comment area"
+                },
+                {
+                    "pos": "6",
+                    "name": "Form type",
+                    "note": "Must be 'D'"
+                },
+                {
+                    "pos": "7-21",
+                    "name": "Name",
+                    "note": "Name of the field, data structure, constant, prototype, or procedure interface (up to 15 chars)"
+                },
+                {
+                    "pos": "22",
+                    "name": "Externally described",
+                    "values": {
+                        "E": "Definition is externally described",
+                        " ": "Definition is not externally described"
+                    }
+                },
+                {
+                    "pos": "23",
+                    "name": "Data area",
+                    "values": {
+                        "U": "Data structure is also a data area",
+                        " ": "Data structure is not a data area"
+                    }
+                },
+                {
+                    "pos": "24-25",
+                    "name": "Data set type",
+                    "values": {
+                        "DS": "Definition is a data structure",
+                        "S": "Definition is a standalone field",
+                        "C": "Definition is a constant",
+                        "PI": "Definition is a procedure interface definition",
+                        "PR": "Definition is a procedure prototype",
+                        "  ": "Definition is a data structure subfield"
+                    }
+                },
+                {
+                    "pos": "26-32",
+                    "name": "Starting location",
+                    "note": "Starting position in the data structure (subfields only)"
+                },
+                {
+                    "pos": "33-39",
+                    "name": "Ending location or length",
+                    "note": "Ending position or length of the field"
+                },
+                {
+                    "pos": "40",
+                    "name": "Data type",
+                    "note": "Applies to subfields only",
+                    "values": {
+                        "A": "(CHARACTER) character field",
+                        "B": "(NUMERIC) binary field",
+                        "C": "UCS-2 (Unicode), character field (2 bytes/character)",
+                        "D": "(DATE) date field",
+                        "F": "(NUMERIC) floating point numeric",
+                        "G": "(GRAPHIC) double-byte character set (DBCS) field",
+                        "I": "(NUMERIC) integer field",
+                        "N": "(CHARACTER) named indicator field",
+                        "O": "(OBJECT) instantiation of a class object",
+                        "P": "(NUMERIC) packed decimal field",
+                        "S": "(NUMERIC) zoned decimal",
+                        "T": "(TIME) time field",
+                        "U": "(NUMERIC) unsigned integer field",
+                        "Z": "(TIMESTAMP) timestamp field",
+                        "*": "(POINTER) pointer field",
+                        " ": "Data type implied by other definition properties"
+                    }
+                },
+                {
+                    "pos": "41-42",
+                    "name": "Decimal positions",
+                    "note": "Blank = non-numeric. Numeric value = numeric field with that many decimal places."
+                },
+                {
+                    "pos": "43",
+                    "name": "(Reserved)",
+                    "note": ""
+                },
+                {
+                    "pos": "44-80",
+                    "name": "Keywords",
+                    "note": "Keywords for definition specification"
+                },
+                {
+                    "pos": "81-",
+                    "name": "Comment",
+                    "note": "Comment area"
+                }
+            ]
+        },
+        "C": {
+            "name": "Calculation Spec",
+            "formTypeChar": "C",
+            "description": "Calculation specifications. Contains calculations and logic of the program.",
+            "positions": [
+                {
+                    "pos": "1-5",
+                    "name": "Comment",
+                    "note": "Comment area"
+                },
+                {
+                    "pos": "6",
+                    "name": "Form type",
+                    "note": "Must be 'C'"
+                },
+                {
+                    "pos": "7",
+                    "name": "Control code",
+                    "note": "Special control code character"
+                },
+                {
+                    "pos": "7-8",
+                    "name": "Control level indicator",
+                    "note": "Control level (L1-L9, LR, SR) or blank"
+                },
+                {
+                    "pos": "9-11",
+                    "name": "Conditioning indicators",
+                    "note": "Up to 3 conditioning indicators (01-99, L1-L9, LR, etc.)"
+                },
+                {
+                    "pos": "12-25",
+                    "name": "Factor 1",
+                    "note": "First operand for the operation"
+                },
+                {
+                    "pos": "26-35",
+                    "name": "Operation code",
+                    "note": "The operation/function to perform"
+                },
+                {
+                    "pos": "36-49",
+                    "name": "Factor 2",
+                    "note": "Second operand for the operation (traditional free-form or standard calc)"
+                },
+                {
+                    "pos": "36-80",
+                    "name": "Extended factor 2",
+                    "note": "Extended factor 2 when no operation code in 26-35 (free-format expression)"
+                },
+                {
+                    "pos": "50-63",
+                    "name": "Result field",
+                    "note": "Field where result is stored"
+                },
+                {
+                    "pos": "64-68",
+                    "name": "Result field length",
+                    "note": "Length of the result field"
+                },
+                {
+                    "pos": "69-70",
+                    "name": "Decimal positions",
+                    "note": "Decimal positions for the result field"
+                },
+                {
+                    "pos": "71-76",
+                    "name": "Resulting indicators",
+                    "note": "Indicators set based on result (positions 71-72, 73-74, 75-76 for High/Low/Equal)"
+                },
+                {
+                    "pos": "77-80",
+                    "name": "(Reserved)",
+                    "note": ""
+                },
+                {
+                    "pos": "81-",
+                    "name": "Comment",
+                    "note": "Comment area"
+                }
+            ],
+            "operationCodes": {
+                "ACQ": "Acquire",
+                "ADDDUR": "Add Duration",
+                "ALLOC": "Allocate Storage",
+                "ANDGT": "And 'factor 1 is greater than factor 2'",
+                "ANDLT": "And 'factor 1 is less than factor 2'",
+                "ANDEQ": "And 'factor 1 is equal to factor 2'",
+                "ANDNE": "And 'factor 1 is not equal to factor 2'",
+                "ANDGE": "And 'factor 1 is greater than or equal to factor 2'",
+                "ANDLE": "And 'factor 1 is less than or equal to factor 2'",
+                "BEGSR": "Beginning of Subroutine",
+                "BITOFF": "Set Bits Off",
+                "BITON": "Set Bits On",
+                "CABGT": "Compare 'factor 1 > factor 2' and Branch",
+                "CABLT": "Compare 'factor 1 < factor 2' and Branch",
+                "CABEQ": "Compare 'factor 1 = factor 2' and Branch",
+                "CABNE": "Compare 'factor 1 <> factor 2' and Branch",
+                "CABGE": "Compare 'factor 1 >= factor 2' and Branch",
+                "CABLE": "Compare 'factor 1 <= factor 2' and Branch",
+                "CALL": "Call a Program",
+                "CALLB": "Call a Bound Procedure",
+                "CALLP": "Call a Prototyped Procedure or Program",
+                "CASGT": "Conditionally 'factor 1 > factor 2' Invoke Subroutine",
+                "CASLT": "Conditionally 'factor 1 < factor 2' Invoke Subroutine",
+                "CASEQ": "Conditionally 'factor 1 = factor 2' Invoke Subroutine",
+                "CASNE": "Conditionally 'factor 1 <> factor 2' Invoke Subroutine",
+                "CASGE": "Conditionally 'factor 1 >= factor 2' Invoke Subroutine",
+                "CASLE": "Conditionally 'factor 1 <= factor 2' Invoke Subroutine",
+                "CAT": "Concatenate Two Strings",
+                "CHAIN": "Random Retrieval from a File",
+                "CHECK": "Check Characters",
+                "CHECKR": "Check Reverse",
+                "CLOSE": "Close Files",
+                "COMP": "Compare",
+                "DEALLOC": "Free Storage",
+                "DEFINE": "Field Definition",
+                "DELETE": "Delete Record",
+                "DIV": "Divide",
+                "DOU": "Do Until",
+                "DOUGT": "Do Until 'factor 1 > factor 2'",
+                "DOULT": "Do Until 'factor 1 < factor 2'",
+                "DOUEQ": "Do Until 'factor 1 = factor 2'",
+                "DOUNE": "Do Until 'factor 1 <> factor 2'",
+                "DOUGE": "Do Until 'factor 1 >= factor 2'",
+                "DOULE": "Do Until 'factor 1 <= factor 2'",
+                "DOW": "Do While",
+                "DOWGT": "Do While 'factor 1 > factor 2'",
+                "DOWLT": "Do While 'factor 1 < factor 2'",
+                "DOWEQ": "Do While 'factor 1 = factor 2'",
+                "DOWNE": "Do While 'factor 1 <> factor 2'",
+                "DOWGE": "Do While 'factor 1 >= factor 2'",
+                "DOWLE": "Do While 'factor 1 <= factor 2'",
+                "DSPLY": "Display Message",
+                "DUMP": "Program Dump",
+                "ELSEIF": "Else If",
+                "ENDyy": "End a Structured Group",
+                "ENDSR": "End of Subroutine",
+                "EVAL": "Evaluate expression",
+                "EVALR": "Evaluate expression, right adjust",
+                "EVAL-CORR": "Assign corresponding subfields",
+                "EXCEPT": "Calculation Time Output",
+                "EXFMT": "Write/Then Read Format",
+                "EXSR": "Invoke Subroutine",
+                "EXTRCT": "Extract Date/Time/Timestamp",
+                "FEOD": "Force End of Data",
+                "FOR-EACH": "For Each",
+                "FORCE": "Force a Certain File to Be Read Next Cycle",
+                "GOTO": "Go To",
+                "IFGT": "If 'factor 1 > factor 2'",
+                "IFLT": "If 'factor 1 < factor 2'",
+                "IFEQ": "If 'factor 1 = factor 2'",
+                "IFNE": "If 'factor 1 <> factor 2'",
+                "IFGE": "If 'factor 1 >= factor 2'",
+                "IFLE": "If 'factor 1 <= factor 2'",
+                "IN": "Retrieve a Data Area",
+                "ITER": "Iterate",
+                "KFLD": "Define Parts of a Key",
+                "KLIST": "Define a Composite Key",
+                "LEAVE": "Leave a Do/For Group",
+                "LEAVESR": "Leave a Subroutine",
+                "LOOKUP": "Look Up a Table or Array Element",
+                "MHHZO": "Move High to High Zone",
+                "MHLZO": "Move High to Low Zone",
+                "MLHZO": "Move Low to High Zone",
+                "MLLZO": "Move Low to Low Zone",
+                "MONITOR": "Begin a Monitor Group",
+                "MOVEA": "Move Array",
+                "MOVEL": "Move Left",
+                "MULT": "Multiply",
+                "MVR": "Move Remainder",
+                "OCCUR": "Set/Get Occurrence of a Data Structure",
+                "ON-ERROR": "On Error",
+                "OPEN": "Open File for Processing",
+                "ORGT": "Or 'factor 1 > factor 2'",
+                "ORLT": "Or 'factor 1 < factor 2'",
+                "OREQ": "Or 'factor 1 = factor 2'",
+                "ORNE": "Or 'factor 1 <> factor 2'",
+                "ORGE": "Or 'factor 1 >= factor 2'",
+                "ORLE": "Or 'factor 1 <= factor 2'",
+                "OTHER": "Otherwise Select",
+                "OUT": "Write a Data Area",
+                "PARM": "Identify Parameters",
+                "PLIST": "Identify a Parameter List",
+                "READ": "Read a Record",
+                "READC": "Read Next Changed Record",
+                "READE": "Read Equal Key",
+                "READP": "Read Prior Record",
+                "READPE": "Read Prior Equal",
+                "REALLOC": "Reallocate Storage with New Length",
+                "REL": "Release",
+                "RETURN": "Return to Caller",
+                "ROLBK": "Roll Back",
+                "SCAN": "Scan String",
+                "SELECT": "Begin a Select Group",
+                "SETGT": "Set Greater Than",
+                "SETLL": "Set Lower Limit",
+                "SETOFF": "Set Indicator Off",
+                "SETON": "Set Indicator On",
+                "SHTDN": "Shut Down",
+                "SORTA": "Sort an Array",
+                "SQRT": "Square Root",
+                "SUB": "Subtract",
+                "SUBDUR": "Subtract Duration",
+                "SUBST": "Substring",
+                "TEST": "Test Date/Time/Timestamp",
+                "TESTB": "Test Bit",
+                "TESTN": "Test Numeric",
+                "TESTZ": "Test Zone",
+                "TIME": "Retrieve Time and Date",
+                "UNLOCK": "Unlock a Data Area or Release a Record",
+                "UPDATE": "Modify Existing Record",
+                "WHEN": "When True Then Select",
+                "WHEN-IN": "When the SELECT Operand is IN the WHEN-IN Operand",
+                "WHEN-IS": "When the SELECT Operand is Equal to the WHEN-IS Operand",
+                "WHENGT": "When 'factor 1 > factor 2' Then Select",
+                "WHENLT": "When 'factor 1 < factor 2' Then Select",
+                "WHENEQ": "When 'factor 1 = factor 2' Then Select",
+                "WHENNE": "When 'factor 1 <> factor 2' Then Select",
+                "WHENGE": "When 'factor 1 >= factor 2' Then Select",
+                "WHENLE": "When 'factor 1 <= factor 2' Then Select",
+                "WRITE": "Create New Records",
+                "XFOOT": "Summing the Elements of an Array",
+                "XLATE": "Translate",
+                "XML-INTO": "Parse an XML Document into a Variable",
+                "XML-SAX": "Parse an XML Document",
+                "Z-ADD": "Zero and Add",
+                "Z-SUB": "Zero and Subtract"
+            }
+        },
+        "E": {
+            "name": "Extension Spec",
+            "formTypeChar": "E",
+            "description": "Extension specifications. Defines arrays and tables.",
+            "positions": [
+                {
+                    "pos": "1-5",
+                    "name": "Comment",
+                    "note": "Comment area"
+                },
+                {
+                    "pos": "6",
+                    "name": "Form type",
+                    "note": "Must be 'E'"
+                },
+                {
+                    "pos": "7-10",
+                    "name": "(Reserved)",
+                    "note": ""
+                },
+                {
+                    "pos": "11-18",
+                    "name": "From file name",
+                    "note": "Blank = array/table loaded at compile or by input/calc specs. Otherwise, file the array/table is read from."
+                },
+                {
+                    "pos": "19-26",
+                    "name": "To file name",
+                    "note": "Blank = array/table is not written at end of program. Otherwise, file the array/table is saved to."
+                },
+                {
+                    "pos": "27-32",
+                    "name": "Array or table name",
+                    "note": "Name of the array or table used in the program."
+                },
+                {
+                    "pos": "33-35",
+                    "name": "Entries per record",
+                    "note": "Blank = loaded by input or calc specs. Otherwise, number of entries per input record."
+                },
+                {
+                    "pos": "36-39",
+                    "name": "Entries per array or table",
+                    "note": "Maximum number of array or table entries."
+                },
+                {
+                    "pos": "40-42",
+                    "name": "Length of entry",
+                    "note": "Length of each element in the array/table (positions 27-32)."
+                },
+                {
+                    "pos": "43",
+                    "name": "Data format",
+                    "values": {
+                        " ": "Zoned decimal or character format",
+                        "P": "Packed decimal format",
+                        "B": "Binary format",
+                        "L": "Numeric with preceding (left) plus or minus sign",
+                        "R": "Numeric with following (right) plus or minus sign"
+                    }
+                },
+                {
+                    "pos": "44",
+                    "name": "Decimal positions",
+                    "note": "Blank = character array/table. Number = decimal places in numeric elements."
+                },
+                {
+                    "pos": "45",
+                    "name": "Sequence",
+                    "values": {
+                        " ": "No particular sequence",
+                        "A": "Ascending sequence",
+                        "D": "Descending sequence"
+                    }
+                },
+                {
+                    "pos": "46-51",
+                    "name": "Alternate array or table name",
+                    "note": "Name of the alternate array/table."
+                },
+                {
+                    "pos": "52-54",
+                    "name": "Alternate entry length",
+                    "note": "Length of each element in the alternate array/table (positions 46-51)."
+                },
+                {
+                    "pos": "55",
+                    "name": "Alternate data format",
+                    "values": {
+                        " ": "Zoned decimal or character format",
+                        "P": "Packed decimal format",
+                        "B": "Binary format",
+                        "L": "Numeric with preceding (left) plus or minus sign",
+                        "R": "Numeric with following (right) plus or minus sign"
+                    }
+                },
+                {
+                    "pos": "56",
+                    "name": "Alternate decimal positions",
+                    "note": "Blank = character. Number = decimal places in alternate numeric elements."
+                },
+                {
+                    "pos": "57",
+                    "name": "Alternate sequence",
+                    "values": {
+                        " ": "No particular sequence",
+                        "A": "Ascending sequence",
+                        "D": "Descending sequence"
+                    }
+                },
+                {
+                    "pos": "58-",
+                    "name": "Comment",
+                    "note": "Comment area"
+                }
+            ]
+        },
+        "I": {
+            "name": "Input Spec",
+            "formTypeChar": "I",
+            "description": "Input specifications. Defines record formats for program-described input files.",
+            "positions": [
+                {
+                    "pos": "1-5",
+                    "name": "Comment",
+                    "note": "Comment area"
+                },
+                {
+                    "pos": "6",
+                    "name": "Form type",
+                    "note": "Must be 'I'"
+                },
+                {
+                    "pos": "7-80",
+                    "name": "TBD",
+                    "note": "Input specification fields (TBD - not fully defined in source)"
+                },
+                {
+                    "pos": "81-",
+                    "name": "Comment",
+                    "note": "Comment area"
+                }
+            ]
+        },
+        "O": {
+            "name": "Output Spec",
+            "formTypeChar": "O",
+            "description": "Output specifications. Defines record formats for program-described output files.",
+            "positions": [
+                {
+                    "pos": "1-5",
+                    "name": "Comment",
+                    "note": "Comment area"
+                },
+                {
+                    "pos": "6",
+                    "name": "Form type",
+                    "note": "Must be 'O'"
+                },
+                {
+                    "pos": "7-80",
+                    "name": "TBD",
+                    "note": "Output specification fields (TBD - not fully defined in source)"
+                },
+                {
+                    "pos": "81-",
+                    "name": "Comment",
+                    "note": "Comment area"
+                }
+            ]
+        },
+        "L": {
+            "name": "Line Counter Spec",
+            "formTypeChar": "L",
+            "description": "Line counter specifications. Defines page lengths for printer files.",
+            "positions": [
+                {
+                    "pos": "1-5",
+                    "name": "Comment",
+                    "note": "Comment area"
+                },
+                {
+                    "pos": "6",
+                    "name": "Form type",
+                    "note": "Must be 'L'"
+                },
+                {
+                    "pos": "7-14",
+                    "name": "File name",
+                    "note": "Name of the printer file"
+                },
+                {
+                    "pos": "15-17",
+                    "name": "Lines per page",
+                    "note": "Number of lines per page on the printed form"
+                },
+                {
+                    "pos": "18-19",
+                    "name": "Form length",
+                    "note": "Physical length of the form in lines"
+                },
+                {
+                    "pos": "20-22",
+                    "name": "Overflow line number",
+                    "note": "The line number where overflow processing begins"
+                },
+                {
+                    "pos": "23-24",
+                    "name": "Overflow line",
+                    "note": "Overflow line indicator"
+                },
+                {
+                    "pos": "25-74",
+                    "name": "(Reserved)",
+                    "note": ""
+                },
+                {
+                    "pos": "75-",
+                    "name": "Comment",
+                    "note": "Comment area"
+                }
+            ]
+        }
+    },
+    "directives": {
+        "description": "Compiler directives. Lines where position 6 is blank and positions 7-12 contain a directive keyword.",
+        "items": {
+            "/TITLE": {
+                "description": "Specify heading information to appear at the top of each page of the compiler listing.",
+                "positions": [
+                    {
+                        "pos": "7-12",
+                        "name": "Directive",
+                        "note": "/TITLE"
+                    },
+                    {
+                        "pos": "13",
+                        "name": "Blank",
+                        "note": "Must be blank"
+                    },
+                    {
+                        "pos": "14-74",
+                        "name": "Title info",
+                        "note": "Heading information text"
+                    }
+                ]
+            },
+            "/EJECT": {
+                "description": "Subsequent specifications begin on a new page of the compiler listing.",
+                "positions": [
+                    {
+                        "pos": "7-12",
+                        "name": "Directive",
+                        "note": "/EJECT"
+                    },
+                    {
+                        "pos": "13-74",
+                        "name": "Blank",
+                        "note": "Must be blank"
+                    }
+                ]
+            },
+            "/SPACE": {
+                "description": "Control line spacing within the compiler listing.",
+                "positions": [
+                    {
+                        "pos": "7-12",
+                        "name": "Directive",
+                        "note": "/SPACE"
+                    },
+                    {
+                        "pos": "13",
+                        "name": "Blank",
+                        "note": "Must be blank"
+                    },
+                    {
+                        "pos": "14-16",
+                        "name": "Line count",
+                        "note": "Positive integer 1-112: number of lines to space in the listing"
+                    }
+                ]
+            },
+            "/COPY": {
+                "description": "Insert records from another file at this point. The copied file may contain any valid specification except /COPY.",
+                "positions": [
+                    {
+                        "pos": "7-11",
+                        "name": "Directive",
+                        "note": "/COPY"
+                    },
+                    {
+                        "pos": "12",
+                        "name": "Blank",
+                        "note": "Must be blank"
+                    },
+                    {
+                        "pos": "13-44",
+                        "name": "Member location",
+                        "note": "Identifies the location of the member to be copied (merged)"
+                    }
+                ]
+            }
+        }
+    },
+    "parserRules": {
+        "description": "Rules for parsing a fixed-format RPGLE source line",
+        "lineIdentification": {
+            "commentLine": {
+                "rule": "If position 1-5 starts with '' OR position 7 is '', the line is a comment",
+                "note": "A line beginning with '*//' is also a free-format comment"
+            },
+            "specType": {
+                "rule": "Character at position 6 (1-based) identifies the specification type",
+                "mapping": {
+                    "H": "Control (Header) spec",
+                    "F": "File spec",
+                    "D": "Definition spec",
+                    "C": "Calculation spec",
+                    "E": "Extension spec",
+                    "I": "Input spec",
+                    "O": "Output spec",
+                    "L": "Line counter spec",
+                    " ": "Continuation line or compiler directive"
+                }
+            }
+        },
+        "positionExtraction": {
+            "description": "Extract field value from a source line at given position range",
+            "note": "Positions are 1-based. Use substring(line, start, end). Trim whitespace for value comparison."
+        }
+    }
+}

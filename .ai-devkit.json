@@ -1,7 +1,7 @@
 {
   "version": "0.12.0",
   "environments": [
-    "antigravity"
+    "codex"
   ],
   "initializedPhases": [
     "requirements",
@@ -13,5 +13,5 @@
     "monitoring"
   ],
   "createdAt": "2026-03-11T14:47:02.074Z",
-  "updatedAt": "2026-03-11T14:47:02.157Z"
+  "updatedAt": "2026-04-12T04:05:31.943Z"
 }
