@@ -5,7 +5,6 @@ import com.as400parser.common.normalizer.NormalizedSource;
 import com.as400parser.rpgle.model.*;
 import com.as400parser.rpg3.model.ExpressionNode;
 import com.as400parser.rpg3.model.IdentifierNode;
-import com.as400parser.rpg3.model.LiteralNode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +43,8 @@ public class RpgleFixedParser {
 
         for (int i = 0; i < lines.length; i++) {
             String line = lines[i];
-            if (line.length() < 6) continue;
+            if (line.length() < 6)
+                continue;
 
             int origLine = origLineNums[i];
             char specChar = Character.toUpperCase(line.charAt(5));
@@ -90,7 +90,8 @@ public class RpgleFixedParser {
                 case 'I' -> scanISpec(line, origLine, i);
                 case 'O' -> scanOSpec(line, origLine, i);
                 case 'P' -> scanPSpec(line, origLine, i);
-                default -> { /* skip unknown spec types (E, L are RPG III only) */ }
+                default -> {
+                    /* skip unknown spec types (E, L are RPG III only) */ }
             }
         }
 
@@ -184,9 +185,9 @@ public class RpgleFixedParser {
     // =========================================================================
     // F-spec (File)
     // RPGLE F-spec: cols 7-16 filename, 17 type, 18 designation, 19 endOfFile,
-    //   20 addition, 21 sequence, 22 format, 23-27 recLen, 28 limit,
-    //   29-33 keyLen, 34 recAddrType, 35 fileOrg, 36-42 device, 43 reserved,
-    //   44-80 keywords
+    // 20 addition, 21 sequence, 22 format, 23-27 recLen, 28 limit,
+    // 29-33 keyLen, 34 recAddrType, 35 fileOrg, 36-42 device, 43 reserved,
+    // 44-80 keywords
     // =========================================================================
 
     private void scanFSpec(String line, int origLine, int lineIndex) {
@@ -209,20 +210,20 @@ public class RpgleFixedParser {
         spec.setSourceSequence(normalizedSource.getSequenceNumbers()[lineIndex]);
         spec.setFormat("fixed");
 
-        spec.setFileName(fileName);                                           // cols 7-16
-        spec.setFileType(sub(line, 16, 17));                                  // col 17
-        spec.setFileDesignation(sub(line, 17, 18));                           // col 18
-        spec.setEndOfFile(sub(line, 18, 19));                                 // col 19
-        spec.setFileAddition(sub(line, 19, 20));                              // col 20
-        spec.setSequence(sub(line, 20, 21));                                  // col 21
-        spec.setFileFormat(sub(line, 21, 22));                                // col 22
-        spec.setRecordLength(safeInt(sub(line, 22, 27)));                     // cols 23-27
-        spec.setProcessingMode(sub(line, 27, 28));                            // col 28
-        spec.setKeyLength(safeInt(sub(line, 28, 33)));                        // cols 29-33
-        spec.setRecordAddressType(sub(line, 33, 34));                         // col 34
-        spec.setFileOrganization(sub(line, 34, 35));                          // col 35
-        spec.setDevice(sub(line, 35, 42));                                    // cols 36-42
-        spec.setKeywords(sub(line, 43, 80));                                  // cols 44-80
+        spec.setFileName(fileName); // cols 7-16
+        spec.setFileType(sub(line, 16, 17)); // col 17
+        spec.setFileDesignation(sub(line, 17, 18)); // col 18
+        spec.setEndOfFile(sub(line, 18, 19)); // col 19
+        spec.setFileAddition(sub(line, 19, 20)); // col 20
+        spec.setSequence(sub(line, 20, 21)); // col 21
+        spec.setFileFormat(sub(line, 21, 22)); // col 22
+        spec.setRecordLength(safeInt(sub(line, 22, 27))); // cols 23-27
+        spec.setProcessingMode(sub(line, 27, 28)); // col 28
+        spec.setKeyLength(safeInt(sub(line, 28, 33))); // cols 29-33
+        spec.setRecordAddressType(sub(line, 33, 34)); // col 34
+        spec.setFileOrganization(sub(line, 34, 35)); // col 35
+        spec.setDevice(sub(line, 35, 42)); // cols 36-42
+        spec.setKeywords(sub(line, 43, 80)); // cols 44-80
 
         // Inline comment from col 81+
         if (line.length() > 80) {
@@ -238,8 +239,8 @@ public class RpgleFixedParser {
     // =========================================================================
     // D-spec (Definition)
     // RPGLE D-spec: cols 7-21 name, 22 externally-described, 23 data-area,
-    //   24-25 definition type (DS/S/C/PR/PI/blank), 26-32 from, 33-39 to/length,
-    //   40 data type, 41-42 decimal positions, 43 reserved, 44-80 keywords
+    // 24-25 definition type (DS/S/C/PR/PI/blank), 26-32 from, 33-39 to/length,
+    // 40 data type, 41-42 decimal positions, 43 reserved, 44-80 keywords
     // =========================================================================
 
     private void scanDSpec(String line, int origLine, int lineIndex) {
@@ -268,14 +269,14 @@ public class RpgleFixedParser {
         spec.setFormat("fixed");
 
         spec.setName(name);
-        spec.setExternallyDescribed(sub(line, 21, 22));                       // col 22
-        spec.setDataAreaType(sub(line, 22, 23));                              // col 23
-        spec.setDefinitionType(defType);                                      // cols 24-25
-        spec.setFromPosition(sub(line, 25, 32));                              // cols 26-32
-        spec.setToPosition(sub(line, 32, 39));                                // cols 33-39
-        spec.setDataType(sub(line, 39, 40));                                  // col 40
-        spec.setDecimalPositions(safeInt(sub(line, 40, 42)));                 // cols 41-42
-        spec.setKeywords(sub(line, 43, 80));                                  // cols 44-80
+        spec.setExternallyDescribed(sub(line, 21, 22)); // col 22
+        spec.setDataAreaType(sub(line, 22, 23)); // col 23
+        spec.setDefinitionType(defType); // cols 24-25
+        spec.setFromPosition(sub(line, 25, 32)); // cols 26-32
+        spec.setToPosition(sub(line, 32, 39)); // cols 33-39
+        spec.setDataType(sub(line, 39, 40)); // col 40
+        spec.setDecimalPositions(safeInt(sub(line, 40, 42))); // cols 41-42
+        spec.setKeywords(sub(line, 43, 80)); // cols 44-80
 
         // Parse keywords for specific values
         String keywords = spec.getKeywords();
@@ -327,13 +328,14 @@ public class RpgleFixedParser {
     // =========================================================================
     // C-spec (Calculation)
     // RPGLE C-spec: cols 7-8 control level, 9-11 conditioning indicators,
-    //   12-25 factor 1, 26-35 opcode + extender,
-    //   36-49 factor 2 (traditional) or 36-80 extended factor 2
-    //   50-63 result, 64-68 field length, 69-70 decimal positions,
-    //   71-76 resulting indicators (HI/LO/EQ)
+    // 12-25 factor 1, 26-35 opcode + extender,
+    // 36-49 factor 2 (traditional) or 36-80 extended factor 2
+    // 50-63 result, 64-68 field length, 69-70 decimal positions,
+    // 71-76 resulting indicators (HI/LO/EQ)
     // =========================================================================
 
-    private record CSpecLine(String rawLine, int origLine, int arrayIndex) {}
+    private record CSpecLine(String rawLine, int origLine, int arrayIndex) {
+    }
 
     private void processCSpecLines(List<CSpecLine> lines) {
         processCalcBlock(lines, 0, lines.size(), content.getCalculationSpecs());
@@ -378,7 +380,7 @@ public class RpgleFixedParser {
         op.setSourceSequence(normalizedSource.getSequenceNumbers()[cline.arrayIndex]);
         op.setFormat("fixed");
 
-        op.setControlLevel(sub(line, 6, 8));                                  // cols 7-8
+        op.setControlLevel(sub(line, 6, 8)); // cols 7-8
 
         // Conditioning indicators (cols 9-11)
         parseConditioningIndicators(line, op);
@@ -436,8 +438,8 @@ public class RpgleFixedParser {
             String loInd = sub(line, 72, 74);
             String eqInd = sub(line, 74, 76);
             if ((hiInd != null && !hiInd.isEmpty()) ||
-                (loInd != null && !loInd.isEmpty()) ||
-                (eqInd != null && !eqInd.isEmpty())) {
+                    (loInd != null && !loInd.isEmpty()) ||
+                    (eqInd != null && !eqInd.isEmpty())) {
                 CalcSpec.ResultingIndicators ri = new CalcSpec.ResultingIndicators();
                 if (hiInd != null && !hiInd.isEmpty()) {
                     ri.setHigh(new CalcSpec.IndicatorRef(hiInd, classifyIndicator(hiInd)));
@@ -466,8 +468,9 @@ public class RpgleFixedParser {
     private boolean isExtendedFactor2Opcode(String opcode) {
         return switch (opcode) {
             case "EVAL", "EVALR", "EVAL-CORR", "IF", "ELSEIF", "DOW", "DOU",
-                 "FOR", "FOR-EACH", "WHEN", "CALLP", "ON-ERROR", "RETURN",
-                 "DATA-INTO", "XML-INTO", "XML-SAX", "SORTA" -> true;
+                    "FOR", "FOR-EACH", "WHEN", "CALLP", "ON-ERROR", "RETURN",
+                    "DATA-INTO", "XML-INTO", "XML-SAX", "SORTA" ->
+                true;
             default -> false;
         };
     }
@@ -763,7 +766,6 @@ public class RpgleFixedParser {
         }
     }
 
-
     // =========================================================================
     // I-spec (Input)
     // =========================================================================
@@ -826,7 +828,6 @@ public class RpgleFixedParser {
         content.getOutputSpecs().add(spec);
     }
 
-
     // =========================================================================
     // P-spec (Procedure)
     // RPGLE P-spec: cols 7-21 name, col 24 begin/end (B/E), cols 44-80 keywords
@@ -839,9 +840,9 @@ public class RpgleFixedParser {
         spec.setSourceSequence(normalizedSource.getSequenceNumbers()[lineIndex]);
         spec.setFormat("fixed");
 
-        spec.setProcedureName(sub(line, 6, 21));                              // cols 7-21
-        spec.setBeginEnd(sub(line, 23, 24));                                  // col 24
-        spec.setKeywords(sub(line, 43, 80));                                  // cols 44-80
+        spec.setProcedureName(sub(line, 6, 21)); // cols 7-21
+        spec.setBeginEnd(sub(line, 23, 24)); // col 24
+        spec.setKeywords(sub(line, 43, 80)); // cols 44-80
 
         // Inline comment from col 81+
         if (line.length() > 80) {
@@ -896,7 +897,8 @@ public class RpgleFixedParser {
 
     private void handleCopyDirective(String line, int origLine) {
         String fullDirective = sub(line, 6, 80);
-        if (fullDirective == null) return;
+        if (fullDirective == null)
+            return;
         copyDirectives.add(fullDirective.trim());
     }
 
@@ -906,7 +908,8 @@ public class RpgleFixedParser {
 
     private String extractOpcode(String line) {
         String opcode = sub(line, 25, 35);
-        if (opcode == null) return "";
+        if (opcode == null)
+            return "";
         // Strip extender: EVAL(H) -> EVAL
         int paren = opcode.indexOf('(');
         return paren > 0 ? opcode.substring(0, paren).trim() : opcode.trim();
@@ -915,16 +918,20 @@ public class RpgleFixedParser {
     private String extractKeywordValue(String keywordArea, String keyword) {
         String upper = keywordArea.toUpperCase();
         int idx = upper.indexOf(keyword.toUpperCase());
-        if (idx < 0) return null;
+        if (idx < 0)
+            return null;
 
         int parenStart = keywordArea.indexOf('(', idx);
-        if (parenStart < 0) return "";
+        if (parenStart < 0)
+            return "";
 
         int depth = 1;
         int parenEnd = parenStart + 1;
         while (parenEnd < keywordArea.length() && depth > 0) {
-            if (keywordArea.charAt(parenEnd) == '(') depth++;
-            if (keywordArea.charAt(parenEnd) == ')') depth--;
+            if (keywordArea.charAt(parenEnd) == '(')
+                depth++;
+            if (keywordArea.charAt(parenEnd) == ')')
+                depth--;
             parenEnd++;
         }
         return keywordArea.substring(parenStart + 1, parenEnd - 1).trim();
@@ -955,7 +962,8 @@ public class RpgleFixedParser {
     }
 
     private Integer safeInt(String text) {
-        if (text == null || text.isBlank()) return null;
+        if (text == null || text.isBlank())
+            return null;
         try {
             return Integer.parseInt(text.trim());
         } catch (NumberFormatException e) {
@@ -964,13 +972,19 @@ public class RpgleFixedParser {
     }
 
     private String classifyIndicator(String name) {
-        if (name == null || name.isEmpty()) return "unknown";
+        if (name == null || name.isEmpty())
+            return "unknown";
         String upper = name.toUpperCase();
-        if (upper.matches("\\d{2}")) return "numeric";
-        if (upper.matches("LR|MR|RT|1P|K[A-N]|U[1-8]")) return "special";
-        if (upper.matches("H[1-9]")) return "halt";
-        if (upper.matches("L[0-9]")) return "level";
-        if (upper.matches("O[A-GV]")) return "overflow";
+        if (upper.matches("\\d{2}"))
+            return "numeric";
+        if (upper.matches("LR|MR|RT|1P|K[A-N]|U[1-8]"))
+            return "special";
+        if (upper.matches("H[1-9]"))
+            return "halt";
+        if (upper.matches("L[0-9]"))
+            return "level";
+        if (upper.matches("O[A-GV]"))
+            return "overflow";
         return "unknown";
     }
 }
